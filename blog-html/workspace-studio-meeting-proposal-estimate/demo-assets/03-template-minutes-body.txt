@@ -1,0 +1,39 @@
+MEETING MINUTES — {{EVENT_TITLE}}
+
+Metadata (filled by automation where possible)
+• Client / project code: {{PROJECT_CODE}} — {{CLIENT_NAME}}
+• Scheduled start: {{EVENT_START}}
+• Duration: 30 minutes
+• Calendar event ID (for ops): {{EVENT_ID}}
+
+1. Goal of this session
+Confirm scope boundaries for the loyalty MVP (earn/burn at POS) and integration constraints with AcmePOS v12.
+
+2. Attendees
+• Acme Retail: (name), (role)
+• Our team: (name), (role)
+
+3. Key questions (pre-filled checklist — update during call)
+• What is the exact POS version in production and staging URLs?
+• OAuth2: will Acme issue a client_id for our integration user, or internal service account only?
+• Uptime / support window expectations for MVP?
+
+4. Current systems (from invite description + discussion)
+• POS: AcmePOS v12 (source of truth for catalog)
+• Identity: Google Workspace for staff accounts
+
+5. Decisions (fill during / after meeting)
+• (None yet)
+
+6. Non-goals for MVP (to confirm)
+• No native mobile app in MVP.
+• No full marketing campaign builder in MVP.
+
+7. Open questions
+• (Add during meeting)
+
+8. Raw notes (paste transcript or quick bullets after Meet)
+(Paste below this line after the interview.)
+
+---
+Demo stub (delete in real use): Waiting for meeting notes.

@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sử dụng Gemini trong Google Docs tạo Project Kickoff Doc</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="badge">Google Workspace Guide</div>
+    <h1>Tạo Project Kickoff Doc bằng Gemini trong Google Docs</h1>
+    <p class="subtitle">Biến gạch đầu dòng thô thành tài liệu Proposal/Kickoff hoàn chỉnh với 3 tính năng cốt lõi của
+      "Help me write" và Gemini Side Panel.</p>
+  </div>
+
+  <div class="container">
+
+    <!-- TABLE OF CONTENTS -->
+    <nav class="toc">
+      <h2>Mục lục</h2>
+      <ol>
+        <li><a href="#s1">Mở bài: Sức mạnh của Gemini trong Tài liệu</a></li>
+        <li><a href="#s2">Kịch bản thực tế (Concrete Scenario)</a></li>
+        <li><a href="#s3">Action 1: Tạo bản nháp đầu tiên (First Draft)</a></li>
+        <li><a href="#s4">Action 2: Viết lại với Tone chuyên nghiệp (Tone Rewrite)</a></li>
+        <li><a href="#s5">Action 3: Trích xuất Action Items thành Bảng (Table Extraction)</a></li>
+        <li><a href="#s6">Action 4: Soạn Email báo cáo với Gmail "Help me write"</a></li>
+        <li><a href="#s7">Quality Gate: Kiểm chứng 5 Factual Claims</a></li>
+        <li><a href="#s8">Kết luận & Best Practices (Tổng kết)</a></li>
+      </ol>
+    </nav>
+
+    <!-- ================================================================ -->
+    <!-- SECTION 1 (NEW INTRO) -->
+    <!-- ================================================================ -->
+    <section id="s1">
+      <h2>1. Sức mạnh của "Help me write" trong Google Docs</h2>
+      <p>Là một Project Manager hoặc Business Analyst, một trong những rào cản lớn nhất khi bắt đầu một dự án mới là
+        việc phải ngồi chắp bút viết các tài liệu khởi động (Kickoff Docs), báo cáo đề xuất (Proposal), hay biên bản họp
+        từ một "trang giấy trắng". Hội chứng sợ trang giấy trắng (Blank Page Syndrome) tiêu tốn rất nhiều thời gian phác
+        thảo cấu trúc và gò ép từ ngữ.</p>
+
+      <p>Với sự ra mắt của tính năng <strong>"Help me write" (Giúp tôi viết)</strong> được cung cấp bởi bộ đôi
+        <em>Gemini Advanced / Duet AI</em> tích hợp thẳng vào Google Workspace, toàn bộ quá trình soạn thảo tài liệu giờ
+        đây đã được tự động hóa. Công cụ này không chỉ giúp bạn sinh ra nội dung (Generate), mà còn hỗ trợ sửa tông
+        giọng (Refine/Formalize) và làm việc trực tiếp với ngữ cảnh của toàn bộ văn bản hiện có (Context-aware Side
+        Panel).</p>
+
+      <p>Trong bài viết này, chúng tôi sẽ mô phỏng một kịch bản viết tài liệu hoàn chỉnh để chứng minh cách khai thác
+        triệt để các tính năng trên một cách thực tế và minh bạch nhất.</p>
+    </section>
+
+    <!-- ================================================================ -->
+    <!-- SECTION 2 -->
+    <!-- ================================================================ -->
+    <section id="s2">
+      <h2>2. Kịch bản thực tế (Concrete Scenario)</h2>
+      <p>Chúng ta sẽ thực hành tạo tài liệu <strong>Project Kickoff Doc (Khởi động dự án Web Quản lý Sản phẩm)</strong>
+        dành cho Ban Giám đốc và các Stakeholders cốt lõi.</p>
+
+      <div class="card card-info">
+        <h4>Dữ liệu đầu vào (Rough Bullets Input):</h4>
+        <p>Bạn chỉ cần chuẩn bị vài gạch đầu dòng nháp (bullet points) về dự án:</p>
+        <ul>
+          <li><strong>Mục tiêu:</strong> Xây dựng một ứng dụng Web để quản lý kho, giá cả và nhà cung cấp.</li>
+          <li><strong>Thời gian:</strong> Bắt đầu 01/12/2026, hoàn thành trong 4 tháng.</li>
+          <li><strong>Ngân sách:</strong> $30,000 cho chi phí phát triển và hạ tầng.</li>
+          <li><strong>Rủi ro chính:</strong> Việc tích hợp với hệ thống ERP cũ có thể bị chậm trễ.</li>
+          <li><strong>Yêu cầu cấu trúc:</strong> Executive Summary, Project Scope, Timeline, Budget & Risks.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ================================================================ -->
+    <!-- SECTION 3 -->
+    <!-- ================================================================ -->
+    <section id="s3">
+      <h2>3. Action 1: Tạo bản nháp đầu tiên (Create First Draft)</h2>
+      <p>Sử dụng tính năng "Help me write" trực tiếp trên trang thay vì tự gõ từng chữ.</p>
+
+      <div class="prompt-box"><span class="label">PROMPT 1 - DRAFT</span>Write a formal Project Kickoff Document for a
+        Product Management Web Application.
+        Structure must include: Executive Summary, Project Scope, Timeline, Budget & Risks.
+        Use the following details:
+        - Goal: Build a web app to manage inventory, pricing, and suppliers.
+        - Timeline: Starts Dec 1, 2026, duration 4 months.
+        - Budget: $30,000 for development and hosting.
+        - Key Risk: Delayed integration with the legacy ERP system.</div>
+
+      <div class="flow-diagram">
+        <div class="flow-step">Mở Google Docs trắng</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step">Click biểu tượng "Pencil" (Help me write)</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step">Nhập Prompt 1</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step">Click "Create" & "Insert"</div>
+      </div>
+
+      <div class="compare-grid" style="align-items: stretch;">
+        <div class="screenshot-wrap" style="margin:0;">
+          <div class="img-placeholder" style="padding: 20px 10px;">
+            <div class="icon">📸</div>
+            [Chèn Ảnh 1: Chỉ dẫn click vào chữ Help me write hoặc hình bút chì]
+          </div>
+          <div class="caption">Bước 1: Mở công cụ Help me write</div>
+        </div>
+        <div class="screenshot-wrap" style="margin:0;">
+          <div class="img-placeholder" style="padding: 20px 10px;">
+            <div class="icon">📸</div>
+            [Chèn Ảnh 2: Hiển thị ô nhập prompt và nhập prompt vào rồi bấm nút start/Create]
+          </div>
+          <div class="caption">Bước 2: Nhập Prompt và Generate</div>
+        </div>
+        <div class="screenshot-wrap" style="margin:0;">
+          <div class="img-placeholder" style="padding: 20px 10px;">
+            <div class="icon">📸</div>
+            [Chèn Ảnh 3: Hiển thị kết quả generate rồi bấm nút Insert vào docs]
+          </div>
+          <div class="caption">Bước 3: Hiển thị bản nháp</div>
+        </div>
+        <div class="screenshot-wrap" style="margin:0;">
+          <div class="img-placeholder" style="padding: 20px 10px;">
+            <div class="icon">📸</div>
+            [Chèn Ảnh 4: Kết quả được insert vào docs]
+          </div>
+          <div class="caption">Bước 4: Insert hoàn tất vào tài liệu</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================================ -->
+    <!-- SECTION 4 -->
+    <!-- ================================================================ -->
+    <section id="s4">
+      <h2>4. Action 2: Viết lại với Tone chuyên nghiệp (Tone Rewrite)</h2>
+      <p>Văn bản sau khi tạo có thể hơi dài dòng hoặc chưa đủ trang trọng. Chúng ta có thể dùng tính năng Rewrite (hoặc
+        Formalize) để tinh chỉnh độ chuyên nghiệp của đoạn "Executive Summary", giúp báo cáo phù hợp hơn để trình bày
+        cho Ban Giám đốc.</p>
+
+      <div class="prompt-box"><span class="label">PROMPT 2 - REWRITE</span>Make this executive summary more formal,
+        concise and impactful for C-level executives.</div>
+
+      <ul>
+        <li>Bôi đen đoạn <strong>Executive Summary</strong> trong Docs.</li>
+        <li>Click vào biểu tượng bút chì (Refine) hiện ra cạnh đoạn văn.</li>
+        <li>Nhập Prompt 2 vào ô <strong>Modify with a prompt</strong> (hoặc bấm chọn tính năng sẵn có <em>More formal</em>) và nhấn mũi tên gửi.
+        </li>
+        <li>Sau khi tạo xong, click <strong>Replace</strong> để thay thế đoạn cũ.</li>
+      </ul>
+
+      <div class="compare-grid">
+        <div class="card">
+          <h4>Before (Draft)</h4>
+          <p><em>"This document formalizes the initiation of the project to develop a new Product Management Web Application. The application is designed to serve as a centralized platform for efficient product management, specifically focusing on core business functions: inventory management, pricing control, and supplier relationship management. The successful completion of this project will replace fragmented processes, enhance data accuracy, and ultimately improve operational efficiency and decision-making capabilities across the product lifecycle.
+
+The project is slated for a four-month duration, commencing on December 1, 2026, with a dedicated budget of $30,000.
+"</em></p>
+        </div>
+        <div class="card card-accent">
+          <h4>After (Formalized via Gemini)</h4>
+          <p><em>"This project formalizes the development of a centralized Product Management Web Application. The platform will integrate core business functions: inventory management, pricing control, and supplier relationship management, directly addressing current process fragmentation. Successful implementation is projected to significantly enhance data accuracy, optimize operational efficiency, and improve decision-making across the product lifecycle. The project is budgeted at $30,000, with a target completion window of four months, commencing December 1, 2026."</em></p>
+        </div>
+      </div>
+
+      <div class="screenshot-wrap">
+        <div class="img-placeholder">
+          <div class="icon">📸</div>
+          [Chèn Ảnh 5: Highlight text đang được Rewrite thông qua popup menu của Gemini (Formalize)]
+        </div>
+        <div class="caption">Gemini Action 2: Tính năng Rewrite và Format text trực tiếp trong Doc</div>
+      </div>
+    </section>
+
+    <!-- ================================================================ -->
+    <!-- SECTION 5 -->
+    <!-- ================================================================ -->
+    <section id="s5">
+      <h2>5. Action 3: Trích xuất Action Items thành Bảng (Table Extraction)</h2>
+      <p>Thay vì liệt kê Timeline bằng Text, bạn có thể yêu cầu Gemini trong Side Panel (hoặc công cụ Refine) trích xuất
+        cục bộ đoạn text về các mốc thời gian thành một bảng thông tin rõ ràng.</p>
+
+      <div class="prompt-box"><span class="label">PROMPT 3 - EXTRACT</span>Extract the project timeline and milestones
+        from the document into a table with 3 columns: Phase, Duration, and Deliverables.</div>
+
+      <div class="card card-warning">
+        <strong>Lưu ý:</strong> Side Panel (Biểu tượng ngôi sao góc phải trên) rất mạnh mẽ trong việc đọc hiểu
+        (Context-aware) toàn bộ file Document hiện tại để trích xuất dữ liệu.
+      </div>
+
+      <div class="screenshot-wrap">
+        <div class="img-placeholder">
+          <div class="icon">📸</div>
+          [Chèn Ảnh 6: Giao diện Gemini Side Panel bên phải đang xuất ra một table, bên trong Doc là thao tác Insert
+          table]
+        </div>
+        <div class="caption">Gemini Action 3: Trích xuất bảng Action items từ Side Panel</div>
+      </div>
+    </section>
+
+    <!-- ================================================================ -->
+    <!-- SECTION 6 -->
+    <!-- ================================================================ -->
+    <section id="s6">
+      <h2>6. Action 4: Soạn Email báo cáo với Gmail "Help me write"</h2>
+      <p>Hệ sinh thái Google Workspace mang lại sức mạnh liền mạch. Sau khi hoàn thiện xong tài liệu Kickoff ở Google Docs, bước tiếp theo tự nhiên nhất là mở Gmail và gửi báo cáo đính kèm này cho Ban Giám đốc.</p>
+
+      <div class="prompt-box"><span class="label">PROMPT 4 - GMAIL DRAFT</span>Write a formal email to the C-level executives attaching the completed Project Kickoff Document for the new Product Management Web App. Keep it concise, mention the $30k budget and 4-month timeline, and ask for their final approval.</div>
+
+      <div class="compare-grid" style="align-items: stretch;">
+        <div class="screenshot-wrap" style="margin:0;">
+          <div class="img-placeholder" style="padding: 20px 10px;">
+            <div class="icon">📸</div>
+            [Chèn Ảnh 7: Nút Help me write trong cửa sổ Compose của Gmail]
+          </div>
+          <div class="caption">Bước 1: Gọi công cụ tạo thư</div>
+        </div>
+        <div class="screenshot-wrap" style="margin:0;">
+          <div class="img-placeholder" style="padding: 20px 10px;">
+            <div class="icon">📸</div>
+            [Chèn Ảnh 8: Popup nhập Prompt cùng thông tin ngân sách/thời gian]
+          </div>
+          <div class="caption">Bước 2: Ra lệnh cho AI</div>
+        </div>
+        <div class="screenshot-wrap" style="margin:0;">
+          <div class="img-placeholder" style="padding: 20px 10px;">
+            <div class="icon">📸</div>
+            [Chèn Ảnh 9: Menu Refine (Formalize/Shorten) độc quyền của Gmail]
+          </div>
+          <div class="caption">Bước 3: Tinh chỉnh Tone giọng thư</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================================ -->
+    <!-- SECTION 7 -->
+    <!-- ================================================================ -->
+    <section id="s7">
+      <h2>7. Quality Gate: Kiểm chứng 5 Factual Claims (Không bịa đặt)</h2>
+      <p>Kẻ thù lớn nhất của AI tạo sinh là Hallucination (Hư cấu/Bịa đặt thông tin). Một tính năng chuyên nghiệp phải
+        đảm bảo kết quả trung thành 100% với dữ liệu đầu vào. Dưới đây là <strong>Quality Gate</strong> phân tích 5 Fact
+        Checks từ văn bản tạo bởi Gemini so với Bullet points gốc.</p>
+
+      <table class="data-table" style="margin-top: 20px;">
+        <thead>
+          <tr>
+            <th>Yếu tố (Claim)</th>
+            <th>Dữ liệu gốc cung cấp (Source)</th>
+            <th>Gemini Generated Output</th>
+            <th>Kết quả (Validation)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Sản phẩm đích</strong></td>
+            <td>Web App quản lý sản phẩm</td>
+            <td>"...centralized Product Management Web Application."</td>
+            <td><span class="tag">PASS</span> Hợp lệ</td>
+          </tr>
+          <tr>
+            <td><strong>Ngày bắt đầu</strong></td>
+            <td>01/12/2026</td>
+            <td>"...commencing December 1, 2026."</td>
+            <td><span class="tag">PASS</span> Hợp lệ</td>
+          </tr>
+          <tr>
+            <td><strong>Kỳ vọng thời gian</strong></td>
+            <td>4 tháng (4 months)</td>
+            <td>"...target completion window of four months..."</td>
+            <td><span class="tag">PASS</span> Hợp lệ</td>
+          </tr>
+          <tr>
+            <td><strong>Kinh phí</strong></td>
+            <td>$30,000</td>
+            <td>"...budgeted at $30,000..."</td>
+            <td><span class="tag">PASS</span> Hợp lệ</td>
+          </tr>
+          <tr>
+            <td><strong>Rủi ro kỹ thuật</strong></td>
+            <td>Tích hợp ERP (ERP integration)</td>
+            <td>"Delayed integration with the legacy ERP system."</td>
+            <td><span class="tag">PASS</span> Hiểu đúng ngữ nghĩa</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="card card-success">
+        <h4>Kết luận Quality Gate:</h4>
+        <p>Gemini trong Google Docs <b>không hề tự bịa thêm (hallucinate)</b> các thông tin ngoài luồng như "Dự án sử
+          dụng ngôn ngữ React/NodeJS", hoặc "Ngân sách bao gồm $5000 cho Marketing", mà hoàn toàn giữ lại 100% Core
+          Facts từ bản nháp thô ban đầu, chỉ diễn đạt lại từ ngữ chuyên nghiệp hơn.</p>
+      </div>
+    </section>
+
+    <!-- ================================================================ -->
+    <!-- SECTION 8 -->
+    <!-- ================================================================ -->
+    <section id="s8">
+      <h2>8. Kết luận & Best Practices (Tổng kết)</h2>
+      <p>Việc ứng dụng <strong>Gemini (Help me write) trong Google Docs</strong> làm thay đổi hoàn toàn cách chúng ta
+        tiếp cận công việc tài liệu văn phòng truyền thống. So với việc phải sử dụng các chatbot AI bên ngoài (như
+        ChatGPT bản web) và copy-paste qua lại thủ công, giải pháp Workspace Native cung cấp trải nghiệm liền mạch và an
+        toàn dữ liệu hơn rất nhiều cho người dùng doanh nghiệp.</p>
+
+      <div class="card card-info">
+        <h4>3 Best Practices Khi Sử Dụng Gemini Docs:</h4>
+        <ul>
+          <li><strong>Cung cấp "Sườn" (Core Facts) đầy đủ:</strong> Generative AI viết rất hay, nhưng nội dung vẫn do
+            bạn quyết định. Thay vì viết prompt "Hãy viết Kickoff cho tôi", luôn list dưới dạng Bullet:
+            <code>Write a Kickoff with... [Goal: / Time: / Budget:]</code> để khóa luồng suy nghĩ của AI.</li>
+          <li><strong>Nguyên tắc One-by-One với Side Panel:</strong> Dùng Side Panel để yêu cầu làm các task đọc/hiểu
+            văn phong trên nền của File hiện tại (vd: "Tóm tắt file này", "Trích xuất rủi ro hiện tại thành bảng").</li>
+          <li><strong>Luôn Review lại với Human-in-the-loop:</strong> Bảng đánh giá Quality Gate là một bước cực kỳ quan
+            trọng đối với các tài liệu gửi ra C-level hoặc External Clients. Hãy dùng mắt kiểm tra lại những con số
+            (Kinh phí, Thời gian) trước khi hoàn tất văn bản.</li>
+        </ul>
+      </div>
+
+      <p>Với bộ 3 kỹ năng cốt lõi: <em>Tạo nháp (Drafting) - Cân chỉnh tông giọng (Refining) - Xử lý thông tin phức tạp
+          (Side panel Extracting)</em>, bất kỳ PM hay chuyên viên nào cũng có thể rút ngắn 80% thời gian tạo ra một
+        Deliverable tiêu chuẩn.</p>
+    </section>
+
+  </div>
+
+  <div class="footer">
+    &copy; 2026 AI_QUEST_LTP Workspace. All standard procedures configured.
+  </div>
+
+</body>
+
+</html>

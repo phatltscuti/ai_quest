@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>ant CLI — Step 04: models list</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <h2 class="page-title">Ảnh Step 04 — Liệt kê model (đã auth)</h2>
+    <p class="page-hint">
+        Chụp khung terminal → lưu <span class="save-as">images/step-04-models-list.png</span>
+    </p>
+
+    <div class="vscode-panel">
+        <div class="vscode-tabs">
+            <div class="v-tab">Problems</div>
+            <div class="v-tab">Output</div>
+            <div class="v-tab">Debug Console</div>
+            <div class="v-tab active">Terminal</div>
+            <div class="v-tab">Ports</div>
+            <div class="v-actions">>_ PowerShell &nbsp; ⚠ &nbsp; + ∨ &nbsp; 🗑️ &nbsp; ...</div>
+        </div>
+        <div class="terminal-content" style="min-height: 420px;">
+
+            <div class="ps-block">
+                <div class="ps-line"><span class="ps-prompt">PS C:\anthropic-cli-ant\tools&gt;</span> <span class="ps-cmd">.\ant.exe models list --format json --transform "data.#.id"</span></div>
+                <pre class="term-out term-json">[
+  <span class="js">"claude-opus-4-8"</span>,
+  <span class="js">"claude-sonnet-4-5-20250929"</span>,
+  <span class="js">"claude-haiku-4-5-20251001"</span>
+]</pre>
+            </div>
+
+            <div class="ps-block">
+                <div class="ps-line"><span class="ps-prompt">PS C:\anthropic-cli-ant\tools&gt;</span> <span class="ps-cmd">.\ant.exe models list</span></div>
+                <pre class="term-out term-json"><span class="jp">{</span>
+  <span class="jk">"data"</span><span class="jp">: [</span>
+    <span class="jp">{</span>
+      <span class="jk">"id"</span><span class="jp">: </span><span class="js">"claude-opus-4-8"</span><span class="jp">,</span>
+      <span class="jk">"display_name"</span><span class="jp">: </span><span class="js">"Claude Opus 4.8"</span><span class="jp">,</span>
+      <span class="jk">"created_at"</span><span class="jp">: </span><span class="js">"2026-02-01T00:00:00Z"</span>
+    <span class="jp">},</span>
+    <span class="jp">{</span>
+      <span class="jk">"id"</span><span class="jp">: </span><span class="js">"claude-sonnet-4-5-20250929"</span><span class="jp">,</span>
+      <span class="jk">"display_name"</span><span class="jp">: </span><span class="js">"Claude Sonnet 4.5"</span><span class="jp">,</span>
+      <span class="jk">"created_at"</span><span class="jp">: </span><span class="js">"2025-09-29T00:00:00Z"</span>
+    <span class="jp">}</span>
+  <span class="jp">],</span>
+  <span class="jk">"has_more"</span><span class="jp">: </span><span class="jn">false</span>
+<span class="jp">}</span></pre>
+            </div>
+
+            <div class="ps-line cursor-line"><span class="ps-prompt">PS C:\anthropic-cli-ant\tools&gt;</span> <span class="cursor"></span></div>
+        </div>
+        <div class="status-bar">GET /v1/models &nbsp;|&nbsp; <code>200 OK</code></div>
+    </div>
+
+</body>
+</html>

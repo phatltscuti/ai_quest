@@ -1,0 +1,30 @@
+OPERATIONS EXECUTIVE SUMMARY — H1 2025 (PDF source text)
+Prepared by: PMO / Operations Analytics
+Distribution: Department heads, steering committee
+
+────────────────────────────────────────
+1. H1 headline
+────────────────────────────────────────
+H1 showed steady reliability improvement through Q2 with uptime above target and P1 incidents at a two-year low. Delivery velocity increased while cloud spend remained within plan.
+
+────────────────────────────────────────
+2. Key highlights (Jan–Jun)
+────────────────────────────────────────
+- Q2 uptime 99.58% — first half above 99.5% target.
+- P1 incidents dropped from 4 (Q1) to 2 (Q2).
+- NPS improved from 41 to 44; support volume up 4% YoY.
+- Budget utilization 75% at mid-year — on track for annual cap.
+
+────────────────────────────────────────
+3. Risks flagged for H2
+────────────────────────────────────────
+- Planned database migration in Q3 may affect uptime SLA.
+- Headcount freeze may constrain Q3 delivery commitments.
+- Vendor contract renewal (monitoring tool) due September.
+
+────────────────────────────────────────
+4. Management narrative (qualitative)
+────────────────────────────────────────
+Leadership noted strong incident response in Q2 but warned that migration communication to customers must improve before Q3 cutover.
+
+(Paste this into a Google Doc, then File → Download → PDF to simulate the H1 PDF report for demo.)

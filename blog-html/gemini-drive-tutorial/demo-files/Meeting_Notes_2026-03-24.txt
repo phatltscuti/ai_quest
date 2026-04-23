@@ -1,0 +1,25 @@
+# BIÊN BẢN CUỘC HỌP PHÁT TRIỂN SPRINT 5 (MEETING NOTES)
+**Dự án:** AI Quest - Core Implementation
+**Thời gian:** 24/03/2026, 14:00 - 15:30
+**Địa điểm:** Google Meet
+**Thành phần:** Nguyễn Văn A (Project Manager), Trần Thị B (Lead AI), Lê Văn C (DevOps), Phạm Văn D (Frontend).
+
+## 1. Nội dung cuộc họp
+- Review tiến độ Giai đoạn 2 của tiến trình xây dựng Core Development. Đã hoàn thiện module Chunking văn bản.
+- Thảo luận sâu về vấn đề bảo mật Auth (OAuth2 vs JWT). B chưa chốt được phương án vì liên quan đến độ trễ hệ thống.
+- C đề nghị tăng cấu hình GPU Cluster để rút ngắn thời gian training model.
+- D báo cáo về UI của module Tìm kiếm ngữ nghĩa đang gặp lỗi hiển thị trên thiết bị di động.
+
+## 2. Các quyết định đã thống nhất
+- Tạm thời sử dụng cluster A100 (3 nodes) để chạy Alpha Test.
+- Lùi ngày chốt phương án Auth sang cuộc họp Thứ Sáu tuần này.
+
+## 3. Danh sách hành động (Action Items)
+- **Nguyễn Văn A:** Gửi báo cáo chi tiết về việc thay đổi ngân sách GPU (tăng lên 75k USD) cho Ban Giám đốc phê duyệt trước ngày 27/03.
+- **Trần Thị B:** Thực hiện khảo sát kỹ thuật so sánh độ trễ giữa OAuth2 và JWT. Gửi báo cáo kết quả vào sáng Thứ Sáu.
+- **Lê Văn C:** Chuẩn bị hạ tầng Staging Environment để chuẩn bị cho giai đoạn Beta Test tháng 6.
+- **Nguyễn Văn A:** Gửi thư mời họp cho đối tác tư vấn bảo mật (CyberSecurity Corp) để xin ý kiến về chuẩn ISO 27001.
+- **Phạm Văn D:** Fix lỗi hiển thị Mobile Responsive cho thanh tìm kiếm Gemini trong tuần này.
+
+---
+*Ghi chép bởi: Thư ký dự án*

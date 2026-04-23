@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>ant CLI — Step 12: debug mode</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h2 class="page-title">Ảnh Step 12 — Debug mode (HTTP request/response)</h2>
+    <p class="page-hint">Chụp khung terminal → lưu <span class="save-as">images/step-12-debug-mode.png</span></p>
+    <div class="vscode-panel">
+        <div class="vscode-tabs">
+            <div class="v-tab active">Terminal</div>
+            <div class="v-actions">>_ PowerShell</div>
+        </div>
+        <div class="terminal-content" style="min-height: 440px;">
+            <div class="ps-block">
+                <div class="ps-line"><span class="ps-prompt">PS C:\anthropic-cli-ant\tools&gt;</span> <span class="ps-cmd">.\ant.exe --debug messages create `</span></div>
+                <div class="ps-line"><span class="ps-cont">>> </span><span class="ps-cmd">  --model claude-sonnet-4-5-20250929 `</span></div>
+                <div class="ps-line"><span class="ps-cont">>> </span><span class="ps-cmd">  --max-tokens 50 `</span></div>
+                <div class="ps-line"><span class="ps-cont">>> </span><span class="ps-cmd">  --message "{role: user, content: 'Test'}"</span></div>
+                <pre class="term-out term-out-muted">2026/06/10 13:29:34 Request Content:
+POST /v1/messages HTTP/1.1
+Host: api.anthropic.com
+Anthropic-Version: 2023-06-01
+Content-Type: application/json
+User-Agent: Anthropic/CLI 1.10.0
+X-Api-Key: &lt;REDACTED&gt;
+
+{"max_tokens":50,"messages":[{"content":"Test","role":"user"}],"model":"claude-sonnet-4-5-20250929"}
+
+2026/06/10 13:29:36 Response Content:
+HTTP/2.0 200 OK
+Anthropic-Ratelimit-Input-Tokens-Remaining: 500000
+Anthropic-Ratelimit-Output-Tokens-Remaining: 80000</pre>
+            </div>
+            <div class="ps-line cursor-line"><span class="ps-prompt">PS C:\anthropic-cli-ant\tools&gt;</span> <span class="cursor"></span></div>
+        </div>
+        <div class="status-bar">--debug &nbsp;|&nbsp; API key redacted</div>
+    </div>
+</body>
+</html>

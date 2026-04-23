@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hướng Dẫn Kích Hoạt & Xác Minh Google Meet Transcripts</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="badge">Google Workspace Guide</div>
+  <h1>Hướng Dẫn Kích Hoạt & Xác Minh Google Meet Transcripts</h1>
+  <p class="subtitle">Xác minh việc lưu trữ Transcript vào Google Drive và Quy trình chuẩn (SOP) dành cho Project Managers trong các cuộc họp Requirements.</p>
+</div>
+
+<div class="container">
+
+<!-- TABLE OF CONTENTS -->
+<nav class="toc">
+  <h2>Mục lục</h2>
+  <ol>
+    <li><a href="#s1">Tổng quan về Google Meet Transcripts</a></li>
+    <li><a href="#s2">Kịch Bản Cuộc Họp Thực Tế</a></li>
+    <li><a href="#s3">Xác minh 1: Bắt đầu Transcription (In-meeting)</a></li>
+    <li><a href="#s4">Xác minh 2: Tìm Transcript trong Google Drive</a></li>
+    <li><a href="#s5">Xác minh 3: Metadata (Timestamps & Speaker Labels)</a></li>
+    <li><a href="#s6">Quyền sở hữu (Ownership) & Chia sẻ (Sharing)</a></li>
+    <li><a href="#s7">Troubleshooting Checklist (Khắc phục sự cố)</a></li>
+    <li><a href="#s8">SOP Dành Cho Project Managers (PMs)</a></li>
+    <li><a href="#s9">Kết luận & Best Practices</a></li>
+  </ol>
+</nav>
+
+<!-- ================================================================ -->
+<!-- SECTION 1 (NEW INTRO) -->
+<!-- ================================================================ -->
+<section id="s1">
+  <h2>1. Tổng quan về Google Meet Transcripts</h2>
+  <p>Tính năng <strong>Transcripts (Bản ghi lời nói)</strong> của Google Meet là một công cụ mạnh mẽ dành cho các Project Managers, Business Analysts và các team làm việc trực tiếp với khách hàng. Thay vì phải chép tay biên bản cuộc họp (Meeting Minutes) hoặc nghe lại toàn bộ video dài hàng giờ đồng hồ, Google Meet tự động ghi lại mọi lời thoại thành văn bản kèm theo tên người nói (diarization) và mốc thời gian (timestamps).</p>
+  
+  <p>Trong bài viết này, chúng tôi sẽ hướng dẫn chi tiết từ khâu thiết lập, tìm kiếm file lưu trữ trên Google Drive, cho đến việc áp dụng <strong>Quy trình chuẩn (SOP)</strong> để quản lý biên bản họp hiệu quả nhất.</p>
+
+  <div class="card card-info">
+    <h4>Tại sao nên sử dụng Transcripts thay vì chỉ ghi hình (Recording)?</h4>
+    <ul>
+      <li><strong>Skimmable:</strong> Có thể đọc quét để tìm nhanh các quyết định, câu hỏi, hoặc action items.</li>
+      <li><strong>Dung lượng nhẹ:</strong> Dễ dàng chia sẻ file Google Doc thay vì chia sẻ file video MP4 nặng nề.</li>
+      <li><strong>Tích hợp sâu:</strong> Dễ dàng highlight lỗi, comment, và giao task trực tiếp trên Google Docs.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ================================================================ -->
+<!-- SECTION 2 -->
+<!-- ================================================================ -->
+<section id="s2">
+  <h2>2. Kịch Bản Cuộc Họp Thực Tế</h2>
+  <p>Để kiểm chứng tính năng một cách thực tế, chúng ta sẽ xem xét một kịch bản lấy yêu cầu khách hàng.</p>
+  
+  <div class="card card-info">
+    <h4>Thông tin kịch bản</h4>
+    <ul>
+      <li><strong>Loại cuộc họp:</strong> Client Requirements Interview (Phỏng vấn lấy yêu cầu khách hàng)</li>
+      <li><strong>Thời lượng:</strong> 15–30 phút</li>
+      <li><strong>Thành phần:</strong> 2–3 Speakers (Project Manager, Business Analyst, Client)</li>
+      <li><strong>Nội dung:</strong> Giao tiếp và thay đổi các chủ đề rõ ràng (Ví dụ: Từ yêu cầu UI/UX chuyển sang yêu cầu bảo mật dữ liệu).</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ================================================================ -->
+<!-- SECTION 3 -->
+<!-- ================================================================ -->
+<section id="s3">
+  <h2>3. Xác minh 1: Kích hoạt tính năng Transcription</h2>
+  <p>Để đảm bảo mọi nội dung trao đổi được ghi lại, host hoặc người tổ chức cần bật tính năng Transcript ngay từ đầu cuộc họp.</p>
+  
+  <div class="flow-diagram">
+    <div class="flow-step">Tham gia cuộc họp</div>
+    <div class="flow-arrow">&rarr;</div>
+    <div class="flow-step">Activities (Hoạt động)</div>
+    <div class="flow-arrow">&rarr;</div>
+    <div class="flow-step">Transcripts</div>
+    <div class="flow-arrow">&rarr;</div>
+    <div class="flow-step">Start transcription</div>
+  </div>
+
+  <div class="card card-warning">
+    <strong>Lưu ý:</strong> Khi tính năng được bật, tất cả người tham gia sẽ nhận được một thông báo (Indicator) trên màn hình rằng cuộc gọi đang được ghi lời nói. Điều này giúp đảm bảo tính minh bạch đối với khách hàng.
+  </div>
+
+  <div class="screenshot-wrap">
+    <div class="img-placeholder">
+        <div class="icon">📸</div>
+        [Chèn Ảnh 1: UI trong Google Meet cho thấy Transcript đã được bật (Giao diện Activities đang chạy)]
+    </div>
+    <div class="caption">Bằng chứng 1: Bắt đầu Transcription (In-meeting UI evidence)</div>
+  </div>
+</section>
+
+<!-- ================================================================ -->
+<!-- SECTION 4 -->
+<!-- ================================================================ -->
+<section id="s4">
+  <h2>4. Xác minh 2: Tìm Transcript trong Google Drive</h2>
+  <p>Sau khi kết thúc cuộc họp, Google sẽ tự động xử lý và lưu bản transcript thành một file Google Doc trong Drive. Thời gian xử lý phụ thuộc vào độ dài cuộc họp.</p>
+  
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Tiêu chí tìm kiếm</th>
+        <th>Cách thức thực hiện</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Vị trí thư mục</strong></td>
+        <td>Thường lưu tự động trong thư mục <code>My Drive > Meet Recordings</code>.</td>
+      </tr>
+      <tr>
+        <td><strong>Từ khóa tìm kiếm</strong></td>
+        <td>Dùng Drive search: <code>type:document</code> kèm theo tên cuộc họp hoặc từ "Transcript".</td>
+      </tr>
+      <tr>
+        <td><strong>Google Calendar</strong></td>
+        <td>Link file được đính kèm trực tiếp vào sự kiện Calendar của cuộc họp đó.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="screenshot-wrap">
+    <div class="img-placeholder">
+        <div class="icon">📸</div>
+        [Chèn Ảnh 2: Màn hình Google Drive hiển thị thư mục lưu trữ và tên file Transcript]
+    </div>
+    <div class="caption">Bằng chứng 2: Tồn tại file Transcript trong Google Drive sau cuộc họp</div>
+  </div>
+</section>
+
+<!-- ================================================================ -->
+<!-- SECTION 5 -->
+<!-- ================================================================ -->
+<section id="s5">
+  <h2>5. Xác minh 3: Metadata (Timestamps & Speaker Labels)</h2>
+  <p>Bản transcript do Google Meet xuất ra có chứa đầy đủ các siêu dữ liệu (metadata) hỗ trợ người dùng theo dõi lại hội thoại.</p>
+  
+  <div class="compare-grid">
+    <div class="card">
+      <h4>Speaker Labels (Nhãn người nói)</h4>
+      <p>Google áp dụng công nghệ Speaker diariization để nhận diện người đang nói. Tên của người tham gia sẽ hiển thị rõ ràng bên cạnh đoạn nội dung họ thoại.</p>
+    </div>
+    <div class="card">
+      <h4>Timestamps (Mốc thời gian)</h4>
+      <p>Mỗi đoạn hội thoại xuất hiện cùng mốc thời gian cụ thể của cuộc gọi (vd: <code>10:15</code>), giúp PM dễ dàng đối chiếu hoặc tua lại video record nếu cần thiết.</p>
+    </div>
+  </div>
+
+  <div class="screenshot-wrap">
+    <div class="img-placeholder">
+        <div class="icon">📸</div>
+        [Chèn Ảnh 3: Nội dung file Google Docs Transcript hiển thị rõ Tên người nói và Mốc thời gian]
+    </div>
+    <div class="caption">Bằng chứng 3: File có chứa Timestamps và Speaker labels đầy đủ</div>
+  </div>
+</section>
+
+<!-- ================================================================ -->
+<!-- SECTION 6 -->
+<!-- ================================================================ -->
+<section id="s6">
+  <h2>6. Quyền sở hữu (Ownership) & Cơ chế chia sẻ (Sharing)</h2>
+  <p>Tính năng lưu trữ gặp nhiều vấn đề nhất ở khâu phân quyền. Bạn cần nắm rõ ai sở hữu file và cách chia sẻ hoạt động.</p>
+  
+  <ul>
+    <li><strong>Chủ sở hữu (Owner):</strong> Thuộc về Meeting Organizer hoặc người đã click nút Start Transcription.</li>
+    <li><strong>Internal Users:</strong> Khách mời cùng domain Workspace sẽ có quyền xem (View) thông qua Calendar event link.</li>
+    <li><strong>External Users (Khách hàng):</strong> Thường không có quyền truy cập trực tiếp để đảm bảo tính bảo mật. Khi bấm vào sẽ hiện lỗi <code>Request Access</code>.</li>
+  </ul>
+
+  <div class="card card-accent">
+    <h4>Cách chia sẻ an toàn</h4>
+    <p>Thay vì cấp quyền lẻ tẻ cho từng meeting, hãy Move file Transcript vào Shared Folder của dự án, và chia sẻ quyền xem toàn bộ folder đó cho đối tác.</p>
+  </div>
+</section>
+
+<!-- ================================================================ -->
+<!-- SECTION 7 -->
+<!-- ================================================================ -->
+<section id="s7">
+  <h2>7. Troubleshooting Checklist (Khắc phục sự cố)</h2>
+  <p>Sử dụng danh sách kiểm tra này nếu bạn gặp trục trặc không thấy nút Transcripts hoặc lỗi lưu trữ.</p>
+  
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Thành phần kiểm tra</th>
+        <th>Tình huống & Khắc phục</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Admin & Permissions</strong></td>
+        <td>Tính năng Transcript bị tắt ở cấp tổ chức (Admin Console). Cần liên hệ bộ phận IT để bật cho OU cấu hình.</td>
+      </tr>
+      <tr>
+        <td><strong>Quyền Host/Co-host</strong></td>
+        <td>Participant thông thường không thấy nút. Hãy xin quyền Co-host.</td>
+      </tr>
+      <tr>
+        <td><strong>Storage Space</strong></td>
+        <td>Drive của Host bị đầy dung lượng khiến file không thể save. Hãy dọn dẹp Drive.</td>
+      </tr>
+      <tr>
+        <td><strong>Device/Browser Constraints</strong></td>
+        <td>Transcript hoạt động tốt nhất trên trình duyệt Desktop (Chrome/Edge). Ứng dụng mobile đôi khi hạn chế tính năng này.</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ================================================================ -->
+<!-- SECTION 8 -->
+<!-- ================================================================ -->
+<section id="s8">
+  <h2>8. SOP Dành Cho Project Managers (PMs)</h2>
+  <p>Quy trình tiêu chuẩn 3 bước cho mọi PM tổ chức họp Requirement.</p>
+  
+  <div class="highlight-box">
+    <div class="step-row">
+      <div class="step-num">1</div>
+      <div>
+        <p><strong>Meeting Naming Rules (Quy chuẩn đặt tên):</strong></p>
+        <p>Luôn đặt theo cú pháp: <code>[Tên Dự Án] - [Loại cuộc họp] - [Tên Client] - YYYY.MM.DD</code><br>
+        <em>Ví dụ:</em> <code>EcomApp - Requirement Interview - ABC Corp - 2026.10.12</code></p>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num">2</div>
+      <div>
+        <p><strong>Transcript Retrieval Rules (Quy tắc trích xuất):</strong></p>
+        <p>Kiểm tra Drive sau 24h. Fix lại nhanh những từ thuật ngữ (jargon) mà AI có thể nghe nhầm trực tiếp trên doc.</p>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num">3</div>
+      <div>
+        <p><strong>Project Folder Linking (Lưu trữ và Liên kết):</strong></p>
+        <p>Không để file trong mục cá nhân. <strong>Move</strong> tới Shared Drive của dự án và đính kèm link lên task Jira/Confluence tương ứng.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================ -->
+<!-- SECTION 9 (NEW CONCLUSION) -->
+<!-- ================================================================ -->
+<section id="s9">
+  <h2>9. Kết luận & Đánh giá hiệu quả tổng thể</h2>
+  <p>Sử dụng thành thạo Google Meet Transcripts tiết kiệm cho Project Managers (PM), Business Analysts (BA) và toàn bộ đội ngũ dự án hàng chục giờ đồng hồ gõ Meeting Minutes thủ công mỗi tuần. Bằng cách tự động hóa khâu ghi chép, đội ngũ có thể tập trung 100% sự chú ý vào cuộc thảo luận với khách hàng thay vì cắm cúi gõ phím.</p>
+
+  <h3>9.1 Đánh giá về chất lượng (Quality & Accuracy)</h3>
+  <p>Mặc dù công nghệ nhận diện giọng nói (Speech-to-Text) và gán nhãn người nói (Speaker Diarization) của Google đã đạt mức rất cao, nó vẫn còn phụ thuộc vào <b>chất lượng âm thanh đầu vào</b> và <b>ngôn ngữ giao tiếp</b>. Trong môi trường công sở, các cuộc gọi có sử dụng lẫn lộn tiếng Anh và tiếng Việt (Code-switching) đôi khi khiến AI bối rối và ghi nhận sai thuật ngữ chuyên ngành.</p>
+  <div class="card card-warning">
+    <strong>Khuyến cáo:</strong> Không bao giờ copy/paste 100% transcript gửi cho khách hàng mà không qua bước Review. Luôn dành 5-10 phút đọc lướt lại file Google Doc để sửa các thuật ngữ chuyên môn bị nghe nhầm.
+  </div>
+
+  <h3>9.2 Compliance & Privacy (Tuân thủ & Bảo mật)</h3>
+  <p>Việc ghi lại lời nói trực tiếp trong cuộc gọi có liên quan mật thiết đến vấn đề bảo mật dữ liệu (Data Privacy). Việc tuân thủ chính sách là yêu cầu bắt buộc khi làm việc với các đối tác lớn hoặc các thị trường có quy định nghiêm ngặt như Châu Âu (GDPR).</p>
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Yếu tố</span></th>
+        <th>Quy định bắt buộc</span></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Xin phép Consent</strong></td>
+        <td>Bắt buộc phải có sự đồng thuận bằng miệng từ tất cả người tham gia trước khi nhấn nút "Start Transcription". (Ví dụ: <em>"Để tiện tổng hợp requirements, tôi xin phép bật Transcript cho cuộc gọi này"</em>)</td>
+      </tr>
+      <tr>
+        <td><strong>Data Retention</strong></td>
+        <td>Đảm bảo cấu hình Google Vault (nếu có) xóa tự động các bản transcript sau một khoảng thời gian quy định (ví dụ 6 tháng hoặc 1 năm) để giảm rủi ro rò rỉ dữ liệu lịch sử.</td>
+      </tr>
+      <tr>
+        <td><strong>Hạn chế truy cập</strong></td>
+        <td>Chỉ cấp quyền "View" hoặc "Comment" cho nhân sự liên quan trực tiếp đến dự án. Khách mời ngoại bộ (External) không được phép truy cập theo mặc định trừ khi có phê duyệt.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>9.3 Tóm tắt 3 Best Practices cốt lõi</h3>
+  <div class="card card-success">
+    <ol>
+      <li><strong>Điều phối Crosstalk chặt chẽ:</strong> Kẻ thù số 1 của Transcript là nói đè lên nhau (crosstalk). PM cần đóng vai trò điều phối viên (Moderator), gọi tên người phát biểu tiếp theo hoặc yêu cầu sử dụng nút "Raise Hand". Điều này giúp file transcript chia đúng đoạn, đúng người.</li>
+      <li><strong>Âm thanh đầu vào (Hardware matters):</strong> Yêu cầu team sử dụng tai nghe (headset) có mic lọc âm tốt thay vì dùng mic laptop và loa ngoài. Loa ngoài thường tạo ra tiếng vang (echo) khiến transcript ghi sai toàn bộ dòng thảo luận.</li>
+      <li><strong>Chấm dứt nạn file "mồ côi" (Orphaned files):</strong> Hầu hết transcript mặc định rơi vào `My Drive` của người tạo. Nếu nhân sự này nghỉ việc, tài liệu có thể bị vô hiệu hóa. <b>Luôn di chuyển (Move) ngay file từ `My Drive` sang `Shared Drive` của dự án trong vòng 24h sau cuộc họp.</b></li>
+    </ol>
+  </div>
+  
+  <p>Tóm lại, Google Meet Transcripts không chỉ là một công cụ tiện lợi mà còn là một bước đệm hoàn hảo để tích hợp với các công cụ Generative AI khác (như Gemini hay ChatGPT) để tự động hóa hoàn toàn việc tạo Báo cáo tóm tắt cuộc họp. Nắm vững workflow trên sẽ làm tăng chất lượng công việc và tính chuyên nghiệp của đội ngũ.</p>
+</section>
+
+</div>
+
+<div class="footer">
+  &copy; 2026 AI_QUEST_LTP Workspace. All standard procedures configured.
+</div>
+
+</body>
+</html>

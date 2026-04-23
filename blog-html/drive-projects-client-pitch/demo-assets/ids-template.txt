@@ -1,0 +1,45 @@
+HƯỚNG DẪN LẤY ID / LINK (điền vào các dòng bên dưới sau khi tạo xong trên Drive)
+
+────────────────────────────────────────
+1) ID thư mục (Folder)
+────────────────────────────────────────
+- Mở folder trên Drive (double-click vào folder).
+- Nhìn thanh địa chỉ trình duyệt, URL dạng:
+  https://drive.google.com/drive/folders/XXXXXXXXXXXXXXXX
+- Phần XXXX sau chữ "folders/" chính là Folder ID → dán vào đây.
+
+────────────────────────────────────────
+2) ID Google Doc
+────────────────────────────────────────
+- Mở Doc (double-click file).
+- URL dạng:
+  https://docs.google.com/document/d/XXXXXXXXXXXXXXXX/edit
+- Phần XXXX sau "/d/" và trước "/edit" là Doc ID.
+
+Hoặc trên Drive (chưa mở Doc): bấm chuột phải file → Share → Copy link
+  https://drive.google.com/file/d/XXXXXXXX/view
+  → ID nằm giữa "/d/" và "/view" (cùng một chuỗi với Docs URL).
+
+────────────────────────────────────────
+3) Link Drive Project
+────────────────────────────────────────
+- Sau khi tạo Project, URL trên trình duyệt thường chứa project (copy nguyên URL).
+- Nếu không có ID riêng: chỉ cần ghi full URL vào "Project URL" là đủ cho demo nội bộ.
+
+────────────────────────────────────────
+GHI CHÉO DEMO (điền sau khi tạo)
+────────────────────────────────────────
+
+Drive root folder: WS_Sales_Pitch_Sources
+Folder 00_Internal_Sources ID: 1991bg1wJMdDlvjV51dZO7UvN_OiuxVaf
+Folder 10_Client_Outputs ID: 1HGZUjwBZJgbdM0yvDZ4IVcleYmCJ071w
+
+SPEC_Warehouse_Visibility_MVP_v1.2 (Doc ID): 1tZ4f_9FutVckvShfPM5dtZkO7z4-7B5J_LR0Uke0Y4I
+TEMPLATE_Proposal_IT_Intake (Doc ID):
+NOTES_Acme_Retail_2026-03-18_REQ_interview (Doc ID):
+
+Drive Project name: Pitch — Nexa Logistics — Warehouse MVP
+Project URL (optional):
+
+Output pitch draft Doc name: PITCH_Nexa_Logistics_Warehouse_MVP_draft
+Output pitch draft (Doc ID): 

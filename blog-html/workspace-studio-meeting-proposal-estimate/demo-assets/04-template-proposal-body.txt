@@ -1,0 +1,24 @@
+PROPOSAL — {{CLIENT_NAME}} / {{PROJECT_CODE}}
+
+Executive summary
+• {{EXEC_SUMMARY_BULLET_1}}
+• {{EXEC_SUMMARY_BULLET_2}}
+
+Proposed scope (MVP)
+• {{MVP_SCOPE_BULLET_1}}
+• {{MVP_SCOPE_BULLET_2}}
+
+Assumptions to confirm
+• {{ASSUMPTION_BULLET_1}}
+• {{ASSUMPTION_BULLET_2}}
+
+Risks & dependencies
+• {{RISK_BULLET_1}}
+• {{RISK_BULLET_2}}
+
+Next steps
+1. {{NEXT_STEP_1}}
+2. {{NEXT_STEP_2}}
+
+---
+Note: Replace {{...}} via Workspace Studio (replace text / merge from Gemini JSON) or manually after generation.

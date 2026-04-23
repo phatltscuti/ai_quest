@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Controlling PDF Slide Decks via Prompt Engineering in NotebookLM</title>
+<style>
+  :root {
+    --primary: #0d47a1;
+    --primary-light: #1976d2;
+    --accent: #ff6d00;
+    --accent-light: #ff9e40;
+    --bg: #fafafa;
+    --card: #ffffff;
+    --text: #212121;
+    --text-secondary: #616161;
+    --border: #e0e0e0;
+    --code-bg: #263238;
+    --success: #2e7d32;
+    --success-bg: #e8f5e9;
+    --warning: #f57f17;
+    --warning-bg: #fff8e1;
+    --error: #c62828;
+    --gradient-start: #0d47a1;
+    --gradient-mid: #1565c0;
+    --gradient-end: #00838f;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.75;
+    font-size: 16px;
+  }
+  .hero {
+    background: linear-gradient(135deg, var(--gradient-start), var(--gradient-mid), var(--gradient-end));
+    color: white;
+    padding: 64px 20px;
+    text-align: center;
+  }
+  .hero h1 { font-size: 2.3em; margin-bottom: 14px; font-weight: 700; letter-spacing: -0.5px; }
+  .hero .subtitle { font-size: 1.12em; opacity: 0.93; max-width: 720px; margin: 0 auto; }
+  .hero .badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.18);
+    padding: 6px 20px;
+    border-radius: 20px;
+    font-size: 0.84em;
+    margin-bottom: 18px;
+    backdrop-filter: blur(4px);
+  }
+  .container { max-width: 940px; margin: 0 auto; padding: 32px 20px; }
+
+  .toc {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px 32px;
+    margin-bottom: 38px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  }
+  .toc h2 { font-size: 1.3em; margin-bottom: 14px; color: var(--primary); }
+  .toc ol { padding-left: 22px; }
+  .toc li { margin-bottom: 6px; }
+  .toc a { color: var(--primary-light); text-decoration: none; }
+  .toc a:hover { text-decoration: underline; }
+
+  section { margin-bottom: 44px; }
+  h2 {
+    font-size: 1.55em;
+    color: var(--primary);
+    border-bottom: 3px solid var(--primary);
+    padding-bottom: 8px;
+    margin-bottom: 22px;
+  }
+  h3 { font-size: 1.22em; color: var(--text); margin: 22px 0 10px; }
+  h4 { font-size: 1.05em; color: var(--text-secondary); margin: 16px 0 8px; }
+  p { margin-bottom: 14px; }
+  a { color: var(--primary-light); }
+
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+  }
+  .card-accent { border-left: 4px solid var(--accent); }
+  .card-info { border-left: 4px solid var(--primary-light); }
+  .card-warning { border-left: 4px solid var(--warning); background: var(--warning-bg); }
+  .card-success { border-left: 4px solid var(--success); background: var(--success-bg); }
+
+  .prompt-box {
+    background: var(--code-bg);
+    color: #cfd8dc;
+    border-radius: 10px;
+    padding: 22px 24px;
+    margin: 14px 0 22px;
+    font-family: 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+    font-size: 0.9em;
+    line-height: 1.65;
+    white-space: pre-wrap;
+    position: relative;
+    overflow-x: auto;
+  }
+  .prompt-box .label {
+    position: absolute;
+    top: 8px;
+    right: 12px;
+    background: var(--accent);
+    color: white;
+    font-size: 0.7em;
+    padding: 2px 12px;
+    border-radius: 8px;
+    font-family: 'Segoe UI', sans-serif;
+    font-weight: 600;
+  }
+
+  table.data-table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+  table.data-table th, table.data-table td {
+    border: 1px solid var(--border);
+    padding: 10px 14px;
+    text-align: left;
+    font-size: 0.93em;
+  }
+  table.data-table th {
+    background: var(--primary);
+    color: white;
+    font-weight: 600;
+  }
+  table.data-table tr:nth-child(even) { background: #f5f5f5; }
+  table.data-table tr:hover { background: #e3f2fd; }
+
+  table.rubric-table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+  table.rubric-table th, table.rubric-table td {
+    border: 1px solid var(--border);
+    padding: 10px 14px;
+    text-align: center;
+    font-size: 0.93em;
+  }
+  table.rubric-table th { background: var(--primary); color: white; }
+  table.rubric-table td:first-child { text-align: left; font-weight: 600; }
+  table.rubric-table tr:nth-child(even) { background: #f5f5f5; }
+
+  .v-badge {
+    display: inline-block;
+    padding: 3px 14px;
+    border-radius: 16px;
+    font-size: 0.8em;
+    font-weight: 700;
+    margin-right: 8px;
+    color: white;
+  }
+  .v-badge.v1 { background: var(--accent); }
+  .v-badge.v2 { background: var(--success); }
+
+  .compare-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin: 18px 0;
+  }
+  @media (max-width: 700px) { .compare-grid { grid-template-columns: 1fr; } }
+
+  .step-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    background: var(--primary);
+    color: white;
+    border-radius: 50%;
+    font-weight: 700;
+    font-size: 0.9em;
+    margin-right: 12px;
+    flex-shrink: 0;
+  }
+  .step-row { display: flex; align-items: flex-start; margin-bottom: 14px; }
+  .step-row p { margin: 0; }
+
+  .img-placeholder {
+    background: #eceff1;
+    border: 2px dashed #b0bec5;
+    border-radius: 10px;
+    padding: 36px 20px;
+    text-align: center;
+    color: var(--text-secondary);
+    font-size: 0.9em;
+    margin: 14px 0;
+  }
+  .img-placeholder .icon { font-size: 2em; margin-bottom: 8px; }
+
+  .screenshot-wrap {
+    margin: 16px 0;
+    text-align: center;
+  }
+  .screenshot-wrap img {
+    max-width: 100%;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+  .screenshot-wrap .caption {
+    margin-top: 8px;
+    font-size: 0.85em;
+    color: var(--text-secondary);
+  }
+
+  ul, ol { margin-bottom: 14px; padding-left: 24px; }
+  li { margin-bottom: 6px; }
+
+  .flow-diagram {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 22px 0;
+    font-size: 0.92em;
+  }
+  .flow-step {
+    background: var(--primary);
+    color: white;
+    padding: 10px 18px;
+    border-radius: 10px;
+    font-weight: 600;
+  }
+  .flow-arrow { color: var(--text-secondary); font-size: 1.4em; }
+
+  .footer {
+    text-align: center;
+    padding: 32px;
+    color: var(--text-secondary);
+    font-size: 0.85em;
+    border-top: 1px solid var(--border);
+    margin-top: 40px;
+  }
+  code {
+    background: #eceff1;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.9em;
+  }
+  .tag {
+    display: inline-block;
+    background: #e3f2fd;
+    color: var(--primary);
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 0.8em;
+    margin: 2px 4px 2px 0;
+  }
+  .highlight-box {
+    background: linear-gradient(135deg, #e3f2fd, #e8f5e9);
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin: 18px 0;
+    border: 1px solid #bbdefb;
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="badge">AI Quest &mdash; Investigate How</div>
+  <h1>Controlling PDF Slide Decks via Prompt Engineering in NotebookLM</h1>
+  <p class="subtitle">From source documents to professional presentations &mdash; A detailed guide on using prompts to control structure, tone, and visual design</p>
+</div>
+
+<div class="container">
+
+<!-- TABLE OF CONTENTS -->
+<nav class="toc">
+  <h2>Table of Contents</h2>
+  <ol>
+    <li><a href="#s1">What is NotebookLM Slide Deck?</a></li>
+    <li><a href="#s2">Source Pack &mdash; 7 Sources &amp; Why We Chose Them</a></li>
+    <li><a href="#s3">Iteration 1 &mdash; Prompt V1 (Outline + Tone + Visual Style)</a></li>
+    <li><a href="#s4">Evaluating V1 &amp; Improvement Strategy</a></li>
+    <li><a href="#s5">Exporting PDF &amp; Screenshots</a></li>
+    <li><a href="#s6">Quality Rubric &amp; Improvement Proposals</a></li>
+    <li><a href="#s7">Conclusion &amp; Best Practices</a></li>
+  </ol>
+</nav>
+
+<!-- ================================================================ -->
+<!-- SECTION 1 -->
+<!-- ================================================================ -->
+<section id="s1">
+  <h2>1. What is NotebookLM Slide Deck?</h2>
+
+  <p><strong>Google NotebookLM</strong> is an AI-powered research platform that lets you upload multiple source documents (PDFs, Google Docs, web URLs, YouTube videos, etc.) and interact with them through intelligent chat. The <strong>Slide Deck</strong> feature (launched late 2025) auto-generates presentations from your uploaded sources using the Nano Banana Pro image model.</p>
+
+  <h3>How It Compares to Other AI Slide Tools</h3>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Criteria</th>
+        <th>NotebookLM Slide Deck</th>
+        <th>Gemini in Google Slides</th>
+        <th>Canva AI / Gamma</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Data Sources</td>
+        <td><strong>Multi-source</strong> (PDF, Docs, Web, YouTube)</td>
+        <td>Text prompt or single file</td>
+        <td>Text prompt</td>
+      </tr>
+      <tr>
+        <td>Factual Grounding</td>
+        <td><strong>High</strong> &mdash; grounded in uploaded sources</td>
+        <td>Medium &mdash; may hallucinate</td>
+        <td>Low &mdash; prompt-dependent</td>
+      </tr>
+      <tr>
+        <td>Custom Prompt</td>
+        <td>Yes &mdash; outline, tone, visual</td>
+        <td>Yes &mdash; limited</td>
+        <td>Yes</td>
+      </tr>
+      <tr>
+        <td>Per-slide Revision</td>
+        <td>Yes</td>
+        <td>Yes (side panel)</td>
+        <td>Yes</td>
+      </tr>
+      <tr>
+        <td>Export Formats</td>
+        <td>PDF, PPTX</td>
+        <td>Native Google Slides</td>
+        <td>PDF, PPTX, link</td>
+      </tr>
+      <tr>
+        <td>Slide Rendering</td>
+        <td>Image-based (rendered)</td>
+        <td>Native editable</td>
+        <td>Editable</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>Overall Workflow</h3>
+  <div class="flow-diagram">
+    <div class="flow-step">Upload 5+ Sources</div>
+    <div class="flow-arrow">&rarr;</div>
+    <div class="flow-step">Write Custom Prompt</div>
+    <div class="flow-arrow">&rarr;</div>
+    <div class="flow-step">Choose Format &amp; Length</div>
+    <div class="flow-arrow">&rarr;</div>
+    <div class="flow-step">Generate</div>
+    <div class="flow-arrow">&rarr;</div>
+    <div class="flow-step">Evaluate</div>
+    <div class="flow-arrow">&rarr;</div>
+    <div class="flow-step">Iterate Prompt</div>
+    <div class="flow-arrow">&rarr;</div>
+    <div class="flow-step">Revise &amp; Export PDF</div>
+  </div>
+
+  <div class="card card-warning">
+    <strong>Important Limitations:</strong>
+    <ul style="margin-top:8px;">
+      <li>Slide Deck is for users <strong>18 years or older</strong> with Edit access to the notebook</li>
+      <li>Slides are rendered as <strong>images</strong> &mdash; you cannot directly edit text like in Google Slides</li>
+      <li>Per-slide revision does <em>not</em> re-reference your sources &mdash; only uses the new instruction</li>
+      <li>Every revision or regeneration creates an <strong>entirely new</strong> slide set &rarr; batch changes together</li>
+      <li>Cannot add or delete individual slides &mdash; only edit content, layout, and visuals</li>
+    </ul>
+  </div>
+
+  <h3>Reference Videos</h3>
+  <ul>
+    <li><a href="https://www.youtube.com/watch?v=tVsqodAOcSE" target="_blank">How to Use NotebookLM to Automatically Generate Slides from Your Sources</a></li>
+    <li><a href="https://youtu.be/qurq6SskJww" target="_blank">How to Create Slide Decks in NotebookLM (Step-by-Step Tutorial)</a></li>
+    <li><a href="https://www.youtube.com/watch?v=6WaztlOyg1s" target="_blank">NotebookLM Slide Deck Tutorial &mdash; by &#272;&#7863;ng T&#250;</a></li>
+  </ul>
+</section>
+
+<!-- ================================================================ -->
+<!-- SECTION 2: SOURCE PACK -->
+<!-- ================================================================ -->
+<section id="s2">
+  <h2>2. Source Pack &mdash; 7 Sources &amp; Why We Chose Them</h2>
+
+  <p>For this demonstration, we use the scenario of an EdTech company <strong>&ldquo;EduNova&rdquo;</strong> preparing a slide deck titled <em>&ldquo;2025 Annual Report &amp; AI Product Vision 2026&rdquo;</em> for their Board of Directors. Here are the 7 selected sources:</p>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Source Document</th>
+        <th>Type</th>
+        <th>Why We Chose It</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>1</td>
+        <td>EduNova 2025 Annual Report</td>
+        <td><span class="tag">PDF</span></td>
+        <td>Contains financial data (revenue, growth, user count), KPIs, and business strategy &mdash; <strong>primary data source</strong> for Executive Summary and Revenue slides</td>
+      </tr>
+      <tr>
+        <td>2</td>
+        <td>AI Product Strategy Doc 2026</td>
+        <td><span class="tag">Google Docs</span></td>
+        <td>Product roadmap, AI feature specs (AI Tutor, Content Gen, Analytics), deployment timeline &mdash; <strong>core content</strong> for Strategic Pillars and Roadmap sections</td>
+      </tr>
+      <tr>
+        <td>3</td>
+        <td>Blog post on AI in education (<a href="https://blog.google/outreach-initiatives/education/gemini-iste-2025" target="_blank">Google Blog: Gemini for Educators</a>)</td>
+        <td><span class="tag">Web URL</span></td>
+        <td>Latest information from Google on AI tools for education (Gemini, NotebookLM, Workspace Studio) &mdash; ensures <strong>factual grounding</strong> on technology trends and industry context</td>
+      </tr>
+      <tr>
+        <td>4</td>
+        <td>TED Talk: <a href="https://www.youtube.com/watch?v=hJP5GqnTrNo" target="_blank">&ldquo;How AI Could Save Education&rdquo; &mdash; Sal Khan</a></td>
+        <td><span class="tag">YouTube</span></td>
+        <td>Vision for AI in education from the Khan Academy CEO &mdash; helps NotebookLM capture an <strong>inspiring tone</strong> and narrative about personalized AI tutoring (aligns with EduNova&rsquo;s Pillar 1)</td>
+      </tr>
+      <tr>
+        <td>5</td>
+        <td>EduNova Brand Guidelines</td>
+        <td><span class="tag">PDF</span></td>
+        <td>Color codes (#0d47a1, #ff6d00), typography (Inter/Roboto), logo rules &mdash; NotebookLM references this to <strong>maintain brand consistency</strong></td>
+      </tr>
+      <tr>
+        <td>6</td>
+        <td>Vietnam EdTech Market Report 2025</td>
+        <td><span class="tag">PDF</span></td>
+        <td>Market context, trends, competitive landscape &mdash; adds <strong>analytical depth</strong> to the Market Landscape section</td>
+      </tr>
+      <tr>
+        <td>7</td>
+        <td>Current EduNova Investor Deck (Q4 2025)</td>
+        <td><span class="tag">Google Slides</span></td>
+        <td>Reference for <strong>existing presentation style</strong> (layout, data visualization) &mdash; maintains consistency with previous materials</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="card card-info">
+    <h4>Principles for Effective Source Selection</h4>
+    <ul>
+      <li><strong>Diverse formats:</strong> Combine PDF + Docs + Web + Video + Slides for multi-angle synthesis</li>
+      <li><strong>Cover 4 content layers:</strong> Data (Report) + Strategy (Docs) + Industry Context (Web + Video) + Brand (Guidelines)</li>
+      <li><strong>Trustworthy:</strong> Prioritize official company or reputable third-party documents</li>
+      <li><strong>Current:</strong> Use the latest materials &mdash; avoid data older than 2 years</li>
+      <li><strong>Upload brand book separately:</strong> This is the &ldquo;cheat code&rdquo; for brand-consistent slides</li>
+    </ul>
+  </div>
+
+  <div class="screenshot-wrap">
+    <img src="images/step-01-notebook-sources.png" alt="NotebookLM with 7 uploaded sources in the Sources panel">
+    <div class="caption">NotebookLM with 7 uploaded sources in the Sources panel</div>
+  </div>
+
+  <div class="screenshot-wrap">
+    <img src="images/step-02-studio-panel.png" alt="Studio panel showing the Slide Deck option">
+    <div class="caption">Studio panel showing the Slide Deck option</div>
+  </div>
+</section>
+
+<!-- ================================================================ -->
+<!-- SECTION 3: ITERATION 1 -->
+<!-- ================================================================ -->
+<section id="s3">
+  <h2>3. Iteration 1 &mdash; Prompt V1</h2>
+
+  <p>NotebookLM allows you to enter a <strong>Custom Prompt</strong> in the customization panel before generating. This prompt is the &ldquo;control brain&rdquo; that determines output quality. We need to control <strong>three aspects</strong>:</p>
+
+  <div class="highlight-box">
+    <strong>Three Aspects to Control via Prompt:</strong>
+    <ol style="margin-top:8px;">
+      <li><strong>(a) Slide Outline</strong> &mdash; Structure, number of slides, content per section</li>
+      <li><strong>(b) Tone</strong> &mdash; Audience, voice, level of detail</li>
+      <li><strong>(c) Visual Style</strong> &mdash; Colors, typography, layout, data visualization</li>
+    </ol>
+  </div>
+
+  <!-- 3a: OUTLINE -->
+  <h3><span class="v-badge v1">V1</span> 3a. Controlling Slide Outline (Structure)</h3>
+
+  <p>Goal: Define the exact structure of the presentation &mdash; sections, slide count, and main content per slide.</p>
+
+  <div class="prompt-box"><span class="label">PROMPT V1 — OUTLINE</span>Create a 14-slide detailed deck about EduNova's 2025 Annual Report
+and AI Product Vision 2026.
+
+Slide 1: Title — "EduNova 2025 Annual Report & AI Vision 2026", company logo area, date
+Slide 2: Agenda / Table of Contents — list all sections
+Slides 3–4: Executive Summary — key 2025 achievements (revenue, user growth, product launches)
+Slide 5: Market Landscape — EdTech industry trends in Vietnam and SEA
+Slide 6: Competitive Positioning — where EduNova stands vs competitors
+Slides 7–9: Three AI Strategic Pillars (one per slide):
+  - Pillar 1: AI-Powered Personalized Tutoring
+  - Pillar 2: Generative Content Creation for Teachers
+  - Pillar 3: Predictive Learning Analytics
+Slide 10: Product Roadmap — Q1–Q4 2026 milestones
+Slide 11: Team & Investment — headcount growth, budget allocation
+Slide 12: Key Risks and Mitigation Strategies
+Slide 13: Key Metrics & KPIs — dashboard-style with target numbers
+Slide 14: Call to Action & Next Steps
+
+Use bullet points. Maximum 6 bullets per slide.
+Prioritize data from the Annual Report and Product Strategy sources.</div>
+
+  <div class="card card-accent">
+    <h4>Prompt Technique Analysis &mdash; Outline:</h4>
+    <ul>
+      <li><strong>Specific slide count (14):</strong> Tightly controls deck length &mdash; NotebookLM will target exactly that number</li>
+      <li><strong>Per-slide content:</strong> &ldquo;Slide 3&ndash;4: Executive Summary&rdquo; leaves no room for AI to freelance</li>
+      <li><strong>Logical grouping:</strong> Related slides grouped (3&ndash;4 for summary, 7&ndash;9 for pillars) ensures narrative flow</li>
+      <li><strong>Source reference:</strong> &ldquo;Prioritize data from Annual Report&rdquo; directs where AI should pull data from</li>
+      <li><strong>Format constraint:</strong> &ldquo;bullet points, max 6 bullets&rdquo; controls content density</li>
+    </ul>
+  </div>
+
+  <!-- 3b: TONE -->
+  <h3><span class="v-badge v1">V1</span> 3b. Controlling Tone (Voice &amp; Audience)</h3>
+
+  <div class="prompt-box"><span class="label">PROMPT V1 — TONE</span>Audience: Board of Directors and potential investors.
+Tone: Professional, confident, data-driven, and forward-looking.
+Language style: Executive briefing — concise sentences, no technical jargon.
+Avoid: Code snippets, implementation details, overly casual phrasing.
+Each slide should feel like a CEO presenting at an annual shareholders meeting.</div>
+
+  <div class="card card-accent">
+    <h4>Prompt Technique Analysis &mdash; Tone:</h4>
+    <ul>
+      <li><strong>Specific audience:</strong> &ldquo;Board of Directors and investors&rdquo; determines the right level of detail</li>
+      <li><strong>Four tone words:</strong> &ldquo;Professional, confident, data-driven, forward-looking&rdquo; sets the emotional frame</li>
+      <li><strong>Negative instruction:</strong> &ldquo;Avoid code snippets, implementation details&rdquo; removes unwanted content types</li>
+      <li><strong>Strong analogy:</strong> &ldquo;CEO presenting at annual shareholders meeting&rdquo; &mdash; AI instantly understands the context</li>
+    </ul>
+  </div>
+
+  <!-- 3c: VISUAL STYLE -->
+  <h3><span class="v-badge v1">V1</span> 3c. Controlling Visual Style (Design)</h3>
+
+  <div class="prompt-box"><span class="label">PROMPT V1 — VISUAL STYLE</span>Visual design guidelines:
+- Color palette: Primary dark blue (#0d47a1), accent orange (#ff6d00), white background, light gray (#f5f5f5) for cards
+- Typography: Modern sans-serif headings (bold, large), clean body text
+- Layout: Left-aligned content with generous whitespace
+- Data visualization: Use clean bar charts, donut charts, or stat cards for numbers
+- Images: Abstract geometric illustrations, no stock photos of people
+- Every slide should have a thin blue header stripe with the section title
+- Use flat, single-color icons to supplement text</div>
+
+  <div class="card card-accent">
+    <h4>Prompt Technique Analysis &mdash; Visual:</h4>
+    <ul>
+      <li><strong>Hex codes:</strong> &ldquo;#0d47a1&rdquo; and &ldquo;#ff6d00&rdquo; &mdash; NotebookLM interprets these approximately (not pixel-perfect, but close)</li>
+      <li><strong>Typography direction:</strong> &ldquo;Modern sans-serif, bold headings&rdquo; guides font style without naming a specific font</li>
+      <li><strong>Layout principle:</strong> &ldquo;Left-aligned, generous whitespace&rdquo; provides clear layout rules</li>
+      <li><strong>Consistency element:</strong> &ldquo;thin blue header stripe&rdquo; creates a repeating element across all slides</li>
+      <li><strong>Negative instruction:</strong> &ldquo;no stock photos of people&rdquo; eliminates generic imagery</li>
+    </ul>
+  </div>
+
+  <!-- COMBINED V1 -->
+  <h3>Combined V1 Prompt (Entered into NotebookLM)</h3>
+  <p>All three aspects are merged into a <strong>single prompt</strong> for the Custom Prompt field:</p>
+
+  <div class="prompt-box"><span class="label">COMBINED PROMPT V1</span>Create a 14-slide detailed deck: "EduNova 2025 Annual Report & AI Vision 2026".
+
+STRUCTURE:
+- Slide 1: Title — company name, subtitle, date
+- Slide 2: Agenda — list all sections
+- Slides 3–4: Executive Summary — 2025 key achievements (revenue, users, product launches)
+- Slide 5: Market Landscape — EdTech trends in Vietnam and SEA
+- Slide 6: Competitive Positioning — EduNova vs competitors
+- Slides 7–9: Three AI Strategic Pillars (one per slide):
+  Pillar 1: AI Personalized Tutoring
+  Pillar 2: Generative Content Creation for Teachers
+  Pillar 3: Predictive Learning Analytics
+- Slide 10: Product Roadmap — Q1–Q4 2026 milestones
+- Slide 11: Team & Investment — headcount, budget allocation
+- Slide 12: Key Risks and Mitigation
+- Slide 13: KPI Dashboard — key metrics with targets
+- Slide 14: Call to Action & Next Steps
+
+TONE:
+- Audience: Board of Directors and investors
+- Professional, confident, data-driven, forward-looking
+- Executive briefing style — concise, no jargon
+- Each slide = CEO at annual shareholders meeting
+- Maximum 6 bullet points per slide
+
+VISUAL STYLE:
+- Colors: Dark blue (#0d47a1), accent orange (#ff6d00), white backgrounds, light gray (#f5f5f5) cards
+- Modern sans-serif typography, bold headings
+- Left-aligned, generous whitespace
+- Clean bar charts, donut charts, and stat cards for data
+- Abstract geometric illustrations — no stock photos
+- Thin blue header stripe on every slide with section label
+- Flat single-color icons
+
+Focus on Annual Report for data and Product Strategy Doc for roadmap content.
+Reference Brand Guidelines for visual consistency.</div>
+
+  <div class="screenshot-wrap">
+    <img src="images/step-03-customization-panel.png" alt="Customization panel — Format, Length, Language selected">
+    <div class="caption">Customization panel — Format, Length, Language selected</div>
+  </div>
+
+  <div class="screenshot-wrap">
+    <img src="images/step-04-prompt-v1-input.png" alt="Combined Prompt V1 entered in Custom Prompt field">
+    <div class="caption">Combined Prompt V1 entered in Custom Prompt field</div>
+  </div>
+
+  <div class="screenshot-wrap">
+    <img src="images/step-05-slides-v1-overview.png" alt="Slide Deck V1 — multi-slide overview after generation">
+    <div class="caption">Slide Deck V1 — multi-slide overview after generation</div>
+  </div>
+
+  <div class="screenshot-wrap">
+    <img src="images/step-06-slides-v1-detail.png" alt="Slide V1 — 2–3 representative slides in detail">
+    <div class="caption">Slide V1 — 2–3 representative slides in detail</div>
+  </div>
+</section>
+
+<!-- ================================================================ -->
+<!-- SECTION 4: EVALUATION V1 -->
+<!-- ================================================================ -->
+<section id="s4">
+  <h2>4. Evaluating V1 &amp; Improvement Strategy</h2>
+
+  <p>After generation, we need to evaluate the results. However, there is an <strong>important limitation</strong>: NotebookLM <em>cannot directly view</em> the generated slide deck. When asked to evaluate, it analyzes the <strong>source text against the Brand Guidelines</strong> rather than the visual output.</p>
+
+  <div class="card card-warning">
+    <strong>Real-world behavior when asking NotebookLM to evaluate:</strong>
+    <p style="margin-top:8px;">NotebookLM responds: <em>&ldquo;I do not have access to the specific slide deck you just generated. However, if you are referring to the source text, here is a review against the Brand Guidelines...&rdquo;</em></p>
+    <p>&rarr; NotebookLM can only evaluate <strong>source text vs Brand Guidelines</strong> &mdash; it cannot see the rendered slides. Therefore, we combine: (1) visual evaluation by eye + (2) content evaluation via NotebookLM chat.</p>
+  </div>
+
+  <h3>4.1 NotebookLM Chat Evaluation (Content vs Brand Guidelines)</h3>
+
+  <p>When asking NotebookLM: <em>&ldquo;Review the slide deck content against the Brand Guidelines. What are the strengths and weaknesses?&rdquo;</em>, it returns:</p>
+
+  <div class="card card-info">
+    <h4>Strengths (NotebookLM feedback)</h4>
+    <ul>
+      <li><strong>Clear Messaging:</strong> Slides stick to one key message per slide, focused on metrics and milestones</li>
+      <li><strong>Correct Tone:</strong> Successfully achieves &ldquo;confident, data-driven&rdquo; tone for Board/Investor context &mdash; leading with numbers (&ldquo;$28.7M revenue&rdquo;, &ldquo;Revenue grew 57.7%&rdquo;)</li>
+      <li><strong>Active Voice:</strong> Uses active phrasing, avoids jargon &mdash; aligned with Brand Guidelines writing style rules</li>
+      <li><strong>Confidentiality:</strong> Opening slide correctly marked as &ldquo;Confidential&rdquo; per footer requirements</li>
+    </ul>
+  </div>
+
+  <div class="card" style="border-left: 4px solid var(--error);">
+    <h4>Weaknesses (NotebookLM feedback)</h4>
+    <ul>
+      <li><strong>Bullet Point Overload:</strong> Brand Guidelines mandate <strong>max 5 bullets/slide</strong>, but multiple slides violate this:
+        <ul>
+          <li>Revenue slide: 7 bullets (3 segment + 4 quarter)</li>
+          <li>Competitive slide: 7 bullets (4 advantages + 3 risks)</li>
+          <li>CTA slide: 8 items</li>
+        </ul>
+      </li>
+      <li><strong>Overuse of Tables:</strong> Several slides rely on raw data tables instead of the <strong>bar charts, donut charts, and stat cards</strong> recommended by Brand Guidelines</li>
+      <li><strong>Missing Structural Elements:</strong> Cannot confirm whether slides have the required dark-blue (#0d47a1) header stripe or standardized footer (&ldquo;EduNova Confidential&rdquo; + slide number)</li>
+    </ul>
+  </div>
+
+  <h3>4.2 Visual Evaluation by Eye (viewing generated slides)</h3>
+
+  <p>In addition to NotebookLM chat feedback, we <strong>visually inspect the generated slides</strong> and note:</p>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Issue Found (visual)</th>
+        <th>Affected Criteria</th>
+        <th>Root Cause in V1 Prompt</th>
+        <th>Recommended Fix</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Multiple slides use raw tables instead of stat cards / charts</td>
+        <td>Design</td>
+        <td>Prompt says &ldquo;bar charts&rdquo; generically without specifying which slide gets which chart</td>
+        <td>Specify per slide: &ldquo;Slide 3: 4 stat cards in 2x2 grid&rdquo;, &ldquo;Slide 4: grouped bar chart&rdquo;</td>
+      </tr>
+      <tr>
+        <td>Exceeding 5 bullets/slide on multiple slides (7&ndash;8 bullets)</td>
+        <td>Clarity, Design</td>
+        <td>V1 says &ldquo;max 6 bullets&rdquo; but Brand Guidelines require max 5 + max 12 words/bullet</td>
+        <td>Tighten to: &ldquo;max 5 bullets, max 10 words each&rdquo; + split heavy slides into two</td>
+      </tr>
+      <tr>
+        <td>Inconsistent colors &mdash; some slides use gradients or off-palette colors</td>
+        <td>Design</td>
+        <td>Prompt merely &ldquo;suggests&rdquo; palette, not strict enough</td>
+        <td>Add &ldquo;STRICTLY use ONLY these colors&rdquo; + &ldquo;NO gradients, NO additional colors&rdquo;</td>
+      </tr>
+      <tr>
+        <td>Header stripe missing on 3&ndash;4 slides</td>
+        <td>Design</td>
+        <td>&ldquo;Every slide&rdquo; instruction not strong enough</td>
+        <td>Emphasize &ldquo;ALL 14 slides MUST have identical blue header stripe at top&rdquo;</td>
+      </tr>
+      <tr>
+        <td>Roadmap slide displayed as bulleted list instead of timeline</td>
+        <td>Structure, Design</td>
+        <td>No visual format specified for roadmap</td>
+        <td>Add &ldquo;HORIZONTAL TIMELINE with Q1&rarr;Q4 markers and milestone icons below&rdquo;</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>4.3 Specific Improvements Suggested by NotebookLM</h3>
+
+  <div class="card card-accent">
+    <ol>
+      <li><strong>Split Content-Heavy Slides:</strong> Break Revenue, Competitive, and CTA slides into two slides each to stay within max 5 bullets and 40-word body text limit</li>
+      <li><strong>Convert Tables to Stat Cards &amp; Charts:</strong>
+        <ul>
+          <li>Q4 Highlights &amp; Financial Position slides &rarr; convert tables to <strong>visual stat cards</strong></li>
+          <li>Revenue by Segment &rarr; use a <strong>donut chart</strong> (EduNova Blue, Orange, Light Gray) with data labels directly on chart</li>
+        </ul>
+      </li>
+      <li><strong>Apply Formatting Requirements:</strong> Ensure every slide has left-aligned text with min 10% padding, dark-blue header bar, and standardized footer</li>
+      <li><strong>Check Bullet Length:</strong> Condense every bullet to <strong>under 12 words</strong></li>
+    </ol>
+  </div>
+
+  <h3>4.4 Prompt Improvement Strategy</h3>
+
+  <div class="card card-info">
+    <h4>Combined improvement directions from both evaluation sources:</h4>
+    <ol>
+      <li><strong>Increase specificity:</strong> Describe layout AND visualization for each slide (2x2 grid, donut chart, horizontal timeline)</li>
+      <li><strong>Strengthen constraints:</strong> Use &ldquo;MUST&rdquo;, &ldquo;ONLY&rdquo;, &ldquo;STRICTLY&rdquo;, &ldquo;NO&rdquo; &mdash; Brand Guidelines say max 5 bullets, so the prompt should enforce it</li>
+      <li><strong>Reduce ambiguity:</strong> Replace &ldquo;clean charts&rdquo; with &ldquo;grouped bar chart comparing 2024 vs 2025 revenue by segment with % labels&rdquo;</li>
+      <li><strong>Add word limits:</strong> &ldquo;Max 10 words per bullet&rdquo;, &ldquo;max 40 words body text per slide&rdquo; (per Brand Guidelines)</li>
+      <li><strong>Explicit visual ratio:</strong> &ldquo;60% visual / 40% text on every slide&rdquo; (per Brand Guidelines 60/40 rule)</li>
+      <li><strong>Map Brand Guidelines rules:</strong> Explicitly restate Brand Guidelines rules in the prompt so NotebookLM adheres to them</li>
+    </ol>
+  </div>
+
+  <div class="screenshot-wrap">
+    <img src="images/step-07-v1-evaluation-notes.png" alt="NotebookLM Chat evaluating content vs Brand Guidelines">
+    <div class="caption">NotebookLM Chat evaluating content vs Brand Guidelines</div>
+  </div>
+</section>
+
+<!-- ================================================================ -->
+<!-- SECTION 5: EXPORT PDF -->
+<!-- ================================================================ -->
+<section id="s5">
+  <h2>5. Exporting PDF &amp; Screenshots</h2>
+
+  <h3>5.1 Per-slide Revision (Optional)</h3>
+  <p>After V1 generation, you can fine-tune individual slides. <strong>If skipped:</strong> no need to capture step-08; proceed directly to export.</p>
+
+  <div class="prompt-box"><span class="label">REVISION — Slide 4</span>Make the bar chart larger — it should fill 70% of the slide area.
+Add percentage change labels above each bar pair.
+Remove all body text except the chart title.</div>
+
+  <div class="prompt-box"><span class="label">REVISION — Slide 10</span>The timeline should be perfectly horizontal.
+Use larger icons (at least 48px equivalent).
+Each quarter section should use alternating blue and gray background bands.</div>
+
+  <div class="card card-warning">
+    <strong>Important Notes on Revision:</strong>
+    <ul style="margin-top:8px;">
+      <li>Each revision creates an <strong>entirely new</strong> slide set &rarr; batch all changes into &ldquo;Pending Changes&rdquo; and generate once</li>
+      <li>Sources are <strong>not re-referenced</strong> during revision &mdash; only the new instruction is used</li>
+      <li>There is a <strong>quota limit</strong> on revisions &rarr; plan ahead, batch instead of revising one by one</li>
+    </ul>
+  </div>
+
+  <div class="screenshot-wrap">
+    <img src="images/step-08-per-slide-revision.png" alt="Per-slide revision interface">
+    <div class="caption">Optional: capture selected slide + instruction field + Apply button. If skipped, proceed to export.</div>
+  </div>
+
+  <h3>5.2 PDF Export Process</h3>
+
+  <div class="step-row">
+    <span class="step-num">1</span>
+    <div><p>In the Slide Deck viewer, click the <strong>three-dot menu</strong> (&ctdot;) next to the slide deck name.</p></div>
+  </div>
+  <div class="step-row">
+    <span class="step-num">2</span>
+    <div><p>Select <strong>&ldquo;Download PDF Document (.pdf)&rdquo;</strong>. You can also choose <strong>&ldquo;Download PowerPoint (.pptx)&rdquo;</strong> for further editing.</p></div>
+  </div>
+  <div class="step-row">
+    <span class="step-num">3</span>
+    <div><p>The file downloads to your machine. Each slide becomes one PDF page (high-quality image, 16:9 aspect ratio).</p></div>
+  </div>
+  <div class="step-row">
+    <span class="step-num">4</span>
+    <div><p>Open the PDF in a viewer (Chrome, Edge, Adobe Reader) to verify final quality.</p></div>
+  </div>
+
+  <div class="screenshot-wrap">
+    <img src="images/step-09-export-menu.png" alt="PDF/PPTX export menu">
+    <div class="caption">Click 3-dot menu (⋮) next to Slide Deck name — capture dropdown as soon as it opens.</div>
+  </div>
+
+  <div class="screenshot-wrap">
+    <img src="images/step-10-exported-pdf.png" alt="Exported PDF file opened in a PDF viewer">
+    <div class="caption">Capture PDF viewer: .pdf filename on tab + content of 1–2 slides displayed.</div>
+    <p style="margin-top:10px;font-size:0.95em;">
+      <strong>Demo notebook:</strong> <a href="https://notebooklm.google.com/notebook/450b4549-8556-4f0a-8dc6-094129d3f0f4" target="_blank">NotebookLM</a> &bull;
+      <strong>PDF:</strong> <code>EduNova_2026_Growth_Blueprint.pdf</code>
+    </p>
+  </div>
+</section>
+
+<!-- ================================================================ -->
+<!-- SECTION 6: RUBRIC -->
+<!-- ================================================================ -->
+<section id="s6">
+  <h2>6. Quality Rubric &amp; Improvement Proposals</h2>
+
+  <p>Evaluate generated slides on four criteria (1&ndash;5 each, max 20):</p>
+  <ul>
+    <li><strong>Structure</strong> — Follows requested outline (slide count, order, content)</li>
+    <li><strong>Clarity</strong> — Clear, concise; each slide conveys one idea</li>
+    <li><strong>Design</strong> — Consistent palette, typography, layout across slides</li>
+    <li><strong>Factual</strong> — Data traceable to sources; no invented numbers</li>
+  </ul>
+
+  <div class="highlight-box">
+    <p><strong>Typical V1 score: 11/20</strong> — Average. Design consistency and text density often need improvement.</p>
+  </div>
+
+  <h3>Key improvement tips</h3>
+  <ol>
+    <li><strong>Be specific:</strong> Per-slide layout (e.g., &ldquo;Slide 4: 2x2 stat cards&rdquo;) beats generic &ldquo;use charts&rdquo;</li>
+    <li><strong>Use strong constraints:</strong> &ldquo;MUST&rdquo;, &ldquo;ONLY&rdquo;, &ldquo;NO gradients&rdquo; — not &ldquo;should&rdquo; or &ldquo;prefer&rdquo;</li>
+    <li><strong>Map sources:</strong> &ldquo;Revenue &rarr; Annual Report, strategy &rarr; Product Doc&rdquo; — tells AI where to pull data</li>
+    <li><strong>Verify after:</strong> NotebookLM can&rsquo;t see slides. Ask chat: &ldquo;List key numbers from Annual Report, cite source&rdquo;</li>
+  </ol>
+
+  <div class="screenshot-wrap">
+    <img src="images/step-11-chat-fact-check.png" alt="NotebookLM chat verifying data from sources">
+    <div class="caption">Ask to verify numbers in sources (e.g., &ldquo;List key numbers from Annual Report, cite source&rdquo;) — capture question + response.</div>
+  </div>
+</section>
+
+<!-- ================================================================ -->
+<!-- SECTION 8: CONCLUSION -->
+<!-- ================================================================ -->
+<section id="s7">
+  <h2>7. Conclusion &amp; Best Practices</h2>
+
+  <h3>7.1 Process Summary</h3>
+  <div class="flow-diagram">
+    <div class="flow-step">7 Sources</div>
+    <div class="flow-arrow">&rarr;</div>
+    <div class="flow-step">Prompt V1</div>
+    <div class="flow-arrow">&rarr;</div>
+    <div class="flow-step">Generate &amp; Evaluate</div>
+    <div class="flow-arrow">&rarr;</div>
+    <div class="flow-step">Export PDF</div>
+  </div>
+
+  <h3>7.2 Prompt Engineering Best Practices for NotebookLM Slide Decks</h3>
+
+  <div class="card card-success">
+    <ol>
+      <li><strong>Specificity is king:</strong> The more specific your prompt, the closer the output matches your intent</li>
+      <li><strong>Separate three layers:</strong> Always clearly divide STRUCTURE / TONE / VISUAL STYLE with their own headings in the prompt</li>
+      <li><strong>Use strong constraints:</strong> Use &ldquo;MUST&rdquo;, &ldquo;ONLY&rdquo;, &ldquo;STRICTLY&rdquo;, &ldquo;NO&rdquo; instead of &ldquo;should&rdquo;, &ldquo;prefer&rdquo;, &ldquo;try to&rdquo;</li>
+      <li><strong>Describe layouts, not just content:</strong> &ldquo;2x2 grid of stat cards&rdquo; &gt; &ldquo;show key metrics&rdquo;</li>
+      <li><strong>Map sources explicitly:</strong> &ldquo;Revenue data &rarr; Annual Report, Strategy &rarr; Product Doc&rdquo; tells AI exactly where to pull data from</li>
+      <li><strong>Set word/number limits:</strong> &ldquo;Max 10 words per bullet&rdquo;, &ldquo;max 40 words per slide&rdquo; forces concise output</li>
+      <li><strong>Negative instructions are powerful:</strong> &ldquo;NO stock photos, NO gradients, NO jargon&rdquo; is more effective than &ldquo;be clean&rdquo;</li>
+      <li><strong>Iteration helps:</strong> No prompt is perfect on the first try. You can iterate: Generate &rarr; Evaluate &rarr; Refine &rarr; Regenerate to improve results</li>
+      <li><strong>Upload brand references:</strong> Brand guidelines + existing decks as separate sources = &ldquo;cheat code&rdquo; for design consistency</li>
+      <li><strong>Verify after generation:</strong> Use NotebookLM chat to cross-check every number in the slides against source material</li>
+    </ol>
+  </div>
+
+  <h3>7.3 When to Use NotebookLM Slide Deck</h3>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Good Fit</th>
+        <th>Not the Best Fit</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Quickly drafting presentations from multiple source documents</td>
+        <td>Pixel-perfect slides (use Figma/Canva instead)</td>
+      </tr>
+      <tr>
+        <td>Condensing lengthy research/reports into a presentation</td>
+        <td>Complex animations or embedded video</td>
+      </tr>
+      <tr>
+        <td>Brainstorming visual stories from raw data</td>
+        <td>Strict corporate templates (use Google Slides + template)</td>
+      </tr>
+      <tr>
+        <td>High factual grounding needed (data pulled from sources, not fabricated)</td>
+        <td>Real-time collaborative editing with multiple people</td>
+      </tr>
+      <tr>
+        <td>Quick sharing via PDF or link</td>
+        <td>Specialized fonts or specific language rendering requirements</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>7.4 References</h3>
+  <ul>
+    <li><a href="https://support.google.com/notebooklm/answer/16757456?hl=en" target="_blank">Google Help: Generate a Slide Deck in NotebookLM</a></li>
+    <li><a href="https://blog.google/technology/google-labs/8-ways-to-make-the-most-out-of-slide-decks-in-notebooklm" target="_blank">Google Blog: 8 ways to make the most out of Slide Decks</a></li>
+    <li><a href="https://www.youtube.com/watch?v=tVsqodAOcSE" target="_blank">Video: How to Use NotebookLM to Automatically Generate Slides</a></li>
+    <li><a href="https://youtu.be/qurq6SskJww" target="_blank">Video: How to Create Slide Decks in NotebookLM (Step-by-Step)</a></li>
+    <li><a href="https://www.youtube.com/watch?v=6WaztlOyg1s" target="_blank">Video: NotebookLM Slide Deck Tutorial &mdash; by &#272;&#7863;ng T&#250;</a></li>
+    <li><a href="https://notebooklm.google.com" target="_blank">NotebookLM Official</a></li>
+  </ul>
+</section>
+
+</div>
+
+<div class="footer">
+  AI Quest &mdash; Investigate How &bull; NotebookLM PDF Prompt Control &bull; 2026
+</div>
+
+</body>
+</html>

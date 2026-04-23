@@ -1,0 +1,10 @@
+period,metric_category,metric_name,value,unit,notes
+2025-Q4,Reliability,Platform uptime,99.61,percent,Recovery post-migration
+2025-Q4,Incidents,P1 incidents,3,count,
+2025-Q4,Incidents,Mean time to resolve (P1),3.9,hours,
+2025-Q4,Delivery,Sprint completion rate,93,percent,
+2025-Q4,Delivery,Story points delivered,356,points,
+2025-Q4,Cost,Cloud spend,46200,USD,Optimization pass in Nov
+2025-Q4,Cost,Budget utilization,88,percent,Full-year 86 percent
+2025-Q4,Customer,NPS,46,score,Year high
+2025-Q4,Customer,Support tickets closed,1988,count,

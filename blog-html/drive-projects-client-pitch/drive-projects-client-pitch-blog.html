@@ -1,0 +1,405 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Create a client-specific pitch document by cross-referencing multiple internal files using Google Drive Projects</title>
+    <style>
+      *{box-sizing:border-box}
+      body{margin:0;font-family:'Segoe UI',Arial,sans-serif;background:#fff;color:#1a1a1a;line-height:1.75}
+      a{color:#1a73e8;text-decoration:none}
+      a:hover{text-decoration:underline}
+      .wrap{max-width:1020px;margin:0 auto;padding:24px}
+      h1{margin:0 0 10px;font-size:26px;color:#1a73e8;line-height:1.35}
+      h2{margin:34px 0 14px;font-size:22px;border-bottom:3px solid #1a73e8;padding-bottom:8px;color:#202124}
+      h3{margin:22px 0 10px;font-size:18px;color:#333}
+      ul,ol{margin:8px 0;padding-left:24px}
+      li{margin-bottom:6px}
+      p{margin:12px 0}
+      code{background:#e8f0fe;border:1px solid #d2e3fc;padding:2px 6px;font-size:13px;font-family:Consolas,monospace;border-radius:3px;color:#174ea6}
+      pre{white-space:pre-wrap;word-break:break-word;border:1px solid #dadce0;background:#f8f9fa;padding:14px;font-size:12px;font-family:Consolas,monospace;margin:12px 0;border-radius:8px;overflow:auto}
+      .hero{border:2px solid #1a73e8;padding:22px 26px;margin-bottom:22px;background:linear-gradient(135deg,#e8f0fe 0%,#f8f9fa 100%);border-radius:12px}
+      .tip{border-left:4px solid #34a853;padding:12px 16px;background:#e6f4ea;margin:14px 0;border-radius:0 8px 8px 0}
+      .warning{border-left:4px solid #ea4335;padding:12px 16px;background:#fce8e6;margin:14px 0;border-radius:0 8px 8px 0}
+      .info{border-left:4px solid #4285f4;padding:12px 16px;background:#e8f0fe;margin:14px 0;border-radius:0 8px 8px 0}
+      table{border-collapse:collapse;width:100%;margin:16px 0;border-radius:8px;overflow:hidden;font-size:14px}
+      th,td{border:1px solid #dadce0;padding:10px 12px;text-align:left;vertical-align:top}
+      th{background:#1a73e8;color:#fff;font-weight:600}
+      tr:nth-child(even){background:#f8f9fa}
+      .toc{background:#f8f9fa;border:1px solid #dadce0;border-radius:8px;padding:16px 22px;margin:20px 0}
+      .toc ul{list-style:none;padding-left:0}
+      .toc li{padding:4px 0}
+      .toc li::before{content:'\2794 ';color:#1a73e8}
+      .demo-fig{margin:20px 0;text-align:center}
+      .demo-fig img{max-width:100%;height:auto;border:2px solid #dadce0;border-radius:8px;box-shadow:0 2px 10px rgba(0,0,0,.08)}
+      .demo-fig figcaption{font-size:13px;color:#5f6368;margin-top:8px;font-style:italic;text-align:center}
+      .ref-list{font-size:14px}
+      .flow-diagram{background:#f8f9fa;border:2px solid #dadce0;border-radius:12px;padding:20px;margin:16px 0;text-align:center;line-height:1.9}
+      .flow-step{display:inline-block;background:#fff;border:2px solid #1a73e8;border-radius:8px;padding:8px 14px;margin:4px;font-weight:600;color:#1a73e8;font-size:13px;vertical-align:middle}
+      .flow-step.starter{background:#34a853;border-color:#34a853;color:#fff}
+      .flow-step.action{background:#4285f4;border-color:#4285f4;color:#fff}
+      .flow-step.ai{background:#fbbc04;border-color:#fbbc04;color:#333}
+      .flow-arrow{display:inline-block;font-size:20px;color:#5f6368;margin:0 2px;vertical-align:middle}
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="hero">
+        <h1>Create a client-specific pitch document by cross-referencing multiple internal files using Google Drive Projects</h1>
+      </div>
+
+      <nav class="toc">
+        <strong>Mục lục</strong>
+        <ul>
+          <li><a href="#intro">Giới thiệu</a></li>
+          <li><a href="#requirements">Yêu cầu &amp; checklist</a></li>
+          <li><a href="#scenario">Kịch bản nghiệp vụ</a></li>
+          <li><a href="#architecture">Luồng làm việc</a></li>
+          <li><a href="#repro">Tái lập (folder &amp; nguồn)</a></li>
+          <li><a href="#implement">Triển khai Drive Project + Ask Gemini</a></li>
+          <li><a href="#analysis">Phân tích hiệu quả &amp; độ chính xác</a></li>
+          <li><a href="#demo-screens">Demo từng bước (ảnh)</a></li>
+          <li><a href="#failures">Điểm dễ hỏng</a></li>
+          <li><a href="#conclusion">Kết luận</a></li>
+          <li><a href="#references">Tài liệu tham khảo</a></li>
+        </ul>
+      </nav>
+
+      <h2 id="intro">Giới thiệu</h2>
+      <p>
+        <b>Google Drive Projects</b> (kết hợp <b>Ask Gemini in Drive</b>) cho phép ghim một tập file/folder/email làm <b>nguồn cố định</b>,
+        rồi đặt câu hỏi tổng hợp trên nhiều tài liệu nội bộ cùng lúc — phù hợp khi presales cần soạn <b>proposal/pitch theo từng khách</b>
+        mà vẫn bám spec sản phẩm, template chuẩn và biên bản họp cũ.
+      </p>
+      <p>
+        Khác với chat Gemini rời rạc từng file, Project <b>không di chuyển file gốc</b> trên Drive; chỉ tạo “khung nghiên cứu” có thể chia sẻ team,
+        resume lịch sử hội thoại, và kiểm chứng câu trả lời qua <b>citations</b> trỏ về Doc nguồn.
+        Tài liệu chính thức: <a href="https://support.google.com/drive/answer/16684520" target="_blank" rel="noopener">Share Gemini sources using Drive projects</a>,
+        <a href="https://support.google.com/drive/answer/16963068" target="_blank" rel="noopener">Use Gemini in Drive for research &amp; analysis</a>.
+      </p>
+
+      <h2 id="requirements">Yêu cầu &amp; checklist</h2>
+      <ul>
+        <li>Tạo <b>Project mới</b> trên Drive và gom file nguồn: đặc tả sản phẩm, template proposal, biên bản họp trước.</li>
+        <li>Dùng <b>Ask Gemini trong Project</b> để tổng hợp và sinh bản nháp proposal cho khách mới.</li>
+        <li>Đính kèm <b>screenshot từng bước</b> (Step 1–16) + ghi chú run/history khi có.</li>
+        <li>Viết <b>phân tích riêng</b> về lợi ích hiệu quả/độ chính xác cho quy trình sales/báo cáo nội bộ.</li>
+        <li>Đảm bảo <b>tái lập</b>: quy tắc folder, tên file nguồn, prompt mẫu để nhân viên khác dựng lại.</li>
+      </ul>
+
+      <h2 id="scenario">Kịch bản nghiệp vụ &amp; dummy data</h2>
+      <p>
+        <b>Bối cảnh:</b> team IT outsourcing nhận RFP từ <b>Nexa Logistics</b> (warehouse visibility MVP).
+        Cần pitch Doc khách hàng trong 1 buổi làm việc, tái sử dụng spec sản phẩm nội bộ + template proposal + bài học từ deal Acme Retail.
+      </p>
+      <table>
+        <thead>
+          <tr><th>Mục</th><th>Giá trị mẫu</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Khách mới (pitch)</td><td>Nexa Logistics Co., Ltd.</td></tr>
+          <tr><td>Dự án</td><td>Real-time warehouse stock visibility MVP (WMS integration)</td></tr>
+          <tr><td>File spec</td><td><code>SPEC_Warehouse_Visibility_MVP_v1.2</code></td></tr>
+          <tr><td>Template proposal</td><td><code>TEMPLATE_Proposal_IT_Intake</code></td></tr>
+          <tr><td>Meeting notes tham chiếu</td><td><code>NOTES_Acme_Retail_2026-03-18_REQ_interview</code></td></tr>
+          <tr><td>Drive Project</td><td><code>Pitch — Nexa Logistics — Warehouse MVP</code></td></tr>
+          <tr><td>Đầu ra</td><td><code>PITCH_Nexa_Logistics_Warehouse_MVP_draft</code> (Google Doc)</td></tr>
+        </tbody>
+      </table>
+
+      <h2 id="architecture">Luồng làm việc</h2>
+      <div class="flow-diagram" aria-label="Luồng Drive Project pitch">
+        <span class="flow-step starter">Gom file nguồn trên Drive</span>
+        <span class="flow-arrow">→</span>
+        <span class="flow-step action">New Project + Add sources</span>
+        <span class="flow-arrow">→</span>
+        <span class="flow-step ai">Ask Gemini (synthesis)</span>
+        <span class="flow-arrow">→</span>
+        <span class="flow-step action">Citations + chỉnh sửa</span>
+        <span class="flow-arrow">→</span>
+        <span class="flow-step action">Export / Doc pitch khách</span>
+      </div>
+
+      <h2 id="repro">Tái lập triển khai</h2>
+      <h3>Cây thư mục Drive</h3>
+      <table>
+        <thead>
+          <tr><th>Đường dẫn</th><th>Vai trò</th><th>Cố định / tham số</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>WS_Sales_Pitch_Sources/00_Internal_Sources</code></td><td>Spec, template, notes — không sửa khi chạy Gemini</td><td>Tên folder cố định; version trong footer Doc</td></tr>
+          <tr><td><code>WS_Sales_Pitch_Sources/10_Client_Outputs</code></td><td>Pitch draft theo khách</td><td>Tên file: <code>PITCH_{{clientSlug}}_draft</code></td></tr>
+        </tbody>
+      </table>
+      <div class="tip">
+        <p><b>Project không đổi vị trí file:</b> khi add sources, quyền và đường dẫn file gốc giữ nguyên — phù hợp chuẩn hóa nguồn dùng chung toàn công ty.</p>
+      </div>
+
+      <h2 id="implement">Triển khai Drive Project + Ask Gemini</h2>
+
+      <h3>Bước A — Chuẩn bị 3 file nguồn (trước khi tạo Project)</h3>
+      <p>Tạo 3 Google Doc trong <code>00_Internal_Sources</code> với nội dung khung sau (có thể mở rộng chi tiết khi demo):</p>
+
+      <h4>1) Product specification (trích đoạn)</h4>
+      <pre>PRODUCT SPECIFICATION — Warehouse Visibility MVP (v1.2)
+
+MVP scope (in)
+- Web dashboard: SKU on-hand, inbound/outbound (24h rolling).
+- REST read API from customer WMS (polling 15 min).
+- RBAC: Ops Manager, Warehouse Lead, Auditor.
+
+Out of scope (MVP)
+- Native mobile apps; ML forecasting.
+
+Internal MD reference
+Work package   | Role      | MD low | MD high
+WMS connector  | Backend   | 18     | 28
+Dashboard UI     | Frontend  | 12     | 18</pre>
+
+      <h4>2) Proposal template (cấu trúc section)</h4>
+      <pre>CLIENT PROPOSAL — {{CLIENT_NAME}}
+
+Executive summary
+Client context & objectives
+Proposed scope (in / out)
+Solution approach
+Timeline & milestones
+Commercial outline
+Risks & mitigations
+Next steps</pre>
+
+      <h4>3) Past meeting notes (lessons learned)</h4>
+      <pre>MEETING NOTES — Acme Retail (reference deal)
+
+Lessons learned
+- Confirm integration credential model in first call.
+- Separate MVP scope from roadmap in writing.
+- Include explicit support window in commercial section.</pre>
+
+      <h3>Bước B — Tạo Project và gắn sources</h3>
+      <ol>
+        <li>Web: <a href="https://drive.google.com" target="_blank" rel="noopener">drive.google.com</a> → <b>New</b> → <b>Project</b> (hoặc <a href="https://project.new" target="_blank" rel="noopener">project.new</a>).</li>
+        <li>Đặt tên: <code>Pitch — Nexa Logistics — Warehouse MVP</code> → <b>Create Project</b>.</li>
+        <li><b>Add sources</b> → chọn 3 Doc: spec, template, meeting notes.</li>
+        <li>Giữ tất cả sources <b>checked</b> (active) trước khi hỏi Gemini.</li>
+      </ol>
+      <div class="warning">
+        <p><b>Quyền:</b> collaborator chỉ phân tích được nội dung file nếu đã có quyền View file đó trên Drive. Share Project không thay thế share file gốc.</p>
+      </div>
+
+      <h3>Bước C — Ask Gemini: prompt tổng hợp pitch</h3>
+      <p>Dán prompt sau vào Ask Gemini (full-screen trong Project). Client brief nằm trong prompt — không bắt buộc tạo file riêng trên Drive.</p>
+      <pre>You are helping our presales team draft a client-specific proposal.
+
+Use ONLY the pinned project sources (product spec, proposal template structure, past meeting notes) plus this new client brief:
+
+---
+Client: Nexa Logistics Co., Ltd.
+Needs: Real-time warehouse stock visibility MVP; WMS integration (OAuth2); web dashboard for Ops/Warehouse Lead/Auditor; target go-live Q3 2026; budget USD 80k–110k; no mobile app in phase 1.
+---
+
+Tasks:
+1) Synthesize relevant capabilities from the product spec that match Nexa's needs.
+2) Apply lessons from the Acme Retail meeting notes (scope discipline, auth model, support window).
+3) Output a complete proposal draft following the section headers in our proposal template: Executive summary, Client context, Proposed scope (in/out), Solution approach, Timeline, Commercial outline (use internal MD ranges from spec as indicative only), Risks, Next steps.
+
+Tone: professional, concise, suitable for B2B logistics.
+Flag any assumptions that need client confirmation with [CONFIRM].</pre>
+
+      <h3>Bước D — Kiểm chứng citations &amp; xuất bản nháp</h3>
+      <ol>
+        <li>Đọc câu trả lời; bấm <b>citation [1], [2]…</b> để mở file nguồn (verify theo <a href="https://support.google.com/drive/answer/16963068" target="_blank" rel="noopener">hướng dẫn research &amp; analysis</a>).</li>
+        <li>Chỉnh sửa chỗ sai/lệch khách; thêm/xóa bullet theo PM.</li>
+        <li><b>Insert / Export to Google Docs</b> → lưu vào <code>10_Client_Outputs</code> với tên pitch khách.</li>
+        <li>(Tuỳ chọn) <b>Save as a project</b> từ conversation Gemini thường nếu bắt đầu từ file đơn lẻ trước đó.</li>
+      </ol>
+
+      <h3>Bước E — Follow-up trong cùng Project</h3>
+      <pre>Based on the draft above, tighten the Commercial outline into a table with 4 work packages and map each to the MD ranges from the product spec. Keep [CONFIRM] flags where budget or WMS API docs are uncertain.</pre>
+
+      <h2 id="analysis">Phân tích: hiệu quả &amp; độ chính xác cho sales / báo cáo</h2>
+      <p><em>Phân tích dưới đây là đánh giá vận hành của team presales/PM — không thay thế review pháp lý hoặc chốt giá cuối.</em></p>
+
+      <h3>1) Hiệu quả (time &amp; throughput)</h3>
+      <table>
+        <thead>
+          <tr><th>Khâu thủ công trước đây</th><th>Với Drive Projects + Gemini</th><th>Tác động ước lượng</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Mở lần lượt 3–5 Doc, copy-paste thủ công vào proposal mới</td>
+            <td>Một Project, một prompt tổng hợp theo template</td>
+            <td>Giảm 40–60% thời gian dựng bản nháp đầu (first draft)</td>
+          </tr>
+          <tr>
+            <td>Onboarding AE mới: không biết file nào là “source of truth”</td>
+            <td>Danh sách sources ghim + tên Project theo deal</td>
+            <td>Giảm sai file / thiếu context khi bàn giao deal</td>
+          </tr>
+          <tr>
+            <td>Báo cáo tuần: tổng hợp rủi ro từ nhiều meeting notes</td>
+            <td>Prompt cross-file (“top 3 risks across Q2 notes”)</td>
+            <td>Phù hợp staff report định kỳ, không chỉ pitch khách</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>2) Độ chính xác (quality &amp; traceability)</h3>
+      <ul>
+        <li><b>Citations</b> buộc người soạn quay lại Doc gốc — giảm “hallucination” so với chat không nguồn.</li>
+        <li><b>Template cố định</b> trong sources giữ cấu trúc proposal thống nhất thương hiệu/delivery.</li>
+        <li><b>Meeting notes</b> đưa bài học deal cũ vào pitch mới (scope, auth, SLA) — tránh lặp lỗi presales.</li>
+        <li><b>Toggle source</b> (bỏ tick tạm) giúp A/B: có/không có notes khi soạn — kiểm soát bias nguồn.</li>
+      </ul>
+
+      <h3>3) Khuyến nghị vận hành cho team</h3>
+      <ol>
+        <li>Chuẩn hóa prefix Project: <code>Pitch — {Client} — {Offering}</code>.</li>
+        <li>Mỗi pitch draft xuất ra kèm dòng <code>Generated from Project: … | Prompt version: v1</code> trong footer Doc.</li>
+        <li>PM review bắt buộc các mục có tag <code>[CONFIRM]</code> trước khi gửi khách.</li>
+        <li>Không share email Gmail làm source chung (email trong Project là private theo tài liệu Google).</li>
+      </ol>
+
+      <h2 id="demo-screens">Demo từng bước (ảnh Step 1–16)</h2>
+      <p>Ảnh lưu tại <code>images/</code>; hướng dẫn thao tác chi tiết: <code>HUONG-DAN-DEMO-CHUP-ANH.md</code>.</p>
+
+      <div class="info"><p><b>Step 1:</b> Mở thư mục gốc <code>WS_Sales_Pitch_Sources</code>, hiển thị <code>00_Internal_Sources</code> và <code>10_Client_Outputs</code>.</p></div>
+      <figure class="demo-fig">
+        <img src="images/step-01-drive-sources-folder.png" alt="Cấu trúc thư mục nguồn pitch" width="960" loading="lazy" />
+        <figcaption>Bước 1 — Cây thư mục Drive cho nguồn và đầu ra pitch.</figcaption>
+      </figure>
+
+      <div class="info"><p><b>Step 2:</b> Mở Doc đặc tả sản phẩm <code>SPEC_Warehouse_Visibility_MVP_v1.2</code>, thấy MVP scope và bảng MD nội bộ.</p></div>
+      <figure class="demo-fig">
+        <img src="images/step-02-product-spec-open.png" alt="Product specification Doc" width="960" loading="lazy" />
+        <figcaption>Bước 2 — Đặc tả sản phẩm (source file).</figcaption>
+      </figure>
+
+      <div class="info"><p><b>Step 3:</b> Mở template proposal <code>TEMPLATE_Proposal_IT_Intake</code>, hiển thị đủ section header chuẩn.</p></div>
+      <figure class="demo-fig">
+        <img src="images/step-03-proposal-template-open.png" alt="Proposal template Doc" width="960" loading="lazy" />
+        <figcaption>Bước 3 — Template proposal nội bộ.</figcaption>
+      </figure>
+
+      <div class="info"><p><b>Step 4:</b> Mở biên bản họp deal tham chiếu <code>NOTES_Acme_Retail_…</code>, nhấn mục Lessons learned.</p></div>
+      <figure class="demo-fig">
+        <img src="images/step-04-past-meeting-notes-open.png" alt="Past meeting notes Doc" width="960" loading="lazy" />
+        <figcaption>Bước 4 — Biên bản họp quá khứ (cross-reference).</figcaption>
+      </figure>
+
+      <div class="info"><p><b>Step 5:</b> Trên Drive, bấm <b>New</b> và chọn <b>Project</b> (hoặc dùng project.new).</p></div>
+      <figure class="demo-fig">
+        <img src="images/step-05-drive-new-project-menu.png" alt="Drive New Project menu" width="960" loading="lazy" />
+        <figcaption>Bước 5 — Tạo Project mới từ Drive.</figcaption>
+      </figure>
+
+      <div class="info"><p><b>Step 6:</b> Nhập tên Project <code>Pitch — Nexa Logistics — Warehouse MVP</code> và tạo project.</p></div>
+      <figure class="demo-fig">
+        <img src="images/step-06-project-name-and-create.png" alt="Project name and create" width="960" loading="lazy" />
+        <figcaption>Bước 6 — Đặt tên Project theo deal.</figcaption>
+      </figure>
+
+      <div class="info"><p><b>Step 7:</b> Bấm <b>Add sources</b>, chọn 3 file trong <code>00_Internal_Sources</code>.</p></div>
+      <figure class="demo-fig">
+        <img src="images/step-07-add-sources-picker.png" alt="Add sources file picker" width="960" loading="lazy" />
+        <figcaption>Bước 7 — Gắn file nguồn vào Project.</figcaption>
+      </figure>
+
+      <div class="info"><p><b>Step 8:</b> Panel sources hiển thị đủ 3 file, trạng thái đang bật (checked).</p></div>
+      <figure class="demo-fig">
+        <img src="images/step-08-project-sources-panel.png" alt="Project sources panel" width="960" loading="lazy" />
+        <figcaption>Bước 8 — Danh sách sources đã ghim.</figcaption>
+      </figure>
+
+      <div class="info"><p><b>Step 9:</b> Mở <b>Ask Gemini</b> trong Project; xác nhận vùng Sources và ô prompt.</p></div>
+      <figure class="demo-fig">
+        <img src="images/step-09-ask-gemini-fullscreen.png" alt="Ask Gemini in project" width="960" loading="lazy" />
+        <figcaption>Bước 9 — Ask Gemini trong Project.</figcaption>
+      </figure>
+
+      <div class="info"><p><b>Step 10:</b> Dán prompt tổng hợp (mục Triển khai — Bước C) vào ô hỏi.</p></div>
+      <figure class="demo-fig">
+        <img src="images/step-10-gemini-prompt-entered.png" alt="Gemini prompt entered" width="960" loading="lazy" />
+        <figcaption>Bước 10 — Prompt synthesis đã nhập.</figcaption>
+      </figure>
+
+      <div class="info"><p><b>Step 11:</b> Gửi prompt; chụp câu trả lời có citations và các section proposal.</p></div>
+      <figure class="demo-fig">
+        <img src="images/step-11-gemini-synthesis-response.png" alt="Gemini synthesis response with citations" width="960" loading="lazy" />
+        <figcaption>Bước 11 — Bản nháp tổng hợp + citations.</figcaption>
+      </figure>
+
+      <div class="info"><p><b>Step 12:</b> Ở cột phải <b>Sources used</b>, click tên một file nguồn (ví dụ spec) để mở Doc và đối chiếu. Nếu có số [1], [2] trong câu trả lời thì click số đó. <b>Chưa</b> bấm Export to Docs (Step 13).</p></div>
+      <figure class="demo-fig">
+        <img src="images/step-12-citation-source-preview.png" alt="Citation opens source document" width="960" loading="lazy" />
+        <figcaption>Bước 12 — Kiểm chứng citation trỏ file nguồn.</figcaption>
+      </figure>
+
+      <div class="info"><p><b>Step 13:</b> Dưới câu trả lời Gemini, bấm <b>Export to Docs</b> (không dùng Export to Sheets — Sheets chỉ xuất bảng Risk). Lưu Doc vào <code>10_Client_Outputs</code>, đặt tên <code>PITCH_Nexa_Logistics_Warehouse_MVP_draft</code>.</p></div>
+      <figure class="demo-fig">
+        <img src="images/step-13-insert-to-google-doc.png" alt="Insert synthesis into Google Doc" width="960" loading="lazy" />
+        <figcaption>Bước 13 — Đưa draft vào Google Doc.</figcaption>
+      </figure>
+
+      <div class="info"><p><b>Step 14:</b> Mở <code>PITCH_Nexa_Logistics_Warehouse_MVP_draft</code>, thấy nội dung đã personalize cho Nexa.</p></div>
+      <figure class="demo-fig">
+        <img src="images/step-14-client-pitch-doc-result.png" alt="Client pitch document result" width="960" loading="lazy" />
+        <figcaption>Bước 14 — Pitch document theo khách.</figcaption>
+      </figure>
+
+      <div class="info"><p><b>Step 15:</b> Tạm bỏ tick một source (ví dụ meeting notes), hỏi lại để so sánh phạm vi phân tích.</p></div>
+      <figure class="demo-fig">
+        <img src="images/step-15-manage-sources-toggle.png" alt="Toggle sources on and off" width="960" loading="lazy" />
+        <figcaption>Bước 15 — Quản lý sources (bật/tắt).</figcaption>
+      </figure>
+
+      <div class="info"><p><b>Step 16:</b> Drive → Projects → mở History, thấy conversation vừa chạy (resume research).</p></div>
+      <figure class="demo-fig">
+        <img src="images/step-16-projects-history-resume.png" alt="Project history and resume" width="960" loading="lazy" />
+        <figcaption>Bước 16 — Lịch sử Project / tiếp tục phiên.</figcaption>
+      </figure>
+
+      <h2 id="failures">Điểm dễ hỏng (≥3)</h2>
+      <table>
+        <thead>
+          <tr><th>Rủi ro</th><th>Quan sát</th><th>Mitigation</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><b>Quyền Drive</b></td>
+            <td>Collaborator vào Project nhưng Gemini không đọc được nội dung file nguồn.</td>
+            <td>Share file gốc trước; dùng group Drive cho presales.</td>
+          </tr>
+          <tr>
+            <td><b>Source sai / thiếu</b></td>
+            <td>Spec cũ vẫn ghim → pitch đề xuất tính năng đã out-of-scope.</td>
+            <td>Version trong tên file; review danh sách sources mỗi quý.</td>
+          </tr>
+          <tr>
+            <td><b>Over-trust output</b></td>
+            <td>Số liệu MD/budget từ spec bị Gemini diễn giải sai ngữ cảnh khách.</td>
+            <td>Bắt buộc PM review + tag <code>[CONFIRM]</code>; không gửi khách trực tiếp.</td>
+          </tr>
+          <tr>
+            <td><b>Chia sẻ Project vs chat</b></td>
+            <td>Share Project chỉ share danh sách sources; chat history vẫn private.</td>
+            <td>Export output sang Doc trước khi handoff nội bộ.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2 id="conclusion">Kết luận</h2>
+      <p>
+        Drive Projects biến tập file nội bộ rời rạc thành <b>ngữ cảnh có kiểm soát</b> cho Ask Gemini — phù hợp tạo pitch/proposal theo khách
+        mà vẫn bám spec, template và kinh nghiệm deal trước. Kết hợp citations + quy trình review PM, team sales có thể rút ngắn thời gian dựng draft
+        đồng thời tăng traceability so với soạn tay hoặc chat không nguồn.
+      </p>
+
+      <h2 id="references">Tài liệu tham khảo</h2>
+      <ul class="ref-list">
+        <li><a href="https://support.google.com/drive/answer/16684520" target="_blank" rel="noopener">Share your Gemini sources using Drive projects (Google Help)</a></li>
+        <li><a href="https://support.google.com/drive/answer/16963068" target="_blank" rel="noopener">Use Gemini in Drive for research &amp; analysis (Google Help)</a></li>
+      </ul>
+    </div>
+  </body>
+</html>

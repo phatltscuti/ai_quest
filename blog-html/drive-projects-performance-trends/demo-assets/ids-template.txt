@@ -1,0 +1,20 @@
+GHI CHÉO ID / LINK (demo)
+
+Drive root: WS_Ops_Performance_Review
+Folder 00_Source_Data ID:
+Folder 10_Review_Outputs ID:
+
+OPS_Metrics_2025_Q1 (Sheet ID):
+OPS_Metrics_2025_Q2 (Sheet ID):
+OPS_Metrics_2025_Q3 (Sheet ID):
+OPS_Metrics_2025_Q4 (Sheet ID):
+
+REPORT_H1_2025_Executive_Summary.pdf (File ID):
+REPORT_FY2025_Annual_Operations_Review.pdf (File ID):
+
+Drive Project: Performance Review — Operations 2025
+Project URL:
+
+Output summary: REVIEW_2025_Ops_Performance_Summary
+
+Cách lấy ID: mở file trên Drive → copy URL → Sheet ID sau /d/ ; PDF tương tự /file/d/{ID}/view

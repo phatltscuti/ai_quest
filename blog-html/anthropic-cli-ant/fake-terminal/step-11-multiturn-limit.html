@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>ant CLI — Step 11: multi-turn YAML limit</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h2 class="page-title">Ảnh Step 11 — Giới hạn multi-turn inline (YAML parse error)</h2>
+    <p class="page-hint">Chụp khung terminal → lưu <span class="save-as">images/step-11-multiturn-limit.png</span></p>
+    <div class="vscode-panel">
+        <div class="vscode-tabs">
+            <div class="v-tab active">Terminal</div>
+            <div class="v-actions">>_ PowerShell</div>
+        </div>
+        <div class="terminal-content" style="min-height: 380px;">
+            <div class="ps-block">
+                <div class="ps-line"><span class="ps-prompt">PS C:\anthropic-cli-ant\tools&gt;</span> <span class="ps-cmd">.\ant.exe messages create `</span></div>
+                <div class="ps-line"><span class="ps-cont">>> </span><span class="ps-cmd">  --model claude-sonnet-4-5-20250929 `</span></div>
+                <div class="ps-line"><span class="ps-cont">>> </span><span class="ps-cmd">  --max-tokens 200 `</span></div>
+                <div class="ps-line"><span class="ps-cont">>> </span><span class="ps-cmd">  --message "[{role: user, content: 'Hello'}, {role: assistant, content: 'Hi!'}, {role: user, content: 'What is your purpose?'}]"</span></div>
+                <pre class="term-out term-err">Incorrect Usage: invalid value "[...]" for flag -message:
+failed to parse as YAML: [1:1] sequence was used where mapping is expected</pre>
+            </div>
+            <div class="ps-block">
+                <div class="ps-line"><span class="ps-prompt">PS C:\anthropic-cli-ant\tools&gt;</span> <span class="ps-cmd"># Workaround: dùng beta:sessions hoặc JSONL file</span></div>
+            </div>
+            <div class="ps-line cursor-line"><span class="ps-prompt">PS C:\anthropic-cli-ant\tools&gt;</span> <span class="cursor"></span></div>
+        </div>
+        <div class="status-bar">known limitation &nbsp;|&nbsp; use <code>beta:sessions</code></div>
+    </div>
+</body>
+</html>

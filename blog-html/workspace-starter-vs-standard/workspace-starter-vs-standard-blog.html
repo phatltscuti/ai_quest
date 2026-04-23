@@ -1,0 +1,535 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Google Workspace Business Starter vs Standard: Phân tích chi tiết sự khác biệt</title>
+    <style>
+      *{box-sizing:border-box}
+      body{margin:0;font-family:'Segoe UI',Arial,sans-serif;background:#fff;color:#1a1a1a;line-height:1.7}
+      a{color:#1a73e8;text-decoration:none}a:hover{text-decoration:underline}
+      .wrap{max-width:980px;margin:0 auto;padding:24px}
+      h1{margin:0 0 10px;font-size:30px;color:#1a73e8}
+      h2{margin:32px 0 14px;font-size:24px;border-bottom:3px solid #1a73e8;padding-bottom:8px;color:#202124}
+      h3{margin:22px 0 10px;font-size:19px;color:#333}
+      h4{margin:16px 0 8px;font-size:16px;color:#444}
+      ul,ol{margin:8px 0;padding-left:22px}li{margin-bottom:4px}
+      p{margin:12px 0}
+      code{background:#e8f0fe;border:1px solid #d2e3fc;padding:2px 6px;font-size:13px;font-family:Consolas,monospace;border-radius:3px;color:#1a73e8}
+      .hero{border:2px solid #1a73e8;padding:24px 28px;margin-bottom:24px;background:linear-gradient(135deg,#e8f0fe 0%,#f8f9fa 100%);border-radius:12px}
+      .hero .subtitle{color:#5f6368;font-size:15px;margin-top:8px}
+      .tip{border-left:4px solid #34a853;padding:12px 16px;background:#e6f4ea;margin:14px 0;border-radius:0 8px 8px 0}
+      .warning{border-left:4px solid #ea4335;padding:12px 16px;background:#fce8e6;margin:14px 0;border-radius:0 8px 8px 0}
+      .info{border-left:4px solid #4285f4;padding:12px 16px;background:#e8f0fe;margin:14px 0;border-radius:0 8px 8px 0}
+      .highlight{border-left:4px solid #fbbc04;padding:12px 16px;background:#fef7e0;margin:14px 0;border-radius:0 8px 8px 0}
+      .opinion{border-left:4px solid #9334e6;padding:12px 16px;background:#f3e8fd;margin:14px 0;border-radius:0 8px 8px 0}
+      table{border-collapse:collapse;width:100%;margin:16px 0;border-radius:8px;overflow:hidden}
+      th,td{border:1px solid #dadce0;padding:10px 14px;text-align:left}
+      th{background:#1a73e8;color:#fff;font-weight:600}
+      tr:nth-child(even){background:#f8f9fa}
+      .vs{display:flex;gap:20px;margin:16px 0;flex-wrap:wrap}
+      .vs-card{flex:1;min-width:300px;border:2px solid #dadce0;border-radius:12px;padding:16px;background:#f8f9fa}
+      .vs-card.starter{border-color:#fbbc04}.vs-card.standard{border-color:#1a73e8}
+      .vs-card h4{margin-top:0;text-align:center;padding:8px;border-radius:6px;color:#fff}
+      .vs-card.starter h4{background:#fbbc04;color:#333}
+      .vs-card.standard h4{background:#1a73e8}
+      .toc{background:#f8f9fa;border:1px solid #dadce0;border-radius:8px;padding:16px 24px;margin:20px 0}
+      .toc ul{list-style:none;padding-left:0}.toc li{padding:4px 0}
+      .badge{display:inline-block;padding:2px 10px;border-radius:12px;font-size:12px;font-weight:600;margin-left:6px}
+      .badge.starter{background:#fef7e0;color:#e37400;border:1px solid #fbbc04}
+      .badge.standard{background:#e8f0fe;color:#1a73e8;border:1px solid #1a73e8}
+      .badge.both{background:#e6f4ea;color:#137333;border:1px solid #34a853}
+      .section-num{color:#1a73e8;font-weight:700}
+      .price{font-size:28px;font-weight:700;color:#1a73e8;text-align:center;margin:8px 0}
+      .price small{font-size:14px;font-weight:400;color:#5f6368}
+      .footer{margin-top:36px;font-size:13px;color:#5f6368;border-top:2px solid #dadce0;padding-top:20px}
+      .feature-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0}
+      .feature-item{padding:10px 14px;border-radius:8px;border:1px solid #dadce0}
+      .feature-item.yes{background:#e6f4ea;border-color:#34a853}
+      .feature-item.no{background:#fce8e6;border-color:#ea4335}
+      .feature-item .label{font-weight:600;font-size:14px}
+      .feature-item .desc{font-size:13px;color:#5f6368}
+      @media(max-width:700px){.vs{flex-direction:column}.feature-grid{grid-template-columns:1fr}}
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+
+      <!-- HERO -->
+      <div class="hero">
+        <h1>Google Workspace: Business Starter vs Business Standard</h1>
+        <p class="subtitle">Phân tích chi tiết sự khác biệt &mdash; Không chỉ liệt kê bảng, mà giải thích tại sao mỗi tính năng quan trọng và bạn nên chọn gói nào</p>
+        <p style="margin:4px 0 0;font-size:13px;color:#80868b;">
+          Ngày viết: 18/03/2026 &bull;
+          Nguồn: <a href="https://knowledge.workspace.google.com/admin/getting-started/editions/compare-business-editions" target="_blank">Google Workspace Compare Business Editions</a>
+        </p>
+      </div>
+
+      <!-- TOC -->
+      <div class="toc">
+        <h3 style="margin-top:0;">Mục lục</h3>
+        <ul>
+          <li><a href="#overview">1. Tổng quan nhanh: Hai gói này dành cho ai?</a></li>
+          <li><a href="#storage">2. Dung lượng lưu trữ: 30 GB vs 2 TB</a></li>
+          <li><a href="#meet">3. Google Meet: Họp cơ bản vs Họp chuyên nghiệp</a></li>
+          <li><a href="#gemini">4. Gemini AI: Khoảng cách lớn nhất</a></li>
+          <li><a href="#drive">5. Drive &amp; Docs: Từ cá nhân sang tổ chức</a></li>
+          <li><a href="#email">6. Gmail: Security Sandbox &amp; Mail Merge</a></li>
+          <li><a href="#chat">7. Google Chat: Spaces nâng cao</a></li>
+          <li><a href="#calendar">8. Calendar: Appointment Scheduling &amp; Working Location</a></li>
+          <li><a href="#security">9. Bảo mật &amp; Quản lý dữ liệu</a></li>
+          <li><a href="#advanced-ai">10. Advanced AI &amp; Workspace Studio Limits</a></li>
+          <li><a href="#my-opinion">11. Ý kiến cá nhân: Standard đáng upgrade ở đâu?</a></li>
+          <li><a href="#who-should">12. Ai nên chọn gói nào?</a></li>
+          <li><a href="#conclusion">13. Kết luận</a></li>
+        </ul>
+      </div>
+
+      <!-- 1. OVERVIEW -->
+      <h2 id="overview"><span class="section-num">1.</span> Tổng quan nhanh: Hai gói này dành cho ai?</h2>
+
+      <div class="vs">
+        <div class="vs-card starter">
+          <h4>Business Starter</h4>
+          <p class="price">~$7 <small>/user/tháng</small></p>
+          <ul>
+            <li>30 GB pooled storage/user</li>
+            <li>Gmail, Drive, Meet, Chat, Calendar cơ bản</li>
+            <li>Gemini AI chỉ trong Gmail</li>
+            <li>Meet tối đa 100 người, không ghi hình</li>
+            <li>Không có Shared Drives nâng cao</li>
+          </ul>
+          <p><b>Phù hợp:</b> Freelancer, startup nhỏ, team &lt; 10 người chỉ cần email doanh nghiệp và collaboration cơ bản.</p>
+        </div>
+        <div class="vs-card standard">
+          <h4>Business Standard</h4>
+          <p class="price">~$14 <small>/user/tháng</small></p>
+          <ul>
+            <li>2 TB pooled storage/user (gấp 66 lần)</li>
+            <li>Gemini AI trên toàn bộ apps</li>
+            <li>Meet 150 người + ghi hình, transcript, breakout rooms</li>
+            <li>Shared Drives đầy đủ, eSignature, custom labels</li>
+            <li>Security Sandbox, Data Regions</li>
+          </ul>
+          <p><b>Phù hợp:</b> Doanh nghiệp vừa, team cần họp nhiều, cộng tác nặng, hoặc muốn tận dụng AI toàn diện.</p>
+        </div>
+      </div>
+
+      <div class="info">
+        <b>Cả hai gói đều:</b> Hỗ trợ 1-300 users, 99.9% uptime SLA, custom email domain, 2-Step Verification, Standard Support, và Workspace Studio.
+        Sự khác biệt nằm ở <b>mức độ</b> và <b>chiều sâu</b> của từng tính năng.
+      </div>
+
+      <!-- 2. STORAGE -->
+      <h2 id="storage"><span class="section-num">2.</span> Dung lượng lưu trữ: 30 GB vs 2 TB</h2>
+
+      <p>
+        Đây là khác biệt dễ thấy nhất và thường là lý do đầu tiên khiến người dùng nâng cấp.
+      </p>
+
+      <table>
+        <thead><tr><th>Tiêu chí</th><th>Starter</th><th>Standard</th></tr></thead>
+        <tbody>
+          <tr><td><b>Dung lượng/user</b></td><td>30 GB pooled</td><td>2 TB pooled</td></tr>
+          <tr><td><b>Chia sẻ giữa</b></td><td colspan="2">Gmail + Drive + Photos (cùng pool)</td></tr>
+          <tr><td><b>Mua thêm</b></td><td colspan="2">Có (cả hai gói)</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Tại sao điều này quan trọng?</h3>
+      <p>
+        30 GB nghe có vẻ đủ, nhưng nó <b>chia sẻ giữa Gmail, Drive, và Photos</b>. Một inbox bận rộn với nhiều attachment
+        có thể chiếm 10-15 GB. Nếu bạn lưu file thiết kế, video, hoặc dataset trên Drive, 30 GB sẽ hết rất nhanh.
+      </p>
+      <p>
+        2 TB của Standard không chỉ là "nhiều hơn" &mdash; nó thay đổi cách bạn làm việc.
+        Bạn không cần lo xóa file cũ, có thể lưu trữ recording cuộc họp trực tiếp trên Drive,
+        và team có thể thoải mái chia sẻ file lớn qua Shared Drives.
+      </p>
+
+      <div class="opinion">
+        <b>Nhận xét:</b> 30 GB chỉ đủ cho email cơ bản. Nếu bạn dùng Drive như storage chính cho team,
+        2 TB là mức tối thiểu hợp lý. Chi phí thêm $7/user/tháng cho 66x dung lượng là rất đáng.
+      </div>
+
+      <!-- 3. MEET -->
+      <h2 id="meet"><span class="section-num">3.</span> Google Meet: Họp cơ bản vs Họp chuyên nghiệp</h2>
+
+      <p>Google Meet là nơi sự khác biệt giữa Starter và Standard <b>rõ ràng nhất trong trải nghiệm hàng ngày</b>.</p>
+
+      <table>
+        <thead><tr><th>Tính năng</th><th>Starter</th><th>Standard</th></tr></thead>
+        <tbody>
+          <tr><td><b>Số người tham gia tối đa</b></td><td>100</td><td>150</td></tr>
+          <tr><td><b>Ghi hình cuộc họp</b></td><td style="color:#ea4335">Không</td><td style="color:#34a853">Có &mdash; lưu vào Drive</td></tr>
+          <tr><td><b>Transcript cuộc họp</b></td><td style="color:#ea4335">Không</td><td style="color:#34a853">Có &mdash; lưu vào Drive</td></tr>
+          <tr><td><b>Noise cancellation</b></td><td style="color:#ea4335">Không</td><td style="color:#34a853">Có</td></tr>
+          <tr><td><b>Breakout rooms</b></td><td style="color:#ea4335">Không</td><td style="color:#34a853">Có</td></tr>
+          <tr><td><b>Polls &amp; Q&amp;A</b></td><td style="color:#ea4335">Không</td><td style="color:#34a853">Có</td></tr>
+          <tr><td><b>Co-hosts</b></td><td style="color:#ea4335">Không</td><td style="color:#34a853">Có</td></tr>
+          <tr><td><b>Waiting rooms</b></td><td style="color:#ea4335">Không</td><td style="color:#34a853">Có</td></tr>
+          <tr><td><b>Translated captions</b></td><td style="color:#ea4335">Không</td><td style="color:#34a853">Có (Gemini)</td></tr>
+          <tr><td><b>Take notes for me</b></td><td style="color:#ea4335">Không</td><td style="color:#34a853">Có (Gemini)</td></tr>
+          <tr><td><b>Studio sound/look/lighting</b></td><td style="color:#ea4335">Không</td><td style="color:#34a853">Có (Gemini)</td></tr>
+          <tr><td><b>Attendance tracking</b></td><td style="color:#ea4335">Không</td><td style="color:#ea4335">Không (chỉ Plus)</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Phân tích thực tế</h3>
+      <p>
+        Starter cho bạn một phòng họp video đủ dùng: screen sharing, chat, hand raising, reactions.
+        Nhưng khi bạn cần <b>ghi lại cuộc họp</b> để chia sẻ cho người vắng mặt, hoặc tạo <b>transcript</b>
+        để review action items sau cuộc họp, Starter không hỗ trợ.
+      </p>
+      <p>
+        Standard biến Meet thành công cụ họp chuyên nghiệp:
+      </p>
+      <ul>
+        <li><b>Recording + Transcript:</b> Không cần ghi chép thủ công. Bật recording, sau cuộc họp file video + bản chép tự động lưu vào Drive.</li>
+        <li><b>Breakout rooms:</b> Workshop, training, brainstorm nhóm nhỏ trong cùng một meeting.</li>
+        <li><b>Noise cancellation:</b> Họp từ quán cà phê hay nhà có trẻ nhỏ? AI lọc tiếng ồn nền.</li>
+        <li><b>Translated captions (Gemini):</b> Team đa ngôn ngữ? Phụ đề được dịch real-time.</li>
+        <li><b>Take notes for me (Gemini):</b> AI tự ghi chú và tóm tắt cuộc họp.</li>
+      </ul>
+
+      <div class="opinion">
+        <b>Nhận xét:</b> Nếu team bạn họp trên 3 lần/tuần và cần review lại nội dung, riêng tính năng
+        <b>recording + transcript + AI notes</b> đã justify toàn bộ chi phí upgrade. Đây là game-changer
+        cho remote teams.
+      </div>
+
+      <!-- 4. GEMINI -->
+      <h2 id="gemini"><span class="section-num">4.</span> Gemini AI: Khoảng cách lớn nhất giữa hai gói</h2>
+
+      <p>
+        Gemini AI là điểm khác biệt chiến lược giữa Starter và Standard. Starter chỉ cho bạn "nếm thử" AI,
+        trong khi Standard mở toàn bộ sức mạnh Gemini trên mọi app.
+      </p>
+
+      <h3>4.1. Gemini trong Google Apps</h3>
+
+      <table>
+        <thead><tr><th>App</th><th>Tính năng AI</th><th>Starter</th><th>Standard</th></tr></thead>
+        <tbody>
+          <tr><td rowspan="3"><b>Gmail</b></td><td>Help me write</td><td style="color:#34a853">Có</td><td style="color:#34a853">Có</td></tr>
+          <tr><td>Side panel</td><td style="color:#34a853">Có</td><td style="color:#34a853">Có</td></tr>
+          <tr><td>Contextual smart replies</td><td style="color:#34a853">Có</td><td style="color:#34a853">Có</td></tr>
+          <tr><td rowspan="3"><b>Chat</b></td><td>Side panel</td><td style="color:#ea4335">Không</td><td style="color:#34a853">Có</td></tr>
+          <tr><td>Summarize conversations</td><td style="color:#ea4335">Không</td><td style="color:#34a853">Có</td></tr>
+          <tr><td>Automatic translation</td><td style="color:#ea4335">Không</td><td style="color:#34a853">Có</td></tr>
+          <tr><td rowspan="3"><b>Meet</b></td><td>Take notes for me</td><td style="color:#ea4335">Không</td><td style="color:#34a853">Có</td></tr>
+          <tr><td>Studio sound/look/lighting</td><td style="color:#ea4335">Không</td><td style="color:#34a853">Có</td></tr>
+          <tr><td>Translated captions &amp; speech</td><td style="color:#ea4335">Không</td><td style="color:#34a853">Có</td></tr>
+          <tr><td rowspan="2"><b>Docs</b></td><td>Side panel, Help me write</td><td style="color:#ea4335">Không</td><td style="color:#34a853">Có</td></tr>
+          <tr><td>Summarize document</td><td style="color:#ea4335">Không</td><td style="color:#34a853">Có</td></tr>
+          <tr><td><b>Sheets</b></td><td>Side panel, Enhanced smart fill</td><td style="color:#ea4335">Không</td><td style="color:#34a853">Có</td></tr>
+          <tr><td><b>Slides</b></td><td>Side panel, Generate images, Remove backgrounds</td><td style="color:#ea4335">Không</td><td style="color:#34a853">Có</td></tr>
+          <tr><td><b>Drive</b></td><td>Side panel, Analyze PDFs</td><td style="color:#ea4335">Không</td><td style="color:#34a853">Có</td></tr>
+        </tbody>
+      </table>
+
+      <h3>4.2. Gemini App (standalone)</h3>
+
+      <table>
+        <thead><tr><th>Tiêu chí</th><th>Starter</th><th>Standard</th></tr></thead>
+        <tbody>
+          <tr><td><b>Tier</b></td><td>Standard access</td><td><b>Pro access</b></td></tr>
+          <tr><td><b>Prompts/ngày</b></td><td>Giới hạn thay đổi</td><td>100 prompts/ngày</td></tr>
+          <tr><td><b>Context window</b></td><td>32K tokens</td><td><b>1M tokens</b></td></tr>
+          <tr><td><b>Deep Research</b></td><td>5 reports/tháng</td><td><b>20 reports/ngày</b></td></tr>
+          <tr><td><b>Image generation</b></td><td>20 images/ngày</td><td>100 images/ngày</td></tr>
+          <tr><td><b>Connect GitHub</b></td><td style="color:#ea4335">Không</td><td style="color:#34a853">Có</td></tr>
+          <tr><td><b>Scheduled actions</b></td><td style="color:#ea4335">Không</td><td>10 active actions</td></tr>
+          <tr><td><b>Video generation (Veo)</b></td><td style="color:#ea4335">Không</td><td>3 videos/ngày</td></tr>
+          <tr><td><b>NotebookLM</b></td><td>Cơ bản</td><td><b>Higher limits + Premium features</b></td></tr>
+        </tbody>
+      </table>
+
+      <h3>4.3. Tại sao khoảng cách này quan trọng?</h3>
+      <p>
+        Với Starter, Gemini chỉ giúp bạn viết email nhanh hơn. Nhưng với Standard, Gemini trở thành
+        <b>trợ lý AI xuyên suốt toàn bộ quy trình làm việc</b>:
+      </p>
+      <ul>
+        <li><b>Đọc email xong → mở Docs → AI tóm tắt tài liệu → chuyển sang Sheets → AI phân tích data → tạo Slides → AI generate hình.</b></li>
+        <li><b>Context window 1M tokens</b> thay vì 32K: có thể phân tích tài liệu dài hàng trăm trang, không bị cắt bớt.</li>
+        <li><b>Deep Research 20 reports/ngày</b> thay vì 5/tháng: research market, đối thủ, xu hướng bất cứ lúc nào.</li>
+      </ul>
+
+      <div class="opinion">
+        <b>Nhận xét:</b> Đây là sự khác biệt lớn nhất. Starter chỉ cho AI ở Gmail &mdash; chỉ 1/7 hệ sinh thái.
+        Standard mở AI cho <b>tất cả 7 apps</b> (Gmail, Chat, Meet, Docs, Sheets, Slides, Drive).
+        Nếu bạn dùng Workspace như công cụ làm việc chính, AI toàn diện sẽ tiết kiệm hàng giờ mỗi tuần.
+      </div>
+
+      <!-- 5. DRIVE -->
+      <h2 id="drive"><span class="section-num">5.</span> Drive &amp; Docs: Từ cá nhân sang tổ chức</h2>
+
+      <table>
+        <thead><tr><th>Tính năng</th><th>Starter</th><th>Standard</th></tr></thead>
+        <tbody>
+          <tr><td><b>Shared Drives (nâng cao)</b></td><td>Chỉ comment/edit file được chia sẻ trực tiếp</td><td>Toàn quyền: tạo, quản lý, sharing settings, storage limits</td></tr>
+          <tr><td><b>eSignature</b></td><td style="color:#ea4335">Không</td><td style="color:#34a853">Có</td></tr>
+          <tr><td><b>Document approvals</b></td><td style="color:#ea4335">Không</td><td style="color:#34a853">Có</td></tr>
+          <tr><td><b>Custom labels &amp; metadata</b></td><td style="color:#ea4335">Không</td><td style="color:#34a853">Có</td></tr>
+          <tr><td><b>Organizational branding (templates)</b></td><td style="color:#ea4335">Không</td><td style="color:#34a853">Có</td></tr>
+          <tr><td><b>Smart chip data extraction</b></td><td style="color:#ea4335">Không</td><td style="color:#34a853">Có</td></tr>
+          <tr><td><b>Ransomware detection</b></td><td style="color:#ea4335">Không</td><td style="color:#34a853">Có</td></tr>
+          <tr><td><b>Gemini AI trong Drive/Docs/Sheets/Slides</b></td><td style="color:#ea4335">Không</td><td style="color:#34a853">Có</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Phân tích thực tế</h3>
+      <ul>
+        <li><b>Shared Drives:</b> Starter cho phép bạn truy cập file trong Shared Drives nhưng không thể tạo hoặc quản lý. Standard cho toàn quyền &mdash; tạo team drives, set sharing rules, quản lý storage. Đây là tính năng cốt lõi cho team collaboration.</li>
+        <li><b>eSignature:</b> Ký hợp đồng, NDA, offer letter ngay trong Google Docs mà không cần DocuSign hay HelloSign. Tiết kiệm cả tiền và thời gian.</li>
+        <li><b>Document approvals:</b> Quy trình duyệt tài liệu chính thức &mdash; request approval, track status, maintain audit trail. Quan trọng cho team có process review.</li>
+        <li><b>Custom labels:</b> Gắn metadata tùy chỉnh cho file (ví dụ: "Department: Marketing", "Status: Approved"). Giúp tìm kiếm và tổ chức file cực kỳ hiệu quả.</li>
+      </ul>
+
+      <div class="opinion">
+        <b>Nhận xét:</b> Starter phù hợp cho cá nhân dùng Drive. Standard biến Drive thành <b>hệ thống quản lý tài liệu doanh nghiệp</b>
+        với shared drives, approvals, labels, eSignature. Nếu team có > 5 người cùng chia sẻ file, Standard là must-have.
+      </div>
+
+      <!-- 6. GMAIL -->
+      <h2 id="email"><span class="section-num">6.</span> Gmail: Security Sandbox &amp; Mail Merge</h2>
+
+      <p>Cả hai gói đều có email doanh nghiệp đầy đủ. Sự khác biệt nằm ở bảo mật nâng cao và tính năng marketing.</p>
+
+      <table>
+        <thead><tr><th>Tính năng</th><th>Starter</th><th>Standard</th></tr></thead>
+        <tbody>
+          <tr><td><b>Custom email (you@company.com)</b></td><td style="color:#34a853">Có</td><td style="color:#34a853">Có</td></tr>
+          <tr><td><b>Spam filtering &amp; virus blocking</b></td><td style="color:#34a853">Có</td><td style="color:#34a853">Có</td></tr>
+          <tr><td><b>Advanced phishing protection</b></td><td style="color:#34a853">Có</td><td style="color:#34a853">Có</td></tr>
+          <tr><td><b>Security Sandbox (advanced attachment scanning)</b></td><td style="color:#ea4335">Không</td><td style="color:#34a853">Có</td></tr>
+          <tr><td><b>Mail merge (personalized email campaigns)</b></td><td style="color:#ea4335">Không</td><td style="color:#34a853">Có</td></tr>
+        </tbody>
+      </table>
+
+      <ul>
+        <li><b>Security Sandbox:</b> Mở attachment đáng ngờ trong môi trường cô lập (sandbox) để phát hiện malware trước khi đến inbox. Quan trọng cho doanh nghiệp nhận nhiều email từ nguồn bên ngoài.</li>
+        <li><b>Mail Merge:</b> Gửi email cá nhân hóa hàng loạt trực tiếp từ Gmail &mdash; mỗi người nhận thấy tên riêng, nội dung riêng. Không cần Mailchimp cho các chiến dịch nhỏ.</li>
+      </ul>
+
+      <!-- 7. CHAT -->
+      <h2 id="chat"><span class="section-num">7.</span> Google Chat: Spaces nâng cao</h2>
+
+      <table>
+        <thead><tr><th>Tính năng</th><th>Starter</th><th>Standard</th></tr></thead>
+        <tbody>
+          <tr><td><b>Chat, Spaces cơ bản</b></td><td style="color:#34a853">Có</td><td style="color:#34a853">Có</td></tr>
+          <tr><td><b>External spaces (mở/tắt)</b></td><td style="color:#ea4335">Không</td><td style="color:#34a853">Có</td></tr>
+          <tr><td><b>Gemini AI trong Chat</b></td><td style="color:#ea4335">Không</td><td style="color:#34a853">Có (summarize, translate, side panel)</td></tr>
+          <tr><td><b>Chat Interoperability (add-on)</b></td><td style="color:#ea4335">Không</td><td style="color:#34a853">Có</td></tr>
+        </tbody>
+      </table>
+
+      <p>
+        Standard cho phép <b>tạo spaces với người bên ngoài tổ chức</b> (partners, freelancers) và kiểm soát admin mở/tắt tính năng này.
+        Gemini trong Chat giúp <b>tóm tắt cuộc trò chuyện dài</b> chỉ bằng 1 click &mdash; đặc biệt hữu ích khi bạn đi vắng và cần catch up nhanh.
+      </p>
+
+      <!-- 8. CALENDAR -->
+      <h2 id="calendar"><span class="section-num">8.</span> Calendar: Appointment Scheduling &amp; Working Location</h2>
+
+      <table>
+        <thead><tr><th>Tính năng</th><th>Starter</th><th>Standard</th></tr></thead>
+        <tbody>
+          <tr><td><b>Appointment schedules</b></td><td>Cơ bản (1 booking page, không premium features)</td><td>Đầy đủ (nhiều booking pages, premium features)</td></tr>
+          <tr><td><b>Working location sharing</b></td><td>User tự chia sẻ, admin không kiểm soát</td><td>Admin kiểm soát bật/tắt cho tổ chức</td></tr>
+          <tr><td><b>Time analytics</b></td><td style="color:#ea4335">Không</td><td style="color:#ea4335">Không (chỉ Plus)</td></tr>
+        </tbody>
+      </table>
+
+      <p>
+        <b>Appointment schedules</b> trong Standard hỗ trợ nhiều booking pages và premium features &mdash; 
+        hữu ích cho team sales, support, hoặc bất kỳ ai cần lên lịch họp với người bên ngoài.
+        <b>Working location</b> giúp hybrid team biết ai đang ở office, ai đang remote.
+      </p>
+
+      <!-- 9. SECURITY -->
+      <h2 id="security"><span class="section-num">9.</span> Bảo mật &amp; Quản lý dữ liệu</h2>
+
+      <table>
+        <thead><tr><th>Tính năng</th><th>Starter</th><th>Standard</th></tr></thead>
+        <tbody>
+          <tr><td><b>2-Step Verification, SSL, Password control</b></td><td style="color:#34a853">Có</td><td style="color:#34a853">Có</td></tr>
+          <tr><td><b>Data Regions (chọn nơi lưu dữ liệu)</b></td><td style="color:#ea4335">Không</td><td style="color:#34a853">Có (chọn 1 vùng cho toàn tổ chức)</td></tr>
+          <tr><td><b>Security Advisor data protection</b></td><td style="color:#ea4335">Không</td><td style="color:#34a853">Có</td></tr>
+          <tr><td><b>Session length control (Google services)</b></td><td style="color:#ea4335">Không</td><td style="color:#34a853">Có</td></tr>
+          <tr><td><b>DLP insights report</b></td><td style="color:#ea4335">Không</td><td style="color:#34a853">Có</td></tr>
+          <tr><td><b>Exchange migration tool</b></td><td style="color:#ea4335">Không</td><td style="color:#34a853">Có</td></tr>
+          <tr><td><b>SAML app autoprovisioning</b></td><td>3 apps</td><td><b>Unlimited</b></td></tr>
+          <tr><td><b>Endpoint management nâng cao</b></td><td style="color:#ea4335">Không</td><td style="color:#ea4335">Không (chỉ Plus)</td></tr>
+        </tbody>
+      </table>
+
+      <ul>
+        <li><b>Data Regions:</b> Chọn nơi lưu dữ liệu at-rest (EU, US, etc.) &mdash; cần thiết nếu doanh nghiệp phải tuân thủ GDPR hoặc quy định nội địa.</li>
+        <li><b>Security Advisor:</b> Gợi ý bảo mật tùy chỉnh dựa trên cách tổ chức bạn đang dùng Workspace.</li>
+        <li><b>SAML autoprovisioning:</b> Starter giới hạn 3 apps, Standard unlimited &mdash; quan trọng nếu team dùng nhiều SaaS tools (Slack, Salesforce, Notion...).</li>
+      </ul>
+
+      <!-- 10. ADVANCED AI -->
+      <h2 id="advanced-ai"><span class="section-num">10.</span> Advanced AI &amp; Workspace Studio Limits</h2>
+
+      <p>Cả hai gói đều có Workspace Studio, nhưng giới hạn sử dụng rất khác nhau:</p>
+
+      <table>
+        <thead><tr><th>Advanced Feature</th><th>Starter</th><th>Standard</th></tr></thead>
+        <tbody>
+          <tr><td><b>Workspace Studio (flow executions/tháng)</b></td><td>100</td><td><b>400</b></td></tr>
+          <tr><td><b>Audio overviews cho PDFs</b></td><td style="color:#ea4335">Không</td><td>20/ngày</td></tr>
+          <tr><td><b>Google Flow credits/tháng</b></td><td>50</td><td><b>1,000</b></td></tr>
+          <tr><td><b>Avatar Generation in Vids</b></td><td>25/tháng</td><td>25/tháng</td></tr>
+          <tr><td><b>Video Generation in Vids</b></td><td>50/tháng</td><td>50/tháng</td></tr>
+          <tr><td><b>Nano Banana Pro (Slides/Vids)</b></td><td>3/tháng</td><td>30/tháng</td></tr>
+        </tbody>
+      </table>
+
+      <div class="info">
+        <b>Lưu ý:</b> Workspace Studio limits bắt đầu áp dụng từ <b>1/4/2026</b>. 100 flow executions/tháng của Starter
+        khá ít nếu bạn có nhiều flow tự động. Standard với 400 executions cho phép tự động hóa nhiều quy trình hơn đáng kể.
+      </div>
+
+      <!-- 11. MY OPINION -->
+      <h2 id="my-opinion"><span class="section-num">11.</span> Ý kiến cá nhân: Tính năng Standard nào tôi tận dụng nhất cho công việc?</h2>
+
+      <p>
+        Dưới đây là đánh giá cá nhân về những tính năng của Standard plan mà tôi cho rằng
+        tạo ra giá trị lớn nhất trong quy trình làm việc hàng ngày:
+      </p>
+
+      <h3>1. Gemini AI toàn diện &mdash; Game changer #1</h3>
+      <div class="opinion">
+        <p>
+          Đây là lý do số 1 để upgrade. Với Starter, Gemini chỉ giúp viết email. Với Standard, workflow hàng ngày của tôi thay đổi hoàn toàn:
+        </p>
+        <ul>
+          <li><b>Docs:</b> "Help me write" draft proposal, "Summarize" tài liệu 50 trang chỉ trong 10 giây.</li>
+          <li><b>Sheets:</b> Side panel giúp phân tích data, tạo formula phức tạp bằng natural language.</li>
+          <li><b>Drive:</b> Upload PDF → Gemini phân tích nội dung → trả lời câu hỏi về document.</li>
+          <li><b>Meet:</b> "Take notes for me" + transcript = không bao giờ quên action items.</li>
+          <li><b>Chat:</b> Tóm tắt conversation dài 200+ messages thành vài bullet points.</li>
+        </ul>
+        <p><b>Ước tính tiết kiệm: 5-8 giờ/tuần</b> cho một knowledge worker.</p>
+      </div>
+
+      <h3>2. Meet Recording + Transcript &mdash; Không thể thiếu cho remote team</h3>
+      <div class="opinion">
+        <p>
+          Trước khi có tính năng này, tôi phải ghi chép thủ công hoặc dùng tool bên ngoài (Otter.ai, Fireflies).
+          Giờ chỉ cần bật recording trong Meet, sau cuộc họp có cả video lẫn bản chép text trên Drive.
+          Kết hợp với Workspace Studio flow "When a meeting transcript is ready → Summarize → Extract action items",
+          toàn bộ quy trình after-meeting trở nên tự động.
+        </p>
+        <p><b>Ước tính tiết kiệm: 30-45 phút/cuộc họp.</b></p>
+      </div>
+
+      <h3>3. Shared Drives + eSignature + Document Approvals</h3>
+      <div class="opinion">
+        <p>
+          Ba tính năng này kết hợp tạo nên một <b>document management system</b> hoàn chỉnh ngay trong Workspace:
+        </p>
+        <ul>
+          <li>Team lưu file vào <b>Shared Drives</b> (không phải My Drive cá nhân) &rarr; file thuộc team, không mất khi ai đó rời công ty.</li>
+          <li>Tạo hợp đồng trong Docs, request <b>eSignature</b> ngay &rarr; không cần DocuSign ($20/tháng).</li>
+          <li>Proposal cần duyệt? Dùng <b>Document Approvals</b> &rarr; formal approval workflow, có audit trail.</li>
+        </ul>
+        <p><b>Tiết kiệm thêm: $15-25/user/tháng</b> nếu trước đó dùng tools bên ngoài cho eSignature và document management.</p>
+      </div>
+
+      <h3>4. Deep Research (20 reports/ngày vs 5/tháng)</h3>
+      <div class="opinion">
+        <p>
+          Starter cho 5 reports/tháng &mdash; gần như không đủ để dùng thường xuyên. Standard cho <b>20 reports/ngày</b> &mdash;
+          tôi có thể research bất kỳ chủ đề nào bất kỳ lúc nào: phân tích đối thủ, xu hướng công nghệ, best practices,
+          market data. Đây là "private research analyst" hoạt động 24/7.
+        </p>
+      </div>
+
+      <h3>5. Noise Cancellation + Breakout Rooms (Meet)</h3>
+      <div class="opinion">
+        <p>
+          Tưởng nhỏ nhưng tác động lớn. Noise cancellation giúp họp chuyên nghiệp hơn khi không ở văn phòng.
+          Breakout rooms biến một meeting 20 người thành 4 nhóm brainstorm rồi tổng hợp &mdash; hiệu quả hơn nhiều
+          so với "mọi người nói lần lượt".
+        </p>
+      </div>
+
+      <!-- 12. WHO SHOULD -->
+      <h2 id="who-should"><span class="section-num">12.</span> Ai nên chọn gói nào?</h2>
+
+      <div class="vs">
+        <div class="vs-card starter">
+          <h4>Chọn Starter khi:</h4>
+          <ul>
+            <li>Chỉ cần email doanh nghiệp (you@company.com)</li>
+            <li>Team nhỏ (&lt; 5 người), ít họp video</li>
+            <li>Không cần ghi hình cuộc họp</li>
+            <li>Dung lượng 30 GB đủ (email + ít file)</li>
+            <li>Chưa cần AI toàn diện</li>
+            <li>Budget hạn chế ($7/user/tháng)</li>
+          </ul>
+        </div>
+        <div class="vs-card standard">
+          <h4>Chọn Standard khi:</h4>
+          <ul>
+            <li>Team 5+ người, họp thường xuyên</li>
+            <li>Cần recording &amp; transcript cuộc họp</li>
+            <li>Dùng Drive như storage chính (cần 2 TB)</li>
+            <li>Muốn Gemini AI trên mọi app</li>
+            <li>Cần Shared Drives, eSignature, approvals</li>
+            <li>Đáng giá $14/user/tháng cho productivity boost</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="highlight">
+        <b>Quy tắc đơn giản:</b> Nếu bạn chỉ cần email &rarr; Starter. Nếu bạn cần <b>collaboration platform</b> &rarr; Standard.
+        Khoảng cách $7/user/tháng giữa hai gói mang lại giá trị vượt xa chi phí nếu bạn tận dụng đúng các tính năng.
+      </div>
+
+      <!-- 13. CONCLUSION -->
+      <h2 id="conclusion"><span class="section-num">13.</span> Kết luận</h2>
+
+      <p>
+        Business Starter và Business Standard <b>không chỉ khác nhau về dung lượng</b>. Sự khác biệt thực sự nằm ở:
+      </p>
+      <ol>
+        <li><b>Gemini AI:</b> 1 app (Gmail) vs 7 apps &mdash; thay đổi hoàn toàn cách làm việc.</li>
+        <li><b>Google Meet:</b> Phòng họp cơ bản vs công cụ họp chuyên nghiệp với recording, transcript, AI notes.</li>
+        <li><b>Drive/Docs:</b> Lưu trữ cá nhân vs hệ thống tài liệu doanh nghiệp với Shared Drives, eSignature, approvals.</li>
+        <li><b>Bảo mật:</b> Cơ bản vs Data Regions, Security Sandbox, DLP insights.</li>
+        <li><b>AI Limits:</b> Workspace Studio 100 vs 400 flows/tháng; Deep Research 5/tháng vs 20/ngày.</li>
+      </ol>
+
+      <p>
+        Với mức chênh lệch $7/user/tháng, Standard plan cung cấp <b>ROI rất cao</b> cho bất kỳ team nào
+        dùng Workspace như platform làm việc chính. Riêng AI + Meet recording đã có thể tiết kiệm
+        hàng chục giờ mỗi tháng cho mỗi nhân viên.
+      </p>
+
+      <div class="tip">
+        <b>Lời khuyên:</b> Bắt đầu với Starter nếu bạn chưa chắc. Google cho phép
+        <a href="https://support.google.com/a/answer/9522878" target="_blank">upgrade bất kỳ lúc nào</a>
+        mà không mất dữ liệu. Khi team bắt đầu cần họp nhiều hơn, chia sẻ file nhiều hơn, hoặc muốn tận dụng AI &mdash;
+        đó là lúc chuyển sang Standard.
+      </div>
+
+      <!-- FOOTER -->
+      <div class="footer">
+        <p>
+          <b>Tham khảo:</b><br>
+          &bull; <a href="https://knowledge.workspace.google.com/admin/getting-started/editions/compare-business-editions" target="_blank">Compare Business Editions (Google Workspace Help)</a><br>
+          &bull; <a href="https://workspace.google.com/pricing" target="_blank">Google Workspace Pricing</a><br>
+          &bull; <a href="https://support.google.com/a/answer/14571493" target="_blank">Gemini App Offerings Comparison</a>
+        </p>
+        <p>Viết bởi AI &bull; 18/03/2026 &bull; AI Quest LTP</p>
+      </div>
+
+    </div>
+  </body>
+</html>

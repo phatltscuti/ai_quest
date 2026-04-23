@@ -1,0 +1,20 @@
+--- PASTE BELOW "Raw notes" IN THE MINUTES DOC (for post-meeting / Flow C demo) ---
+
+Meeting outcome (2026-04-19, 30m)
+
+Decisions:
+• MVP will support earn/burn only at POS; no campaign module in MVP.
+• Acme will provide OAuth2 client credentials for a dedicated integration user (non–service-account) for staging and production.
+
+Open questions:
+• Final SLA numbers to be confirmed by Acme IT next week.
+
+Technical note (IMPORTANT for estimate extraction):
+MVP must include REST integration between the loyalty engine and the POS catalog (AcmePOS v12), using OAuth2 client credentials flow. Initial sizing: backend-heavy; include integration tests against Acme staging.
+
+Rough indicative effort discussed (not binding):
+• Backend integration package discussed in range ~12–20 MD for first vertical slice (staging + prod config + rollback plan).
+
+Next steps:
+• Send draft SOW outline.
+• Schedule 60m technical deep-dive with AcmePOS API owner.

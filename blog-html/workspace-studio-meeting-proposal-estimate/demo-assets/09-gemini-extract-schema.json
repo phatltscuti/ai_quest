@@ -1,0 +1,17 @@
+{
+  "clientName": "string",
+  "projectCode": "string",
+  "executiveSummaryBullets": ["string"],
+  "mvpScopeBullets": ["string"],
+  "assumptionsBullets": ["string"],
+  "risksBullets": ["string"],
+  "nextStepsNumbered": ["string"],
+  "estimateRows": [
+    {
+      "work_package": "string",
+      "role": "string",
+      "md_low": 0,
+      "md_high": 0
+    }
+  ]
+}

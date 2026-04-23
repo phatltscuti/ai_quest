@@ -1,0 +1,323 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Summarize The Complete Guide to Building Skills for Claude</title>
+    <style>
+      *{box-sizing:border-box}
+      body{margin:0;font-family:Arial,sans-serif;background:#fff;color:#222;line-height:1.7}
+      a{color:#0066cc;text-decoration:none}
+      a:hover{text-decoration:underline}
+      .wrap{max-width:980px;margin:0 auto;padding:20px}
+      h1{margin:0 0 10px;font-size:28px}
+      h2{margin:28px 0 14px;font-size:22px;border-bottom:2px solid #ddd;padding-bottom:8px}
+      h3{margin:20px 0 10px;font-size:18px}
+      ul,ol{margin:8px 0;padding-left:22px}
+      p{margin:12px 0}
+      code{background:#f5f5f5;border:1px solid #ddd;padding:2px 6px;font-size:13px;font-family:monospace}
+      pre{white-space:pre-wrap;word-wrap:break-word;border:1px solid #ddd;background:#f5f5f5;padding:12px;overflow:auto;font-size:13px;font-family:monospace;margin:12px 0}
+      .hero{border:1px solid #ddd;padding:20px;margin-bottom:20px;background:#f9f9f9}
+      .highlight{background:#fffbe6;border-left:4px solid #f5c542;padding:12px 16px;margin:16px 0}
+      .comparison{width:100%;border-collapse:collapse;margin:16px 0}
+      .comparison th,.comparison td{border:1px solid #ddd;padding:10px 12px;text-align:left}
+      .comparison th{background:#f0f0f0;font-weight:bold}
+      .footer{margin-top:30px;font-size:12px;color:#666;border-top:1px solid #ddd;padding-top:20px}
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+
+      <!-- ==================== INTRODUCTION ==================== -->
+      <div class="hero">
+        <h1>Summarize The Complete Guide to Building Skills for Claude</h1>
+        <p>
+          Analysis and insights from
+          <a href="https://resources.anthropic.com/hubfs/The-Complete-Guide-to-Building-Skill-for-Claude.pdf" target="_blank">
+            <i>The Complete Guide to Building Skills for Claude</i></a> (Anthropic, 2026).
+        </p>
+        <p>
+          If you use Claude daily &ndash; writing code, creating documents, managing workflows &ndash;
+          you've probably had to repeat the same prompt instructions over and over.
+          <b>Skills</b> are Anthropic's solution to this problem:
+          you "teach" Claude once, and it remembers how to work that way forever.
+        </p>
+        <p>
+          This article is <b>not a translation</b> of the original document.
+          The goal is to <b>extract practical lessons</b>,
+          analyze the benefits, and share personal perspectives on how to apply Skills in real projects.
+        </p>
+      </div>
+
+      <!-- ==================== BODY ==================== -->
+
+      <h2>1. What is a Skill?</h2>
+      <p>
+        A <b>Skill</b> is a <b>folder containing a set of instructions</b> (in Markdown + YAML format) that teaches Claude how to handle
+        a specific type of task. Instead of re-explaining every time,
+        you package your knowledge, processes, and best practices into a folder &ndash;
+        and Claude will automatically apply them when needed.
+      </p>
+      <p>Skill folder structure:</p>
+      <pre>your-skill-name/
+&#9500;&#9472;&#9472; SKILL.md          # Required &ndash; main instruction file (Markdown + YAML frontmatter)
+&#9500;&#9472;&#9472; scripts/          # Optional &ndash; executable code (Python, Bash...)
+&#9500;&#9472;&#9472; references/       # Optional &ndash; reference documentation
+&#9492;&#9472;&#9472; assets/           # Optional &ndash; templates, fonts, icons...</pre>
+
+      <div class="highlight">
+        <b>Key takeaway:</b> A Skill is not a complex plugin or extension.
+        It's just a folder with a <code>SKILL.md</code> file &ndash; simple yet powerful.
+      </div>
+
+      <h2>2. Why Use Skills? (Practical Benefits)</h2>
+
+      <h3>2.1. No More Repeating Prompts</h3>
+      <p>
+        The biggest problem with AI is that <b>every new conversation starts from zero</b>.
+        You have to re-explain your coding conventions, style guides, and workflows each time.
+        Skills solve this completely: teach once, Claude remembers forever.
+      </p>
+
+      <h3>2.2. Consistent Results</h3>
+      <p>
+        When the entire team uses the same Skill, everyone gets output following the same standard &ndash;
+        regardless of individual prompting ability.
+      </p>
+
+      <h3>2.3. Save Tokens and Time</h3>
+      <p>
+        Anthropic's document shows a comparison: without a Skill, it takes 15 back-and-forth messages + 12,000 tokens;
+        with a Skill, only 2 clarifying questions + 6,000 tokens. <b>50% token reduction and 85% fewer messages.</b>
+      </p>
+
+      <h3>2.4. Cross-Platform</h3>
+      <p>
+        A Skill written once works on <b>Claude.ai</b>, <b>Claude Code</b>, and the <b>API</b> &ndash;
+        no modifications needed.
+      </p>
+
+      <h3>2.5. Combine with MCP (Model Context Protocol)</h3>
+      <p>
+        If you're using MCP to connect Claude with services (Notion, Linear, GitHub, Sentry...),
+        Skills serve as the <b>"knowledge"</b> layer on top of the <b>"connectivity"</b> layer:
+      </p>
+      <table class="comparison">
+        <tr><th>MCP (Connectivity)</th><th>Skill (Knowledge)</th></tr>
+        <tr><td>Connects Claude to services (Notion, Linear...)</td><td>Teaches Claude how to use services effectively</td></tr>
+        <tr><td>Provides real-time data and tools</td><td>Packages workflows and best practices</td></tr>
+        <tr><td>What Claude <i>can</i> do</td><td>How Claude <i>should</i> do it</td></tr>
+      </table>
+      <p>
+        Anthropic uses an analogy: MCP is the <b>professional kitchen</b> (tools, ingredients),
+        Skills are the <b>recipes</b> (step-by-step guidance).
+        Having a kitchen without recipes still works, but results are inconsistent.
+      </p>
+
+      <h2>3. Core Design Principles (3 Pillars)</h2>
+
+      <h3>3.1. Progressive Disclosure</h3>
+      <p>Skills use a 3-tier system to save tokens:</p>
+      <ol>
+        <li><b>Tier 1 &ndash; YAML frontmatter:</b> Always loaded into the system prompt. Contains only the name and short description so Claude knows <i>when</i> to use this skill.</li>
+        <li><b>Tier 2 &ndash; SKILL.md body:</b> Loaded only when Claude determines the skill is relevant. Contains all detailed instructions.</li>
+        <li><b>Tier 3 &ndash; Linked files:</b> Read only when truly needed (scripts, references, assets).</li>
+      </ol>
+      <div class="highlight">
+        <b>Lesson:</b> This is a brilliantly designed architecture.
+        Instead of stuffing everything into context, Claude only loads what's necessary &ndash;
+        just like lazy loading in web development.
+      </div>
+
+      <h3>3.2. Composability</h3>
+      <p>
+        Claude can load multiple Skills simultaneously. Each Skill should work independently,
+        never assuming it's the only capability available.
+      </p>
+
+      <h3>3.3. Portability</h3>
+      <p>
+        A Skill works identically across Claude.ai, Claude Code, and the API.
+        Write once, run everywhere.
+      </p>
+
+      <h2>4. Key Points Summary</h2>
+
+      <h3>4.1. Three Common Skill Categories</h3>
+      <table class="comparison">
+        <tr><th>Category</th><th>Purpose</th><th>Example</th></tr>
+        <tr>
+          <td><b>Category 1:</b> Document &amp; Asset Creation</td>
+          <td>Create consistent output (code, documents, designs, slides...)</td>
+          <td><code>frontend-design</code> &ndash; create production-grade web interfaces</td>
+        </tr>
+        <tr>
+          <td><b>Category 2:</b> Workflow Automation</td>
+          <td>Multi-step processes requiring consistency</td>
+          <td><code>skill-creator</code> &ndash; guided Skill creation wizard</td>
+        </tr>
+        <tr>
+          <td><b>Category 3:</b> MCP Enhancement</td>
+          <td>Add workflow guidance to existing MCP servers</td>
+          <td><code>sentry-code-review</code> &ndash; auto code review using Sentry data</td>
+        </tr>
+      </table>
+
+      <h3>4.2. Writing Effective YAML Frontmatter</h3>
+      <p>Frontmatter is the most important part &ndash; it determines whether Claude loads your skill:</p>
+      <pre>---
+name: sprint-planner
+description: Manages Linear project workflows including sprint
+  planning, task creation, and status tracking. Use when user
+  mentions "sprint", "Linear tasks", "project planning", or
+  asks to "create tickets".
+---</pre>
+      <p><b>Golden rules:</b></p>
+      <ul>
+        <li><code>name</code>: use kebab-case, no capitals, no spaces</li>
+        <li><code>description</code>: must include <b>what the skill does</b> + <b>when to use it</b> (trigger phrases)</li>
+        <li>No XML tags (<code>&lt; &gt;</code>) in frontmatter (security reason)</li>
+        <li>Don't use "claude" or "anthropic" in names (reserved)</li>
+      </ul>
+
+      <h3>4.3. Five Skill Design Patterns</h3>
+      <ol>
+        <li><b>Sequential Workflow:</b> Multi-step processes in order (customer onboarding, deploy pipeline...)</li>
+        <li><b>Multi-MCP Coordination:</b> Combining multiple MCP servers (Figma &rarr; Google Drive &rarr; Linear &rarr; Slack)</li>
+        <li><b>Iterative Refinement:</b> Loop to improve quality (generate report, check, fix, repeat)</li>
+        <li><b>Context-aware Tool Selection:</b> Pick the right tool based on context (large file &rarr; cloud, code &rarr; GitHub, doc &rarr; Notion)</li>
+        <li><b>Domain-specific Intelligence:</b> Embed specialized knowledge (compliance rules, internal processes...)</li>
+      </ol>
+
+      <h3>4.4. Testing and Iteration</h3>
+      <p>The document recommends 3 testing levels:</p>
+      <ol>
+        <li><b>Triggering test:</b> Does the skill auto-load when relevant? Does it trigger on unrelated queries?</li>
+        <li><b>Functional test:</b> Is the output correct? Do API calls succeed?</li>
+        <li><b>Performance comparison:</b> Compare with/without Skill (tokens, steps, accuracy)</li>
+      </ol>
+      <div class="highlight">
+        <b>Pro tip from Anthropic:</b> Iterate on a <b>single task</b> until Claude succeeds,
+        then extract the winning approach into a Skill.
+        Don't write the Skill first and then test &ndash; working backwards is faster.
+      </div>
+
+      <h3>4.5. Distribution and Sharing</h3>
+      <ul>
+        <li><b>Individual:</b> Upload a zip to Claude.ai (Settings &gt; Capabilities &gt; Skills) or place in Claude Code's skills directory</li>
+        <li><b>Organization:</b> Admins deploy Skills workspace-wide (feature since Dec 2025)</li>
+        <li><b>Community:</b> Host on GitHub with README and installation guide</li>
+        <li><b>API:</b> Use <code>/v1/skills</code> endpoint for apps and automated agents</li>
+      </ul>
+      <p>
+        Notably, Anthropic has published <b>Agent Skills as an open standard</b> &ndash;
+        like MCP, Skills are designed to be cross-platform, not exclusive to Claude.
+      </p>
+
+      <h2>5. Lessons Learned</h2>
+
+      <h3>5.1. "Teach" AI Instead of "Command" AI</h3>
+      <p>
+        Skills change how we think about AI: instead of writing prompts every time (commanding),
+        you <b>package knowledge</b> so AI knows how to work on its own (teaching).
+        This is an important step from "AI assistant" to "AI colleague".
+      </p>
+
+      <h3>5.2. Domain Knowledge is a Competitive Advantage</h3>
+      <p>
+        AI can write code, but it doesn't know your team's <i>internal processes</i>,
+        your specific <i>coding conventions</i>, or your unique <i>business logic</i>.
+        Whoever packages this knowledge into Skills gains a significant edge.
+      </p>
+
+      <h3>5.3. Simple but Not Trivial</h3>
+      <p>
+        Technically, a Skill is just a folder with a Markdown file.
+        But the power lies in the <b>Progressive Disclosure architecture</b> &ndash;
+        loading only what's needed, when it's needed.
+        This is a design lesson worth learning for any system.
+      </p>
+
+      <h3>5.4. Skills are "Living Documents"</h3>
+      <p>
+        Anthropic emphasizes: Skills aren't write-once-and-done.
+        You need to monitor for under-triggering / over-triggering and update continuously.
+        Just like maintaining code.
+      </p>
+
+      <h2>6. Personal Take: Applying Skills in Real Projects</h2>
+
+      <h3>6.1. Skills for Laravel/PHP Projects</h3>
+      <p>
+        As a PHP Developer, the biggest potential lies in creating Skills for:
+      </p>
+      <ul>
+        <li><b>Laravel coding conventions:</b> Teach Claude how to name controllers, services, repositories, migrations... following team standards</li>
+        <li><b>API response format:</b> Ensure every API Claude creates returns the correct format <code>{data, message, status}</code></li>
+        <li><b>Database migration workflow:</b> Process: create migration &rarr; model &rarr; factory &rarr; seeder &rarr; test in proper order</li>
+        <li><b>Code review checklist:</b> Claude self-checks for N+1 queries, mass assignment, validation rules... before returning code</li>
+      </ul>
+
+      <h3>6.2. Skills for Team Workflows</h3>
+      <ul>
+        <li><b>Sprint planning skill:</b> Combine with Linear/Jira MCP so Claude auto-creates tasks from requirement docs</li>
+        <li><b>PR review skill:</b> Combine GitHub MCP + Sentry MCP for code review based on real error data</li>
+        <li><b>Documentation skill:</b> Auto-generate API docs and changelogs from commit history</li>
+      </ul>
+
+      <h3>6.3. Skills for Personal Use</h3>
+      <ul>
+        <li><b>Blog writing skill:</b> Teach Claude to write blogs in your personal style (structure, tone, HTML format)</li>
+        <li><b>Video script skill:</b> Create YouTube video scripts using a fixed template (hook &rarr; content &rarr; CTA)</li>
+        <li><b>Learning note skill:</b> Claude summarizes documents into personalized study notes</li>
+      </ul>
+
+      <div class="highlight">
+        <b>Key insight:</b> Skills aren't just for developers.
+        Anyone with repeatable workflows can benefit:
+        marketing, content, HR, finance...
+        If you can write Markdown, you can create a Skill.
+      </div>
+
+      <h2>7. Quick Start in 15 Minutes</h2>
+      <p>Anthropic says you can create your first Skill in 15-30 minutes. Here's how:</p>
+      <ol>
+        <li><b>Identify a use case:</b> Pick your most repetitive workflow</li>
+        <li><b>Create a folder:</b> <code>mkdir my-first-skill</code></li>
+        <li><b>Write SKILL.md:</b> Start with YAML frontmatter (name + description), then add detailed instructions</li>
+        <li><b>Upload &amp; test:</b> Upload to Claude.ai (Settings &gt; Capabilities &gt; Skills) and try different prompts</li>
+        <li><b>Iterate:</b> Fix description if skill doesn't trigger correctly, add instructions if output quality is lacking</li>
+      </ol>
+      <p>Or use the <b>skill-creator</b> (available in Claude.ai): type <code>"Use the skill-creator skill to help me build a skill for [use case]"</code></p>
+
+      <!-- ==================== CONCLUSION ==================== -->
+
+      <h2>8. Conclusion</h2>
+      <p>
+        <i>The Complete Guide to Building Skills for Claude</i> is more than a technical document &ndash;
+        it reveals <b>Anthropic's direction</b>: transforming Claude from a chatbot into a deeply customizable platform.
+      </p>
+      <p>
+        With Skills, you don't just use AI &ndash; you <b>train AI</b> your way.
+        This is an advantage that not every AI tool provides.
+      </p>
+      <p><b>Three things to do right now:</b></p>
+      <ol>
+        <li>Read the original document (link at the top) for full technical details</li>
+        <li>Try creating a simple Skill for your most repetitive workflow</li>
+        <li>Share Skills with your team to standardize how everyone works with AI</li>
+      </ol>
+
+      <h2>References</h2>
+      <ul>
+        <li><a href="https://resources.anthropic.com/hubfs/The-Complete-Guide-to-Building-Skill-for-Claude.pdf" target="_blank">The Complete Guide to Building Skills for Claude (PDF)</a> &ndash; Anthropic</li>
+        <li><a href="https://docs.anthropic.com/en/docs/agents-and-tools/skills" target="_blank">Skills Documentation</a> &ndash; Anthropic Docs</li>
+        <li><a href="https://modelcontextprotocol.io/" target="_blank">Model Context Protocol (MCP)</a></li>
+      </ul>
+
+      <div class="footer">
+        <p>File: <code>blog-html/claude-skills-guide/claude-skills-guide-blog-en.html</code></p>
+      </div>
+    </div>
+  </body>
+</html>

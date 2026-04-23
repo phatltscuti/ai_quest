@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>ant CLI — Step 02: kiểm tra trước login</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <h2 class="page-title">Ảnh Step 02 — Auth status (trước khi login)</h2>
+    <p class="page-hint">
+        Bước đầu trong luồng demo &bull; Chụp khung terminal → lưu <span class="save-as">images/step-02-auth-status-not-configured.png</span>
+    </p>
+
+    <div class="vscode-panel">
+        <div class="vscode-tabs">
+            <div class="v-tab">Problems</div>
+            <div class="v-tab">Output</div>
+            <div class="v-tab">Debug Console</div>
+            <div class="v-tab active">Terminal</div>
+            <div class="v-tab">Ports</div>
+            <div class="v-actions">>_ PowerShell &nbsp; ⚠ &nbsp; + ∨ &nbsp; 🗑️ &nbsp; ...</div>
+        </div>
+        <div class="terminal-content" style="min-height: 380px;">
+
+            <div class="ps-block">
+                <div class="ps-line"><span class="ps-prompt">PS C:\anthropic-cli-ant\tools&gt;</span> <span class="ps-cmd">.\ant.exe auth status</span></div>
+                <pre class="term-out">Active profile:  default (fallback — no active_config set)
+Config dir:      C:\Users\ADMIN\AppData\Roaming\Anthropic
+Profile config:  C:\Users\ADMIN\AppData\Roaming\Anthropic\configs\default.json
+Credentials:     C:\Users\ADMIN\AppData\Roaming\Anthropic\credentials\default.json
+
+Credentials
+  (profile "default" not configured — run `ant auth login` to set it up)
+
+Base URL
+  (active) * SDK default                                    https://api.anthropic.com
+
+Organization
+  (active) * Derived from credential (server-side)          (determined at request time)
+
+Workspace
+  (active) * Server-side default                            (determined at request time)</pre>
+            </div>
+
+            <div class="ps-line cursor-line"><span class="ps-prompt">PS C:\anthropic-cli-ant\tools&gt;</span> <span class="cursor"></span></div>
+        </div>
+        <div class="status-bar">ant v1.10.0 &nbsp;|&nbsp; auth <code>not configured</code> → tiếp step-03 login</div>
+    </div>
+
+</body>
+</html>

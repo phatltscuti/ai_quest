@@ -1,0 +1,53 @@
+PRODUCT SPECIFICATION — Warehouse Visibility MVP (v1.2)
+
+Product line: Operations & Supply Chain
+Status: Approved for presales reuse
+Last updated: 2026-03-10
+
+────────────────────────────────────────
+1. Problem statement
+────────────────────────────────────────
+Mid-size logistics operators lack a single view of stock movement across warehouses. Existing WMS exports are batch-based (4–6 hour lag), causing oversell and manual reconciliation.
+
+────────────────────────────────────────
+2. MVP scope (in)
+────────────────────────────────────────
+- Web dashboard: SKU-level on-hand, inbound/outbound events (last 24h rolling).
+- REST read API from customer WMS (polling every 15 min; webhook optional phase 2).
+- Role-based access: Ops Manager, Warehouse Lead, Read-only Auditor.
+- Alert rules: low-stock threshold, stale sync (>30 min).
+
+────────────────────────────────────────
+3. Out of scope (MVP)
+────────────────────────────────────────
+- Native mobile apps.
+- Multi-tenant billing portal.
+- Predictive demand forecasting (ML).
+
+────────────────────────────────────────
+4. Non-functional requirements
+────────────────────────────────────────
+- Uptime target: 99.5% monthly.
+- P95 API latency: < 800 ms for dashboard queries.
+- Audit log retention: 12 months.
+
+────────────────────────────────────────
+5. Integration assumptions
+────────────────────────────────────────
+- Customer provides WMS API credentials (OAuth2 client credentials).
+- Staging environment available before production cutover.
+
+────────────────────────────────────────
+6. Delivery estimate (internal reference)
+────────────────────────────────────────
+Work package                  | Role      | MD low | MD high
+WMS connector + sync jobs     | Backend   | 18     | 28
+Dashboard UI (web)            | Frontend  | 12     | 18
+IAM + audit                   | Backend   | 6      | 10
+QA + UAT support              | QA        | 8      | 12
+
+────────────────────────────────────────
+7. Risks
+────────────────────────────────────────
+- WMS API documentation incomplete → +2 weeks discovery.
+- Customer firewall whitelisting delays → blocks staging.

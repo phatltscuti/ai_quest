@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Google Workspace CLI (gws) - Tự động hóa Drive/Sheets bằng lệnh terminal</title>
+    <style>
+      *{box-sizing:border-box}
+      body{ margin:0; font-family: 'Segoe UI', Arial, sans-serif; background:#fff; color:#1a1a1a; line-height:1.7; }
+      a{ color:#1a73e8; text-decoration:none; }
+      a:hover{ text-decoration:underline; }
+      .wrap{ max-width: 980px; margin:0 auto; padding: 24px; }
+      h1{ margin:0 0 10px 0; font-size: 30px; color:#1a73e8; }
+      h2{ margin: 32px 0 14px; font-size: 24px; border-bottom: 3px solid #1a73e8; padding-bottom: 8px; color:#202124; }
+      h3{ margin: 22px 0 10px; font-size: 19px; color:#333; }
+      p{ margin: 12px 0; }
+      ul,ol{ margin: 8px 0; padding-left: 22px; }
+      li{ margin-bottom: 4px; }
+      code{ background:#e8f0fe; border:1px solid #d2e3fc; padding:2px 6px; font-size: 13px; font-family:'Consolas', monospace; border-radius:3px; color:#1a73e8; }
+      pre{ white-space: pre-wrap; word-wrap: break-word; border:1px solid #dadce0; background:#f8f9fa; padding:14px; overflow:auto; font-size:13px; font-family:'Consolas', monospace; margin: 12px 0; border-radius:8px; }
+      .hero{ border: 2px solid #1a73e8; padding: 24px 28px; margin-bottom: 24px; background: linear-gradient(135deg, #e8f0fe 0%, #f8f9fa 100%); border-radius: 12px; }
+      .info{ border-left: 4px solid #4285f4; padding: 12px 16px; background:#e8f0fe; margin: 14px 0; border-radius:0 8px 8px 0; }
+      .tip{ border-left: 4px solid #34a853; padding: 12px 16px; background:#e6f4ea; margin: 14px 0; border-radius:0 8px 8px 0; }
+      .warning{ border-left: 4px solid #ea4335; padding: 12px 16px; background:#fce8e6; margin: 14px 0; border-radius:0 8px 8px 0; }
+      .section-num{ color:#1a73e8; font-weight:700; }
+      table{ border-collapse:collapse; width:100%; margin:16px 0; border-radius:8px; overflow:hidden; }
+      th,td{ border:1px solid #dadce0; padding:10px 14px; text-align:left; }
+      th{ background:#1a73e8; color:#fff; font-weight:600; }
+      tr:nth-child(even){ background:#f8f9fa; }
+      .footer{ margin-top: 36px; font-size: 13px; color:#5f6368; border-top:2px solid #dadce0; padding-top:20px; }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="hero">
+        <h1>Google Workspace CLI (gws): Tự động hóa Drive/Sheets bằng lệnh terminal</h1>
+        <p style="margin:4px 0 0;font-size:13px;color:#80868b;">
+          Ngày viết: 20/03/2026 &bull; Nguồn: 
+          <a href="https://github.com/googleworkspace/cli" target="_blank">googleworkspace/cli</a> &bull;
+          <a href="https://www.youtube.com/watch?v=a8sq2fHxlDA" target="_blank">YouTube reference video</a>
+        </p>
+      </div>
+
+      <div class="info">
+        <b>Mục tiêu bài viết:</b> (1) Tóm tắt core features của CLI dựa trên repo chính thức, (2) làm 2 ví dụ “chạy thật” trong máy và ghi lại command + output, (3) đưa ra góc nhìn cá nhân về cách áp dụng để tối ưu công việc hằng ngày.
+      </div>
+
+      <h2 id="features"><span class="section-num">1.</span> Core features có thể đạt được với Google Workspace CLI (`gws`)</h2>
+      <p>
+        Theo README chính thức của dự án, CLI mang tên <code>gws</code> đóng vai trò như “một CLI cho mọi Google Workspace”:
+        thao tác được nhiều dịch vụ (Drive, Gmail, Calendar, Sheets, Chat, ...), dùng chung một cú pháp lệnh và luôn trả về output dạng JSON có cấu trúc.
+      </p>
+
+      <h3>1.1. Tự động sinh command từ Discovery Service</h3>
+      <p>
+        Điểm khác biệt lớn: <code>gws</code> “không ship một danh sách lệnh tĩnh”.
+        Nó đọc Discovery Service của Google tại runtime và tự dựng toàn bộ bề mặt lệnh.
+        Vì vậy khi Google Workspace thêm API/method mới, <code>gws</code> có thể tự cập nhật command surface mà không cần bạn “chờ release CLI”.
+      </p>
+
+      <h3>1.2. Output JSON + khả năng script hóa</h3>
+      <p>
+        README nhấn mạnh mọi output (kết quả và error) đều có cấu trúc JSON.
+        Điều này giúp bạn dễ dàng đưa vào pipeline (ví dụ: pipe sang công cụ khác, hoặc feed cho AI agent).
+      </p>
+
+      <h3>1.3. `--dry-run` để validate trước khi gọi API</h3>
+      <p>
+        Nhiều lệnh hỗ trợ <code>--dry-run</code> để “validate request cục bộ” (không gửi đi).
+        Trong thực tế, nó cực hữu ích để kiểm tra tham số URL/query/body sẽ trông như thế nào trước khi bạn đăng nhập/đã set credentials.
+      </p>
+
+      <h3>1.4. Helper commands (prefix `+`) cho workflow thực dụng</h3>
+      <p>
+        Bên cạnh Discovery-generated commands, repo có các “helper commands” tiền tố <code>+</code> để đưa ra thao tác “đúng nhu cầu người dùng”:
+        ví dụ <code>gmail +send</code>, <code>sheets +append</code>, <code>calendar +agenda</code>, <code>drive +upload</code>, ...
+        Những lệnh này thường dùng tham số dạng cờ/flag đơn giản hơn so với JSON payload.
+      </p>
+
+      <h3>1.5. AI Agent Skills đi kèm</h3>
+      <p>
+        Repo mô tả có 40+ (và thực tế có thể lên đến 100+ theo nội dung video) “agent skills” và có cả index/skills để cài đặt.
+        Ý nghĩa thực tế: bạn có thể để LLM/AI agent gọi trực tiếp các thao tác Workspace mà không tự viết “glue code” cho từng REST endpoint.
+      </p>
+
+      <h3>1.6. Authentication đa luồng + env vars</h3>
+      <p>
+        README mô tả nhiều workflow: <code>gws auth setup</code>, <code>gws auth login</code>, hoặc truyền credentials qua
+        <code>GOOGLE_WORKSPACE_CLI_CREDENTIALS_FILE</code>, token qua <code>GOOGLE_WORKSPACE_CLI_TOKEN</code>, hoặc service account.
+      </p>
+
+      <h3>1.7. Introspect schema & lộ “hợp đồng API”</h3>
+      <p>
+        Bạn có thể dùng <code>gws schema &lt;service&gt;.&lt;resource&gt;</code> để xem mô tả method, request/response schema.
+        Đây là cách nhanh để hiểu “phải truyền body/query thế nào” trước khi bạn ghép automation.
+      </p>
+
+      <h2 id="demos"><span class="section-num">2.</span> Thử nghiệm thực tế trong máy: command + execution result</h2>
+
+      <h3>2.1. Cài đặt và kiểm tra version</h3>
+      <pre>npm install -g @googleworkspace/cli</pre>
+      <pre>gws --version
+gws 0.18.1
+This is not an officially supported Google product.</pre>
+
+      <h3>2.2. Ví dụ #1 (Drive): Dry-run “list files”</h3>
+      <p>
+        Mục tiêu: kiểm tra CLI dựng đúng URL/query request khi gọi Drive API.
+        Mình dùng <code>--dry-run</code> để tránh phụ thuộc credentials.
+      </p>
+      <pre>gws drive files list --params '{}' --dry-run</pre>
+      <pre>{
+  "body": null,
+  "dry_run": true,
+  "is_multipart_upload": false,
+  "method": "GET",
+  "query_params": [],
+  "url": "https://www.googleapis.com/drive/v3/files"
+}</pre>
+
+      <div class="tip">
+        <b>Nhận xét nhanh:</b> Result cho thấy <code>gws</code> dựng request rõ ràng (method, url, query_params).
+        Điều này đủ để bạn “soi” logic before/after khi thay tham số trong automation.
+      </div>
+
+      <h3>2.3. Ví dụ #2 (Sheets): Helper <code>+append</code> thêm 1 dòng (dry-run)</h3>
+      <p>
+        Mục tiêu: dùng helper command để append dữ liệu vào Sheets mà không cần truyền JSON phức tạp.
+        Mình chạy với <code>--dry-run</code> và dùng một ID giả để chỉ kiểm tra phần request.
+      </p>
+      <pre>gws sheets +append --spreadsheet TEST_SPREADSHEET_ID --values 'Alice,100' --dry-run</pre>
+      <pre>{
+  "body": {
+    "values": [
+      [
+        "Alice",
+        "100"
+      ]
+    ]
+  },
+  "dry_run": true,
+  "is_multipart_upload": false,
+  "method": "POST",
+  "query_params": [
+    [
+      "valueInputOption",
+      "USER_ENTERED"
+    ]
+  ],
+  "url": "https://sheets.googleapis.com/v4/spreadsheets/TEST%5FSPREADSHEET%5FID/values/A1:append"
+}</pre>
+
+      <h3>2.4. Ví dụ #3 (Schema): xem “contract” của thao tác tạo Spreadsheet</h3>
+      <p>
+        Trong video reference có nhắc đến việc gom dữ liệu từ Drive rồi đưa vào Sheets để tracking.
+        Thay vì đoán cấu trúc request để tạo spreadsheet, bạn có thể dùng <code>gws schema ...</code> để xem schema cần truyền.
+      </p>
+      <pre>gws schema sheets.spreadsheets.create</pre>
+      <pre>{
+  "description": "Creates a spreadsheet, returning the newly created spreadsheet.",
+  "httpMethod": "POST",
+  "parameters": {},
+  "path": "v4/spreadsheets",
+  "requestBody": {
+    "schema": {
+      "description": "Resource that represents a spreadsheet.",
+      "properties": {
+        "dataSourceSchedules": {
+          "description": "Output only. A list of data source refresh schedules.",
+          "items": {
+            "$ref": "DataSourceRefreshSchedule"
+          },
+          "readOnly": true,
+          "type": "array"
+        },
+        "dataSources": {
+          "description": "A list of external data sources connected with the spreadsheet.",
+          "items": {
+            "$ref": "DataSource"
+          },
+          "type": "array"
+        },
+        "developerMetadata": {
+          "description": "The developer metadata associated with a spreadsheet.",
+          "items": {
+            "$ref": "DeveloperMetadata"
+          },
+          "type": "array"
+        },
+        "namedRanges": {
+          "description": "The named ranges defined in a spreadsheet.",
+          "items": {
+            "$ref": "NamedRange"
+          }
+      ... (đã rút gọn)
+      </pre>
+
+      <h3>2.5. Ghi chú về một giới hạn trong môi trường PowerShell</h3>
+      <p>
+        Khi mình thử truyền payload JSON có key (ví dụ <code>--params '{"pageSize": 2}'</code>), CLI báo lỗi validation kiểu
+        “key must be a string…”, và khi debug qua <code>argv</code> mình thấy dấu <code>"</code> trong JSON bị “nuốt” khi truyền vào native app.
+        Vì vậy, để đảm bảo demo chạy được trong môi trường hiện tại, mình ưu tiên:
+        <code>--params '{}'</code> (không có key), hoặc dùng helper commands (<code>+append</code>) vốn nhận tham số dạng chuỗi/flag.
+      </p>
+
+      <h2 id="opinion"><span class="section-num">3.</span> Quan điểm cá nhân: dùng `gws` để tối ưu công việc hằng ngày</h2>
+      <p>
+        Với workflow thường ngày của mình (kiểu: “mỗi sáng/tuần cần gom dữ liệu từ Drive rồi cập nhật Sheets để theo dõi”), 
+        mình thấy <code>gws</code> có thể đóng vai trò như một “tầng tự động hóa” ở mức thấp nhưng rất linh hoạt:
+      </p>
+      <ul>
+        <li>
+          <b>Giảm thao tác lặp:</b> dùng lệnh kiểu <code>drive files list --dry-run</code> để chuẩn hóa truy vấn, rồi đến lúc thật mình chạy không dry-run để pull danh sách file cần xử lý.
+        </li>
+        <li>
+          <b>Ghi log/aggregation nhanh:</b> helper <code>sheets +append</code> phù hợp để lưu kết quả tổng hợp (ví dụ: tên file mới, link, trạng thái, người phụ trách) vào 1 bảng tracking.
+        </li>
+        <li>
+          <b>AI agent làm “thư ký”:</b> vì output dạng JSON có cấu trúc, agent có thể đọc/ra quyết định dựa trên schema thay vì phải parse text thủ công.
+          Điều này đặc biệt hữu ích khi bạn muốn “hỏi AI” và để AI tự chọn action (ví dụ: tìm tài liệu liên quan trong Drive rồi ghi vào Sheet).
+        </li>
+      </ul>
+
+      <div class="warning">
+        <b>Best practice mình sẽ áp dụng:</b> luôn bắt đầu bằng <code>--dry-run</code> và <code>gws schema ...</code> trước,
+        sau đó mới chuyển sang automation thật. Cách này giúp giảm rủi ro “đụng nhầm API/method” và làm quá trình thiết kế workflow nhanh hơn.
+      </div>
+
+      <div class="footer">
+        <p>
+          <b>Tham khảo:</b><br/>
+          &bull; <a href="https://github.com/googleworkspace/cli" target="_blank">Repo: googleworkspace/cli</a><br/>
+          &bull; <a href="https://www.youtube.com/watch?v=a8sq2fHxlDA" target="_blank">Video reference</a>
+        </p>
+        <p>Viết bởi AI &bull; 20/03/2026 &bull; Nguồn demo: lệnh chạy trên máy hiện tại</p>
+        <p>File: <code>blog-html/google-workspace-cli-gws-2026-03-20/google-workspace-cli-gws-blog.html</code></p>
+      </div>
+    </div>
+  </body>
+</html>
+

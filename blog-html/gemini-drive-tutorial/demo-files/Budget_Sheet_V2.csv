@@ -1,0 +1,12 @@
+Hạng mục,Chi tiết,Đơn giá (USD),Số lượng,Thành tiền (USD),Ghi chú
+Hạ tầng Cloud,A100 GPU Instance,25000,3,75000,Tăng từ 50k lên 75k
+Nhân sự AI Engineer,Senior Level,6000,5,30000,Thuê trong 6 tháng
+Data Storage,Vector DB (Pinecone),2000,1,2000,Chi phí hàng tháng
+API Vertex AI,Token usage,5000,1,5000,Dự trù cho 10M tokens
+Marketing & PR,Webinar & Ads,12000,1,12000,Kế hoạch Q4
+Văn phòng & Thiết bị,Thiết bị test,1000,10,10000,
+Dự phòng phí,10%,13400,1,13400,
+Tổng cộng,,,,147400,
+
+---
+*Bảng ngân sách AI Quest V2*

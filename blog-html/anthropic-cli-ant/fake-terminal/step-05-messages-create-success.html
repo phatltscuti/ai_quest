@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>ant CLI — Step 05: messages create</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <h2 class="page-title">Ảnh Step 05 — Gọi Messages API (first request thành công)</h2>
+    <p class="page-hint">
+        Chụp khung terminal → lưu <span class="save-as">images/step-05-messages-create-success.png</span>
+    </p>
+
+    <div class="vscode-panel">
+        <div class="vscode-tabs">
+            <div class="v-tab">Problems</div>
+            <div class="v-tab">Output</div>
+            <div class="v-tab">Debug Console</div>
+            <div class="v-tab active">Terminal</div>
+            <div class="v-tab">Ports</div>
+            <div class="v-actions">>_ PowerShell &nbsp; ⚠ &nbsp; + ∨ &nbsp; 🗑️ &nbsp; ...</div>
+        </div>
+        <div class="terminal-content" style="min-height: 500px;">
+
+            <div class="ps-block">
+                <div class="ps-line"><span class="ps-prompt">PS C:\anthropic-cli-ant\tools&gt;</span> <span class="ps-cmd">.\ant.exe messages create `</span></div>
+                <div class="ps-line"><span class="ps-cont">>> </span><span class="ps-cmd">  --model claude-sonnet-4-5-20250929 `</span></div>
+                <div class="ps-line"><span class="ps-cont">>> </span><span class="ps-cmd">  --max-tokens 128 `</span></div>
+                <div class="ps-line"><span class="ps-cont">>> </span><span class="ps-cmd">  --message "{role: user, content: 'Hello from ant CLI test'}"</span></div>
+                <pre class="term-out term-json"><span class="jp">{</span>
+  <span class="jk">"model"</span><span class="jp">: </span><span class="js">"claude-sonnet-4-5-20250929"</span><span class="jp">,</span>
+  <span class="jk">"id"</span><span class="jp">: </span><span class="js">"msg_01YMmR5XodC5nTqMxLZMKaq6"</span><span class="jp">,</span>
+  <span class="jk">"type"</span><span class="jp">: </span><span class="js">"message"</span><span class="jp">,</span>
+  <span class="jk">"role"</span><span class="jp">: </span><span class="js">"assistant"</span><span class="jp">,</span>
+  <span class="jk">"content"</span><span class="jp">: [</span>
+    <span class="jp">{</span>
+      <span class="jk">"type"</span><span class="jp">: </span><span class="js">"text"</span><span class="jp">,</span>
+      <span class="jk">"text"</span><span class="jp">: </span><span class="js">"Hello! How are you doing today? Is there something I can help you with?"</span>
+    <span class="jp">}</span>
+  <span class="jp">],</span>
+  <span class="jk">"stop_reason"</span><span class="jp">: </span><span class="js">"end_turn"</span><span class="jp">,</span>
+  <span class="jk">"usage"</span><span class="jp">: {</span>
+    <span class="jk">"input_tokens"</span><span class="jp">: </span><span class="jn">12</span><span class="jp">,</span>
+    <span class="jk">"output_tokens"</span><span class="jp">: </span><span class="jn">20</span>
+  <span class="jp">}</span>
+<span class="jp">}</span></pre>
+            </div>
+
+            <div class="ps-block">
+                <div class="ps-line"><span class="ps-prompt">PS C:\anthropic-cli-ant\tools&gt;</span> <span class="ps-cmd">.\ant.exe messages create `</span></div>
+                <div class="ps-line"><span class="ps-cont">>> </span><span class="ps-cmd">  --model claude-sonnet-4-5-20250929 `</span></div>
+                <div class="ps-line"><span class="ps-cont">>> </span><span class="ps-cmd">  --max-tokens 128 `</span></div>
+                <div class="ps-line"><span class="ps-cont">>> </span><span class="ps-cmd">  --message "{role: user, content: 'Hello'}" `</span></div>
+                <div class="ps-line"><span class="ps-cont">>> </span><span class="ps-cmd">  --transform "content.#(type==`"text`").text" `</span></div>
+                <div class="ps-line"><span class="ps-cont">>> </span><span class="ps-cmd">  --raw-output</span></div>
+                <pre class="term-out term-ok">Hello! How are you doing today? Is there something I can help you with?</pre>
+            </div>
+
+            <div class="ps-line cursor-line"><span class="ps-prompt">PS C:\anthropic-cli-ant\tools&gt;</span> <span class="cursor"></span></div>
+        </div>
+        <div class="status-bar">POST /v1/messages &nbsp;|&nbsp; <code>200 OK</code> &nbsp;|&nbsp; in=12 out=20</div>
+    </div>
+
+</body>
+</html>

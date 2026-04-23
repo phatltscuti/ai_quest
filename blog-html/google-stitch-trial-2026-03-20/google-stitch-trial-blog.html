@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Google Stitch: 5 nâng cấp mới & Thử nghiệm thực tế</title>
+  <style>
+    :root {
+      --primary: #0d47a1;
+      --primary-light: #1976d2;
+      --accent: #ff6d00;
+      --bg: #fafafa;
+      --card: #ffffff;
+      --text: #212121;
+      --text-secondary: #616161;
+      --border: #e0e0e0;
+      --code-bg: #263238;
+      --success: #2e7d32;
+      --success-bg: #e8f5e9;
+      --warning: #f57f17;
+      --warning-bg: #fff8e1;
+      --error: #c62828;
+      --gradient-start: #0d47a1;
+      --gradient-mid: #1565c0;
+      --gradient-end: #00838f;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.75;
+      font-size: 16px;
+    }
+    .hero {
+      background: linear-gradient(135deg, var(--gradient-start), var(--gradient-mid), var(--gradient-end));
+      color: white;
+      padding: 64px 20px;
+      text-align: center;
+    }
+    .hero h1 { font-size: 2.3em; margin-bottom: 14px; font-weight: 700; letter-spacing: -0.5px; }
+    .hero .subtitle { font-size: 1.12em; opacity: 0.93; max-width: 880px; margin: 0 auto; }
+    .hero .badge {
+      display: inline-block;
+      background: rgba(255,255,255,0.18);
+      padding: 6px 20px;
+      border-radius: 20px;
+      font-size: 0.84em;
+      margin-bottom: 18px;
+      backdrop-filter: blur(4px);
+    }
+    .container { max-width: 960px; margin: 0 auto; padding: 32px 20px; }
+
+    .toc {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 28px 32px;
+      margin-bottom: 38px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    }
+    .toc h2 { font-size: 1.3em; margin-bottom: 14px; color: var(--primary); }
+    .toc ol { padding-left: 22px; }
+    .toc li { margin-bottom: 6px; }
+    .toc a { color: var(--primary-light); text-decoration: none; }
+    .toc a:hover { text-decoration: underline; }
+
+    section { margin-bottom: 44px; }
+    h2 {
+      font-size: 1.55em;
+      color: var(--primary);
+      border-bottom: 3px solid var(--primary);
+      padding-bottom: 8px;
+      margin-bottom: 22px;
+    }
+    h3 { font-size: 1.22em; color: var(--text); margin: 22px 0 10px; }
+    h4 { font-size: 1.05em; color: var(--text-secondary); margin: 16px 0 8px; }
+    p { margin-bottom: 14px; }
+    a { color: var(--primary-light); }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 22px 24px;
+      margin-bottom: 20px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+    }
+    .card-accent { border-left: 4px solid var(--accent); }
+    .card-info { border-left: 4px solid var(--primary-light); }
+    .card-warning { border-left: 4px solid var(--warning); background: var(--warning-bg); }
+    .card-success { border-left: 4px solid var(--success); background: var(--success-bg); }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+      margin: 18px 0;
+    }
+    @media (min-width: 800px) {
+      .feature-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    .feature {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 18px 18px;
+      background: white;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+    }
+    .feature h4 {
+      margin: 0 0 8px;
+      color: var(--primary);
+      font-size: 1.05em;
+    }
+    .feature ul { padding-left: 18px; }
+    .feature li { margin-bottom: 6px; }
+
+    .screenshot-wrap { margin: 16px 0; text-align: center; }
+    .screenshot-wrap img {
+      max-width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    .screenshot-wrap .caption { margin-top: 8px; font-size: 0.85em; color: var(--text-secondary); }
+
+    .prompt-box {
+      background: var(--code-bg);
+      color: #cfd8dc;
+      border-radius: 10px;
+      padding: 18px 20px;
+      margin: 14px 0 18px;
+      font-family: 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+      font-size: 0.9em;
+      line-height: 1.65;
+      white-space: pre-wrap;
+      overflow-x: auto;
+    }
+
+    ul { margin-bottom: 14px; padding-left: 24px; }
+    li { margin-bottom: 6px; }
+
+    .footer {
+      text-align: center;
+      padding: 32px;
+      color: var(--text-secondary);
+      font-size: 0.85em;
+      border-top: 1px solid var(--border);
+      margin-top: 40px;
+    }
+    code {
+      background: #eceff1;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.9em;
+    }
+    .tag {
+      display: inline-block;
+      background: #e3f2fd;
+      color: var(--primary);
+      padding: 2px 10px;
+      border-radius: 12px;
+      font-size: 0.8em;
+      margin: 2px 4px 2px 0;
+      font-weight: 600;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- HERO -->
+  <div class="hero">
+    <div class="badge">AI Quest — Investigate How</div>
+    <h1>Google Stitch: 5 nâng cấp mới &amp; Thử nghiệm thực tế</h1>
+    <p class="subtitle">
+      Tóm tắt các năng lực mới được Google công bố và đối chiếu bằng ảnh chụp màn hình từ quá trình thử nghiệm của mình.
+    </p>
+  </div>
+
+  <div class="container">
+    <!-- TABLE OF CONTENTS -->
+    <nav class="toc">
+      <h2>Mục lục</h2>
+      <ol>
+        <li><a href="#s1">Tổng quan 5 nâng cấp mới của Google Stitch</a></li>
+        <li><a href="#s2">Hands-on trial: các bước mình đã làm (kèm ảnh)</a></li>
+        <li><a href="#s3">Mình xác nhận được gì &amp; chưa xác nhận được gì</a></li>
+        <li><a href="#s4">Quan điểm cá nhân &amp; cách áp dụng vào daily workflow</a></li>
+        <li><a href="#s5">Nguồn tham khảo</a></li>
+      </ol>
+    </nav>
+
+    <!-- ================================================================ -->
+    <!-- SECTION 1 -->
+    <!-- ================================================================ -->
+    <section id="s1">
+      <h2>1) Tổng quan 5 nâng cấp mới của Google Stitch</h2>
+
+      <div class="card card-info">
+        <p>
+          Stitch (Google Labs) được mô tả là “AI-native software design canvas” giúp biến <strong>natural language</strong>
+          thành thiết kế UI chất lượng cao, và đang được nâng cấp theo hướng: canvas hiểu ngữ cảnh, agent suy luận,
+          tương tác nhanh (prototypes), voice, và hệ thống thiết kế dùng được xuyên công cụ.
+        </p>
+      </div>
+
+      <div class="feature-grid">
+        <div class="feature">
+          <h4>1. AI-Native Canvas</h4>
+          <ul>
+            <li>Thiết kế lại giao diện canvas dạng infinite (để “diverge &amp; converge”).</li>
+            <li>Cho phép đưa nhiều loại context vào canvas: <code>images</code>, <code>text</code>, và thậm chí <code>code</code>.</li>
+          </ul>
+        </div>
+        <div class="feature">
+          <h4>2. Smarter Design Agent + Agent manager</h4>
+          <ul>
+            <li>Agent có khả năng “reason across the project’s evolution”.</li>
+            <li>Agent manager giúp theo dõi tiến trình và làm song song nhiều hướng thiết kế.</li>
+          </ul>
+        </div>
+        <div class="feature">
+          <h4>3. Voice (“Vibe design”)</h4>
+          <ul>
+            <li>Nói trực tiếp với canvas để nhận critique hoặc cập nhật thiết kế theo lời thoại.</li>
+            <li>Ví dụ được nêu: “give me three different menu options”, “show me this screen in different color palettes”.</li>
+          </ul>
+        </div>
+        <div class="feature">
+          <h4>4. Instant Prototypes (“Prototypes” / Play)</h4>
+          <ul>
+            <li>“Stitch” nhiều screen thành một prototype chạy được.</li>
+            <li>Tạo tương tác &amp; user flows; và có cơ chế suy ra screen tiếp theo dựa trên click.</li>
+          </ul>
+        </div>
+        <div class="feature">
+          <h4>5. Design Systems + DESIGN.md</h4>
+          <ul>
+            <li><code>DESIGN.md</code> là file markdown “agent-friendly” để export/import rules thiết kế.</li>
+            <li>Có thể trích xuất design system từ URL và dùng lại giữa các project/công cụ.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="card card-accent">
+        <h4>Khớp với tweet của Stitch by Google</h4>
+        <p>
+          Ở ảnh tweet, Google liệt kê đúng 5 nâng cấp: AI-Native Canvas, Smarter Design Agent, Voice, Instant Prototypes,
+          và Design Systems + DESIGN.md.
+        </p>
+        <div class="screenshot-wrap">
+          <img src="images/step-01-tweet-upgrades.png" alt="Tweet listing 5 upgrades">
+          <div class="caption">Ảnh chứng cứ: tweet liệt kê 5 nâng cấp mới của Stitch.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================================ -->
+    <!-- SECTION 2 -->
+    <!-- ================================================================ -->
+    <section id="s2">
+      <h2>2) Hands-on trial: các bước mình đã làm (kèm ảnh)</h2>
+
+      <div class="card card-warning">
+        <p>
+          <strong>Lưu ý tính “hands-on”:</strong> Mình thực sự chạy thử trên máy bằng Playwright (headless)
+          để truy cập web và chụp màn hình theo từng bước, sau đó lưu ảnh vào thư mục <code>images/</code> của blog này.
+          Phần sau là mô tả đúng các bước/điểm mình quan sát được từ ảnh.
+        </p>
+      </div>
+
+      <h3>2.1 Bước 1: Xác nhận danh sách 5 nâng cấp</h3>
+      <div class="screenshot-wrap">
+        <img src="images/step-01-tweet-upgrades.png" alt="Tweet listing 5 upgrades">
+        <div class="caption">Bước 1 — Mở tweet và đọc phần liệt kê 5 nâng cấp mới của Stitch.</div>
+      </div>
+
+      <h3>2.2 Bước 2: Mở Stitch web app (landing page)</h3>
+      <div class="screenshot-wrap">
+        <img src="images/step-02-stitch-landing.png" alt="Stitch landing page and prompt card">
+        <div class="caption">Bước 2 — Vào <code>https://stitch.withgoogle.com/</code>, thấy màn landing và card gợi ý prompt (“What native mobile app shall we design?”) + nút “Try now”.</div>
+      </div>
+
+      <h3>2.3 Bước 3: Thử tìm ô nhập prompt trong phiên tự động</h3>
+      <p>
+        Mình cố gắng để automation nhận diện <code>textarea</code>/<code>textbox</code> hoặc điều hướng để vào vùng nhập prompt.
+        Kết quả: không thấy được ô nhập prompt trong phiên headless này.
+      </p>
+      <div class="screenshot-wrap">
+        <img src="images/step-03-prompt-box-not-found.png" alt="Prompt box not found">
+        <div class="caption">Bước 3 — Ảnh cho thấy vẫn ở landing card và automation không tìm thấy prompt textbox/textarea.</div>
+      </div>
+
+      <h3>2.4 Bước 4: Bấm “Try now” nhưng chưa chạm được canvas/prototypes</h3>
+      <div class="screenshot-wrap">
+        <img src="images/step-04-try-now-no-canvas.png" alt="Try now clicked but no canvas">
+        <div class="caption">Bước 4 — Thử “Try now”, nhưng vẫn chưa chuyển được sang canvas/prototype trong phiên tự động.</div>
+      </div>
+
+      <h3>2.5 Bước 5: Bấm “Try now” (coordinate click) -> bị chặn bởi Google sign-in</h3>
+      <div class="screenshot-wrap">
+        <img src="images/step-05-google-signin-block.png" alt="Google sign-in page">
+        <div class="caption">Bước 5 — Khi bấm “Try now” theo kiểu coordinate, Stitch chuyển sang màn Google sign-in (bị gate).</div>
+      </div>
+
+      <h3>2.6 Bước 6: Flow tạo tài khoản Google</h3>
+      <div class="screenshot-wrap">
+        <img src="images/step-06-create-account-flow.png" alt="Create a Google account flow">
+        <div class="caption">Bước 6 — Chuyển tiếp vào “Create a Google Account”.</div>
+      </div>
+
+      <h3>2.7 Bước 7: Thử “Guest mode”/lối tắt trên trang sign-in nhưng không vào được</h3>
+      <div class="screenshot-wrap">
+        <img src="images/step-07-guest-mode-blocked.png" alt="Guest mode blocked">
+        <div class="caption">Bước 7 — Mình thử tìm/tác động “Guest mode” nhưng vẫn bị chặn, không mở được canvas để test prototypes/voice/DESIGN.md.</div>
+      </div>
+
+      <div class="card card-info">
+        <h4>Hệ quả cho “verify how it works”</h4>
+        <p>
+          Vì bị chặn ở bước sign-in trong phiên automation, mình <strong>chưa thể</strong> test trực tiếp hành vi:
+          Play/Prototypes (user flow chạy như thế nào), voice/vibe design (critique realtime ra sao),
+          và DESIGN.md (export/import rules hoạt động thế nào).
+        </p>
+      </div>
+    </section>
+
+    <!-- ================================================================ -->
+    <!-- SECTION 3 -->
+    <!-- ================================================================ -->
+    <section id="s3">
+      <h2>3) Mình xác nhận được gì &amp; chưa xác nhận được gì</h2>
+
+      <div class="card card-success">
+        <h4>Đã xác nhận được (có ảnh chứng cứ)</h4>
+        <ul>
+          <li>Tweet của Stitch by Google có liệt kê đúng 5 nâng cấp mới.</li>
+          <li>Landing của Stitch có card gợi ý prompt + nút “Try now”.</li>
+          <li>Khi đi tới bước “Try now”, phiên thử nghiệm của mình bị chuyển sang Google sign-in/account creation, nên không vào được canvas để chạy tính năng mới.</li>
+        </ul>
+      </div>
+
+      <div class="card card-warning">
+        <h4>Chưa xác nhận được (chưa tới canvas)</h4>
+        <ul>
+          <li>Prototypes/Play chạy interactive flow như thế nào.</li>
+          <li>Voice/Vibe design tạo critique/biến thể UI realtime ra sao.</li>
+          <li>DESIGN.md xuất/nhập quy tắc thiết kế trong UI thực tế.</li>
+          <li>Design agent + Agent manager tạo ra output ra sao sau khi có canvas/đầu vào.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ================================================================ -->
+    <!-- SECTION 4 -->
+    <!-- ================================================================ -->
+    <section id="s4">
+      <h2>4) Quan điểm cá nhân &amp; cách áp dụng vào daily workflow</h2>
+
+      <div class="card card-accent">
+        <p>
+          Dựa trên mô tả chính thức + những gì mình nhìn thấy ở landing,
+          mình đánh giá Stitch đang đi đúng hướng: biến “ý tưởng UI” thành một quá trình gồm <strong>canvas + agent + prototype + design system</strong>.
+          Đây là chuỗi rất hợp với workflow của người làm sản phẩm: từ “muốn gì” -> “thấy được luồng” -> “giữ consistency”.
+        </p>
+      </div>
+
+      <h3>4.1 Cách mình sẽ áp dụng (khi vào được canvas/prototypes)</h3>
+      <ul>
+        <li><strong>Giai đoạn ideation:</strong> Dùng “vibe design” theo intent (business objective / user feeling) để tạo 2–3 hướng layout nhanh hơn.</li>
+        <li><strong>Giai đoạn kiểm chứng:</strong> Dùng “Instant Prototypes/Play” để validate flow (home -> pricing -> signup) trước khi mất thời gian implement.</li>
+        <li><strong>Giai đoạn chuẩn hóa:</strong> Dùng <code>DESIGN.md</code> như một “source of truth” cho rules (spacing, tokens, pattern) để các màn hình mới không bị drift style.</li>
+        <li><strong>Giai đoạn phối hợp:</strong> Nếu voice/vibe design hoạt động đúng như công bố, mình sẽ dùng để convert feedback trong buổi brainstorm thành yêu cầu UI rõ ràng.</li>
+      </ul>
+
+      <div class="card card-info">
+        <h4>Điểm thực tế (từ trải nghiệm của mình)</h4>
+        <p>
+          Trong phiên automation của mình, Stitch bị gate bởi Google sign-in nên mình không test được prototypes/voice/DESIGN.md.
+          Vì vậy, đối với daily workflow của cá nhân mình: mình sẽ dùng Stitch theo kiểu “feature-check” khi đã đăng nhập được,
+          và coi nó như công cụ tăng tốc cho các vòng lặp UI thay vì một bước tự động hóa hoàn toàn.
+        </p>
+      </div>
+    </section>
+
+    <!-- ================================================================ -->
+    <!-- SECTION 5 -->
+    <!-- ================================================================ -->
+    <section id="s5">
+      <h2>5) Nguồn tham khảo</h2>
+      <ul>
+        <li>
+          Google Labs — <a href="https://blog.google/innovation-and-ai/models-and-research/google-labs/stitch-ai-ui-design/" target="_blank" rel="noopener">Introducing “vibe design” with Stitch</a>
+        </li>
+        <li>
+          Google Labs — <a href="https://blog.google/innovation-and-ai/models-and-research/google-labs/stitch-gemini-3/" target="_blank" rel="noopener">Stitch from Google Labs gets updates with Gemini 3</a>
+        </li>
+      </ul>
+    </section>
+
+  </div>
+
+  <div class="footer">
+    AI Quest — Investigate How &bull; Google Stitch Trial Blog &bull; 2026
+  </div>
+</body>
+</html>
+

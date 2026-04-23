@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>ant CLI — Step 03: auth login + status</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <h2 class="page-title">Ảnh Step 03 — Thiết lập credential (OAuth thành công)</h2>
+    <p class="page-hint">
+        Chụp khung terminal → lưu <span class="save-as">images/step-03-auth-configured.png</span>
+    </p>
+
+    <div class="vscode-panel">
+        <div class="vscode-tabs">
+            <div class="v-tab">Problems</div>
+            <div class="v-tab">Output</div>
+            <div class="v-tab">Debug Console</div>
+            <div class="v-tab active">Terminal</div>
+            <div class="v-tab">Ports</div>
+            <div class="v-actions">>_ PowerShell &nbsp; ⚠ &nbsp; + ∨ &nbsp; 🗑️ &nbsp; ...</div>
+        </div>
+        <div class="terminal-content" style="min-height: 420px;">
+
+            <div class="ps-block">
+                <div class="ps-line"><span class="ps-prompt">PS C:\anthropic-cli-ant\tools&gt;</span> <span class="ps-cmd">.\ant.exe auth login</span></div>
+                <pre class="term-out term-out-muted">Opening browser for OAuth login...
+Waiting for authorization...
+
+Logged in successfully. Credentials saved to profile "default".</pre>
+            </div>
+
+            <div class="ps-block">
+                <div class="ps-line"><span class="ps-prompt">PS C:\anthropic-cli-ant\tools&gt;</span> <span class="ps-cmd">.\ant.exe auth status</span></div>
+                <pre class="term-out">Active profile:  default
+Config dir:      C:\Users\ADMIN\AppData\Roaming\Anthropic
+Profile config:  C:\Users\ADMIN\AppData\Roaming\Anthropic\configs\default.json
+Credentials:     C:\Users\ADMIN\AppData\Roaming\Anthropic\credentials\default.json
+
+Credentials
+  (active) * OAuth (Console)                                valid
+  Expires:    2026-06-10 14:32:00 UTC (auto-refresh enabled)
+
+Base URL
+  (active) * SDK default                                    https://api.anthropic.com
+
+Organization
+  (active) * Derived from credential (server-side)          org_01AbcDefGhIjKlMn
+
+Workspace
+  (active) * Server-side default                            wrk_01XyZ9876543210</pre>
+            </div>
+
+            <div class="ps-line cursor-line"><span class="ps-prompt">PS C:\anthropic-cli-ant\tools&gt;</span> <span class="cursor"></span></div>
+        </div>
+        <div class="status-bar">ant v1.10.0 &nbsp;|&nbsp; auth <code>configured</code> &nbsp;|&nbsp; profile default</div>
+    </div>
+
+</body>
+</html>

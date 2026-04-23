@@ -1,0 +1,335 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Analyze performance trends across multiple spreadsheets and data reports using Google Drive Projects</title>
+    <style>
+      *{box-sizing:border-box}
+      body{margin:0;font-family:'Segoe UI',Arial,sans-serif;background:#fff;color:#1a1a1a;line-height:1.75}
+      a{color:#1a73e8;text-decoration:none}
+      a:hover{text-decoration:underline}
+      .wrap{max-width:1020px;margin:0 auto;padding:24px}
+      h1{margin:0 0 10px;font-size:26px;color:#1a73e8;line-height:1.35}
+      h2{margin:34px 0 14px;font-size:22px;border-bottom:3px solid #1a73e8;padding-bottom:8px;color:#202124}
+      h3{margin:28px 0 12px;font-size:18px;color:#333}
+      ol,ul{margin:8px 0;padding-left:24px}
+      li{margin-bottom:6px}
+      p{margin:12px 0}
+      code{background:#e8f0fe;border:1px solid #d2e3fc;padding:2px 6px;font-size:13px;font-family:Consolas,monospace;border-radius:3px;color:#174ea6}
+      pre{white-space:pre-wrap;word-break:break-word;border:1px solid #dadce0;background:#f8f9fa;padding:14px;font-size:12px;font-family:Consolas,monospace;margin:12px 0;border-radius:8px;overflow:auto}
+      .hero{border:2px solid #1a73e8;padding:22px 26px;margin-bottom:22px;background:linear-gradient(135deg,#e8f0fe 0%,#f8f9fa 100%);border-radius:12px}
+      .tip{border-left:4px solid #34a853;padding:12px 16px;background:#e6f4ea;margin:14px 0;border-radius:0 8px 8px 0}
+      table{border-collapse:collapse;width:100%;margin:16px 0;border-radius:8px;overflow:hidden;font-size:14px}
+      th,td{border:1px solid #dadce0;padding:10px 12px;text-align:left;vertical-align:top}
+      th{background:#1a73e8;color:#fff;font-weight:600}
+      tr:nth-child(even){background:#f8f9fa}
+      .toc{background:#f8f9fa;border:1px solid #dadce0;border-radius:8px;padding:16px 22px;margin:20px 0}
+      .toc ul{list-style:none;padding-left:0}
+      .toc li{padding:4px 0}
+      .toc li::before{content:'\2794 ';color:#1a73e8}
+      .ref-list{font-size:14px}
+      .flow-diagram{background:#f8f9fa;border:2px solid #dadce0;border-radius:12px;padding:20px;margin:16px 0;text-align:center;line-height:1.9}
+      .flow-step{display:inline-block;background:#fff;border:2px solid #1a73e8;border-radius:8px;padding:8px 14px;margin:4px;font-weight:600;color:#1a73e8;font-size:13px;vertical-align:middle}
+      .flow-step.starter{background:#34a853;border-color:#34a853;color:#fff}
+      .flow-step.action{background:#4285f4;border-color:#4285f4;color:#fff}
+      .flow-step.ai{background:#fbbc04;border-color:#fbbc04;color:#333}
+      .flow-arrow{display:inline-block;font-size:20px;color:#5f6368;margin:0 2px;vertical-align:middle}
+      .step-block{border:1px solid #dadce0;border-radius:8px;padding:16px 20px;margin:18px 0;background:#fafafa}
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="hero">
+        <h1>Analyze performance trends across multiple spreadsheets and data reports using Google Drive Projects</h1>
+        <p style="color:#5f6368;margin:8px 0 0">AI Quest Type 2 — Investigate How · Demo video included</p>
+      </div>
+
+      <nav class="toc">
+        <strong>Table of contents</strong>
+        <ul>
+          <li><a href="#intro">Introduction</a></li>
+          <li><a href="#requirements">Requirements &amp; checklist</a></li>
+          <li><a href="#scenario">Business scenario</a></li>
+          <li><a href="#architecture">Analysis workflow</a></li>
+          <li><a href="#repro">Reproducibility</a></li>
+          <li><a href="#opinion">Department integration opinion</a></li>
+          <li><a href="#demo-steps">Hands-on steps (Step 1–16)</a></li>
+          <li><a href="#failures">Failure-prone points</a></li>
+          <li><a href="#conclusion">Conclusion</a></li>
+          <li><a href="#references">References</a></li>
+        </ul>
+      </nav>
+
+      <h2 id="intro">Introduction</h2>
+      <p>
+        <b>Google Drive Projects</b> with <b>Ask Gemini in Drive</b> let you pin multiple Google Sheets and PDF reports (by quarter or period)
+        as fixed sources, then ask cross-document analysis questions—extract metrics, compare trends over time, and produce structured findings.
+      </p>
+      <p>
+        Unlike opening files one by one and copying numbers manually, Projects keep original file locations, support citations, resume conversation history,
+        and control scope by toggling sources. Documentation:
+        <a href="https://support.google.com/drive/answer/16684520" target="_blank" rel="noopener">Share Gemini sources using Drive projects</a>,
+        <a href="https://support.google.com/drive/answer/16963068" target="_blank" rel="noopener">Use Gemini in Drive for research &amp; analysis</a>.
+      </p>
+
+      <h2 id="requirements">Requirements &amp; checklist</h2>
+      <ul>
+        <li>Create a <b>Google Drive Project</b> and bundle multiple Sheets + PDF reports across operational periods.</li>
+        <li>Prompt Gemini: extract <b>key performance metrics</b>, <b>compare trends over time</b>, generate a <b>structured summary</b>.</li>
+        <li>State a <b>clear opinion</b> on how cross-document retrieval streamlines periodic review tasks.</li>
+        <li>Demo via <b>video</b> following Steps 1–16 plus folder/schema reproducibility guidance.</li>
+      </ul>
+
+      <h2 id="scenario">Business scenario &amp; dummy data</h2>
+      <p>
+        <b>Context:</b> a <b>PMO / Operations</b> team prepares a 2025 performance review for leadership.
+        Data is scattered across four quarterly Sheets plus H1 and full-year PDF summaries.
+      </p>
+      <table>
+        <thead><tr><th>Item</th><th>Sample value</th></tr></thead>
+        <tbody>
+          <tr><td>Department</td><td>Operations / PMO</td></tr>
+          <tr><td>Sheets</td><td><code>OPS_Metrics_2025_Q1</code> … <code>Q4</code></td></tr>
+          <tr><td>PDFs</td><td><code>REPORT_H1_2025_Executive_Summary.pdf</code>, <code>REPORT_FY2025_Annual_Operations_Review.pdf</code></td></tr>
+          <tr><td>Drive Project</td><td><code>Performance Review — Operations 2025</code></td></tr>
+          <tr><td>Sample metrics</td><td>Uptime, P1 incidents, MTTR, sprint completion, cloud spend, NPS</td></tr>
+          <tr><td>Output</td><td><code>REVIEW_2025_Ops_Performance_Summary</code></td></tr>
+        </tbody>
+      </table>
+
+      <h2 id="architecture">Analysis workflow</h2>
+      <div class="flow-diagram">
+        <span class="flow-step starter">Sheets Q1–Q4 + PDF reports</span>
+        <span class="flow-arrow">→</span>
+        <span class="flow-step action">Drive Project + Add sources</span>
+        <span class="flow-arrow">→</span>
+        <span class="flow-step ai">Ask Gemini (metrics + trends)</span>
+        <span class="flow-arrow">→</span>
+        <span class="flow-step action">Verify citations</span>
+        <span class="flow-arrow">→</span>
+        <span class="flow-step action">Export structured summary</span>
+      </div>
+
+      <h2 id="repro">Reproducibility</h2>
+      <h3>Folder tree</h3>
+      <table>
+        <thead><tr><th>Path</th><th>Role</th></tr></thead>
+        <tbody>
+          <tr><td><code>WS_Ops_Performance_Review/00_Source_Data</code></td><td>Period Sheets + PDFs (master, read-only during analysis)</td></tr>
+          <tr><td><code>WS_Ops_Performance_Review/10_Review_Outputs</code></td><td>Exported summaries after Gemini</td></tr>
+        </tbody>
+      </table>
+      <h3>Sheet schema (fixed across quarters)</h3>
+      <table>
+        <thead><tr><th>Column</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td><code>period</code></td><td>2025-Q1 … Q4</td></tr>
+          <tr><td><code>metric_category</code></td><td>Reliability, Incidents, Delivery, Cost, Customer</td></tr>
+          <tr><td><code>metric_name</code></td><td>Metric name</td></tr>
+          <tr><td><code>value</code></td><td>Numeric value</td></tr>
+          <tr><td><code>unit</code></td><td>percent, count, USD, …</td></tr>
+          <tr><td><code>notes</code></td><td>Qualitative notes (migration, target, …)</td></tr>
+        </tbody>
+      </table>
+      <div class="tip">
+        <p><b>Before Step 1:</b> create folders first → import CSV into Sheets → create/upload PDFs → then create the Project.
+        Details: <code>demo-assets/CHUAN-BI-TRUOC-DEMO.md</code>.</p>
+      </div>
+
+      <h2 id="opinion">Opinion: integrating into PMO/Operations workflows</h2>
+      <p><em>Subjective assessment based on this demo—for teams running periodic reviews with data spread across Drive.</em></p>
+      <h3>Why integrate</h3>
+      <ul>
+        <li><b>Less manual consolidation:</b> PMO often spends 2–4 hours per quarter copying from multiple Sheets and reading PDFs; one Project + one prompt cuts that to ~30–45 minutes for a structured draft.</li>
+        <li><b>Consistent cross-period comparison:</b> Gemini sees Q1–Q4 and PDF narrative together—reduces missed inflection points (e.g. Q3 migration).</li>
+        <li><b>Traceability:</b> citations and Sources used answer “where did this number come from?” in steering meetings.</li>
+        <li><b>Reusable each period:</b> clone the Project annually, swap source files, keep the prompt template.</li>
+      </ul>
+      <h3>Limits to control</h3>
+      <ul>
+        <li>Gemini may round numbers or misread PDF text—require <code>[VERIFY]</code> tags and PMO sign-off.</li>
+        <li>Low-quality scanned PDFs may OCR poorly—prefer text-native PDFs from Google Docs.</li>
+        <li>Does not replace BI/real-time dashboards; best for <b>periodic review narrative</b>.</li>
+      </ul>
+
+      <h2 id="demo-steps">Hands-on steps (Step 1–16)</h2>
+      <p><em>Record demo video following the steps below; full prompt is in Step 12.</em></p>
+
+      <div class="step-block" id="step-01">
+        <h3>Step 1 — Drive folder structure</h3>
+        <ol>
+          <li>Open <a href="https://drive.google.com" target="_blank" rel="noopener">drive.google.com</a>.</li>
+          <li>Go to <code>WS_Ops_Performance_Review</code>.</li>
+          <li>Confirm <code>00_Source_Data</code> and <code>10_Review_Outputs</code> exist.</li>
+        </ol>
+      </div>
+
+      <div class="step-block" id="step-02">
+        <h3>Step 2 — Q1 metrics sheet</h3>
+        <ol>
+          <li>In <code>00_Source_Data</code>, open <code>OPS_Metrics_2025_Q1</code>.</li>
+          <li>Verify headers: <code>period</code>, <code>metric_category</code>, <code>metric_name</code>, <code>value</code>, <code>unit</code>, <code>notes</code>.</li>
+          <li>Confirm Q1 data (e.g. uptime 99.42%, P1 incidents = 4).</li>
+        </ol>
+      </div>
+
+      <div class="step-block" id="step-03">
+        <h3>Step 3 — Q2 metrics sheet</h3>
+        <ol>
+          <li>Open <code>OPS_Metrics_2025_Q2</code>.</li>
+          <li>Compare with Q1: lower P1 incidents (2 vs 4), higher uptime (99.58%).</li>
+        </ol>
+      </div>
+
+      <div class="step-block" id="step-04">
+        <h3>Step 4 — Q3 metrics sheet</h3>
+        <ol>
+          <li>Open <code>OPS_Metrics_2025_Q3</code>.</li>
+          <li>Note uptime dip (99.31%) and migration notes in <code>notes</code>.</li>
+        </ol>
+      </div>
+
+      <div class="step-block" id="step-05">
+        <h3>Step 5 — Q4 metrics sheet</h3>
+        <ol>
+          <li>Open <code>OPS_Metrics_2025_Q4</code>.</li>
+          <li>Confirm recovery: uptime 99.61%, NPS 46, sprint completion 93%.</li>
+        </ol>
+      </div>
+
+      <div class="step-block" id="step-06">
+        <h3>Step 6 — PDF report</h3>
+        <ol>
+          <li>Open <code>REPORT_H1_2025_Executive_Summary.pdf</code> or <code>REPORT_FY2025_Annual_Operations_Review.pdf</code>.</li>
+          <li>Read narrative sections (Key highlights / Quarter-over-quarter) for context beyond Sheets.</li>
+        </ol>
+      </div>
+
+      <div class="step-block" id="step-07">
+        <h3>Step 7 — Create Drive Project</h3>
+        <ol>
+          <li>On Drive, click <b>New</b> → <b>Project</b> (or open <a href="https://project.new" target="_blank" rel="noopener">project.new</a>).</li>
+        </ol>
+      </div>
+
+      <div class="step-block" id="step-08">
+        <h3>Step 8 — Name the Project</h3>
+        <ol>
+          <li>Enter name: <code>Performance Review — Operations 2025</code>.</li>
+          <li>Click <b>Create Project</b>.</li>
+        </ol>
+      </div>
+
+      <div class="step-block" id="step-09">
+        <h3>Step 9 — Add sources</h3>
+        <ol>
+          <li>In the Project, click <b>Add sources</b>.</li>
+          <li>Select 6 files from <code>00_Source_Data</code>:
+            <code>OPS_Metrics_2025_Q1</code> … <code>Q4</code>,
+            <code>REPORT_H1_2025_Executive_Summary.pdf</code>,
+            <code>REPORT_FY2025_Annual_Operations_Review.pdf</code>.
+          </li>
+        </ol>
+      </div>
+
+      <div class="step-block" id="step-10">
+        <h3>Step 10 — Confirm sources list</h3>
+        <ol>
+          <li>Verify Sources / Sources used panel shows all 6 files.</li>
+          <li>Keep all checkboxes <b>enabled</b> before asking Gemini.</li>
+        </ol>
+      </div>
+
+      <div class="step-block" id="step-11">
+        <h3>Step 11 — Open Ask Gemini</h3>
+        <ol>
+          <li>Inside the Project, open <b>Ask Gemini</b>.</li>
+          <li>Confirm 6 sources are active and the prompt box is empty.</li>
+        </ol>
+      </div>
+
+      <div class="step-block" id="step-12">
+        <h3>Step 12 — Enter trend analysis prompt</h3>
+        <p>Paste this prompt into Ask Gemini and send:</p>
+        <pre>You are an operations analyst helping our PMO team prepare a quarterly performance review.
+
+Use ONLY the pinned project sources (Q1–Q4 Google Sheets and the H1 / FY PDF reports).
+
+Tasks:
+1) Extract key performance metrics by category: Reliability, Incidents, Delivery, Cost, Customer.
+2) Compare trends quarter-over-quarter for 2025 (Q1 → Q4): direction (up/down/stable), notable inflection points.
+3) Cross-check Sheet numbers with qualitative statements in the PDF reports (flag any mismatch with [VERIFY]).
+4) Output a structured summary with these sections:
+   - Executive snapshot (5 bullets)
+   - Metric table (metric name | Q1 | Q2 | Q3 | Q4 | trend)
+   - Top 3 improvements
+   - Top 3 risks or regressions
+   - Recommended actions for next quarter
+
+Tone: concise, data-driven, suitable for a department steering meeting.
+Use citations where possible.</pre>
+      </div>
+
+      <div class="step-block" id="step-13">
+        <h3>Step 13 — Review analysis output</h3>
+        <ol>
+          <li>Wait for Gemini to respond.</li>
+          <li>Check for: Executive snapshot, Q1–Q4 metric table, top improvements/risks, recommended actions.</li>
+          <li>Note citations [1], [2]… if present.</li>
+        </ol>
+      </div>
+
+      <div class="step-block" id="step-14">
+        <h3>Step 14 — Verify data sources</h3>
+        <ol>
+          <li>In <b>Sources used</b>, click a file name (e.g. <code>OPS_Metrics_2025_Q3</code>) to open the Sheet.</li>
+          <li>Or click citation [1], [2] in the response.</li>
+          <li>Reconcile Sheet numbers with PDF narrative; flag items needing <code>[VERIFY]</code>.</li>
+        </ol>
+        <p><b>Do not Export yet</b> — export is Step 15.</p>
+      </div>
+
+      <div class="step-block" id="step-15">
+        <h3>Step 15 — Export structured summary</h3>
+        <ol>
+          <li>Scroll to the bottom of Gemini’s response.</li>
+          <li>Click <b>Export to Docs</b> (or Word depending on tenant) — not Export to Sheets for the full summary.</li>
+          <li>Save to <code>10_Review_Outputs</code> as <code>REVIEW_2025_Ops_Performance_Summary</code>.</li>
+        </ol>
+      </div>
+
+      <div class="step-block" id="step-16">
+        <h3>Step 16 — Project history</h3>
+        <ol>
+          <li>Drive sidebar → <b>Projects</b> → select your project.</li>
+          <li>Open <b>History</b> → see the trends conversation (resume research).</li>
+        </ol>
+      </div>
+
+      <h2 id="failures">Failure-prone points (3+)</h2>
+      <table>
+        <thead><tr><th>Risk</th><th>Observation</th><th>Mitigation</th></tr></thead>
+        <tbody>
+          <tr><td><b>Inconsistent Sheet schema</b></td><td>Renamed columns in Q3 break trends.</td><td>Sheet template + validate before adding sources.</td></tr>
+          <tr><td><b>Unreadable PDF</b></td><td>Blurry scan → Gemini skips narrative.</td><td>Use text PDFs from Google Docs.</td></tr>
+          <tr><td><b>Hallucinated metrics</b></td><td>Numbers not in Sheets appear in summary.</td><td>Require citations; PMO verifies each table row.</td></tr>
+          <tr><td><b>Drive permissions</b></td><td>Collaborator lacks View on Sheet/PDF.</td><td>Share <code>00_Source_Data</code> with PMO group.</td></tr>
+        </tbody>
+      </table>
+
+      <h2 id="conclusion">Conclusion</h2>
+      <p>
+        Drive Projects turn quarterly Sheets and PDFs into one analysis workspace: extract metrics, compare trends, and summarize findings with source verification.
+        This is a practical approach for <b>periodic operational review</b>—especially PMO/Operations teams that still consolidate manually before steering meetings.
+        Combined with the Step 1–16 demo video, teams can onboard and repeat the process each quarter or year.
+      </p>
+
+      <h2 id="references">References</h2>
+      <ul class="ref-list">
+        <li><a href="https://support.google.com/drive/answer/16684520" target="_blank" rel="noopener">Share your Gemini sources using Drive projects (Google Help)</a></li>
+        <li><a href="https://support.google.com/drive/answer/16963068" target="_blank" rel="noopener">Use Gemini in Drive for research &amp; analysis (Google Help)</a></li>
+      </ul>
+    </div>
+  </body>
+</html>

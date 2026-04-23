@@ -1,0 +1,28 @@
+{
+  "manifest_version": 3,
+  "name": "NREER Auto Click",
+  "version": "1.0.0",
+  "description": "Auto click extension for nreer.com",
+  "permissions": [
+    "storage",
+    "activeTab"
+  ],
+  "host_permissions": [
+    "https://nreer.com/*",
+    "http://nreer.com/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "https://nreer.com/*",
+        "http://nreer.com/*"
+      ],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html"
+  }
+}
+

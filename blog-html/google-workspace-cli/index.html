@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Review: Google Workspace CLI (gws) – Quyền năng Terminal cho mọi Developer</title>
+  <meta name="description"
+    content="Review chi tiết Google Workspace CLI (gws): cài đặt, xác thực trên Windows PowerShell, demo thực tế tìm file Drive và kiểm tra Gmail, gotcha và ứng dụng tự động hóa hàng ngày.">
+  <style>
+    body {
+      font-family: Georgia, serif;
+      font-size: 17px;
+      line-height: 1.8;
+      color: #111;
+      background: #fff;
+      max-width: 800px;
+      margin: 60px auto;
+      padding: 0 24px;
+    }
+
+    h1 {
+      font-size: 2.2rem;
+      margin-bottom: 8px;
+    }
+
+    h2 {
+      font-size: 1.5rem;
+      margin-top: 56px;
+      border-bottom: 2px solid #111;
+      padding-bottom: 6px;
+    }
+
+    h3 {
+      font-size: 1.15rem;
+      margin-top: 32px;
+    }
+
+    p {
+      margin: 14px 0;
+    }
+
+    ul,
+    ol {
+      margin: 14px 0;
+      padding-left: 28px;
+    }
+
+    li {
+      margin: 8px 0;
+    }
+
+    pre {
+      background: #f5f5f5;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      padding: 16px 18px;
+      overflow-x: auto;
+      margin: 14px 0;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    code {
+      font-family: 'Courier New', monospace;
+      font-size: 14px;
+      background: #f0f0f0;
+      padding: 1px 5px;
+      border-radius: 3px;
+    }
+
+    pre code {
+      background: none;
+      padding: 0;
+      font-size: 14px;
+    }
+
+    blockquote {
+      border-left: 4px solid #999;
+      margin: 20px 0;
+      padding: 10px 20px;
+      color: #444;
+      background: #f9f9f9;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin: 16px 0;
+    }
+
+    th,
+    td {
+      border: 1px solid #bbb;
+      padding: 8px 12px;
+      text-align: left;
+    }
+
+    th {
+      background: #f0f0f0;
+      font-weight: bold;
+    }
+
+    .meta {
+      color: #555;
+      font-size: 0.9rem;
+      margin-bottom: 32px;
+    }
+
+    .note {
+      border: 1px solid #bbb;
+      padding: 14px 18px;
+      margin: 20px 0;
+      background: #fffdf0;
+    }
+
+    .note strong {
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .screenshot-box {
+      border: 2px dashed #aaa;
+      padding: 30px 20px;
+      text-align: center;
+      margin: 16px 0;
+      color: #666;
+      background: #fafafa;
+      font-size: 0.9rem;
+    }
+
+    .screenshot-box .filename {
+      font-family: monospace;
+      margin-top: 8px;
+      font-size: 0.85rem;
+      color: #333;
+    }
+
+    hr {
+      border: none;
+      border-top: 1px solid #ccc;
+      margin: 48px 0;
+    }
+
+    a {
+      color: #0066cc;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>Review: Google Workspace CLI (gws)<br>Bringing Google Workspace to the Terminal</h1>
+
+  <div class="meta">
+    📅 Tháng 4, 2026 &nbsp;·&nbsp; ✍️ Scuti Tech Lab &nbsp;·&nbsp; 🖥️ Windows PowerShell &nbsp;·&nbsp; ⏱️ ~10 phút đọc
+  </div>
+
+  <p>
+    Nếu bạn theo dõi xu hướng công nghệ hoặc đã xem video viral trên YouTube của cộng đồng dev Nhật Bản
+    <a href="https://www.youtube.com/watch?v=a8sq2fHxlDA" target="_blank">「Google Workspace CLI - gws - が革命的すぎた」</a>,
+    chắc chắn bạn đã nghe đến <strong>gws (Google Workspace CLI)</strong> – công cụ đã thu về hơn <strong>14,000 ⭐ trên
+      GitHub chỉ trong 5 ngày</strong>.
+  </p>
+  <p>
+    Là một developer, tôi biết rõ cơn đau đầu này: liên tục phải chuyển qua lại giữa code editor và trình duyệt để tìm
+    tài liệu, check email, hay cập nhật spreadsheet. Hôm nay, tôi quyết định tự tay thử nghiệm <code>gws</code> trên môi
+    trường Windows PowerShell, ghi lại từng bước thực hiện và đánh giá khách quan xem nó có thực sự xứng đáng với cái
+    danh "cách mạng" đó không.
+  </p>
+
+  <hr>
+
+  <!-- TOC -->
+  <h2>Mục lục</h2>
+  <ol>
+    <li><a href="#overview">Tổng quan: gws là gì và làm được gì?</a></li>
+    <li><a href="#architecture">Kiến trúc và điểm khác biệt cốt lõi</a></li>
+    <li><a href="#setup">Cài đặt và Xác thực (Gotcha trên Windows)</a>
+      <ul>
+        <li>Bước 1: Cài đặt qua NPM</li>
+        <li>Bước 2: Tạo OAuth Credentials trên Google Cloud</li>
+        <li>Bước 3: Chạy gws auth setup</li>
+        <li>Bước 4: Đăng nhập với gws auth login</li>
+      </ul>
+    </li>
+    <li><a href="#lab1">Lab 1 – Tìm kiếm thư mục trên Google Drive</a></li>
+    <li><a href="#lab2">Lab 2 – Kiểm tra email chưa đọc với Gmail +triage</a></li>
+    <li><a href="#opinion">Nhận xét cá nhân và ý tưởng tự động hóa</a></li>
+    <li><a href="#drawbacks">Những hạn chế của gws</a></li>
+    <li><a href="#conclusion">Kết luận</a></li>
+  </ol>
+
+  <hr>
+
+  <!-- SECTION 1 -->
+  <h2 id="overview">1. Tổng quan: gws là gì và làm được gì?</h2>
+
+  <p>
+    <strong>Google Workspace CLI (gws)</strong> là một công cụ dòng lệnh cho phép bạn tương tác trực tiếp với hầu hết
+    mọi dịch vụ Google Workspace ngay từ terminal, bao gồm:
+  </p>
+
+  <ul>
+    <li><strong>Google Drive</strong> – liệt kê, tìm kiếm, tải lên, tải xuống, tạo, xóa, phân quyền file/thư mục</li>
+    <li><strong>Gmail</strong> – đọc, tìm kiếm, phân loại, gửi, trả lời, forward email</li>
+    <li><strong>Google Calendar</strong> – xem lịch, tạo sự kiện, quản lý lời mời</li>
+    <li><strong>Google Docs / Sheets / Slides</strong> – tạo, đọc, chỉnh sửa nội dung tài liệu</li>
+    <li><strong>Google Chat</strong> – gửi tin nhắn vào Space, tạo Space mới</li>
+    <li><strong>Admin SDK</strong> – quản lý user, group, đơn vị tổ chức (dành cho Google Workspace Admin)</li>
+    <li><strong>Google Tasks, Meet, Classroom</strong> và nhiều dịch vụ khác</li>
+  </ul>
+
+  <p>
+    Điểm quan trọng: đây không phải là một wrapper đơn giản bọc quanh API. gws được xây dựng theo kiến trúc hoàn toàn
+    khác biệt, mà tôi sẽ giải thích ở phần tiếp theo.
+  </p>
+
+  <!-- SECTION 2 -->
+  <h2 id="architecture">2. Kiến trúc và điểm khác biệt cốt lõi</h2>
+
+  <h3>2.1. Dynamic Command Generation (Không hardcode API)</h3>
+  <p>
+    Phần lớn các CLI thông thường hardcode danh sách lệnh và tham số vào source code. Khi Google cập nhật API, nhóm
+    maintainer phải cập nhật CLI và release phiên bản mới.
+  </p>
+  <p>
+    <strong>gws làm ngược lại hoàn toàn.</strong> Khi bạn chạy một lệnh, nó tự động gọi <strong>Google Discovery
+      Service</strong> – một API đặc biệt của Google cung cấp toàn bộ metadata về tất cả các API (endpoints, parameters,
+    schemas) theo thời gian thực. gws đọc metadata đó và sinh ra lệnh tương ứng ngay tại runtime.
+  </p>
+  <p>
+    Điều này có nghĩa là khi Google ra mắt API mới, gws hỗ trợ ngay lập tức mà không cần update. Đây là lý do gws cực kỳ
+    "future-proof".
+  </p>
+
+  <h3>2.2. Structured Output (JSON, Table, YAML, CSV)</h3>
+  <p>
+    gws trả về output có cấu trúc, mặc định là JSON. Điều này làm cho nó cực kỳ phù hợp để kết hợp với các công cụ khác:
+  </p>
+  <ul>
+    <li>Pipe với <code>jq</code> trên Linux/Mac để filter và transform JSON</li>
+    <li>Pipe với <code>ConvertFrom-Json</code> trong PowerShell để xử lý dữ liệu</li>
+    <li>Dùng flag <code>--format table</code> để hiển thị dạng bảng dễ đọc</li>
+    <li>Xuất <code>--format csv</code> để import vào Excel</li>
+  </ul>
+
+  <h3>2.3. AI-Ready với MCP Server</h3>
+  <p>
+    gws tích hợp sẵn <strong>Model Context Protocol (MCP) Server</strong>, cho phép các AI Agent như Gemini hoặc Claude
+    kết nối trực tiếp vào gws và thao tác với dữ liệu Google Workspace của bạn. LLM có thể đặt câu hỏi kiểu "hãy tìm
+    email từ sếp tôi trong tuần này và tóm tắt" mà không cần code thêm gì.
+  </p>
+
+  <h3>2.4. Agent Skills – Hơn 100 kỹ năng tắt</h3>
+  <p>
+    Bên cạnh các lệnh API raw, gws còn có hệ thống <strong>Skills</strong> – các lệnh tắt được thiết kế sẵn cho các tác
+    vụ phổ biến. Ví dụ:
+  </p>
+  <ul>
+    <li><code>gws gmail +triage</code> – Tóm tắt email chưa đọc ra dạng bảng (thay vì trả về JSON raw phức tạp)</li>
+    <li><code>gws gmail +read</code> – Đọc nội dung một email cụ thể, tự động decode base64 và extract text</li>
+    <li><code>gws gmail +watch</code> – Lắng nghe email mới đến và stream chúng theo thời gian thực (NDJSON)</li>
+    <li><code>gws drive +upload</code> – Upload file với metadata tự động, đơn giản hơn nhiều so với raw API</li>
+  </ul>
+
+  <h3>2.5. Dry-Run Mode</h3>
+  <p>
+    Flag <code>--dry-run</code> cho phép bạn xem chính xác HTTP request nào sẽ được gửi đi (URL, method, headers, body)
+    mà không thực sự thực thi. Cực kỳ hữu ích khi học API hoặc debug.
+  </p>
+
+  <p>Ví dụ thực tế tôi đã chạy:</p>
+  <pre><code>npx @googleworkspace/cli drive files list --dry-run</code></pre>
+
+  <p>Kết quả trả về:</p>
+  <pre><code>{
+  "body": null,
+  "dry_run": true,
+  "is_multipart_upload": false,
+  "method": "GET",
+  "query_params": [],
+  "url": "https://www.googleapis.com/drive/v3/files"
+}</code></pre>
+
+  <!-- SECTION 3 -->
+  <h2 id="setup">3. Cài đặt và Xác thực (Gotcha trên Windows)</h2>
+
+  <h3>Bước 1: Cài đặt gws qua NPM</h3>
+  <p>Mở <strong>Windows Terminal</strong> (PowerShell) và chạy lệnh sau:</p>
+
+  <pre><code>npm install -g @googleworkspace/cli</code></pre>
+
+  <p>Hoặc dùng npx để không cần cài đặt toàn cục:</p>
+  <pre><code>npx @googleworkspace/cli --version</code></pre>
+
+  <p>Nếu cài thành công, bạn sẽ thấy:</p>
+  <pre><code>gws 0.22.5
+This is not an officially supported Google product.</code></pre>
+
+  <div class="screenshot-box">
+    📸 <strong>Chụp màn hình: Bước 1 – Cài đặt thành công</strong><br>
+    Chụp terminal hiển thị kết quả <code>gws 0.18.1</code> sau khi chạy --version<br>
+    <div class="filename">→ Lưu vào: assets/step1-install.png</div>
+  </div>
+
+  <h3>Bước 2: Tạo OAuth Credentials trên Google Cloud Console</h3>
+  <p>Đây là bước nhiều người bỏ qua và gặp lỗi. gws cần một "OAuth App" trong Google Cloud của bạn để xác thực.</p>
+  <ol>
+    <li>Vào <a href="https://console.cloud.google.com/" target="_blank">console.cloud.google.com</a></li>
+    <li>Tạo hoặc chọn một Project</li>
+    <li>Vào <strong>APIs & Services → Library</strong>, bật những API bạn muốn dùng (Google Drive API, Gmail API,
+      Calendar API, v.v.)</li>
+    <li>Vào <strong>APIs & Services → Credentials → Create Credentials → Create OAuth client ID</strong></li>
+  </ol>
+
+  <div class="note">
+    <strong>⚠️ Gotcha #0 – Phải cấu hình Consent Screen trước</strong>
+    Nếu đây là Project mới, Google sẽ hiển thị cảnh báo:
+    <em>"To create an OAuth client ID, you must first configure your consent screen"</em>
+    và nút <strong>Configure consent screen</strong>. Bạn BẮT BUỘC phải làm bước này trước.<br><br>
+    ✅ <strong>Cách xử lý:</strong>
+    <ol>
+      <li>Nhấn nút <strong>Configure consent screen</strong></li>
+      <li>Chọn <strong>External</strong> (nếu dùng tài khoản Gmail cá nhân) hoặc <strong>Internal</strong> (nếu dùng
+        Google Workspace tổ chức)</li>
+      <li>Điền <strong>App name</strong> (ví dụ: "GWS CLI"), <strong>User support email</strong> và <strong>Developer
+          contact email</strong></li>
+      <li>Nhấn <strong>Save and Continue</strong> qua các bước Scopes và Test users (có thể bỏ qua, nhấn Next)</li>
+      <li>Quay lại <strong>Credentials → Create Credentials → Create OAuth client ID</strong></li>
+    </ol>
+  </div>
+
+  <div class="screenshot-box">
+    📸 <strong>Chụp màn hình: Bước 2A – Thông báo "Configure consent screen"</strong><br>
+    Chụp màn hình Google Cloud Console hiển thị cảnh báo màu vàng yêu cầu cấu hình consent screen trước.<br>
+    <div class="filename">→ Lưu vào: assets/step2a-consent-screen-warning.png</div>
+  </div>
+
+  <div class="screenshot-box">
+    📸 <strong>Chụp màn hình: Bước 2B – Trang OAuth Consent Screen</strong><br>
+    Chụp trang "OAuth consent screen" đang điền thông tin App name, Support email.<br>
+    <div class="filename">→ Lưu vào: assets/step2b-consent-screen-fill.png</div>
+  </div>
+
+  <p>Sau khi đã cấu hình Consent Screen xong, tiếp tục tạo Client ID:</p>
+  <ol start="5">
+    <li>Chọn Application type: <strong>Desktop app</strong></li>
+    <li>Đặt tên (ví dụ: "GWS CLI") rồi nhấn Create</li>
+    <li>Copy <strong>Client ID</strong> và <strong>Client Secret</strong> được cấp</li>
+  </ol>
+
+  <div class="screenshot-box">
+    📸 <strong>Chụp màn hình: Bước 2A – Google Cloud Console</strong><br>
+    Chụp màn hình Google Cloud Console tại trang Credentials hiển thị OAuth 2.0 Client IDs<br>
+    <div class="filename">→ Lưu vào: assets/step2a-gcloud-credentials.png</div>
+  </div>
+
+  <div class="screenshot-box">
+    📸 <strong>Chụp màn hình: Bước 2B – Màn hình Client ID được tạo</strong><br>
+    Chụp popup hoặc trang hiển thị Client ID và Client Secret sau khi tạo thành công<br>
+    <div class="filename">→ Lưu vào: assets/step2b-client-id.png (nhớ blur phần giá trị thật)</div>
+  </div>
+
+  <h3>Bước 3: Chạy gws auth setup</h3>
+  <pre><code>gws auth setup</code></pre>
+
+  <div class="note">
+    <strong>⚠️ Gotcha #0.5 – gcloud CLI chưa được cài đặt</strong>
+    Nếu bạn nhận lỗi JSON như sau:
+    <em>"gcloud CLI not found. Install it from https://cloud.google.com/sdk/docs/install"</em>
+    — đây là vì <code>gws auth setup</code> mặc định dùng gcloud để xác thực.
+    Có <strong>2 cách giải quyết</strong>:
+  </div>
+
+  <div class="screenshot-box">
+    📸 <strong>Chụp màn hình: Bước 3A – Lỗi gcloud CLI not found</strong><br>
+    Chụp terminal hiển thị JSON lỗi có message "gcloud CLI not found"<br>
+    <div class="filename">→ Lưu vào: assets/step3a-gcloud-error.png</div>
+  </div>
+
+  <h3>Phương án A: Cài Google Cloud SDK (khuyến nghị)</h3>
+  <ol>
+    <li>Tải Google Cloud SDK tại: <a href="https://cloud.google.com/sdk/docs/install"
+        target="_blank">cloud.google.com/sdk/docs/install</a></li>
+    <li>Chọn bản <strong>Windows Installer (.exe)</strong>, chạy cài đặt bình thường</li>
+    <li>Mở <strong>Terminal hoặc Windows PowerShell mới</strong> (quan trọng: phải mở terminal mới để PATH được cập
+      nhật)</li>
+    <li>Chạy lệnh khởi động gcloud:<br><code>gcloud init</code></li>
+    <li>Gcloud sẽ mở trình duyệt để đăng nhập tài khoản Google và chọn project</li>
+    <li>Sau khi đăng nhập thành công (<em>You are signed in as: phatlt@scuti.asia</em>), terminal sẽ hiển thị danh sách
+      project — chọn ô số tương ứng với project GWS CLI bạn vừa tạo (ví dụ: <code>testgwscli-492309</code>)</li>
+    <li>Kiểm tra gcloud hoạt động: <code>gcloud --version</code></li>
+    <li>Chạy lại: <code>gws auth setup</code></li>
+  </ol>
+
+  <div class="screenshot-box">
+    📸 <strong>Chụp màn hình: Bước 3B – gws auth setup thành công</strong><br>
+    Chụp terminal hiển thị prompt hỏi Client ID và Client Secret sau khi gcloud đã được cài<br>
+    <div class="filename">→ Lưu vào: assets/step3b-auth-setup-ok.png (blur giá trị nhập vào)</div>
+  </div>
+
+
+
+
+  <h3>Bước 4: Đăng nhập với gws auth login</h3>
+  <pre><code>gws auth login</code></pre>
+
+  <p>Terminal sẽ in ra một URL OAuth rất dài, ví dụ:</p>
+  <pre><code>Please open the following URL in your browser to authenticate:
+https://accounts.google.com/o/oauth2/auth?client_id=xxxx&redirect_uri=...
+&scope=https://www.googleapis.com/auth/drive+https://www.googleapis.com/auth/gmail...
+&response_type=code&access_type=offline...</code></pre>
+
+  <div class="note">
+    <strong>⚠️ Gotcha #1 – PowerShell &amp; Toán tử &amp;</strong>
+    URL OAuth chứa nhiều ký tự <code>&amp;</code>. <strong>KHÔNG copy URL này và dán vào PowerShell!</strong>
+    PowerShell hiểu <code>&amp;</code> là lệnh thực thi và sẽ báo lỗi:
+    <code>"The ampersand (&amp;) character is not allowed here"</code>.
+    <br><br>
+    ✅ <strong>Giải pháp:</strong> Copy URL từ terminal và dán thẳng vào <strong>thanh địa chỉ trình duyệt
+      Chrome/Edge</strong> rồi nhấn Enter.
+  </div>
+
+  <p>Copy URL từ terminal và dán thẳng vào <strong>thanh địa chỉ trình duyệt Chrome/Edge</strong> rồi nhấn Enter. Google
+    sẽ hiển thị màn hình xác nhận quyền truy cập — nhấn <strong>Allow</strong>. Sau đó quay lại terminal sẽ thấy thông
+    báo thành công:</p>
+  <pre><code>✓ Authentication successful. Token saved to ~/.config/gws/token.json</code></pre>
+
+  <div class="screenshot-box">
+    📸 <strong>Chụp màn hình: Bước 4 – Xác thực thành công</strong><br>
+    Chụp terminal hiển thị thông báo <em>"Authentication successful"</em> là hoàn tất<br>
+    <div class="filename">→ Lưu vào: assets/step4-login-success.png</div>
+  </div>
+
+  <!-- SECTION 4 -->
+  <h2 id="lab1">4. Lab 1 – Tìm kiếm thư mục trên Google Drive</h2>
+
+  <p>
+    <strong>Bối cảnh:</strong> Tôi thường xuyên phải tìm các thư mục dự án cũ trên Drive. Thay vì mở
+    <code>drive.google.com</code>, chờ trang load và dùng thanh tìm kiếm, tôi muốn làm điều đó ngay trong terminal.
+  </p>
+
+  <h3>Lệnh thực thi</h3>
+  <p>Tìm tất cả thư mục có tên chứa từ "Demo":</p>
+
+  <pre><code>gws drive files list --params "{\"q\": \"name contains 'Demo' and mimeType = 'application/vnd.google-apps.folder'\", \"pageSize\": 10}" --format table</code></pre>
+
+  <div class="note">
+    <strong>⚠️ Gotcha #2 – PowerShell JSON Escaping</strong>
+    PowerShell nổi tiếng với việc "ăn mất" dấu nháy kép <code>"</code> khi truyền vào file <code>.exe</code> từ bên
+    ngoài. Nếu bạn dùng JSON chuẩn như <code>{"q": "name contains..."}</code>, gws sẽ báo lỗi:
+    <code>Invalid --params JSON: key must be a string</code>
+    <br><br>
+    ✅ <strong>Giải pháp:</strong> Bọc toàn bộ JSON trong dấu nháy đơn <code>'...'</code>. Đối với dấu nháy kép bên trong
+    JSON, dùng <code>\"</code>. Đối với chuỗi lồng nhau (nested string) trong Google Query Language, dùng
+    <code>\\\"</code>.
+  </div>
+
+  <div class="screenshot-box">
+    📸 <strong>Chụp màn hình: Lab 1A – Lệnh tìm kiếm Drive đang chạy</strong><br>
+    Chụp terminal lúc đang gõ hoặc vừa nhấn Enter chạy lệnh drive files list<br>
+    <div class="filename">→ Lưu vào: assets/lab1a-drive-command.png</div>
+  </div>
+
+  <h3>Kết quả thực thi</h3>
+  <p>Nếu dùng <code>--format table</code>, output sẽ hiển thị dạng bảng gọn gàng:</p>
+
+  <pre><code>┌──────────────────────────────────────────┬───────────────────────────────────────────┐
+│ ID                                       │ NAME                                      │
+├──────────────────────────────────────────┼───────────────────────────────────────────┤
+│ 1uJ3p056k_IEN0lZVKLB5kUeIxz0MA7Da         │ CV Tester Demo                            │
+│ 1XEPN_q4xouyDZAU0RJbANjO562LfhtIv         │ CV Intern sale Demo                       │
+│ 1eigFvWEOvVUIvhg16vzvIRRrqVIlN5Nm         │ CV PHP Demo                               │
+│ 1QriJj-DXEJZbhdwU-q9OYRg5pQhtK88N         │ JD Demo                                   │
+│ 1-CgPA43fOsp3bb_AEhlg1NbYlQVoXRHR         │ DemoApiCreateOrder                        │
+│ 1M--LQVyzfFrDzZI_QhZe6g9rUVxHxsey         │ DemoOrder                                 │
+│ 1xvOLGsLQ2-QxZov-5KcpomudCjqPXkJz         │ Demo                                      │
+└──────────────────────────────────────────┴───────────────────────────────────────────┘</code></pre>
+
+  <div class="screenshot-box">
+    📸 <strong>Chụp màn hình: Lab 1B – Kết quả tìm kiếm Drive trả về</strong><br>
+    Chụp terminal hiển thị bảng kết quả với ID và tên thư mục được tìm thấy trên Drive<br>
+    <div class="filename">→ Lưu vào: assets/lab1b-drive-result.png</div>
+  </div>
+
+  <p>
+    <strong>Nhận xét:</strong> Thao tác này hoàn toàn thay thế việc mở trình duyệt và tìm kiếm thủ công. Quan trọng hơn,
+    tôi có thể dùng kết quả này (đặc biệt là cột <code>ID</code>) trong các bước tự động hóa tiếp theo, ví dụ:
+  </p>
+
+  <pre><code># Lấy danh sách file bên trong thư mục vừa tìm được:
+gws drive files list `
+  --params '{\"q\": \"\\\"1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74Og\\\" in parents\"}' `
+  --format table</code></pre>
+
+  <!-- SECTION 5 -->
+  <h2 id="lab2">5. Lab 2 – Kiểm tra email chưa đọc với Gmail +triage</h2>
+
+  <p>
+    <strong>Bối cảnh:</strong> Đầu ngày đi làm, tôi muốn biết ngay sếp có giao task mới không, hay có email quan trọng
+    nào cần xử lý gấp, mà không cần mở tab Gmail lên và mất 1–2 phút chờ load rồi scroll tìm kiếm.
+  </p>
+
+  <p>gws có một Skill sẵn cho việc này:</p>
+
+  <h3>Lệnh thực thi</h3>
+  <pre><code>gws gmail +triage --format table --max 5</code></pre>
+
+  <p>Giải thích các tham số:</p>
+  <ul>
+    <li><code>+triage</code> – Skill tắt, tự động gọi API Gmail để lấy email chưa đọc và format gọn</li>
+    <li><code>--format table</code> – Hiển thị dạng bảng thay vì JSON raw</li>
+    <li><code>--max 5</code> – Chỉ lấy tối đa 5 email gần nhất</li>
+  </ul>
+
+  <div class="screenshot-box">
+    📸 <strong>Chụp màn hình: Lab 2A – Lệnh gmail +triage đang chạy</strong><br>
+    Chụp terminal lúc đang chạy lệnh (có thể thấy spinner đang xử lý)<br>
+    <div class="filename">→ Lưu vào: assets/lab2a-gmail-command.png</div>
+  </div>
+
+  <h3>Kết quả thực thi</h3>
+  <p>Output hiển thị bảng tóm tắt ngay trong terminal:</p>
+
+<pre><code>┌──────────────────────────────────────────────┬────────────────────────────────────────────────────────────┬────────────────────────────┐
+│ FROM                                         │ SUBJECT                                                    │ DATE                       │
+├──────────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────────────────────────┤
+│ Railway &lt;hello@news.railway.app&gt;              │ Skip rebuilds, guardrails, better CLI                      │ Apr 03, 2026 21:01         │
+│ Vercel &lt;ship@info.vercel.com&gt;                │ Your competitors are building agents                       │ Apr 03, 2026 19:36         │
+│ reyovov406@algarr.com (via eSignature)       │ eSignature request for "Thỏa thuận Bảo mật Thông tin..."   │ Apr 03, 2026 08:44         │
+│ Gemini &lt;gemini-notes@google.com&gt;             │ Notes: “[NI] Thảo luận về feedback khách hàng”             │ Apr 03, 2026 07:50         │
+│ Hoang The Canh (via Google Sheets)           │ Share request for "data"                                   │ Apr 03, 2026 07:33         │
+└──────────────────────────────────────────────┴────────────────────────────────────────────────────────────┴────────────────────────────┘</code></pre>
+
+  <div class="screenshot-box">
+    📸 <strong>Chụp màn hình: Lab 2B – Kết quả bảng email chưa đọc</strong><br>
+    Chụp terminal hiển thị bảng tóm tắt email với cột From, Subject, Date. Nhớ blur địa chỉ email thật nếu cần.<br>
+    <div class="filename">→ Lưu vào: assets/lab2b-gmail-triage-result.png</div>
+  </div>
+
+  <h3>Đọc toàn bộ nội dung một email</h3>
+  <p>Từ kết quả trên, nếu muốn đọc email "[URGENT] Q2 Roadmap Review" mà không rời terminal, tôi chạy lệnh
+    <code>+read</code> với message ID:
+  </p>
+
+  <pre><code># Trước tiên lấy message ID:
+gws gmail +triage --format json --max 1
+
+# Sau đó đọc toàn bộ nội dung:
+gws gmail +read --id 19d525250a98af7b</code></pre>
+
+  <p>Output trả về toàn bộ nội dung text của email, decode tự động từ base64 (Gmail API trả về content dạng base64),
+    hiển thị thẳng ra terminal.</p>
+
+  <div class="screenshot-box">
+    📸 <strong>Chụp màn hình: Lab 2C – Đọc nội dung email đầy đủ (tùy chọn)</strong><br>
+    Chụp terminal hiển thị nội dung text của email sau lệnh +read. Blur toàn bộ nội dung nhạy cảm.<br>
+    <div class="filename">→ Lưu vào: assets/lab2c-gmail-read.png</div>
+  </div>
+
+  <!-- SECTION 6 -->
+  <h2 id="opinion">6. Nhận xét cá nhân và ý tưởng tự động hóa</h2>
+
+  <blockquote>
+    Theo quan điểm của tôi, gws là một game-changer thực sự. Nó loại bỏ hoàn toàn nhu cầu phải viết 50 dòng boilerplate
+    code Python/Node.js và cấu hình Service Account chỉ để thực hiện một API request đơn giản. Tốc độ rất nhanh và
+    output JSON làm cho nó trở thành mảnh ghép hoàn hảo cho scripting và automation.
+  </blockquote>
+
+  <h3>Những cách tôi sẽ ứng dụng gws vào công việc hàng ngày:</h3>
+
+  <h3>6.1. "Good Morning" Dashboard</h3>
+  <p>
+    Tôi sẽ viết một script PowerShell chạy tự động mỗi khi mở terminal vào buổi sáng. Script này sẽ:
+  </p>
+  <ul>
+    <li>Gọi <code>gws calendar events list --params '{"timeMin": "...", "timeMax": "..."}'</code> để lấy danh sách lịch
+      họp hôm nay</li>
+    <li>Gọi <code>gws gmail +triage --max 10</code> để hiển thị 10 email chưa đọc quan trọng nhất</li>
+    <li>In ra một bảng tổng hợp ngay trong console, không cần mở bất kỳ tab trình duyệt nào</li>
+  </ul>
+  <p>Ước tính tiết kiệm: <strong>5–10 phút mỗi buổi sáng</strong> không phải mở trình duyệt, chờ load, đăng nhập lại.
+  </p>
+
+  <h3>6.2. Tự động sao lưu Code lên Google Drive</h3>
+  <p>
+    Tôi sẽ tạo một Windows Scheduled Task chạy lúc 5:00 PM mỗi ngày:
+  </p>
+  <ol>
+    <li>Zip thư mục project hiện tại</li>
+    <li>Dùng <code>gws drive files create</code> để upload file zip lên một thư mục backup chỉ định trên Drive</li>
+    <li>Xóa các bản backup cũ hơn 30 ngày bằng <code>gws drive files delete</code></li>
+  </ol>
+  <p>Không cần phần mềm backup thứ ba, không cần cấu hình phức tạp, chỉ cần một script ngắn.</p>
+
+  <h3>6.3. CI/CD Notification Bot</h3>
+  <p>
+    Sau mỗi lần deploy thành công, pipeline tự động:
+  </p>
+  <ol>
+    <li>Tạo document release note mới trong Google Docs với <code>gws docs</code></li>
+    <li>Gửi thông báo vào Google Chat Space của team với <code>gws chat spaces messages create</code></li>
+    <li>Update trạng thái deployment vào Google Sheet tracking với <code>gws sheets values append</code></li>
+  </ol>
+
+  <h3>6.4. Audit Quyền File Drive Hàng Tuần</h3>
+  <p>
+    Mỗi sáng thứ Hai, script tự động quét tất cả file đang được share với quyền "anyone with the link" trên Drive của
+    công ty:
+  </p>
+  <pre><code>gws drive files list `
+  --params '{\"q\": \"visibility = \\\"anyoneWithLink\\\"\"}' `
+  --format table > security_audit.txt</code></pre>
+  <p>
+    Kết quả được gửi tự động qua email cho IT Admin để review. Không cần dashboard phức tạp, không cần phần mềm thứ ba.
+  </p>
+
+  <!-- SECTION 7 -->
+  <h2 id="drawbacks">7. Những hạn chế của gws</h2>
+
+  <p>Để đánh giá khách quan, tôi phải nêu ra những điểm còn hạn chế:</p>
+
+  <h3>7.1. Syntax Khác Nhau Giữa Shell</h3>
+  <p>
+    Như đã thấy trong Lab 1, cú pháp truyền JSON qua <code>--params</code> trên PowerShell khác hoàn toàn so với Bash.
+    Một script chạy tốt trên Linux hoàn toàn có thể báo lỗi trên Windows PowerShell và ngược lại. Đây không phải lỗi của
+    gws, nhưng là thực tế người dùng phải đối mặt khi làm việc đa môi trường.
+  </p>
+
+  <h3>7.2. Google API Rate Limits</h3>
+  <p>
+    gws giao tiếp trực tiếp với Google Workspace APIs, nghĩa là bị ràng buộc bởi quota của Google. Nếu bạn viết script
+    bulk thao tác hàng nghìn file (download, upload, xóa) trong vòng lặp chặt, bạn sẽ nhận lỗi
+    <code>429 Too Many Requests</code>. Cần thêm delay hoặc backoff logic vào script.
+  </p>
+
+  <h3>7.3. Không Phù Hợp với Nội Dung Rich Media</h3>
+  <p>
+    gws là công cụ text-first. Đọc email HTML phức tạp có ảnh, bảng, định dạng trong terminal là trải nghiệm tệ. Xem
+    Google Slides hay ảnh trên Drive qua CLI cũng vậy. Đây không phải tool để thay thế hoàn toàn trình duyệt, mà để
+    supplement cho các tác vụ dữ liệu.
+  </p>
+
+  <h3>7.4. Initial Setup Còn Phức Tạp Với Non-Developer</h3>
+  <p>
+    Bước tạo OAuth credentials trên Google Cloud Console, enable API, setup Client ID... là quá trình kỹ thuật mà người
+    dùng thông thường sẽ thấy khó. Hơn nữa, màn hình OAuth consent cảnh báo app "unverified" có thể gây lo lắng không
+    cần thiết. Đây không phải tool dành cho người dùng cuối.
+  </p>
+
+  <!-- SECTION 8 -->
+  <h2 id="conclusion">8. Kết luận</h2>
+
+  <p>
+    Sau khi tự tay thực hiện từng bước cài đặt, xác thực và chạy hai ví dụ thực tế trên Windows PowerShell, tôi nhận
+    thấy <strong>gws xứng đáng với danh tiếng của nó</strong>.
+  </p>
+
+  <p>
+    Điểm mạnh nhất của gws không phải là danh sách tính năng dài, mà là <strong>triết lý thiết kế</strong> của nó:
+    dynamic, structured output và AI-ready. Ba yếu tố này cộng lại biến nó thành một công cụ không bao giờ lỗi thời và
+    luôn có thể kết hợp với bất cứ công cụ nào khác trong workflow của bạn.
+  </p>
+
+  <p>
+    Nếu bạn là developer, sysadmin, automation engineer, hay đơn giản là người thích keyboard hơn chuột – <strong>hãy
+      thử gws ngay hôm nay</strong>. Khi đã vượt qua bước setup ban đầu (và hiểu cách PowerShell handle JSON), nó sẽ
+    tiết kiệm cho bạn hàng giờ mỗi tuần.
+  </p>
+
+  <p>
+    🔗 Repository chính thức: <a href="https://github.com/googleworkspace/cli"
+      target="_blank">github.com/googleworkspace/cli</a><br>
+    🎥 Video demo (tiếng Nhật): <a href="https://www.youtube.com/watch?v=a8sq2fHxlDA"
+      target="_blank">youtube.com/watch?v=a8sq2fHxlDA</a><br>
+    📖 Nguồn tham khảo bài viết: <a
+      href="https://scuti.asia/review-google-workspace-cli-gws-bringing-google-workspace-to-the-terminal-ultimate-automation-for-devs/"
+      target="_blank">scuti.asia</a>
+  </p>
+
+  <hr>
+  <p style="font-size:0.85rem; color:#666;">© 2026 Scuti Tech Lab · Bài viết được tạo bằng Antigravity AI Agent</p>
+
+</body>
+
+</html>

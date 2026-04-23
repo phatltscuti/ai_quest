@@ -1,0 +1,336 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Analyze performance trends across multiple spreadsheets and data reports using Google Drive Projects</title>
+    <style>
+      *{box-sizing:border-box}
+      body{margin:0;font-family:'Segoe UI',Arial,sans-serif;background:#fff;color:#1a1a1a;line-height:1.75}
+      a{color:#1a73e8;text-decoration:none}
+      a:hover{text-decoration:underline}
+      .wrap{max-width:1020px;margin:0 auto;padding:24px}
+      h1{margin:0 0 10px;font-size:26px;color:#1a73e8;line-height:1.35}
+      h2{margin:34px 0 14px;font-size:22px;border-bottom:3px solid #1a73e8;padding-bottom:8px;color:#202124}
+      h3{margin:28px 0 12px;font-size:18px;color:#333}
+      ol,ul{margin:8px 0;padding-left:24px}
+      li{margin-bottom:6px}
+      p{margin:12px 0}
+      code{background:#e8f0fe;border:1px solid #d2e3fc;padding:2px 6px;font-size:13px;font-family:Consolas,monospace;border-radius:3px;color:#174ea6}
+      pre{white-space:pre-wrap;word-break:break-word;border:1px solid #dadce0;background:#f8f9fa;padding:14px;font-size:12px;font-family:Consolas,monospace;margin:12px 0;border-radius:8px;overflow:auto}
+      .hero{border:2px solid #1a73e8;padding:22px 26px;margin-bottom:22px;background:linear-gradient(135deg,#e8f0fe 0%,#f8f9fa 100%);border-radius:12px}
+      .tip{border-left:4px solid #34a853;padding:12px 16px;background:#e6f4ea;margin:14px 0;border-radius:0 8px 8px 0}
+      .warning{border-left:4px solid #ea4335;padding:12px 16px;background:#fce8e6;margin:14px 0;border-radius:0 8px 8px 0}
+      table{border-collapse:collapse;width:100%;margin:16px 0;border-radius:8px;overflow:hidden;font-size:14px}
+      th,td{border:1px solid #dadce0;padding:10px 12px;text-align:left;vertical-align:top}
+      th{background:#1a73e8;color:#fff;font-weight:600}
+      tr:nth-child(even){background:#f8f9fa}
+      .toc{background:#f8f9fa;border:1px solid #dadce0;border-radius:8px;padding:16px 22px;margin:20px 0}
+      .toc ul{list-style:none;padding-left:0}
+      .toc li{padding:4px 0}
+      .toc li::before{content:'\2794 ';color:#1a73e8}
+      .ref-list{font-size:14px}
+      .flow-diagram{background:#f8f9fa;border:2px solid #dadce0;border-radius:12px;padding:20px;margin:16px 0;text-align:center;line-height:1.9}
+      .flow-step{display:inline-block;background:#fff;border:2px solid #1a73e8;border-radius:8px;padding:8px 14px;margin:4px;font-weight:600;color:#1a73e8;font-size:13px;vertical-align:middle}
+      .flow-step.starter{background:#34a853;border-color:#34a853;color:#fff}
+      .flow-step.action{background:#4285f4;border-color:#4285f4;color:#fff}
+      .flow-step.ai{background:#fbbc04;border-color:#fbbc04;color:#333}
+      .flow-arrow{display:inline-block;font-size:20px;color:#5f6368;margin:0 2px;vertical-align:middle}
+      .step-block{border:1px solid #dadce0;border-radius:8px;padding:16px 20px;margin:18px 0;background:#fafafa}
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="hero">
+        <h1>Analyze performance trends across multiple spreadsheets and data reports using Google Drive Projects</h1>
+        <p style="color:#5f6368;margin:8px 0 0">AI Quest Type 2 — Investigate How · Demo video kèm theo</p>
+      </div>
+
+      <nav class="toc">
+        <strong>Mục lục</strong>
+        <ul>
+          <li><a href="#intro">Giới thiệu</a></li>
+          <li><a href="#requirements">Yêu cầu &amp; checklist</a></li>
+          <li><a href="#scenario">Kịch bản nghiệp vụ</a></li>
+          <li><a href="#architecture">Luồng phân tích</a></li>
+          <li><a href="#repro">Tái lập (folder &amp; schema)</a></li>
+          <li><a href="#opinion">Quan điểm tích hợp phòng ban</a></li>
+          <li><a href="#demo-steps">Các bước thực hành (Step 1–16)</a></li>
+          <li><a href="#failures">Điểm dễ hỏng</a></li>
+          <li><a href="#conclusion">Kết luận</a></li>
+          <li><a href="#references">Tài liệu tham khảo</a></li>
+        </ul>
+      </nav>
+
+      <h2 id="intro">Giới thiệu</h2>
+      <p>
+        <b>Google Drive Projects</b> kết hợp <b>Ask Gemini in Drive</b> cho phép ghim nhiều Google Sheets và báo cáo PDF (theo quý/kỳ)
+        làm nguồn cố định, rồi đặt câu hỏi phân tích xuyên tài liệu — trích metric, so sánh xu hướng, tổng hợp findings có cấu trúc.
+      </p>
+      <p>
+        Khác với mở từng file rồi copy số thủ công, Project giữ nguyên vị trí file gốc, hỗ trợ citations, resume lịch sử hội thoại,
+        và kiểm soát phạm vi bằng bật/tắt source. Tài liệu:
+        <a href="https://support.google.com/drive/answer/16684520" target="_blank" rel="noopener">Share Gemini sources using Drive projects</a>,
+        <a href="https://support.google.com/drive/answer/16963068" target="_blank" rel="noopener">Use Gemini in Drive for research &amp; analysis</a>.
+      </p>
+
+      <h2 id="requirements">Yêu cầu &amp; checklist</h2>
+      <ul>
+        <li>Tạo <b>Google Drive Project</b> và bundle nhiều Sheets + PDF báo cáo theo các quý/kỳ vận hành.</li>
+        <li>Prompt Gemini trong Project: trích <b>key performance metrics</b>, <b>so sánh trend theo thời gian</b>, sinh <b>structured summary</b>.</li>
+        <li>Nêu <b>quan điểm rõ ràng</b> về lợi ích tích hợp cross-document retrieval vào quy trình review định kỳ của phòng ban.</li>
+        <li>Demo bằng <b>video</b> theo Step 1–16 + hướng dẫn tái lập folder/schema.</li>
+      </ul>
+
+      <h2 id="scenario">Kịch bản nghiệp vụ &amp; dummy data</h2>
+      <p>
+        <b>Bối cảnh:</b> phòng <b>PMO / Operations</b> cần báo cáo review hiệu suất năm 2025 cho ban điều hành.
+        Dữ liệu nằm rải rác: 4 Sheet theo quý + 2 PDF tóm tắt H1 và cả năm.
+      </p>
+      <table>
+        <thead><tr><th>Mục</th><th>Giá trị mẫu</th></tr></thead>
+        <tbody>
+          <tr><td>Phòng ban</td><td>Operations / PMO</td></tr>
+          <tr><td>Sheets</td><td><code>OPS_Metrics_2025_Q1</code> … <code>Q4</code></td></tr>
+          <tr><td>PDF</td><td><code>REPORT_H1_2025_Executive_Summary.pdf</code>, <code>REPORT_FY2025_Annual_Operations_Review.pdf</code></td></tr>
+          <tr><td>Drive Project</td><td><code>Performance Review — Operations 2025</code></td></tr>
+          <tr><td>Metric mẫu</td><td>Uptime, P1 incidents, MTTR, sprint completion, cloud spend, NPS</td></tr>
+          <tr><td>Đầu ra</td><td><code>REVIEW_2025_Ops_Performance_Summary</code></td></tr>
+        </tbody>
+      </table>
+
+      <h2 id="architecture">Luồng phân tích</h2>
+      <div class="flow-diagram">
+        <span class="flow-step starter">Sheets Q1–Q4 + PDF reports</span>
+        <span class="flow-arrow">→</span>
+        <span class="flow-step action">Drive Project + Add sources</span>
+        <span class="flow-arrow">→</span>
+        <span class="flow-step ai">Ask Gemini (metrics + trends)</span>
+        <span class="flow-arrow">→</span>
+        <span class="flow-step action">Verify citations</span>
+        <span class="flow-arrow">→</span>
+        <span class="flow-step action">Export structured summary</span>
+      </div>
+
+      <h2 id="repro">Tái lập triển khai</h2>
+      <h3>Cây thư mục</h3>
+      <table>
+        <thead><tr><th>Đường dẫn</th><th>Vai trò</th></tr></thead>
+        <tbody>
+          <tr><td><code>WS_Ops_Performance_Review/00_Source_Data</code></td><td>Sheets + PDF theo kỳ (master, read-only khi phân tích)</td></tr>
+          <tr><td><code>WS_Ops_Performance_Review/10_Review_Outputs</code></td><td>Summary export sau Gemini</td></tr>
+        </tbody>
+      </table>
+      <h3>Schema Sheet (cố định giữa các quý)</h3>
+      <table>
+        <thead><tr><th>Cột</th><th>Mô tả</th></tr></thead>
+        <tbody>
+          <tr><td><code>period</code></td><td>2025-Q1 … Q4</td></tr>
+          <tr><td><code>metric_category</code></td><td>Reliability, Incidents, Delivery, Cost, Customer</td></tr>
+          <tr><td><code>metric_name</code></td><td>Tên metric</td></tr>
+          <tr><td><code>value</code></td><td>Giá trị số</td></tr>
+          <tr><td><code>unit</code></td><td>percent, count, USD, …</td></tr>
+          <tr><td><code>notes</code></td><td>Ghi chú định tính (migration, target, …)</td></tr>
+        </tbody>
+      </table>
+      <div class="tip">
+        <p><b>Chuẩn bị trước Step 1:</b> tạo folder trước → import CSV thành Sheets → tạo/upload PDF → mới tạo Project.
+        Chi tiết: <code>demo-assets/CHUAN-BI-TRUOC-DEMO.md</code>.</p>
+      </div>
+
+      <h2 id="opinion">Quan điểm: tích hợp vào quy trình PMO/Operations</h2>
+      <p><em>Đánh giá chủ quan dựa trên demo — áp dụng cho team có review định kỳ với dữ liệu rải trên Drive.</em></p>
+      <h3>Nên tích hợp — vì sao</h3>
+      <ul>
+        <li><b>Giảm consolidation thủ công:</b> PMO thường mất 2–4 giờ/quý copy số từ nhiều Sheet + đọc PDF; một Project + một prompt rút còn ~30–45 phút cho bản nháp có cấu trúc.</li>
+        <li><b>So sánh cross-period nhất quán:</b> Gemini nhìn cùng lúc Q1–Q4 + narrative PDF, tránh sót inflection point (ví dụ Q3 migration).</li>
+        <li><b>Traceability:</b> citations/Sources used trả lời “số này lấy từ đâu?” trong họp steering.</li>
+        <li><b>Tái sử dụng theo kỳ:</b> clone Project mỗi năm, thay source files, giữ prompt template.</li>
+      </ul>
+      <h3>Giới hạn cần kiểm soát</h3>
+      <ul>
+        <li>Gemini có thể làm tròn số hoặc diễn giải sai PDF — bắt buộc tag <code>[VERIFY]</code> và PMO sign-off.</li>
+        <li>PDF scan kém OCR — ưu tiên PDF text-native từ Google Docs.</li>
+        <li>Không thay thế BI/dashboard realtime; phù hợp <b>periodic review narrative</b>.</li>
+      </ul>
+
+      <h2 id="demo-steps">Các bước thực hành (Step 1–16)</h2>
+      <p><em>Demo quay video theo các step dưới đây; prompt đầy đủ nằm ở Step 12.</em></p>
+
+      <div class="step-block" id="step-01">
+        <h3>Step 1 — Cây thư mục Drive</h3>
+        <ol>
+          <li>Mở <a href="https://drive.google.com" target="_blank" rel="noopener">drive.google.com</a>.</li>
+          <li>Vào folder <code>WS_Ops_Performance_Review</code>.</li>
+          <li>Xác nhận có <code>00_Source_Data</code> và <code>10_Review_Outputs</code>.</li>
+        </ol>
+      </div>
+
+      <div class="step-block" id="step-02">
+        <h3>Step 2 — Sheet metrics Q1</h3>
+        <ol>
+          <li>Trong <code>00_Source_Data</code>, mở <code>OPS_Metrics_2025_Q1</code>.</li>
+          <li>Kiểm tra header: <code>period</code>, <code>metric_category</code>, <code>metric_name</code>, <code>value</code>, <code>unit</code>, <code>notes</code>.</li>
+          <li>Xác nhận dữ liệu Q1 (ví dụ uptime 99.42%, P1 incidents = 4).</li>
+        </ol>
+      </div>
+
+      <div class="step-block" id="step-03">
+        <h3>Step 3 — Sheet metrics Q2</h3>
+        <ol>
+          <li>Mở <code>OPS_Metrics_2025_Q2</code>.</li>
+          <li>So sánh với Q1: P1 incidents giảm (2 vs 4), uptime tăng (99.58%).</li>
+        </ol>
+      </div>
+
+      <div class="step-block" id="step-04">
+        <h3>Step 4 — Sheet metrics Q3</h3>
+        <ol>
+          <li>Mở <code>OPS_Metrics_2025_Q3</code>.</li>
+          <li>Thấy dip uptime (99.31%) và ghi chú migration trong cột <code>notes</code>.</li>
+        </ol>
+      </div>
+
+      <div class="step-block" id="step-05">
+        <h3>Step 5 — Sheet metrics Q4</h3>
+        <ol>
+          <li>Mở <code>OPS_Metrics_2025_Q4</code>.</li>
+          <li>Xác nhận recovery: uptime 99.61%, NPS 46, sprint completion 93%.</li>
+        </ol>
+      </div>
+
+      <div class="step-block" id="step-06">
+        <h3>Step 6 — Báo cáo PDF</h3>
+        <ol>
+          <li>Mở <code>REPORT_H1_2025_Executive_Summary.pdf</code> hoặc <code>REPORT_FY2025_Annual_Operations_Review.pdf</code>.</li>
+          <li>Đọc phần narrative (Key highlights / Quarter-over-quarter) — bổ sung ngữ cảnh cho số trên Sheets.</li>
+        </ol>
+      </div>
+
+      <div class="step-block" id="step-07">
+        <h3>Step 7 — Tạo Drive Project</h3>
+        <ol>
+          <li>Trên Drive, bấm <b>New</b> → <b>Project</b> (hoặc mở <a href="https://project.new" target="_blank" rel="noopener">project.new</a>).</li>
+        </ol>
+      </div>
+
+      <div class="step-block" id="step-08">
+        <h3>Step 8 — Đặt tên Project</h3>
+        <ol>
+          <li>Nhập tên: <code>Performance Review — Operations 2025</code>.</li>
+          <li>Bấm <b>Create Project</b>.</li>
+        </ol>
+      </div>
+
+      <div class="step-block" id="step-09">
+        <h3>Step 9 — Add sources</h3>
+        <ol>
+          <li>Trong Project, bấm <b>Add sources</b>.</li>
+          <li>Chọn 6 file trong <code>00_Source_Data</code>:
+            <code>OPS_Metrics_2025_Q1</code> … <code>Q4</code>,
+            <code>REPORT_H1_2025_Executive_Summary.pdf</code>,
+            <code>REPORT_FY2025_Annual_Operations_Review.pdf</code>.
+          </li>
+        </ol>
+      </div>
+
+      <div class="step-block" id="step-10">
+        <h3>Step 10 — Xác nhận danh sách sources</h3>
+        <ol>
+          <li>Kiểm tra panel Sources / Sources used hiển thị đủ 6 file.</li>
+          <li>Giữ tất cả checkbox <b>bật</b> (checked) trước khi hỏi Gemini.</li>
+        </ol>
+      </div>
+
+      <div class="step-block" id="step-11">
+        <h3>Step 11 — Mở Ask Gemini</h3>
+        <ol>
+          <li>Trong Project, mở <b>Ask Gemini</b>.</li>
+          <li>Xác nhận indicator số source (6 file) và ô prompt trống.</li>
+        </ol>
+      </div>
+
+      <div class="step-block" id="step-12">
+        <h3>Step 12 — Nhập prompt phân tích trend</h3>
+        <p>Dán prompt sau vào ô Ask Gemini, rồi gửi:</p>
+        <pre>You are an operations analyst helping our PMO team prepare a quarterly performance review.
+
+Use ONLY the pinned project sources (Q1–Q4 Google Sheets and the H1 / FY PDF reports).
+
+Tasks:
+1) Extract key performance metrics by category: Reliability, Incidents, Delivery, Cost, Customer.
+2) Compare trends quarter-over-quarter for 2025 (Q1 → Q4): direction (up/down/stable), notable inflection points.
+3) Cross-check Sheet numbers with qualitative statements in the PDF reports (flag any mismatch with [VERIFY]).
+4) Output a structured summary with these sections:
+   - Executive snapshot (5 bullets)
+   - Metric table (metric name | Q1 | Q2 | Q3 | Q4 | trend)
+   - Top 3 improvements
+   - Top 3 risks or regressions
+   - Recommended actions for next quarter
+
+Tone: concise, data-driven, suitable for a department steering meeting.
+Use citations where possible.</pre>
+      </div>
+
+      <div class="step-block" id="step-13">
+        <h3>Step 13 — Xem kết quả phân tích</h3>
+        <ol>
+          <li>Đợi Gemini trả lời.</li>
+          <li>Kiểm tra có đủ: Executive snapshot, bảng metric Q1–Q4, top improvements/risks, recommended actions.</li>
+          <li>Chú ý citations [1], [2]… nếu có.</li>
+        </ol>
+      </div>
+
+      <div class="step-block" id="step-14">
+        <h3>Step 14 — Kiểm chứng nguồn số liệu</h3>
+        <ol>
+          <li>Ở cột <b>Sources used</b>, click tên file (ví dụ <code>OPS_Metrics_2025_Q3</code>) để mở Sheet đối chiếu.</li>
+          <li>Hoặc click citation [1], [2] trong câu trả lời.</li>
+          <li>So sánh số trên Sheet với narrative trong PDF; ghi nhận chỗ cần <code>[VERIFY]</code>.</li>
+        </ol>
+        <p><b>Chưa Export</b> — bước tiếp theo mới xuất file summary.</p>
+      </div>
+
+      <div class="step-block" id="step-15">
+        <h3>Step 15 — Export structured summary</h3>
+        <ol>
+          <li>Cuộn xuống cuối câu trả lời Gemini.</li>
+          <li>Bấm <b>Export to Docs</b> (hoặc Word tùy tenant) — <b>không</b> dùng Export to Sheets cho cả summary.</li>
+          <li>Lưu vào <code>10_Review_Outputs</code>, đặt tên <code>REVIEW_2025_Ops_Performance_Summary</code>.</li>
+        </ol>
+      </div>
+
+      <div class="step-block" id="step-16">
+        <h3>Step 16 — Lịch sử Project</h3>
+        <ol>
+          <li>Drive sidebar → <b>Projects</b> → chọn project vừa dùng.</li>
+          <li>Mở <b>History</b> → thấy conversation prompt trends vừa chạy (resume research).</li>
+        </ol>
+      </div>
+
+      <h2 id="failures">Điểm dễ hỏng (≥3)</h2>
+      <table>
+        <thead><tr><th>Rủi ro</th><th>Quan sát</th><th>Mitigation</th></tr></thead>
+        <tbody>
+          <tr><td><b>Schema Sheet không đồng nhất</b></td><td>Q3 đổi tên cột → trend sai.</td><td>Template Sheet + validate trước khi add source.</td></tr>
+          <tr><td><b>PDF không đọc được</b></td><td>Scan mờ → Gemini bỏ qua narrative.</td><td>Dùng PDF text từ Google Docs.</td></tr>
+          <tr><td><b>Số liệu hallucinated</b></td><td>Metric không có trong Sheet vẫn xuất hiện.</td><td>Yêu cầu cite; PMO verify từng dòng bảng.</td></tr>
+          <tr><td><b>Quyền Drive</b></td><td>Collaborator thiếu View trên Sheet/PDF.</td><td>Share folder <code>00_Source_Data</code> cho nhóm PMO.</td></tr>
+        </tbody>
+      </table>
+
+      <h2 id="conclusion">Kết luận</h2>
+      <p>
+        Drive Projects biến tập Sheet/PDF theo quý thành workspace phân tích thống nhất: trích metric, so trend, tổng hợp findings có cấu trúc,
+        với khả năng kiểm chứng nguồn. Đây là hướng triển khai thực tế cho <b>periodic operational review</b> — đặc biệt phòng PMO/Operations
+        đang consolidate thủ công trước mỗi kỳ họp steering. Kết hợp video demo Step 1–16, team có thể onboard và lặp lại quy trình mỗi quý/năm.
+      </p>
+
+      <h2 id="references">Tài liệu tham khảo</h2>
+      <ul class="ref-list">
+        <li><a href="https://support.google.com/drive/answer/16684520" target="_blank" rel="noopener">Share your Gemini sources using Drive projects (Google Help)</a></li>
+        <li><a href="https://support.google.com/drive/answer/16963068" target="_blank" rel="noopener">Use Gemini in Drive for research &amp; analysis (Google Help)</a></li>
+      </ul>
+    </div>
+  </body>
+</html>

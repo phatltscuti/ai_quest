@@ -1,0 +1,408 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Create a client-specific pitch document by cross-referencing multiple internal files using Google Drive Projects</title>
+    <style>
+      *{box-sizing:border-box}
+      body{margin:0;font-family:'Segoe UI',Arial,sans-serif;background:#fff;color:#1a1a1a;line-height:1.75}
+      a{color:#1a73e8;text-decoration:none}
+      a:hover{text-decoration:underline}
+      .wrap{max-width:1020px;margin:0 auto;padding:24px}
+      h1{margin:0 0 10px;font-size:26px;color:#1a73e8;line-height:1.35}
+      h2{margin:34px 0 14px;font-size:22px;border-bottom:3px solid #1a73e8;padding-bottom:8px;color:#202124}
+      h3{margin:22px 0 10px;font-size:18px;color:#333}
+      h4{margin:16px 0 8px;font-size:15px;color:#444}
+      ul,ol{margin:8px 0;padding-left:24px}
+      li{margin-bottom:6px}
+      p{margin:12px 0}
+      code{background:#e8f0fe;border:1px solid #d2e3fc;padding:2px 6px;font-size:13px;font-family:Consolas,monospace;border-radius:3px;color:#174ea6}
+      pre{white-space:pre-wrap;word-break:break-word;border:1px solid #dadce0;background:#f8f9fa;padding:14px;font-size:12px;font-family:Consolas,monospace;margin:12px 0;border-radius:8px;overflow:auto}
+      .hero{border:2px solid #1a73e8;padding:22px 26px;margin-bottom:22px;background:linear-gradient(135deg,#e8f0fe 0%,#f8f9fa 100%);border-radius:12px}
+      .tip{border-left:4px solid #34a853;padding:12px 16px;background:#e6f4ea;margin:14px 0;border-radius:0 8px 8px 0}
+      .warning{border-left:4px solid #ea4335;padding:12px 16px;background:#fce8e6;margin:14px 0;border-radius:0 8px 8px 0}
+      .info{border-left:4px solid #4285f4;padding:12px 16px;background:#e8f0fe;margin:14px 0;border-radius:0 8px 8px 0}
+      table{border-collapse:collapse;width:100%;margin:16px 0;border-radius:8px;overflow:hidden;font-size:14px}
+      th,td{border:1px solid #dadce0;padding:10px 12px;text-align:left;vertical-align:top}
+      th{background:#1a73e8;color:#fff;font-weight:600}
+      tr:nth-child(even){background:#f8f9fa}
+      .toc{background:#f8f9fa;border:1px solid #dadce0;border-radius:8px;padding:16px 22px;margin:20px 0}
+      .toc ul{list-style:none;padding-left:0}
+      .toc li{padding:4px 0}
+      .toc li::before{content:'\2794 ';color:#1a73e8}
+      .demo-fig{margin:20px 0;text-align:center}
+      .demo-fig img{max-width:100%;height:auto;border:2px solid #dadce0;border-radius:8px;box-shadow:0 2px 10px rgba(0,0,0,.08)}
+      .demo-fig figcaption{font-size:13px;color:#5f6368;margin-top:8px;font-style:italic;text-align:center}
+      .ref-list{font-size:14px}
+      .flow-diagram{background:#f8f9fa;border:2px solid #dadce0;border-radius:12px;padding:20px;margin:16px 0;text-align:center;line-height:1.9}
+      .flow-step{display:inline-block;background:#fff;border:2px solid #1a73e8;border-radius:8px;padding:8px 14px;margin:4px;font-weight:600;color:#1a73e8;font-size:13px;vertical-align:middle}
+      .flow-step.starter{background:#34a853;border-color:#34a853;color:#fff}
+      .flow-step.action{background:#4285f4;border-color:#4285f4;color:#fff}
+      .flow-step.ai{background:#fbbc04;border-color:#fbbc04;color:#333}
+      .flow-arrow{display:inline-block;font-size:20px;color:#5f6368;margin:0 2px;vertical-align:middle}
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="hero">
+        <h1>Create a client-specific pitch document by cross-referencing multiple internal files using Google Drive Projects</h1>
+      </div>
+
+      <nav class="toc">
+        <strong>Table of contents</strong>
+        <ul>
+          <li><a href="#intro">Introduction</a></li>
+          <li><a href="#requirements">Requirements &amp; checklist</a></li>
+          <li><a href="#scenario">Business scenario</a></li>
+          <li><a href="#architecture">Workflow</a></li>
+          <li><a href="#repro">Reproducibility (folders &amp; sources)</a></li>
+          <li><a href="#implement">Drive Project + Ask Gemini setup</a></li>
+          <li><a href="#analysis">Efficiency &amp; accuracy analysis</a></li>
+          <li><a href="#demo-screens">Step-by-step demo (screenshots)</a></li>
+          <li><a href="#failures">Failure-prone points</a></li>
+          <li><a href="#conclusion">Conclusion</a></li>
+          <li><a href="#references">References</a></li>
+        </ul>
+      </nav>
+
+      <h2 id="intro">Introduction</h2>
+      <p>
+        <b>Google Drive Projects</b> (with <b>Ask Gemini in Drive</b>) let you pin a fixed set of files, folders, or emails as <b>stable sources</b>,
+        then ask synthesis questions across multiple internal documents at once—ideal when presales needs a <b>client-specific proposal or pitch</b>
+        while still aligning with product specs, standard templates, and past meeting notes.
+      </p>
+      <p>
+        Unlike ad-hoc Gemini chats on single files, a Project <b>does not move original files</b> on Drive; it creates a reusable research frame you can share with the team,
+        resume conversation history, and verify answers through <b>citations</b> back to source Docs.
+        Official documentation:
+        <a href="https://support.google.com/drive/answer/16684520" target="_blank" rel="noopener">Share Gemini sources using Drive projects</a>,
+        <a href="https://support.google.com/drive/answer/16963068" target="_blank" rel="noopener">Use Gemini in Drive for research &amp; analysis</a>.
+      </p>
+
+      <h2 id="requirements">Requirements &amp; checklist</h2>
+      <ul>
+        <li>Create a <b>new Project</b> on Drive and aggregate source files: product specification, proposal template, and past meeting notes.</li>
+        <li>Use <b>Ask Gemini within the project</b> to synthesize documents and generate a comprehensive draft for a new client proposal.</li>
+        <li>Attach <b>step-by-step screenshots</b> (Steps 1–16) plus run/history notes when available.</li>
+        <li>Include your own <b>analysis</b> on how cross-file synthesis improves efficiency and accuracy in sales or internal reporting routines.</li>
+        <li>Ensure <b>reproducibility</b>: folder rules, source file names, and sample prompts so another team member can rebuild the setup.</li>
+      </ul>
+
+      <h2 id="scenario">Business scenario &amp; dummy data</h2>
+      <p>
+        <b>Context:</b> an IT outsourcing team receives an RFP from <b>Nexa Logistics</b> (warehouse visibility MVP).
+        They need a client pitch document in one working session, reusing internal product spec, proposal template, and lessons from the Acme Retail deal.
+      </p>
+      <table>
+        <thead>
+          <tr><th>Item</th><th>Sample value</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>New client (pitch)</td><td>Nexa Logistics Co., Ltd.</td></tr>
+          <tr><td>Project</td><td>Real-time warehouse stock visibility MVP (WMS integration)</td></tr>
+          <tr><td>Spec file</td><td><code>SPEC_Warehouse_Visibility_MVP_v1.2</code></td></tr>
+          <tr><td>Proposal template</td><td><code>TEMPLATE_Proposal_IT_Intake</code></td></tr>
+          <tr><td>Reference meeting notes</td><td><code>NOTES_Acme_Retail_2026-03-18_REQ_interview</code></td></tr>
+          <tr><td>Drive Project</td><td><code>Pitch — Nexa Logistics — Warehouse MVP</code></td></tr>
+          <tr><td>Output</td><td><code>PITCH_Nexa_Logistics_Warehouse_MVP_draft</code> (Google Doc or Word, depending on export)</td></tr>
+        </tbody>
+      </table>
+
+      <h2 id="architecture">Workflow</h2>
+      <div class="flow-diagram" aria-label="Drive Project pitch workflow">
+        <span class="flow-step starter">Collect source files on Drive</span>
+        <span class="flow-arrow">→</span>
+        <span class="flow-step action">New Project + Add sources</span>
+        <span class="flow-arrow">→</span>
+        <span class="flow-step ai">Ask Gemini (synthesis)</span>
+        <span class="flow-arrow">→</span>
+        <span class="flow-step action">Citations + edit</span>
+        <span class="flow-arrow">→</span>
+        <span class="flow-step action">Export client pitch document</span>
+      </div>
+
+      <h2 id="repro">Reproducibility</h2>
+      <h3>Drive folder tree</h3>
+      <p><b>Order matters:</b> create folders first, then create Docs inside <code>00_Internal_Sources</code>, then create the Drive Project.</p>
+      <table>
+        <thead>
+          <tr><th>Path</th><th>Role</th><th>Fixed vs parameterized</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>WS_Sales_Pitch_Sources/00_Internal_Sources</code></td><td>Spec, template, notes—do not edit while running Gemini</td><td>Fixed folder name; version in Doc footer</td></tr>
+          <tr><td><code>WS_Sales_Pitch_Sources/10_Client_Outputs</code></td><td>Client-specific pitch drafts</td><td>File name: <code>PITCH_{{clientSlug}}_draft</code></td></tr>
+        </tbody>
+      </table>
+      <div class="tip">
+        <p><b>Projects do not relocate files:</b> when you add sources, original Drive permissions and paths stay the same—suitable for company-wide shared source standards.</p>
+      </div>
+
+      <h2 id="implement">Drive Project + Ask Gemini implementation</h2>
+
+      <h3>Step A — Prepare 3 source files (before creating the Project)</h3>
+      <p>Create 3 Google Docs in <code>00_Internal_Sources</code> using the sample bodies below (expand as needed for your demo):</p>
+
+      <h4>1) Product specification (excerpt)</h4>
+      <pre>PRODUCT SPECIFICATION — Warehouse Visibility MVP (v1.2)
+
+MVP scope (in)
+- Web dashboard: SKU on-hand, inbound/outbound (24h rolling).
+- REST read API from customer WMS (polling 15 min).
+- RBAC: Ops Manager, Warehouse Lead, Auditor.
+
+Out of scope (MVP)
+- Native mobile apps; ML forecasting.
+
+Internal MD reference
+Work package   | Role      | MD low | MD high
+WMS connector  | Backend   | 18     | 28
+Dashboard UI     | Frontend  | 12     | 18</pre>
+
+      <h4>2) Proposal template (section structure)</h4>
+      <pre>CLIENT PROPOSAL — {{CLIENT_NAME}}
+
+Executive summary
+Client context & objectives
+Proposed scope (in / out)
+Solution approach
+Timeline & milestones
+Commercial outline
+Risks & mitigations
+Next steps</pre>
+
+      <h4>3) Past meeting notes (lessons learned)</h4>
+      <pre>MEETING NOTES — Acme Retail (reference deal)
+
+Lessons learned
+- Confirm integration credential model in first call.
+- Separate MVP scope from roadmap in writing.
+- Include explicit support window in commercial section.</pre>
+
+      <h3>Step B — Create Project and attach sources</h3>
+      <ol>
+        <li>Web: <a href="https://drive.google.com" target="_blank" rel="noopener">drive.google.com</a> → <b>New</b> → <b>Project</b> (or <a href="https://project.new" target="_blank" rel="noopener">project.new</a>).</li>
+        <li>Name: <code>Pitch — Nexa Logistics — Warehouse MVP</code> → <b>Create Project</b>.</li>
+        <li><b>Add sources</b> → select the 3 Docs: spec, template, meeting notes.</li>
+        <li>Keep all sources <b>checked</b> (active) before asking Gemini.</li>
+      </ol>
+      <div class="warning">
+        <p><b>Permissions:</b> collaborators can only analyze file content if they already have View access on Drive. Sharing a Project does not replace sharing the underlying files.</p>
+      </div>
+
+      <h3>Step C — Ask Gemini: synthesis prompt</h3>
+      <p>Paste the prompt below into Ask Gemini (full-screen inside the Project). The new client brief is embedded in the prompt—a separate Drive file is optional.</p>
+      <pre>You are helping our presales team draft a client-specific proposal.
+
+Use ONLY the pinned project sources (product spec, proposal template structure, past meeting notes) plus this new client brief:
+
+---
+Client: Nexa Logistics Co., Ltd.
+Needs: Real-time warehouse stock visibility MVP; WMS integration (OAuth2); web dashboard for Ops/Warehouse Lead/Auditor; target go-live Q3 2026; budget USD 80k–110k; no mobile app in phase 1.
+---
+
+Tasks:
+1) Synthesize relevant capabilities from the product spec that match Nexa's needs.
+2) Apply lessons from the Acme Retail meeting notes (scope discipline, auth model, support window).
+3) Output a complete proposal draft following the section headers in our proposal template: Executive summary, Client context, Proposed scope (in/out), Solution approach, Timeline, Commercial outline (use internal MD ranges from spec as indicative only), Risks, Next steps.
+
+Tone: professional, concise, suitable for B2B logistics.
+Flag any assumptions that need client confirmation with [CONFIRM].</pre>
+
+      <h3>Step D — Verify citations &amp; export draft</h3>
+      <ol>
+        <li>Read the response; click <b>citation [1], [2]…</b> or a file name under <b>Sources used</b> to open the source Doc (see <a href="https://support.google.com/drive/answer/16963068" target="_blank" rel="noopener">research &amp; analysis guide</a>).</li>
+        <li>Edit anything incorrect or off-client; adjust bullets per PM review.</li>
+        <li><b>Export to Docs</b> (or Word, depending on your tenant) → save into <code>10_Client_Outputs</code> with the client pitch file name.</li>
+        <li>(Optional) <b>Save as a project</b> from a regular Gemini conversation if you started from a single file first.</li>
+      </ol>
+
+      <h3>Step E — Follow-up in the same Project</h3>
+      <pre>Based on the draft above, tighten the Commercial outline into a table with 4 work packages and map each to the MD ranges from the product spec. Keep [CONFIRM] flags where budget or WMS API docs are uncertain.</pre>
+
+      <h2 id="analysis">Analysis: efficiency &amp; accuracy for sales / reporting</h2>
+      <p><em>The following is an operational assessment for presales/PM teams—it does not replace legal review or final pricing approval.</em></p>
+
+      <h3>1) Efficiency (time &amp; throughput)</h3>
+      <table>
+        <thead>
+          <tr><th>Previous manual step</th><th>With Drive Projects + Gemini</th><th>Estimated impact</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Open 3–5 Docs one by one and copy-paste into a new proposal</td>
+            <td>One Project, one synthesis prompt aligned to template</td>
+            <td>~40–60% less time for first draft</td>
+          </tr>
+          <tr>
+            <td>New AE onboarding: unclear which file is “source of truth”</td>
+            <td>Pinned source list + Project name per deal</td>
+            <td>Fewer wrong files / missing context on handoff</td>
+          </tr>
+          <tr>
+            <td>Weekly report: aggregate risks from multiple meeting notes</td>
+            <td>Cross-file prompt (“top 3 risks across Q2 notes”)</td>
+            <td>Useful for staff reports, not only client pitches</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>2) Accuracy (quality &amp; traceability)</h3>
+      <ul>
+        <li><b>Citations</b> and <b>Sources used</b> push authors back to original Docs—reduces hallucination vs sourceless chat.</li>
+        <li><b>Fixed template</b> in sources keeps proposal structure consistent across brand and delivery.</li>
+        <li><b>Meeting notes</b> bring lessons from past deals into new pitches (scope, auth, SLA)—avoids repeating presales mistakes.</li>
+        <li><b>Toggle sources</b> (temporarily uncheck) supports A/B analysis with or without reference notes.</li>
+      </ul>
+
+      <h3>3) Team operating recommendations</h3>
+      <ol>
+        <li>Standardize Project prefix: <code>Pitch — {Client} — {Offering}</code>.</li>
+        <li>Each exported pitch includes a footer line: <code>Generated from Project: … | Prompt version: v1</code>.</li>
+        <li>PM must review all <code>[CONFIRM]</code> items before sending to the client.</li>
+        <li>Do not rely on shared Gmail as a common source (email in Projects is private per Google documentation).</li>
+      </ol>
+
+      <h2 id="demo-screens">Step-by-step demo (screenshots Steps 1–16)</h2>
+      <p>Screenshots live in <code>images/</code>; detailed capture instructions: <code>HUONG-DAN-DEMO-CHUP-ANH.md</code> (Vietnamese).</p>
+
+      <div class="info"><p><b>Step 1:</b> Open root folder <code>WS_Sales_Pitch_Sources</code> and show <code>00_Internal_Sources</code> and <code>10_Client_Outputs</code>.</p></div>
+      <figure class="demo-fig">
+        <img src="images/step-01-drive-sources-folder.png" alt="Drive folder structure for pitch sources" width="960" loading="lazy" />
+        <figcaption>Step 1 — Drive folder tree for sources and outputs.</figcaption>
+      </figure>
+
+      <div class="info"><p><b>Step 2:</b> Open product spec Doc <code>SPEC_Warehouse_Visibility_MVP_v1.2</code>; show MVP scope and internal MD table.</p></div>
+      <figure class="demo-fig">
+        <img src="images/step-02-product-spec-open.png" alt="Product specification Doc" width="960" loading="lazy" />
+        <figcaption>Step 2 — Product specification (source file).</figcaption>
+      </figure>
+
+      <div class="info"><p><b>Step 3:</b> Open proposal template <code>TEMPLATE_Proposal_IT_Intake</code>; show all standard section headers.</p></div>
+      <figure class="demo-fig">
+        <img src="images/step-03-proposal-template-open.png" alt="Proposal template Doc" width="960" loading="lazy" />
+        <figcaption>Step 3 — Internal proposal template.</figcaption>
+      </figure>
+
+      <div class="info"><p><b>Step 4:</b> Open reference meeting notes <code>NOTES_Acme_Retail_…</code>; highlight Lessons learned.</p></div>
+      <figure class="demo-fig">
+        <img src="images/step-04-past-meeting-notes-open.png" alt="Past meeting notes Doc" width="960" loading="lazy" />
+        <figcaption>Step 4 — Past meeting notes (cross-reference).</figcaption>
+      </figure>
+
+      <div class="info"><p><b>Step 5:</b> On Drive, click <b>New</b> and select <b>Project</b> (or use project.new).</p></div>
+      <figure class="demo-fig">
+        <img src="images/step-05-drive-new-project-menu.png" alt="Drive New Project menu" width="960" loading="lazy" />
+        <figcaption>Step 5 — Create a new Project from Drive.</figcaption>
+      </figure>
+
+      <div class="info"><p><b>Step 6:</b> Enter Project name <code>Pitch — Nexa Logistics — Warehouse MVP</code> and create the project.</p></div>
+      <figure class="demo-fig">
+        <img src="images/step-06-project-name-and-create.png" alt="Project name and create" width="960" loading="lazy" />
+        <figcaption>Step 6 — Name the Project for the deal.</figcaption>
+      </figure>
+
+      <div class="info"><p><b>Step 7:</b> Click <b>Add sources</b> and select the 3 files in <code>00_Internal_Sources</code>.</p></div>
+      <figure class="demo-fig">
+        <img src="images/step-07-add-sources-picker.png" alt="Add sources file picker" width="960" loading="lazy" />
+        <figcaption>Step 7 — Attach source files to the Project.</figcaption>
+      </figure>
+
+      <div class="info"><p><b>Step 8:</b> Sources panel shows all 3 files with checkboxes enabled (active).</p></div>
+      <figure class="demo-fig">
+        <img src="images/step-08-project-sources-panel.png" alt="Project sources panel" width="960" loading="lazy" />
+        <figcaption>Step 8 — Pinned sources list.</figcaption>
+      </figure>
+
+      <div class="info"><p><b>Step 9:</b> Open <b>Ask Gemini</b> in the Project; confirm Sources area and prompt box.</p></div>
+      <figure class="demo-fig">
+        <img src="images/step-09-ask-gemini-fullscreen.png" alt="Ask Gemini in project" width="960" loading="lazy" />
+        <figcaption>Step 9 — Ask Gemini inside the Project.</figcaption>
+      </figure>
+
+      <div class="info"><p><b>Step 10:</b> Paste the synthesis prompt (Implementation — Step C) into the question box.</p></div>
+      <figure class="demo-fig">
+        <img src="images/step-10-gemini-prompt-entered.png" alt="Gemini prompt entered" width="960" loading="lazy" />
+        <figcaption>Step 10 — Synthesis prompt entered.</figcaption>
+      </figure>
+
+      <div class="info"><p><b>Step 11:</b> Send the prompt; capture the response with citations and proposal sections (Risk table, Next steps, etc.).</p></div>
+      <figure class="demo-fig">
+        <img src="images/step-11-gemini-synthesis-response.png" alt="Gemini synthesis response with citations" width="960" loading="lazy" />
+        <figcaption>Step 11 — Synthesized draft + citations.</figcaption>
+      </figure>
+
+      <div class="info"><p><b>Step 12:</b> In the right <b>Sources used</b> column, click a source file name (e.g. spec) to open the Doc and verify content. If inline <b>[1], [2]</b> appear, click those too. Do <b>not</b> click Export yet (Step 13).</p></div>
+      <figure class="demo-fig">
+        <img src="images/step-12-citation-source-preview.png" alt="Citation opens source document" width="960" loading="lazy" />
+        <figcaption>Step 12 — Verify source via Sources used or citation.</figcaption>
+      </figure>
+
+      <div class="info"><p><b>Step 13:</b> Below Gemini’s response, click <b>Export to Docs</b> (not Export to Sheets—Sheets only exports a table such as Risks). Some tenants produce Word (.docx); move/rename to <code>10_Client_Outputs</code> as <code>PITCH_Nexa_Logistics_Warehouse_MVP_draft</code>.</p></div>
+      <figure class="demo-fig">
+        <img src="images/step-13-insert-to-google-doc.png" alt="Export synthesis to document" width="960" loading="lazy" />
+        <figcaption>Step 13 — Export draft to Doc or Word.</figcaption>
+      </figure>
+
+      <div class="info"><p><b>Step 14:</b> Open <code>PITCH_Nexa_Logistics_Warehouse_MVP_draft</code>; confirm Nexa-specific Executive summary, scope, timeline, etc.</p></div>
+      <figure class="demo-fig">
+        <img src="images/step-14-client-pitch-doc-result.png" alt="Client pitch document result" width="960" loading="lazy" />
+        <figcaption>Step 14 — Client-specific pitch document.</figcaption>
+      </figure>
+
+      <div class="info"><p><b>Step 15:</b> Temporarily uncheck one source (e.g. meeting notes) and ask a short follow-up to show scope control.</p></div>
+      <figure class="demo-fig">
+        <img src="images/step-15-manage-sources-toggle.png" alt="Toggle sources on and off" width="960" loading="lazy" />
+        <figcaption>Step 15 — Manage sources (on/off).</figcaption>
+      </figure>
+
+      <div class="info"><p><b>Step 16:</b> Drive → Projects → open History and show the conversation you just ran (resume research).</p></div>
+      <figure class="demo-fig">
+        <img src="images/step-16-projects-history-resume.png" alt="Project history and resume" width="960" loading="lazy" />
+        <figcaption>Step 16 — Project history / resume session.</figcaption>
+      </figure>
+
+      <h2 id="failures">Failure-prone points (3+)</h2>
+      <table>
+        <thead>
+          <tr><th>Risk</th><th>What you observe</th><th>Mitigation</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><b>Drive permissions</b></td>
+            <td>Collaborator opens Project but Gemini cannot read source file content.</td>
+            <td>Share underlying files first; use a presales Drive group.</td>
+          </tr>
+          <tr>
+            <td><b>Wrong or stale sources</b></td>
+            <td>Old spec still pinned → pitch proposes out-of-scope features.</td>
+            <td>Version in file names; quarterly review of pinned sources.</td>
+          </tr>
+          <tr>
+            <td><b>Over-trusting output</b></td>
+            <td>MD/budget numbers from spec misapplied to the new client context.</td>
+            <td>Mandatory PM review + <code>[CONFIRM]</code> tags; never send raw Gemini output to clients.</td>
+          </tr>
+          <tr>
+            <td><b>Sharing Project vs chat</b></td>
+            <td>Sharing a Project shares the source list only; chat history stays private.</td>
+            <td>Export to Doc/Word before internal handoff.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2 id="conclusion">Conclusion</h2>
+      <p>
+        Drive Projects turn scattered internal files into a <b>controlled context</b> for Ask Gemini—well suited for client-specific pitches and proposals
+        that still align with product specs, templates, and prior deal experience. Combined with citations, source toggles, and PM review,
+        sales teams can shorten first-draft time while improving traceability compared to manual copy-paste or sourceless chat.
+      </p>
+
+      <h2 id="references">References</h2>
+      <ul class="ref-list">
+        <li><a href="https://support.google.com/drive/answer/16684520" target="_blank" rel="noopener">Share your Gemini sources using Drive projects (Google Help)</a></li>
+        <li><a href="https://support.google.com/drive/answer/16963068" target="_blank" rel="noopener">Use Gemini in Drive for research &amp; analysis (Google Help)</a></li>
+      </ul>
+    </div>
+  </body>
+</html>

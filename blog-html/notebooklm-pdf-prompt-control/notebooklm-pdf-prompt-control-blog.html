@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kiểm soát Slide Deck PDF bằng Prompt Engineering trong NotebookLM</title>
+<style>
+  :root {
+    --primary: #0d47a1;
+    --primary-light: #1976d2;
+    --accent: #ff6d00;
+    --accent-light: #ff9e40;
+    --bg: #fafafa;
+    --card: #ffffff;
+    --text: #212121;
+    --text-secondary: #616161;
+    --border: #e0e0e0;
+    --code-bg: #263238;
+    --success: #2e7d32;
+    --success-bg: #e8f5e9;
+    --warning: #f57f17;
+    --warning-bg: #fff8e1;
+    --error: #c62828;
+    --gradient-start: #0d47a1;
+    --gradient-mid: #1565c0;
+    --gradient-end: #00838f;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.75;
+    font-size: 16px;
+  }
+  .hero {
+    background: linear-gradient(135deg, var(--gradient-start), var(--gradient-mid), var(--gradient-end));
+    color: white;
+    padding: 64px 20px;
+    text-align: center;
+  }
+  .hero h1 { font-size: 2.3em; margin-bottom: 14px; font-weight: 700; letter-spacing: -0.5px; }
+  .hero .subtitle { font-size: 1.12em; opacity: 0.93; max-width: 720px; margin: 0 auto; }
+  .hero .badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.18);
+    padding: 6px 20px;
+    border-radius: 20px;
+    font-size: 0.84em;
+    margin-bottom: 18px;
+    backdrop-filter: blur(4px);
+  }
+  .container { max-width: 940px; margin: 0 auto; padding: 32px 20px; }
+
+  .toc {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px 32px;
+    margin-bottom: 38px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  }
+  .toc h2 { font-size: 1.3em; margin-bottom: 14px; color: var(--primary); }
+  .toc ol { padding-left: 22px; }
+  .toc li { margin-bottom: 6px; }
+  .toc a { color: var(--primary-light); text-decoration: none; }
+  .toc a:hover { text-decoration: underline; }
+
+  section { margin-bottom: 44px; }
+  h2 {
+    font-size: 1.55em;
+    color: var(--primary);
+    border-bottom: 3px solid var(--primary);
+    padding-bottom: 8px;
+    margin-bottom: 22px;
+  }
+  h3 { font-size: 1.22em; color: var(--text); margin: 22px 0 10px; }
+  h4 { font-size: 1.05em; color: var(--text-secondary); margin: 16px 0 8px; }
+  p { margin-bottom: 14px; }
+  a { color: var(--primary-light); }
+
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+  }
+  .card-accent { border-left: 4px solid var(--accent); }
+  .card-info { border-left: 4px solid var(--primary-light); }
+  .card-warning { border-left: 4px solid var(--warning); background: var(--warning-bg); }
+  .card-success { border-left: 4px solid var(--success); background: var(--success-bg); }
+
+  .prompt-box {
+    background: var(--code-bg);
+    color: #cfd8dc;
+    border-radius: 10px;
+    padding: 22px 24px;
+    margin: 14px 0 22px;
+    font-family: 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+    font-size: 0.9em;
+    line-height: 1.65;
+    white-space: pre-wrap;
+    position: relative;
+    overflow-x: auto;
+  }
+  .prompt-box .label {
+    position: absolute;
+    top: 8px;
+    right: 12px;
+    background: var(--accent);
+    color: white;
+    font-size: 0.7em;
+    padding: 2px 12px;
+    border-radius: 8px;
+    font-family: 'Segoe UI', sans-serif;
+    font-weight: 600;
+  }
+
+  table.data-table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+  table.data-table th, table.data-table td {
+    border: 1px solid var(--border);
+    padding: 10px 14px;
+    text-align: left;
+    font-size: 0.93em;
+  }
+  table.data-table th {
+    background: var(--primary);
+    color: white;
+    font-weight: 600;
+  }
+  table.data-table tr:nth-child(even) { background: #f5f5f5; }
+  table.data-table tr:hover { background: #e3f2fd; }
+
+  table.rubric-table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+  table.rubric-table th, table.rubric-table td {
+    border: 1px solid var(--border);
+    padding: 10px 14px;
+    text-align: center;
+    font-size: 0.93em;
+  }
+  table.rubric-table th { background: var(--primary); color: white; }
+  table.rubric-table td:first-child { text-align: left; font-weight: 600; }
+  table.rubric-table tr:nth-child(even) { background: #f5f5f5; }
+
+  .v-badge {
+    display: inline-block;
+    padding: 3px 14px;
+    border-radius: 16px;
+    font-size: 0.8em;
+    font-weight: 700;
+    margin-right: 8px;
+    color: white;
+  }
+  .v-badge.v1 { background: var(--accent); }
+  .v-badge.v2 { background: var(--success); }
+
+  .compare-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin: 18px 0;
+  }
+  @media (max-width: 700px) { .compare-grid { grid-template-columns: 1fr; } }
+
+  .step-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    background: var(--primary);
+    color: white;
+    border-radius: 50%;
+    font-weight: 700;
+    font-size: 0.9em;
+    margin-right: 12px;
+    flex-shrink: 0;
+  }
+  .step-row { display: flex; align-items: flex-start; margin-bottom: 14px; }
+  .step-row p { margin: 0; }
+
+  .img-placeholder {
+    background: #eceff1;
+    border: 2px dashed #b0bec5;
+    border-radius: 10px;
+    padding: 36px 20px;
+    text-align: center;
+    color: var(--text-secondary);
+    font-size: 0.9em;
+    margin: 14px 0;
+  }
+  .img-placeholder .icon { font-size: 2em; margin-bottom: 8px; }
+
+  .screenshot-wrap {
+    margin: 16px 0;
+    text-align: center;
+  }
+  .screenshot-wrap img {
+    max-width: 100%;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+  .screenshot-wrap .caption {
+    margin-top: 8px;
+    font-size: 0.85em;
+    color: var(--text-secondary);
+  }
+
+  ul, ol { margin-bottom: 14px; padding-left: 24px; }
+  li { margin-bottom: 6px; }
+
+  .flow-diagram {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 22px 0;
+    font-size: 0.92em;
+  }
+  .flow-step {
+    background: var(--primary);
+    color: white;
+    padding: 10px 18px;
+    border-radius: 10px;
+    font-weight: 600;
+  }
+  .flow-arrow { color: var(--text-secondary); font-size: 1.4em; }
+
+  .score-bar {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin: 4px 0;
+  }
+  .score-bar .bar {
+    height: 10px;
+    border-radius: 5px;
+    background: var(--primary-light);
+  }
+  .score-bar .bar.v2 { background: var(--success); }
+
+  .footer {
+    text-align: center;
+    padding: 32px;
+    color: var(--text-secondary);
+    font-size: 0.85em;
+    border-top: 1px solid var(--border);
+    margin-top: 40px;
+  }
+  code {
+    background: #eceff1;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.9em;
+  }
+  .tag {
+    display: inline-block;
+    background: #e3f2fd;
+    color: var(--primary);
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 0.8em;
+    margin: 2px 4px 2px 0;
+  }
+  .highlight-box {
+    background: linear-gradient(135deg, #e3f2fd, #e8f5e9);
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin: 18px 0;
+    border: 1px solid #bbdefb;
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="badge">AI Quest &mdash; Investigate How</div>
+  <h1>Kiểm soát Slide Deck PDF qua Prompt Engineering trong NotebookLM</h1>
+  <p class="subtitle">Từ nguồn tài liệu đến bài trình bày chuyên nghiệp &mdash; Hướng dẫn chi tiết cách dùng prompt để điều khiển cấu trúc, giọng điệu, và phong cách thiết kế</p>
+</div>
+
+<div class="container">
+
+<!-- TABLE OF CONTENTS -->
+<nav class="toc">
+  <h2>Mục lục</h2>
+  <ol>
+    <li><a href="#s1">NotebookLM Slide Deck là gì?</a></li>
+    <li><a href="#s2">Source Pack &mdash; Chọn 7 nguồn tài liệu &amp; lý do</a></li>
+    <li><a href="#s3">Iteration 1 &mdash; Prompt V1 (Outline + Tone + Visual Style)</a></li>
+    <li><a href="#s4">Đánh giá V1 &amp; Chiến lược cải thiện</a></li>
+    <li><a href="#s5">Xuất PDF &amp; Screenshots</a></li>
+    <li><a href="#s6">Rubric đánh giá chất lượng &amp; Đề xuất cải thiện</a></li>
+    <li><a href="#s7">Kết luận &amp; Best Practices</a></li>
+  </ol>
+</nav>
+
+<!-- ================================================================ -->
+<!-- SECTION 1 -->
+<!-- ================================================================ -->
+<section id="s1">
+  <h2>1. NotebookLM Slide Deck là gì?</h2>
+
+  <p><strong>Google NotebookLM</strong> là nền tảng nghiên cứu AI cho phép tải lên nhiều nguồn tài liệu (PDF, Google Docs, Web URL, YouTube, v.v.) rồi tương tác thông minh với chúng. Tính năng <strong>Slide Deck</strong> (ra mắt cuối 2025) cho phép tự động tạo bài trình bày từ các nguồn đã tải &mdash; sử dụng model hình ảnh Nano Banana Pro.</p>
+
+  <h3>Điểm khác biệt so với các công cụ tạo slide AI khác</h3>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Tiêu chí</th>
+        <th>NotebookLM Slide Deck</th>
+        <th>Gemini in Google Slides</th>
+        <th>Canva AI / Gamma</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Nguồn dữ liệu</td>
+        <td><strong>Multi-source</strong> (PDF, Docs, Web, YouTube)</td>
+        <td>Từ prompt text hoặc 1 file</td>
+        <td>Từ prompt text</td>
+      </tr>
+      <tr>
+        <td>Factual grounding</td>
+        <td><strong>Cao</strong> &mdash; bám sát nguồn tải lên</td>
+        <td>Trung bình &mdash; có thể hallucinate</td>
+        <td>Thấp &mdash; dựa trên prompt</td>
+      </tr>
+      <tr>
+        <td>Custom prompt</td>
+        <td>Có &mdash; outline, tone, visual</td>
+        <td>Có &mdash; nhưng hạn chế</td>
+        <td>Có</td>
+      </tr>
+      <tr>
+        <td>Per-slide revision</td>
+        <td>Có</td>
+        <td>Có (Gemini side panel)</td>
+        <td>Có</td>
+      </tr>
+      <tr>
+        <td>Export format</td>
+        <td>PDF, PPTX</td>
+        <td>Native Google Slides</td>
+        <td>PDF, PPTX, link</td>
+      </tr>
+      <tr>
+        <td>Slide render</td>
+        <td>Dạng ảnh (image-based)</td>
+        <td>Native editable</td>
+        <td>Editable</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>Workflow tổng quan</h3>
+  <div class="flow-diagram">
+    <div class="flow-step">Upload 5+ Sources</div>
+    <div class="flow-arrow">&rarr;</div>
+    <div class="flow-step">Viết Custom Prompt</div>
+    <div class="flow-arrow">&rarr;</div>
+    <div class="flow-step">Chọn Format &amp; Length</div>
+    <div class="flow-arrow">&rarr;</div>
+    <div class="flow-step">Generate</div>
+    <div class="flow-arrow">&rarr;</div>
+    <div class="flow-step">Evaluate</div>
+    <div class="flow-arrow">&rarr;</div>
+    <div class="flow-step">Iterate Prompt</div>
+    <div class="flow-arrow">&rarr;</div>
+    <div class="flow-step">Revise &amp; Export PDF</div>
+  </div>
+
+  <div class="card card-warning">
+    <strong>Hạn chế cần biết trước:</strong>
+    <ul style="margin-top:8px;">
+      <li>Slide Deck dành cho người dùng từ <strong>18 tuổi</strong> trở lên, cần quyền Edit đối với notebook</li>
+      <li>Slide render dạng <strong>hình ảnh</strong> &mdash; không thể edit text trực tiếp như Google Slides</li>
+      <li>Khi dùng per-slide revision, NotebookLM <em>không</em> tham chiếu lại nguồn gốc &mdash; chỉ dùng instruction mới</li>
+      <li>Mỗi lần revise/generate tạo ra bộ slide <strong>hoàn toàn mới</strong> &rarr; gom nhiều thay đổi cùng lúc</li>
+      <li>Chưa hỗ trợ thêm/xóa slide &mdash; chỉ edit nội dung, layout, visual</li>
+    </ul>
+  </div>
+
+  <h3>Video tham khảo</h3>
+  <ul>
+    <li><a href="https://www.youtube.com/watch?v=tVsqodAOcSE" target="_blank">How to Use NotebookLM to Automatically Generate Slides from Your Sources</a></li>
+    <li><a href="https://youtu.be/qurq6SskJww" target="_blank">How to Create Slide Decks in NotebookLM (Step-by-Step Tutorial)</a></li>
+    <li><a href="https://www.youtube.com/watch?v=6WaztlOyg1s" target="_blank">Hướng dẫn sử dụng NotebookLM tổng hợp tài liệu và tạo slide &mdash; Đặng Tú</a></li>
+  </ul>
+</section>
+
+<!-- ================================================================ -->
+<!-- SECTION 2: SOURCE PACK -->
+<!-- ================================================================ -->
+<section id="s2">
+  <h2>2. Source Pack &mdash; Chọn 7 nguồn tài liệu</h2>
+
+  <p>Để minh họa, chúng ta sử dụng kịch bản <strong>công ty EdTech "EduNova"</strong> cần tạo slide deck trình bày <em>"Báo cáo năm 2025 &amp; Tầm nhìn Sản phẩm AI 2026"</em> cho hội đồng quản trị. Dưới đây là 7 nguồn được chọn:</p>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Nguồn tài liệu</th>
+        <th>Loại</th>
+        <th>Lý do chọn</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>1</td>
+        <td>Báo cáo thường niên EduNova 2025 (Annual Report)</td>
+        <td><span class="tag">PDF</span></td>
+        <td>Chứa số liệu tài chính (doanh thu, tăng trưởng, số học viên), KPI, chiến lược &mdash; <strong>nguồn dữ liệu chính</strong> cho phần Executive Summary và Revenue</td>
+      </tr>
+      <tr>
+        <td>2</td>
+        <td>Tài liệu chiến lược sản phẩm AI 2026 (Product Strategy Doc)</td>
+        <td><span class="tag">Google Docs</span></td>
+        <td>Roadmap tính năng AI (AI Tutor, Content Gen, Analytics), timeline triển khai &mdash; <strong>nội dung chính</strong> cho phần Strategic Pillars và Roadmap</td>
+      </tr>
+      <tr>
+        <td>3</td>
+        <td>Blog post về AI trong giáo dục (<a href="https://blog.google/outreach-initiatives/education/gemini-iste-2025" target="_blank">Google Blog: Gemini for Educators</a>)</td>
+        <td><span class="tag">Web URL</span></td>
+        <td>Thông tin mới nhất từ Google về AI tools cho giáo dục (Gemini, NotebookLM, Workspace Studio) &mdash; đảm bảo <strong>factual grounding</strong> về xu hướng công nghệ và bối cảnh ngành</td>
+      </tr>
+      <tr>
+        <td>4</td>
+        <td>TED Talk: <a href="https://www.youtube.com/watch?v=hJP5GqnTrNo" target="_blank">"How AI Could Save Education" &mdash; Sal Khan</a></td>
+        <td><span class="tag">YouTube</span></td>
+        <td>Tầm nhìn AI trong giáo dục từ CEO Khan Academy &mdash; giúp NotebookLM nắm bắt <strong>tone truyền cảm hứng</strong> và narrative về AI tutor cá nhân hóa (khớp với Pillar 1 của EduNova)</td>
+      </tr>
+      <tr>
+        <td>5</td>
+        <td>Brand Guidelines EduNova (Bộ nhận diện thương hiệu)</td>
+        <td><span class="tag">PDF</span></td>
+        <td>Quy chuẩn màu sắc (#0d47a1, #ff6d00), typography (Inter/Roboto), logo usage &mdash; NotebookLM tham chiếu để <strong>duy trì brand consistency</strong></td>
+      </tr>
+      <tr>
+        <td>6</td>
+        <td>Báo cáo thị trường EdTech Việt Nam 2025 (Industry Report)</td>
+        <td><span class="tag">PDF</span></td>
+        <td>Bối cảnh thị trường, xu hướng, competitive landscape &mdash; tăng <strong>chiều sâu phân tích</strong> cho phần Market Landscape</td>
+      </tr>
+      <tr>
+        <td>7</td>
+        <td>Slide deck hiện tại của EduNova (Investor Deck Q4/2025)</td>
+        <td><span class="tag">Google Slides</span></td>
+        <td>Tham chiếu <strong>style hiện có</strong> (layout, cách trình bày data) &mdash; giúp duy trì tính nhất quán với các tài liệu trước</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="card card-info">
+    <h4>Nguyên tắc chọn nguồn hiệu quả</h4>
+    <ul>
+      <li><strong>Đa dạng format:</strong> Kết hợp PDF + Docs + Web + Video + Slides để NotebookLM tổng hợp từ nhiều góc nhìn</li>
+      <li><strong>Phủ đủ 4 lớp nội dung:</strong> Data (Report) + Strategy (Docs) + Industry Context (Web + Video) + Brand (Guidelines)</li>
+      <li><strong>Nguồn đáng tin cậy:</strong> Ưu tiên tài liệu chính thức từ công ty hoặc tổ chức uy tín</li>
+      <li><strong>Cập nhật:</strong> Dùng tài liệu mới nhất, tránh data quá 2 năm</li>
+      <li><strong>Upload brandbook riêng:</strong> Đây là "cheat code" để NotebookLM tạo slide đúng brand</li>
+    </ul>
+  </div>
+
+  <div class="screenshot-wrap">
+    <img src="images/step-01-notebook-sources.png" alt="NotebookLM với 7 sources đã upload trong Sources panel">
+    <div class="caption">NotebookLM với 7 sources đã upload trong Sources panel</div>
+  </div>
+
+  <div class="screenshot-wrap">
+    <img src="images/step-02-studio-panel.png" alt="Studio panel hiển thị tùy chọn Slide Deck">
+    <div class="caption">Studio panel hiển thị tùy chọn Slide Deck</div>
+  </div>
+</section>
+
+<!-- ================================================================ -->
+<!-- SECTION 3: ITERATION 1 -->
+<!-- ================================================================ -->
+<section id="s3">
+  <h2>3. Iteration 1 &mdash; Prompt V1</h2>
+
+  <p>NotebookLM cho phép nhập <strong>Custom Prompt</strong> trong panel tùy chỉnh trước khi generate. Prompt là "bộ não điều khiển" &mdash; quyết định chất lượng đầu ra. Chúng ta cần kiểm soát <strong>3 khía cạnh</strong>:</p>
+
+  <div class="highlight-box">
+    <strong>Ba khía cạnh kiểm soát qua prompt:</strong>
+    <ol style="margin-top:8px;">
+      <li><strong>(a) Slide Outline</strong> &mdash; Cấu trúc, số slide, nội dung từng section</li>
+      <li><strong>(b) Tone</strong> &mdash; Đối tượng, giọng điệu, mức độ chuyên sâu</li>
+      <li><strong>(c) Visual Style</strong> &mdash; Màu sắc, font, layout, data visualization</li>
+    </ol>
+  </div>
+
+  <!-- 3a: OUTLINE -->
+  <h3><span class="v-badge v1">V1</span> 3a. Prompt kiểm soát Slide Outline (Cấu trúc)</h3>
+
+  <p>Mục tiêu: Định nghĩa rõ cấu trúc bài trình bày &mdash; từng section, số slide, nội dung chính.</p>
+
+  <div class="prompt-box"><span class="label">PROMPT V1 — OUTLINE</span>Create a 14-slide detailed deck about EduNova's 2025 Annual Report
+and AI Product Vision 2026.
+
+Slide 1: Title — "EduNova 2025 Annual Report & AI Vision 2026", company logo area, date
+Slide 2: Agenda / Table of Contents — list all sections
+Slides 3–4: Executive Summary — key 2025 achievements (revenue, user growth, product launches)
+Slide 5: Market Landscape — EdTech industry trends in Vietnam and SEA
+Slide 6: Competitive Positioning — where EduNova stands vs competitors
+Slides 7–9: Three AI Strategic Pillars (one per slide):
+  - Pillar 1: AI-Powered Personalized Tutoring
+  - Pillar 2: Generative Content Creation for Teachers
+  - Pillar 3: Predictive Learning Analytics
+Slide 10: Product Roadmap — Q1–Q4 2026 milestones
+Slide 11: Team & Investment — headcount growth, budget allocation
+Slide 12: Key Risks and Mitigation Strategies
+Slide 13: Key Metrics & KPIs — dashboard-style with target numbers
+Slide 14: Call to Action & Next Steps
+
+Use bullet points. Maximum 6 bullets per slide.
+Prioritize data from the Annual Report and Product Strategy sources.</div>
+
+  <div class="card card-accent">
+    <h4>Phân tích kỹ thuật prompt outline:</h4>
+    <ul>
+      <li><strong>Số slide cụ thể (14):</strong> Kiểm soát chặt độ dài &mdash; NotebookLM sẽ tạo đúng số slide yêu cầu</li>
+      <li><strong>Nội dung từng slide:</strong> Chỉ định rõ "Slide 3–4: Executive Summary" &rarr; không để AI tự quyết định</li>
+      <li><strong>Phân nhóm logic:</strong> Gom slides liên quan (3–4 cho Summary, 7–9 cho Pillars) &rarr; flow mạch lạc</li>
+      <li><strong>Source reference:</strong> "Prioritize data from Annual Report and Product Strategy" &rarr; hướng dẫn AI lấy data từ đâu</li>
+      <li><strong>Format constraint:</strong> "bullet points, max 6 bullets" &rarr; kiểm soát mật độ nội dung</li>
+    </ul>
+  </div>
+
+  <!-- 3b: TONE -->
+  <h3><span class="v-badge v1">V1</span> 3b. Prompt kiểm soát Tone (Giọng điệu)</h3>
+
+  <p>Mục tiêu: Xác định đối tượng, phong cách ngôn ngữ, cảm xúc truyền tải.</p>
+
+  <div class="prompt-box"><span class="label">PROMPT V1 — TONE</span>Audience: Board of Directors and potential investors.
+Tone: Professional, confident, data-driven, and forward-looking.
+Language style: Executive briefing — concise sentences, no technical jargon.
+Avoid: Code snippets, implementation details, overly casual phrasing.
+Each slide should feel like a CEO presenting at an annual shareholders meeting.</div>
+
+  <div class="card card-accent">
+    <h4>Phân tích kỹ thuật prompt tone:</h4>
+    <ul>
+      <li><strong>Audience cụ thể:</strong> "Board of Directors and investors" &rarr; quyết định mức chi tiết (tổng quan, không quá sâu kỹ thuật)</li>
+      <li><strong>Bốn tính từ tone:</strong> "Professional, confident, data-driven, forward-looking" &rarr; khung cảm xúc rõ ràng</li>
+      <li><strong>Negative instruction:</strong> "Avoid code snippets, implementation details" &rarr; loại bỏ nội dung không phù hợp</li>
+      <li><strong>Analogy mạnh:</strong> "CEO presenting at annual shareholders meeting" &rarr; AI hiểu ngay context và phong cách</li>
+    </ul>
+  </div>
+
+  <!-- 3c: VISUAL STYLE -->
+  <h3><span class="v-badge v1">V1</span> 3c. Prompt kiểm soát Visual Style (Phong cách thiết kế)</h3>
+
+  <p>Mục tiêu: Hướng dẫn fonts, colors, layout principles để đảm bảo tính nhất quán thương hiệu.</p>
+
+  <div class="prompt-box"><span class="label">PROMPT V1 — VISUAL STYLE</span>Visual design guidelines:
+- Color palette: Primary dark blue (#0d47a1), accent orange (#ff6d00), white background, light gray (#f5f5f5) for cards
+- Typography: Modern sans-serif headings (bold, large), clean body text
+- Layout: Left-aligned content with generous whitespace
+- Data visualization: Use clean bar charts, donut charts, or stat cards for numbers
+- Images: Abstract geometric illustrations, no stock photos of people
+- Every slide should have a thin blue header stripe with the section title
+- Use flat, single-color icons to supplement text</div>
+
+  <div class="card card-accent">
+    <h4>Phân tích kỹ thuật prompt visual:</h4>
+    <ul>
+      <li><strong>Mã hex cụ thể:</strong> "#0d47a1" và "#ff6d00" &rarr; NotebookLM interpret gần đúng (không pixel-perfect nhưng gần)</li>
+      <li><strong>Typography direction:</strong> "Modern sans-serif, bold headings" &rarr; hướng dẫn font style mà không chỉ font cụ thể (vì NotebookLM tự render)</li>
+      <li><strong>Layout principle:</strong> "Left-aligned, generous whitespace" &rarr; nguyên tắc bố cục rõ ràng</li>
+      <li><strong>Consistency element:</strong> "thin blue header stripe" &rarr; tạo yếu tố lặp lại xuyên suốt</li>
+      <li><strong>Negative instruction:</strong> "no stock photos of people" &rarr; loại bỏ hình ảnh generic</li>
+    </ul>
+  </div>
+
+  <!-- COMBINED V1 -->
+  <h3>Prompt tổng hợp V1 (Combined &mdash; nhập vào NotebookLM)</h3>
+  <p>Gộp cả 3 khía cạnh vào <strong>một prompt duy nhất</strong> khi nhập vào ô Custom Prompt:</p>
+
+  <div class="prompt-box"><span class="label">COMBINED PROMPT V1</span>Create a 14-slide detailed deck: "EduNova 2025 Annual Report & AI Vision 2026".
+
+STRUCTURE:
+- Slide 1: Title — company name, subtitle, date
+- Slide 2: Agenda — list all sections
+- Slides 3–4: Executive Summary — 2025 key achievements (revenue, users, product launches)
+- Slide 5: Market Landscape — EdTech trends in Vietnam and SEA
+- Slide 6: Competitive Positioning — EduNova vs competitors
+- Slides 7–9: Three AI Strategic Pillars (one per slide):
+  Pillar 1: AI Personalized Tutoring
+  Pillar 2: Generative Content Creation for Teachers
+  Pillar 3: Predictive Learning Analytics
+- Slide 10: Product Roadmap — Q1–Q4 2026 milestones
+- Slide 11: Team & Investment — headcount, budget allocation
+- Slide 12: Key Risks and Mitigation
+- Slide 13: KPI Dashboard — key metrics with targets
+- Slide 14: Call to Action & Next Steps
+
+TONE:
+- Audience: Board of Directors and investors
+- Professional, confident, data-driven, forward-looking
+- Executive briefing style — concise, no jargon
+- Each slide = CEO at annual shareholders meeting
+- Maximum 6 bullet points per slide
+
+VISUAL STYLE:
+- Colors: Dark blue (#0d47a1), accent orange (#ff6d00), white backgrounds, light gray (#f5f5f5) cards
+- Modern sans-serif typography, bold headings
+- Left-aligned, generous whitespace
+- Clean bar charts, donut charts, and stat cards for data
+- Abstract geometric illustrations — no stock photos
+- Thin blue header stripe on every slide with section label
+- Flat single-color icons
+
+Focus on Annual Report for data and Product Strategy Doc for roadmap content.
+Reference Brand Guidelines for visual consistency.</div>
+
+  <div class="screenshot-wrap">
+    <img src="images/step-03-customization-panel.png" alt="Customization panel — Format, Length, Language đã chọn">
+    <div class="caption">Customization panel — Format, Length, Language đã chọn</div>
+  </div>
+
+  <div class="screenshot-wrap">
+    <img src="images/step-04-prompt-v1-input.png" alt="Combined Prompt V1 đã nhập vào ô Custom Prompt">
+    <div class="caption">Combined Prompt V1 đã nhập vào ô Custom Prompt</div>
+  </div>
+
+  <div class="screenshot-wrap">
+    <img src="images/step-05-slides-v1-overview.png" alt="Slide Deck V1 — overview nhiều slide sau khi generate">
+    <div class="caption">Slide Deck V1 — overview nhiều slide sau khi generate</div>
+  </div>
+
+  <div class="screenshot-wrap">
+    <img src="images/step-06-slides-v1-detail.png" alt="Slide V1 — chi tiết 2–3 slide đại diện">
+    <div class="caption">Slide V1 — chi tiết 2–3 slide đại diện (title, data, strategy)</div>
+  </div>
+</section>
+
+<!-- ================================================================ -->
+<!-- SECTION 4: EVALUATION V1 -->
+<!-- ================================================================ -->
+<section id="s4">
+  <h2>4. Đánh giá V1 &amp; Chiến lược cải thiện</h2>
+
+  <p>Sau khi generate xong, ta cần đánh giá kết quả. Tuy nhiên, có một <strong>hạn chế quan trọng</strong>: NotebookLM <em>không thể xem trực tiếp</em> slide deck đã generate. Khi hỏi NotebookLM đánh giá, nó sẽ phân tích <strong>nội dung nguồn đối chiếu với Brand Guidelines</strong> thay vì đánh giá output visual.</p>
+
+  <div class="card card-warning">
+    <strong>Thực tế khi chat NotebookLM đánh giá:</strong>
+    <p style="margin-top:8px;">NotebookLM trả lời: <em>"I do not have access to the specific slide deck you just generated. However, if you are referring to the source text, here is a review against the Brand Guidelines..."</em></p>
+    <p>&rarr; NotebookLM chỉ đánh giá được <strong>source text vs Brand Guidelines</strong>, không thấy slide đã render. Vì vậy, ta cần kết hợp: (1) đánh giá visual bằng mắt + (2) đánh giá nội dung qua NotebookLM chat.</p>
+  </div>
+
+  <h3>4.1 Đánh giá qua NotebookLM Chat (nội dung vs Brand Guidelines)</h3>
+
+  <p>Khi hỏi NotebookLM: <em>"Review the slide deck content against the Brand Guidelines. What are the strengths and weaknesses?"</em>, kết quả như sau:</p>
+
+  <div class="card card-info">
+    <h4>Strengths (NotebookLM nhận xét)</h4>
+    <ul>
+      <li><strong>Clear Messaging:</strong> Các slide bám sát 1 message/slide, tập trung vào metrics và milestones</li>
+      <li><strong>Tone đúng:</strong> Đạt được tone "confident, data-driven" cho Board/Investor &mdash; dẫn đầu bằng số liệu ("$28.7M revenue", "Revenue grew 57.7%")</li>
+      <li><strong>Active Voice:</strong> Sử dụng câu chủ động, tránh jargon &mdash; đúng với writing style rules trong Brand Guidelines</li>
+      <li><strong>Confidentiality:</strong> Slide mở đầu ghi đúng "Confidential" theo yêu cầu footer</li>
+    </ul>
+  </div>
+
+  <div class="card" style="border-left: 4px solid var(--error);">
+    <h4>Weaknesses (NotebookLM nhận xét)</h4>
+    <ul>
+      <li><strong>Bullet Point Overload:</strong> Brand Guidelines quy định <strong>max 5 bullets/slide</strong>, nhưng nhiều slide vi phạm:
+        <ul>
+          <li>Slide Revenue: 7 bullets (3 segment + 4 quarter)</li>
+          <li>Slide Competitive: 7 bullets (4 advantages + 3 risks)</li>
+          <li>Slide CTA: 8 items</li>
+        </ul>
+      </li>
+      <li><strong>Overuse of Tables:</strong> Nhiều slide dùng bảng dữ liệu thô thay vì <strong>bar charts, donut charts, stat cards</strong> theo yêu cầu trong Brand Guidelines</li>
+      <li><strong>Missing Structural Elements:</strong> Không rõ slide có header stripe dark-blue (#0d47a1) và footer chuẩn ("EduNova Confidential" + slide number) hay không</li>
+    </ul>
+  </div>
+
+  <h3>4.2 Đánh giá visual bằng mắt (xem slide đã generate)</h3>
+
+  <p>Ngoài feedback từ NotebookLM chat, ta <strong>xem trực tiếp slide</strong> và ghi nhận thêm:</p>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Vấn đề phát hiện (visual)</th>
+        <th>Tiêu chí ảnh hưởng</th>
+        <th>Nguyên nhân trong prompt V1</th>
+        <th>Hướng sửa đề xuất</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Nhiều slide dùng bảng thô thay vì stat cards / charts</td>
+        <td>Design</td>
+        <td>Prompt nói "bar charts" chung chung, không chỉ rõ slide nào dùng chart nào</td>
+        <td>Chỉ định cụ thể: "Slide 3: 4 stat cards in 2x2 grid", "Slide 4: grouped bar chart"</td>
+      </tr>
+      <tr>
+        <td>Vượt quá 5 bullets/slide ở nhiều slide (7–8 bullets)</td>
+        <td>Clarity, Design</td>
+        <td>V1 ghi "max 6 bullets" nhưng Brand Guidelines yêu cầu max 5 + max 12 words/bullet</td>
+        <td>Siết lại: "max 5 bullets, max 10 words each" + chia slide nặng thành 2 slide</td>
+      </tr>
+      <tr>
+        <td>Màu sắc không nhất quán &mdash; vài slide dùng gradient hoặc màu ngoài palette</td>
+        <td>Design</td>
+        <td>Prompt chỉ "suggest" palette, chưa đủ mạnh</td>
+        <td>Thêm "STRICTLY use ONLY these colors" + "NO gradients, NO additional colors"</td>
+      </tr>
+      <tr>
+        <td>Header stripe thiếu ở 3–4 slide</td>
+        <td>Design</td>
+        <td>Instruction "every slide" chưa đủ mạnh</td>
+        <td>Nhấn mạnh "ALL 14 slides MUST have identical blue header stripe at top"</td>
+      </tr>
+      <tr>
+        <td>Slide Roadmap hiển thị dạng list thay vì timeline</td>
+        <td>Structure, Design</td>
+        <td>Chưa mô tả visual format cho roadmap</td>
+        <td>Thêm "HORIZONTAL TIMELINE with Q1→Q4 markers and milestone icons below"</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>4.3 Suggested Improvements từ NotebookLM</h3>
+
+  <p>NotebookLM đề xuất cụ thể:</p>
+
+  <div class="card card-accent">
+    <ol>
+      <li><strong>Split Content-Heavy Slides:</strong> Chia slide Revenue, Competitive, và CTA thành 2 slide mỗi cái để không vượt max 5 bullets và 40 words body text</li>
+      <li><strong>Convert Tables to Stat Cards &amp; Charts:</strong>
+        <ul>
+          <li>Slide Q4 Highlights &amp; Financial Position &rarr; chuyển bảng thành <strong>visual stat cards</strong></li>
+          <li>Slide Revenue by Segment &rarr; dùng <strong>donut chart</strong> (EduNova Blue, Orange, Light Gray) thay vì list, data labels trực tiếp trên chart</li>
+        </ul>
+      </li>
+      <li><strong>Apply Formatting Requirements:</strong> Đảm bảo mọi slide có left-aligned text với min 10% padding, dark-blue header bar, và footer chuẩn</li>
+      <li><strong>Check Bullet Length:</strong> Rút gọn mỗi bullet xuống <strong>dưới 12 từ</strong></li>
+    </ol>
+  </div>
+
+  <h3>4.4 Chiến lược cải thiện prompt (nếu iterate)</h3>
+
+  <div class="card card-info">
+    <h4>Tổng hợp hướng sửa từ cả 2 nguồn đánh giá:</h4>
+    <ol>
+      <li><strong>Tăng specificity:</strong> Mô tả chi tiết layout và visualization cho từng slide (2x2 grid, donut chart, horizontal timeline)</li>
+      <li><strong>Siết constraints:</strong> Dùng "MUST", "ONLY", "STRICTLY", "NO" &mdash; Brand Guidelines nói max 5 bullets thì prompt cần enforce</li>
+      <li><strong>Giảm ambiguity:</strong> Thay "clean charts" bằng "grouped bar chart comparing 2024 vs 2025 revenue by segment with % labels"</li>
+      <li><strong>Thêm word limits:</strong> "max 10 words per bullet", "max 40 words body text per slide" (theo Brand Guidelines)</li>
+      <li><strong>Explicit visual ratio:</strong> "60% visual / 40% text on every slide" (theo Brand Guidelines 60/40 rule)</li>
+      <li><strong>Map Brand Guidelines:</strong> Nhắc lại cụ thể các rule từ Brand Guidelines trong prompt để NotebookLM tuân thủ</li>
+    </ol>
+  </div>
+
+  <div class="screenshot-wrap">
+    <img src="images/step-07-v1-evaluation-notes.png" alt="NotebookLM Chat đánh giá nội dung slide vs Brand Guidelines">
+    <div class="caption">NotebookLM Chat đánh giá nội dung slide vs Brand Guidelines</div>
+  </div>
+</section>
+
+<!-- ================================================================ -->
+<!-- SECTION 5: EXPORT PDF -->
+<!-- ================================================================ -->
+<section id="s5">
+  <h2>5. Xuất PDF &amp; Screenshots</h2>
+
+  <h3>5.1 Per-slide Revision (tùy chọn — có thể bỏ qua)</h3>
+  <p>Sau khi generate V1, có thể dùng per-slide revision để tinh chỉnh các slide cụ thể. <strong>Nếu bỏ qua:</strong> không cần chụp step-08, blog vẫn đầy đủ với step-05.</p>
+
+  <div class="prompt-box"><span class="label">REVISION — Slide 4</span>Make the bar chart larger — it should fill 70% of the slide area.
+Add percentage change labels above each bar pair.
+Remove all body text except the chart title.</div>
+
+  <div class="prompt-box"><span class="label">REVISION — Slide 10</span>The timeline should be perfectly horizontal.
+Use larger icons (at least 48px equivalent).
+Each quarter section should use alternating blue and gray background bands.</div>
+
+  <div class="card card-warning">
+    <strong>Lưu ý quan trọng khi revise:</strong>
+    <ul style="margin-top:8px;">
+      <li>Mỗi lần revise tạo bộ slide <strong>hoàn toàn mới</strong> &rarr; gom tất cả thay đổi vào "Pending Changes" rồi generate 1 lần</li>
+      <li>Sources <strong>không được tham chiếu</strong> khi revise &mdash; chỉ instruction mới có hiệu lực</li>
+      <li>Có <strong>quota limit</strong> cho số lần revise &rarr; plan trước, batch thay vì revise liên tục</li>
+    </ul>
+  </div>
+
+  <div class="screenshot-wrap">
+    <img src="images/step-08-per-slide-revision.png" alt="Giao diện per-slide revision">
+    <div class="caption">Tùy chọn: chụp slide đang chọn + ô instruction + nút Apply. Nếu bỏ qua, có thể dùng ảnh step-05.</div>
+  </div>
+
+  <h3>5.2 Quy trình xuất PDF</h3>
+
+  <div class="step-row">
+    <span class="step-num">1</span>
+    <div><p>Trong Slide Deck viewer, nhấn <strong>menu 3 chấm</strong> (⋮) cạnh tên slide deck.</p></div>
+  </div>
+  <div class="step-row">
+    <span class="step-num">2</span>
+    <div><p>Chọn <strong>"Download PDF Document (.pdf)"</strong>. Cũng có thể chọn <strong>"Download PowerPoint (.pptx)"</strong> nếu cần chỉnh sửa thêm.</p></div>
+  </div>
+  <div class="step-row">
+    <span class="step-num">3</span>
+    <div><p>File tải về máy. Mỗi slide = 1 trang PDF (dạng hình ảnh chất lượng cao, 16:9).</p></div>
+  </div>
+  <div class="step-row">
+    <span class="step-num">4</span>
+    <div><p>Mở file PDF bằng trình xem (Chrome, Edge, Adobe Reader) để kiểm tra chất lượng cuối cùng.</p></div>
+  </div>
+
+  <div class="screenshot-wrap">
+    <img src="images/step-09-export-menu.png" alt="Menu xuất PDF/PPTX">
+    <div class="caption">Click menu 3 chấm (⋮) cạnh tên Slide Deck — chụp dropdown ngay khi mở.</div>
+  </div>
+
+  <div class="screenshot-wrap">
+    <img src="images/step-10-exported-pdf.png" alt="File PDF đã xuất, mở trong trình xem PDF">
+    <div class="caption">Chụp PDF viewer: tên file .pdf trên tab + nội dung 1–2 slide đang hiển thị.</div>
+    <p style="margin-top:10px;font-size:0.95em;">
+      <strong>Notebook demo:</strong> <a href="https://notebooklm.google.com/notebook/450b4549-8556-4f0a-8dc6-094129d3f0f4" target="_blank">NotebookLM</a> &bull;
+      <strong>PDF:</strong> <code>EduNova_2026_Growth_Blueprint.pdf</code>
+    </p>
+  </div>
+</section>
+
+<!-- ================================================================ -->
+<!-- SECTION 6: RUBRIC -->
+<!-- ================================================================ -->
+<section id="s6">
+  <h2>6. Rubric đánh giá chất lượng &amp; Đề xuất cải thiện</h2>
+
+  <p>Đánh giá slide theo 4 tiêu chí (1&ndash;5 mỗi tiêu chí, tối đa 20 điểm):</p>
+  <ul>
+    <li><strong>Structure</strong> — Khớp outline (số slide, thứ tự, nội dung)</li>
+    <li><strong>Clarity</strong> — Rõ ràng; mỗi slide truyền tải một ý</li>
+    <li><strong>Design</strong> — Nhất quán palette, typography, layout</li>
+    <li><strong>Factual</strong> — Số liệu trace được về source; không bịa</li>
+  </ul>
+
+  <div class="highlight-box">
+    <p><strong>Điểm V1 điển hình: 11/20</strong> — Trung bình. Design consistency và text density thường cần cải thiện.</p>
+  </div>
+
+  <h3>Gợi ý cải thiện chính</h3>
+  <ol>
+    <li><strong>Be specific:</strong> Layout từng slide (VD: "Slide 4: 2x2 stat cards") tốt hơn "dùng charts" chung chung</li>
+    <li><strong>Dùng strong constraints:</strong> "MUST", "ONLY", "NO gradients" — không dùng "should" hay "prefer"</li>
+    <li><strong>Map sources:</strong> "Revenue → Annual Report, strategy → Product Doc" — giúp AI biết lấy data từ đâu</li>
+    <li><strong>Verify sau khi generate:</strong> NotebookLM không xem được slide. Hỏi chat: "List key numbers from Annual Report, cite source"</li>
+  </ol>
+
+  <div class="screenshot-wrap">
+    <img src="images/step-11-chat-fact-check.png" alt="Chat NotebookLM verify số liệu từ sources">
+    <div class="caption">Hỏi verify số liệu trong sources (VD: "List key numbers from Annual Report, cite source") — chụp câu hỏi + câu trả lời.</div>
+  </div>
+</section>
+
+<!-- ================================================================ -->
+<!-- SECTION 7: CONCLUSION -->
+<!-- ================================================================ -->
+<section id="s7">
+  <h2>7. Kết luận &amp; Best Practices</h2>
+
+  <h3>7.1 Tóm tắt quy trình</h3>
+  <div class="flow-diagram">
+    <div class="flow-step">7 Sources</div>
+    <div class="flow-arrow">&rarr;</div>
+    <div class="flow-step">Prompt V1</div>
+    <div class="flow-arrow">&rarr;</div>
+    <div class="flow-step">Generate &amp; Evaluate</div>
+    <div class="flow-arrow">&rarr;</div>
+    <div class="flow-step">Export PDF</div>
+  </div>
+
+  <h3>7.2 Prompt Engineering Best Practices cho NotebookLM Slide Deck</h3>
+
+  <div class="card card-success">
+    <ol>
+      <li><strong>Specificity is king:</strong> Prompt càng cụ thể → output càng gần mong muốn</li>
+      <li><strong>Separate 3 layers:</strong> Luôn tách rõ STRUCTURE / TONE / VISUAL STYLE trong prompt, mỗi phần có heading riêng</li>
+      <li><strong>Use strong constraints:</strong> Dùng "MUST", "ONLY", "STRICTLY", "NO" thay vì "should", "prefer", "try to"</li>
+      <li><strong>Describe layouts, not just content:</strong> "2x2 grid of stat cards" &gt; "show key metrics"</li>
+      <li><strong>Map sources explicitly:</strong> "Revenue data → Annual Report, Strategy → Product Doc" giúp AI biết lấy data từ đâu</li>
+      <li><strong>Set word/number limits:</strong> "Max 10 words per bullet", "max 40 words per slide" buộc AI viết gọn</li>
+      <li><strong>Negative instructions are powerful:</strong> "NO stock photos, NO gradients, NO jargon" loại bỏ cụ thể hơn "be clean"</li>
+      <li><strong>Iteration helps:</strong> Không prompt nào hoàn hảo lần 1. Có thể lặp lại Generate → Evaluate → Refine → Re-generate để cải thiện</li>
+      <li><strong>Upload brand reference:</strong> Brand guidelines + existing decks làm source riêng = "cheat code" cho design consistency</li>
+      <li><strong>Verify after generation:</strong> Dùng NotebookLM chat để cross-check mọi số liệu trong slide với source gốc</strong></li>
+    </ol>
+  </div>
+
+  <h3>7.3 Khi nào dùng NotebookLM Slide Deck?</h3>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Phù hợp</th>
+        <th>Không phù hợp</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Tạo nhanh draft bài trình bày từ nhiều nguồn tài liệu</td>
+        <td>Slide cần chỉnh pixel-perfect (dùng Figma/Canva)</td>
+      </tr>
+      <tr>
+        <td>Tổng hợp research / reports dài thành presentation gọn</td>
+        <td>Slide có animation / video embed phức tạp</td>
+      </tr>
+      <tr>
+        <td>Brainstorm visual story từ data thô</td>
+        <td>Template công ty nghiêm ngặt (dùng Google Slides + template)</td>
+      </tr>
+      <tr>
+        <td>Cần factual grounding cao (data từ source, không bịa)</td>
+        <td>Cần co-edit real-time nhiều người</td>
+      </tr>
+      <tr>
+        <td>Chia sẻ nhanh qua PDF hoặc link</td>
+        <td>Slide tiếng Việt cần font đặc thù (NotebookLM tự chọn font)</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>7.4 Tài liệu tham khảo</h3>
+  <ul>
+    <li><a href="https://support.google.com/notebooklm/answer/16757456?hl=en" target="_blank">Google Help: Generate a Slide Deck in NotebookLM</a></li>
+    <li><a href="https://blog.google/technology/google-labs/8-ways-to-make-the-most-out-of-slide-decks-in-notebooklm" target="_blank">Google Blog: 8 ways to make the most out of Slide Decks</a></li>
+    <li><a href="https://www.youtube.com/watch?v=tVsqodAOcSE" target="_blank">Video: How to Use NotebookLM to Automatically Generate Slides</a></li>
+    <li><a href="https://youtu.be/qurq6SskJww" target="_blank">Video: How to Create Slide Decks in NotebookLM (Step-by-Step)</a></li>
+    <li><a href="https://www.youtube.com/watch?v=6WaztlOyg1s" target="_blank">Video: Hướng dẫn sử dụng NotebookLM &mdash; Đặng Tú</a></li>
+    <li><a href="https://notebooklm.google.com" target="_blank">NotebookLM Official</a></li>
+  </ul>
+</section>
+
+</div>
+
+<div class="footer">
+  AI Quest &mdash; Investigate How &bull; NotebookLM PDF Prompt Control &bull; 2026
+</div>
+
+</body>
+</html>

@@ -1,0 +1,45 @@
+MEETING NOTES — Client requirements interview (reference deal)
+
+Client: Acme Retail Co., Ltd.
+Project: Customer loyalty mini-portal (MVP)
+Date: 2026-03-18
+Duration: 30 minutes
+Attendees: PM (host), Solution architect, Client IT lead
+
+────────────────────────────────────────
+Purpose
+────────────────────────────────────────
+Clarify loyalty MVP scope and POS integration constraints before formal proposal.
+
+────────────────────────────────────────
+Key discussion points
+────────────────────────────────────────
+1. Scope: Client wants earn/burn only in MVP; marketing campaigns deferred to phase 2.
+2. POS: AcmePOS v12 on-prem; staging URL promised within 1 week.
+3. Auth: Client prefers OAuth2 client credentials for integration service account (not user-delegated).
+4. Operations: Support window 08:00–20:00 ICT; no 24/7 SLA for MVP.
+
+────────────────────────────────────────
+Decisions
+────────────────────────────────────────
+- POS catalog remains source of truth for SKU master data.
+- No native mobile app in MVP.
+
+────────────────────────────────────────
+Open questions (carried to proposal)
+────────────────────────────────────────
+- Final staging URL and firewall whitelist timeline.
+- Campaign module budget owner (marketing vs IT).
+
+────────────────────────────────────────
+Lessons learned (for future pitches)
+────────────────────────────────────────
+- Always confirm integration credential model in first call.
+- Separate MVP scope from roadmap items in writing to avoid scope creep.
+- Include explicit support window in commercial section.
+
+────────────────────────────────────────
+Action items
+────────────────────────────────────────
+- PM: Send draft proposal within 3 business days.
+- Architect: Document REST endpoints required from loyalty engine.

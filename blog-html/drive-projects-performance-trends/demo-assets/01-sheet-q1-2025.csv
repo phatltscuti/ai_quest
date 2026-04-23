@@ -1,0 +1,10 @@
+period,metric_category,metric_name,value,unit,notes
+2025-Q1,Reliability,Platform uptime,99.42,percent,Target 99.5
+2025-Q1,Incidents,P1 incidents,4,count,Down from Q4 2024
+2025-Q1,Incidents,Mean time to resolve (P1),5.2,hours,
+2025-Q1,Delivery,Sprint completion rate,87,percent,
+2025-Q1,Delivery,Story points delivered,312,points,
+2025-Q1,Cost,Cloud spend,42800,USD,
+2025-Q1,Cost,Budget utilization,71,percent,Annual budget 240k USD
+2025-Q1,Customer,NPS,41,score,
+2025-Q1,Customer,Support tickets closed,1847,count,

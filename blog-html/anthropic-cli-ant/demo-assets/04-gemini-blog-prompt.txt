@@ -1,0 +1,7 @@
+You are helping draft a technical blog section.
+
+Context: We use Google Workspace (Drive Projects, Sheets, Gemini) for client deliverables and AI Quest demos.
+
+Task: In 3 bullet points, explain how the Anthropic ant CLI could automate parts of our workflow — for example batch-summarizing meeting notes, calling Claude API from CI without Python SDK, or deploying a Managed Agent to process uploaded PDFs.
+
+Keep each bullet under 25 words. Output plain text only, no markdown.

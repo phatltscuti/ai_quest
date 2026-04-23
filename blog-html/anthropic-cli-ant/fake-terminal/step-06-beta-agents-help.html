@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>ant CLI — Step 06: beta:agents</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <h2 class="page-title">Ảnh Step 06 — Managed Agents (beta:agents create)</h2>
+    <p class="page-hint">
+        Chụp khung terminal → lưu <span class="save-as">images/step-06-beta-agents-help.png</span>
+    </p>
+
+    <div class="vscode-panel">
+        <div class="vscode-tabs">
+            <div class="v-tab">Problems</div>
+            <div class="v-tab">Output</div>
+            <div class="v-tab">Debug Console</div>
+            <div class="v-tab active">Terminal</div>
+            <div class="v-tab">Ports</div>
+            <div class="v-actions">>_ PowerShell &nbsp; ⚠ &nbsp; + ∨ &nbsp; 🗑️ &nbsp; ...</div>
+        </div>
+        <div class="terminal-content" style="min-height: 480px;">
+
+            <div class="ps-block">
+                <div class="ps-line"><span class="ps-prompt">PS C:\anthropic-cli-ant\tools&gt;</span> <span class="ps-cmd">.\ant.exe beta:agents --help</span></div>
+                <pre class="term-out">NAME:
+   ant beta:agents
+
+USAGE:
+   ant beta:agents [command [command options]]
+
+CATEGORY:
+   API RESOURCE
+
+COMMANDS:
+   create    Create Agent
+   retrieve  Get Agent
+   update    Update Agent
+   list      List Agents
+   archive   Archive Agent
+
+OPTIONS:
+   --help, -h  show help</pre>
+            </div>
+
+            <div class="ps-block">
+                <div class="ps-line"><span class="ps-prompt">PS C:\anthropic-cli-ant\demo-assets&gt;</span> <span class="ps-cmd">Get-Content .\03-managed-agent-sample.yaml | C:\anthropic-cli-ant\tools\ant.exe beta:agents create</span></div>
+                <pre class="term-out term-json"><span class="jp">{</span>
+  <span class="jk">"id"</span><span class="jp">: </span><span class="js">"agt_01QnR8vKpLmNxYzAbCdEfGh"</span><span class="jp">,</span>
+  <span class="jk">"name"</span><span class="jp">: </span><span class="js">"ops-review-assistant"</span><span class="jp">,</span>
+  <span class="jk">"description"</span><span class="jp">: </span><span class="js">"Summarize operational metrics and draft review notes from structured input."</span><span class="jp">,</span>
+  <span class="jk">"model"</span><span class="jp">: </span><span class="js">"claude-sonnet-4-5-20250929"</span><span class="jp">,</span>
+  <span class="jk">"created_at"</span><span class="jp">: </span><span class="js">"2026-06-09T03:22:41Z"</span>
+<span class="jp">}</span></pre>
+            </div>
+
+            <div class="ps-block">
+                <div class="ps-line"><span class="ps-prompt">PS C:\anthropic-cli-ant\demo-assets&gt;</span> <span class="ps-cmd">C:\anthropic-cli-ant\tools\ant.exe beta:agents list --transform "data.#.name"</span></div>
+                <pre class="term-out term-json">[<span class="js">"ops-review-assistant"</span>]</pre>
+            </div>
+
+            <div class="ps-line cursor-line"><span class="ps-prompt">PS C:\anthropic-cli-ant\demo-assets&gt;</span> <span class="cursor"></span></div>
+        </div>
+        <div class="status-bar">beta:agents &nbsp;|&nbsp; <code>create 201</code> &nbsp;|&nbsp; Managed Agents</div>
+    </div>
+
+</body>
+</html>

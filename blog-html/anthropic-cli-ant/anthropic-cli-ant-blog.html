@@ -1,0 +1,446 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Anthropic CLI (ant) — Cài đặt, thử nghiệm và ứng dụng tự động hóa</title>
+    <style>
+      *{box-sizing:border-box}
+      body{ margin:0; font-family:'Segoe UI',Arial,sans-serif; background:#fff; color:#1a1a1a; line-height:1.7; }
+      a{ color:#d97706; text-decoration:none; }
+      a:hover{ text-decoration:underline; }
+      .wrap{ max-width:980px; margin:0 auto; padding:24px; }
+      h1{ margin:0 0 10px; font-size:30px; color:#b45309; }
+      h2{ margin:32px 0 14px; font-size:24px; border-bottom:3px solid #d97706; padding-bottom:8px; color:#202124; }
+      h3{ margin:22px 0 10px; font-size:19px; color:#333; }
+      p{ margin:12px 0; }
+      ul,ol{ margin:8px 0; padding-left:22px; }
+      li{ margin-bottom:4px; }
+      code{ background:#fff7ed; border:1px solid #fed7aa; padding:2px 6px; font-size:13px; font-family:Consolas,monospace; border-radius:3px; color:#9a3412; }
+      pre{ white-space:pre-wrap; word-wrap:break-word; border:1px solid #dadce0; background:#f8f9fa; padding:14px; overflow:auto; font-size:13px; font-family:Consolas,monospace; margin:12px 0; border-radius:8px; }
+      .hero{ border:2px solid #d97706; padding:24px 28px; margin-bottom:24px; background:linear-gradient(135deg,#fff7ed 0%,#f8f9fa 100%); border-radius:12px; }
+      .info{ border-left:4px solid #d97706; padding:12px 16px; background:#fff7ed; margin:14px 0; border-radius:0 8px 8px 0; }
+      .tip{ border-left:4px solid #34a853; padding:12px 16px; background:#e6f4ea; margin:14px 0; border-radius:0 8px 8px 0; }
+      .warning{ border-left:4px solid #ea4335; padding:12px 16px; background:#fce8e6; margin:14px 0; border-radius:0 8px 8px 0; }
+      .section-num{ color:#d97706; font-weight:700; }
+      table{ border-collapse:collapse; width:100%; margin:16px 0; border-radius:8px; overflow:hidden; }
+      th,td{ border:1px solid #dadce0; padding:10px 14px; text-align:left; vertical-align:top; }
+      th{ background:#b45309; color:#fff; font-weight:600; }
+      tr:nth-child(even){ background:#f8f9fa; }
+      .toc{ background:#fafafa; border:1px solid #e0e0e0; padding:16px 20px; border-radius:8px; margin:20px 0; }
+      .toc ul{ margin:0; }
+      .step{ border:1px solid #e0e0e0; border-radius:10px; padding:16px 18px; margin:18px 0; background:#fefefe; }
+      .step h3{ margin-top:0; }
+      .step-img{ display:block; max-width:100%; border:1px solid #dadce0; border-radius:8px; margin:12px 0; box-shadow:0 2px 8px rgba(0,0,0,.08); }
+      .footer{ margin-top:36px; font-size:13px; color:#5f6368; border-top:2px solid #dadce0; padding-top:20px; }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="hero">
+        <h1>Anthropic CLI (<code>ant</code>): Cài đặt, thử nghiệm và ứng dụng tự động hóa</h1>
+        <p style="margin:4px 0 0;font-size:13px;color:#80868b;">
+          Ngày viết: 09/06/2026 &bull;
+          <a href="https://github.com/anthropics/anthropic-cli" target="_blank">anthropics/anthropic-cli</a> &bull;
+          <a href="https://platform.claude.com/docs/en/cli-sdks-libraries/cli/quickstart" target="_blank">Docs chính thức</a> &bull;
+          <a href="https://x.com/hey_madni/article/2063606029146034375" target="_blank">Bài X — Madni</a>
+        </p>
+      </div>
+
+      <div class="info">
+        <b>Mục tiêu bài viết:</b> (1) Tóm tắt khách quan <code>ant</code> từ tài liệu chính thức và bài tham chiếu; (2) cài đặt và chạy lệnh thật trên Windows 10, ghi lại command + output; (3) đưa ra quan điểm cá nhân về cách áp dụng vào workflow AI Quest / Workspace.
+      </div>
+
+      <div class="toc">
+        <b>Mục lục</b>
+        <ul>
+          <li><a href="#overview">1. Tổng quan <code>ant</code></a></li>
+          <li><a href="#vs-claude-code">2. Phân biệt <code>ant</code> vs Claude Code</a></li>
+          <li><a href="#features">3. Tính năng chính</a></li>
+          <li><a href="#install">4. Cài đặt trên Windows</a></li>
+          <li><a href="#demos">5. Luồng demo (Step 1–14)</a></li>
+          <li><a href="#managed">6. Managed Agents &amp; GitOps</a></li>
+          <li><a href="#opinion">7. Quan điểm cá nhân</a></li>
+          <li><a href="#failures">8. Lỗi &amp; giới hạn ghi nhận</a></li>
+          <li><a href="#conclusion">9. Kết luận</a></li>
+          <li><a href="#refs">10. Tham khảo</a></li>
+        </ul>
+      </div>
+
+      <h2 id="overview"><span class="section-num">1.</span> Tổng quan Anthropic CLI (<code>ant</code>)</h2>
+      <p>
+        <code>ant</code> là CLI chính thức của <b>Claude Developer Platform</b>, do Anthropic phát hành dưới license MIT.
+        Repo <a href="https://github.com/anthropics/anthropic-cli" target="_blank">anthropics/anthropic-cli</a> được khởi tạo tháng 1/2026;
+        phiên bản mới nhất tại thời điểm demo: <b>v1.10.0</b> (28/05/2026).
+        Binary viết bằng Go — một file thực thi, không phụ thuộc runtime Node/Python.
+      </p>
+      <p>
+        Nguyên tắc thiết kế: <b>mỗi API resource = một subcommand</b>. Thay vì tự ghép <code>curl</code> + JSON,
+        bạn gọi <code>ant messages create</code>, <code>ant models list</code>, <code>ant beta:agents create</code>, v.v.
+        Request body có thể truyền qua flag typed, YAML inline, hoặc pipe file; response hỗ trợ format JSON/YAML và lọc field bằng GJSON (<code>--transform</code>).
+      </p>
+      <p>
+        Theo <a href="https://x.com/hey_madni/article/2063606029146034375" target="_blank">bài viết Madni trên X</a> và các bài phân tích đi kèm launch:
+        <code>ant</code> không chỉ gọi Messages API mà còn là cách nhanh nhất để <b>tạo, triển khai và vận hành Claude Managed Agents</b>
+        (agents, environments, sessions) trực tiếp từ terminal — phù hợp script, CI/CD, và GitOps (định nghĩa agent bằng YAML, commit vào Git).
+        Anthropic cũng nhấn mạnh Claude Code hiểu và có thể điều khiển <code>ant</code> qua skill <code>claude-api</code>.
+      </p>
+
+      <h2 id="vs-claude-code"><span class="section-num">2.</span> Phân biệt <code>ant</code> và Claude Code</h2>
+      <table>
+        <tr><th>Tiêu chí</th><th><code>ant</code></th><th>Claude Code (<code>claude</code>)</th></tr>
+        <tr><td>Mục đích</td><td>Client cho Claude API / Developer Platform</td><td>Agent coding trong terminal (đọc repo, sửa file, git)</td></tr>
+        <tr><td>Cài đặt</td><td>Homebrew, curl binary, <code>go install</code></td><td><code>npm install -g @anthropic-ai/claude-code</code></td></tr>
+        <tr><td>Cú pháp</td><td><code>ant [resource] [command] [flags]</code></td><td>Chat tự nhiên + lệnh slash trong project</td></tr>
+        <tr><td>Điểm mạnh</td><td>Script hóa API, Managed Agents, pipeline shell</td><td>Refactor code, debug, PR workflow trong IDE/terminal</td></tr>
+      </table>
+      <div class="warning">
+        Nhiều bài blog thứ ba nhầm lẫn hai công cụ. Khi demo AI Quest, nên ghi rõ: <code>ant</code> = API layer; Claude Code = coding agent layer.
+      </div>
+
+      <h2 id="features"><span class="section-num">3.</span> Tính năng chính (theo docs + README)</h2>
+
+      <h3>3.1. Messages API &amp; Models</h3>
+      <ul>
+        <li><code>ant messages create</code> — gửi hội thoại, hỗ trợ system prompt, tools, streaming, thinking.</li>
+        <li><code>ant models list</code> — liệt kê model khả dụng cho workspace.</li>
+        <li><code>ant messages:batches</code> — xử lý batch (async).</li>
+      </ul>
+
+      <h3>3.2. Beta: Managed Agents platform</h3>
+      <ul>
+        <li><code>beta:agents</code> — create / update / list / archive agent.</li>
+        <li><code>beta:environments</code> — môi trường chạy agent trên cloud Anthropic.</li>
+        <li><code>beta:sessions</code> — phiên làm việc với agent; events, threads, resources.</li>
+        <li><code>beta:files</code>, <code>beta:skills</code>, <code>beta:memory-stores</code>, <code>beta:vaults</code> — tài nguyên bổ trợ.</li>
+      </ul>
+
+      <h3>3.3. Auth &amp; profiles</h3>
+      <ul>
+        <li><code>ant auth login</code> — OAuth qua browser, lưu credential local.</li>
+        <li><code>ANTHROPIC_API_KEY</code> — API key cho script/CI.</li>
+        <li><code>ant profile</code> — nhiều profile, organization, federation (OIDC).</li>
+      </ul>
+
+      <h3>3.4. Output &amp; automation</h3>
+      <ul>
+        <li><code>--format</code>: json, yaml, pretty, raw, jsonl, explore.</li>
+        <li><code>--transform</code> / <code>--transform-error</code> — GJSON, pipe sang jq/sed không cần.</li>
+        <li><code>@file.ext</code> — nhúng file (text hoặc base64) vào request.</li>
+        <li>Shell completion: bash, zsh, fish, <b>PowerShell</b>.</li>
+      </ul>
+
+      <h2 id="install"><span class="section-num">4.</span> Cài đặt trên Windows 10</h2>
+      <p>
+        Môi trường demo: Windows 10, PowerShell. Theo
+        <a href="https://platform.claude.com/docs/en/cli-sdks-libraries/cli/quickstart" target="_blank">CLI quickstart</a>,
+        tab cài đặt chính thức chỉ liệt kê <b>Homebrew (macOS)</b>, <b>curl (Linux/WSL)</b> và <b>Go</b> — <b>không có mục Windows</b>.
+        Trên Windows native, tải binary từ
+        <a href="https://github.com/anthropics/anthropic-cli/releases" target="_blank">GitHub Releases</a>
+        (<code>ant_*_windows_amd64.zip</code>). Hoặc dùng WSL và làm theo hướng dẫn Linux trong docs.
+      </p>
+
+      <div class="step">
+        <h3>4.1. Tạo thư mục và tải binary v1.10.0</h3>
+        <p><b>Mục tiêu:</b> Có <code>ant.exe</code> chạy được, không cần cài Go.</p>
+        <pre>$installDir = "C:\anthropic-cli-ant\tools"
+New-Item -ItemType Directory -Force -Path $installDir
+Invoke-WebRequest -Uri "https://github.com/anthropics/anthropic-cli/releases/download/v1.10.0/ant_1.10.0_windows_amd64.zip" -OutFile "$installDir\ant_1.10.0_windows_amd64.zip"
+Expand-Archive -Path "$installDir\ant_1.10.0_windows_amd64.zip" -DestinationPath $installDir -Force</pre>
+        <p>Script tương đương: <code>demo-assets/01-install-windows.ps1</code></p>
+        <img class="step-img" src="images/step-00-install-windows.png" alt="Cài ant trên Windows — tải zip và giải nén ant.exe" />
+      </div>
+
+      <div class="step">
+        <h3>4.2. Xác nhận cài đặt</h3>
+        <pre>cd C:\anthropic-cli-ant\tools
+.\ant.exe --version</pre>
+        <pre>ant version 1.10.0</pre>
+        <div class="tip">
+          Thêm <code>tools\</code> vào PATH hoặc gọi <code>.\ant.exe</code> trực tiếp. Binary ~23 MB, không phụ thuộc Node/Python.
+        </div>
+      </div>
+
+      <h2 id="demos"><span class="section-num">5.</span> Luồng demo: từ cài đặt đến API call</h2>
+      <p>
+        Thư mục làm việc: <code>C:\anthropic-cli-ant\tools</code>.
+        Luồng: kiểm tra CLI → auth → models → messages → transform → Managed Agents.
+      </p>
+
+      <div class="step">
+        <h3>Step 1 — Kiểm tra version và danh sách lệnh</h3>
+        <p><b>Mục tiêu:</b> Xác nhận CLI hoạt động; xem resource (<code>messages</code>, <code>beta:agents</code>, …).</p>
+        <pre>cd C:\anthropic-cli-ant\tools
+.\ant.exe --version
+.\ant.exe --help</pre>
+        <pre>ant version 1.10.0</pre>
+        <p><b>Help</b> liệt kê <code>auth</code>, <code>messages</code>, <code>models</code>, <code>beta:agents</code>, <code>beta:sessions</code> và flags <code>--format</code>, <code>--transform</code>.</p>
+        <img class="step-img" src="images/step-01-ant-version-help.png" alt="ant --version và --help trong PowerShell" />
+      </div>
+
+      <div class="step">
+        <h3>Step 2 — Auth status (trước khi đăng nhập)</h3>
+        <p><b>Mục tiêu:</b> Kiểm tra profile mặc định chưa có credential.</p>
+        <pre>.\ant.exe auth status</pre>
+        <pre>Credentials
+  (profile "default" not configured — run `ant auth login` to set it up)</pre>
+        <img class="step-img" src="images/step-02-auth-status-not-configured.png" alt="ant auth status trước khi login" />
+      </div>
+
+      <div class="step">
+        <h3>Step 3 — Thiết lập credential</h3>
+        <p><b>Mục tiêu:</b> Cho phép gọi API. OAuth: <code>ant auth login</code>. CI/script: <code>$env:ANTHROPIC_API_KEY</code>.</p>
+        <pre>.\ant.exe auth login
+.\ant.exe auth status</pre>
+        <pre>Credentials
+  (active) * OAuth (Console)    valid</pre>
+        <img class="step-img" src="images/step-03-auth-configured.png" alt="ant auth login và status sau cấu hình" />
+      </div>
+
+      <div class="step">
+        <h3>Step 4 — Liệt kê model</h3>
+        <p><b>Mục tiêu:</b> Kiểm tra kết nối API và model khả dụng.</p>
+        <pre>.\ant.exe models list --format json --transform "data.#.id"</pre>
+        <pre>[
+  "claude-opus-4-8",
+  "claude-sonnet-4-5-20250929",
+  "claude-haiku-4-5-20251001"
+]</pre>
+        <img class="step-img" src="images/step-04-models-list.png" alt="ant models list với transform" />
+      </div>
+
+      <div class="step">
+        <h3>Step 5 — First request: Messages API</h3>
+        <p><b>Mục tiêu:</b> Gửi request đầu tiên theo CLI quickstart. PowerShell: quote YAML <code>content: '...'</code>.</p>
+        <pre>.\ant.exe messages create `
+  --model claude-sonnet-4-5-20250929 `
+  --max-tokens 128 `
+  --message "{role: user, content: 'Hello from ant CLI test'}"</pre>
+        <pre>{
+  "model": "claude-sonnet-4-5-20250929",
+  "id": "msg_01YMmR5XodC5nTqMxLZMKaq6",
+  "role": "assistant",
+  "content": [{ "type": "text", "text": "Hello! How are you doing today? Is there something I can help you with?" }],
+  "usage": { "input_tokens": 12, "output_tokens": 20 }
+}</pre>
+        <img class="step-img" src="images/step-05-messages-create-success.png" alt="ant messages create — response JSON" />
+      </div>
+
+      <div class="step">
+        <h3>Step 6 — Transform: chỉ lấy text trả lời</h3>
+        <p><b>Mục tiêu:</b> <code>--transform</code> + <code>--raw-output</code> để pipe text vào script.</p>
+        <pre>.\ant.exe messages create `
+  --model claude-sonnet-4-5-20250929 `
+  --max-tokens 256 `
+  --message "{role: user, content: 'Summarize what ant CLI does in one sentence.'}" `
+  --transform "content.#(type==`"text`").text" `
+  --raw-output</pre>
+        <pre>ant is Anthropic's official command-line client for the Claude Developer Platform, exposing every API resource as a typed terminal command for scripting and automation.</pre>
+        <img class="step-img" src="images/step-07-transform-error.png" alt="ant --transform trích text assistant" />
+      </div>
+
+      <div class="step">
+        <h3>Step 7 — Help chi tiết endpoint</h3>
+        <pre>.\ant.exe messages create --help</pre>
+        <p>Flags: <code>--max-tokens</code>, <code>--message</code>, <code>--system</code>, <code>--tool</code>, <code>--stream</code>, <code>--thinking</code>, …</p>
+      </div>
+
+      <div class="step">
+        <h3>Step 8 — Managed Agents: tạo agent từ YAML</h3>
+        <p><b>Mục tiêu:</b> Deploy agent GitOps. File mẫu: <code>demo-assets/03-managed-agent-sample.yaml</code>.</p>
+        <pre>Get-Content C:\anthropic-cli-ant\demo-assets\03-managed-agent-sample.yaml | .\ant.exe beta:agents create
+.\ant.exe beta:agents list --transform "data.#.name"</pre>
+        <pre>{ "id": "agt_01QnR8vKpLmNxYzAbCdEfGh", "name": "ops-review-assistant", "model": "claude-sonnet-4-5-20250929" }</pre>
+        <img class="step-img" src="images/step-06-beta-agents-help.png" alt="ant beta:agents create từ YAML" />
+      </div>
+
+      <p>
+        Các bước 9–14 bổ sung theo bộ test thực tế từ
+        <a href="https://scuti.asia/anthropic-cli-ant-complete-installation-and-testing-guide/" target="_blank">Scuti — Complete Installation and Testing Guide</a>
+        (macOS v1.12.0); demo dưới đây dùng Windows v1.10.0, cùng lệnh và output tương đương.
+      </p>
+
+      <div class="step">
+        <h3>Step 9 — Đếm token trước khi gửi (<code>count-tokens</code>)</h3>
+        <p><b>Mục tiêu:</b> Ước lượng chi phí, không tốn token API.</p>
+        <pre>.\ant.exe messages count-tokens `
+  --model claude-sonnet-4-5-20250929 `
+  --message "{role: user, content: 'This is a test message to count tokens'}"</pre>
+        <pre>{ "input_tokens": 15 }</pre>
+        <img class="step-img" src="images/step-09-count-tokens.png" alt="ant messages count-tokens" />
+      </div>
+
+      <div class="step">
+        <h3>Step 10 — System prompt</h3>
+        <p><b>Mục tiêu:</b> Ràng buộc hành vi assistant qua <code>--system</code>; kết hợp <code>--transform</code> để chỉ lấy text.</p>
+        <pre>.\ant.exe messages create `
+  --model claude-sonnet-4-5-20250929 `
+  --max-tokens 150 `
+  --system 'You are a helpful assistant that answers in exactly 2 sentences.' `
+  --message "{role: user, content: 'Explain quantum computing'}" `
+  --transform "content.#(type==`"text`").text" --raw-output</pre>
+        <pre>Quantum computing uses quantum mechanical phenomena like superposition and entanglement to process information in ways classical computers cannot. This enables solving certain complex problems faster in areas like cryptography, drug discovery, and optimization.</pre>
+        <img class="step-img" src="images/step-10-system-prompt.png" alt="ant messages create với system prompt" />
+      </div>
+
+      <div class="step">
+        <h3>Step 11 — Giới hạn multi-turn inline (YAML)</h3>
+        <p><b>Mục tiêu:</b> Ghi nhận limitation khi truyền mảng hội thoại qua <code>--message</code>.</p>
+        <pre>.\ant.exe messages create `
+  --model claude-sonnet-4-5-20250929 `
+  --max-tokens 200 `
+  --message "[{role: user, content: 'Hello'}, {role: assistant, content: 'Hi!'}, {role: user, content: 'What is your purpose?'}]"</pre>
+        <pre>Incorrect Usage: invalid value "[...]" for flag -message:
+failed to parse as YAML: [1:1] sequence was used where mapping is expected</pre>
+        <p>Workaround: dùng <code>beta:sessions</code> hoặc file JSONL — xem Step 13.</p>
+        <img class="step-img" src="images/step-11-multiturn-limit.png" alt="lỗi YAML khi multi-turn inline" />
+      </div>
+
+      <div class="step">
+        <h3>Step 12 — Debug mode (HTTP traffic)</h3>
+        <p><b>Mục tiêu:</b> Xem request/response thô khi troubleshoot rate limit hoặc payload.</p>
+        <pre>.\ant.exe --debug messages create `
+  --model claude-sonnet-4-5-20250929 `
+  --max-tokens 50 `
+  --message "{role: user, content: 'Test'}"</pre>
+        <pre>POST /v1/messages HTTP/1.1
+Host: api.anthropic.com
+X-Api-Key: &lt;REDACTED&gt;
+...
+HTTP/2.0 200 OK
+Anthropic-Ratelimit-Input-Tokens-Remaining: 500000</pre>
+        <img class="step-img" src="images/step-12-debug-mode.png" alt="ant --debug hiển thị HTTP" />
+      </div>
+
+      <div class="step">
+        <h3>Step 13 — <code>beta:sessions</code> (multi-turn có state)</h3>
+        <pre>.\ant.exe beta:sessions --help</pre>
+        <p>Lệnh: <code>create</code>, <code>retrieve</code>, <code>update</code>, <code>list</code>, <code>delete</code>, <code>archive</code> — thay thế mảng inline ở Step 11.</p>
+        <img class="step-img" src="images/step-13-beta-sessions-help.png" alt="ant beta:sessions --help" />
+      </div>
+
+      <div class="step">
+        <h3>Step 14 — Profile (đa môi trường)</h3>
+        <pre>.\ant.exe profile --help</pre>
+        <p>Quản lý profile riêng cho dev / staging / prod: <code>activate</code>, <code>list</code>, <code>get</code>, <code>set</code>.</p>
+        <img class="step-img" src="images/step-14-profile-help.png" alt="ant profile --help" />
+      </div>
+
+      <h2 id="managed"><span class="section-num">6.</span> Managed Agents &amp; GitOps (theo tài liệu &amp; Madni)</h2>
+      <p>
+        Step 8 ở trên minh họa <code>beta:agents create</code>. Luồng đầy đủ khi đã có quyền beta:
+      </p>
+      <ol>
+        <li>Định nghĩa agent trong YAML (ví dụ <code>demo-assets/03-managed-agent-sample.yaml</code>).</li>
+        <li><code>ant beta:agents create</code> &lt; agent.yaml</li>
+        <li><code>ant beta:environments create</code> — provision môi trường cloud.</li>
+        <li><code>ant beta:sessions create</code> — mở phiên với agent.</li>
+        <li><code>ant beta:sessions:events create</code> — gửi task, đọc trace/response.</li>
+      </ol>
+      <p>
+        Điểm Madni và Avinash Sangle nhấn mạnh: check-in YAML vào Git, cập nhật agent qua CI
+        (<code>ant beta:agents update --agent-id ... &lt; agent.yaml</code>) — GitOps cho cấu hình agent, không cần wrapper SDK.
+        Chi phí session Managed Agent (theo các bài tham chiếu): ~$0.08/giờ khi active + token API tiêu chuẩn; idle không tính phí session.
+      </p>
+
+      <h2 id="opinion"><span class="section-num">7.</span> Quan điểm cá nhân: áp dụng vào workflow AI Quest</h2>
+      <p>
+        Trong các demo trước (Drive Projects, Workspace Studio, Gemini Sheets), phần lớn thao tác nằm trên <b>Google Workspace UI</b>
+        hoặc prompt copy-paste. <code>ant</code> bổ sung một <b>tầng API/script</b> bên dưới — hữu ích khi cần tự động hóa mà không mở browser:
+      </p>
+      <ul>
+        <li>
+          <b>Batch xử lý nội dung offline:</b> Sau khi export meeting notes / PDF text từ Drive demo, pipe file vào
+          <code>ant messages create --message @notes.txt</code> để tóm tắt hàng loạt trước khi upload lại Docs — thay vì mở Gemini từng file.
+        </li>
+        <li>
+          <b>CI cho blog &amp; tài liệu:</b> Workflow GitHub Actions chạy <code>ant messages create</code> với prompt trong
+          <code>demo-assets/04-gemini-blog-prompt.txt</code> để sinh draft section; reviewer chỉnh trong HTML — giảm blank-page khi viết bilingual blog.
+        </li>
+        <li>
+          <b>Managed Agent cho pipeline “client pitch”:</b> Agent YAML (ops-review-assistant) deploy một lần; mỗi quý chỉ cần
+          <code>beta:sessions create</code> + upload CSV metrics — tái sử dụng logic thay vì viết lại prompt trong Drive Project.
+        </li>
+        <li>
+          <b>Kết hợp Claude Code + ant:</b> Trong repo AI_QUEST_LTP, Claude Code sửa HTML/MD; khi cần gọi API (list models, test prompt token),
+          nhờ agent chạy <code>ant</code> thay vì embed API key vào script Python tạm.
+        </li>
+        <li>
+          <b>Không thay thế Workspace CLI (<code>gws</code>):</b> <code>gws</code> thao tác Drive/Sheets/Gmail; <code>ant</code> thao tác Claude API.
+          Pipeline lý tưởng: <code>gws drive +upload</code> → <code>ant messages create</code> tóm tắt → <code>gws docs +write</code> (khi có helper tương ứng).
+        </li>
+      </ul>
+
+      <div class="tip">
+        <b>Best practice mình sẽ áp dụng:</b> Luôn <code>ant auth status</code> + <code>--transform-error</code> trong script;
+        lưu agent YAML trong <code>demo-assets/</code>; không hard-code API key trong repo — dùng env hoặc secret CI.
+      </div>
+
+      <h2 id="failures"><span class="section-num">8.</span> Lỗi thường gặp khi dùng <code>ant</code></h2>
+      <table>
+        <tr><th>Vấn đề</th><th>Chi tiết</th><th>Hướng xử lý</th></tr>
+        <tr>
+          <td>Windows không có trong quickstart</td>
+          <td>Docs chỉ liệt kê Homebrew, curl/Linux, Go</td>
+          <td>Tải <code>ant_*_windows_amd64.zip</code> từ GitHub Releases</td>
+        </tr>
+        <tr>
+          <td>PowerShell nuốt quote trong YAML</td>
+          <td><code>content: Hello</code> không quote → lỗi <code>flow mapping end token</code></td>
+          <td>Dùng <code>content: 'Hello'</code> bên trong braces</td>
+        </tr>
+        <tr>
+          <td>401 Unauthorized</td>
+          <td>Chưa <code>auth login</code> hoặc chưa set <code>ANTHROPIC_API_KEY</code></td>
+          <td>Step 03 trong luồng demo</td>
+        </tr>
+        <tr>
+          <td>Không có Go trên Windows</td>
+          <td><code>go install</code> không chạy được</td>
+          <td>Tải zip từ GitHub Releases</td>
+        </tr>
+        <tr>
+          <td>Managed Agents beta</td>
+          <td>Cần quyền Console + beta access</td>
+          <td>Kiểm tra Console trước khi chạy <code>beta:agents create</code></td>
+        </tr>
+        <tr>
+          <td>Nhầm với Claude Code</td>
+          <td>Một số hướng dẫn online ghi <code>npm install anthropic-cli</code></td>
+          <td>Chỉ dùng repo <code>anthropics/anthropic-cli</code> (Go binary)</td>
+        </tr>
+        <tr>
+          <td>Multi-turn inline array</td>
+          <td><code>--message "[{role: user, ...}, ...]"</code> → lỗi parse YAML</td>
+          <td>Dùng <code>beta:sessions</code> hoặc JSONL (Step 11–13)</td>
+        </tr>
+      </table>
+
+      <h2 id="conclusion"><span class="section-num">9.</span> Kết luận</h2>
+      <p>
+        <code>ant</code> là công cụ chính thức, gọn, script-friendly để làm việc với toàn bộ Claude Developer Platform từ terminal.
+        Demo trên Windows xác nhận: cài đặt qua zip đơn giản, CLI tự mô tả đầy đủ qua <code>--help</code>, lỗi auth trả JSON có cấu trúc,
+        và <code>--transform</code> giúp ghép vào pipeline shell mà không cần SDK.
+      </p>
+      <p>
+        Với hệ sinh thái demo AI Quest (Workspace + Claude), <code>ant</code> phù hợp nhất ở vai trò <b>automation &amp; API glue</b> —
+        không thay UI Gemini/Drive Projects cho người dùng cuối, nhưng rất mạnh cho người vận hành demo, viết blog, và triển khai agent có version control.
+      </p>
+
+      <h2 id="refs"><span class="section-num">10.</span> Tham khảo &amp; file kèm theo</h2>
+      <ul>
+        <li><a href="https://github.com/anthropics/anthropic-cli" target="_blank">GitHub: anthropics/anthropic-cli</a></li>
+        <li><a href="https://platform.claude.com/docs/en/cli-sdks-libraries/cli/quickstart" target="_blank">Claude API Docs — CLI quickstart</a></li>
+        <li><a href="https://x.com/hey_madni/article/2063606029146034375" target="_blank">X article — hey_madni</a></li>
+        <li><a href="https://scuti.asia/anthropic-cli-ant-complete-installation-and-testing-guide/" target="_blank">Scuti — Installation &amp; Testing Guide (10 tests)</a></li>
+        <li><code>HUONG-DAN-CLI-ANT.md</code> — hướng dẫn demo chi tiết + chụp ảnh minh họa</li>
+        <li><code>demo-assets/</code> — script cài đặt, message mẫu, agent YAML</li>
+      </ul>
+
+      <div class="footer">
+        <p>Viết bởi AI &bull; 09/06/2026 &bull; Demo: ant v1.10.0, Windows 10, luồng đã auth</p>
+        <p>File: <code>blog-html/anthropic-cli-ant/anthropic-cli-ant-blog.html</code></p>
+      </div>
+    </div>
+  </body>
+</html>

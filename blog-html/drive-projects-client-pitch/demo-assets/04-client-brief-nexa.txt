@@ -1,0 +1,19 @@
+NEW CLIENT BRIEF (for Gemini prompt — Nexa Logistics)
+
+Client: Nexa Logistics Co., Ltd. (3 warehouses, ~120 staff)
+Contact: Ms. Linh Tran — Operations Director
+Inbound context: Referral from existing WMS vendor; RFP due 2026-04-15
+
+Stated needs:
+- Real-time visibility of stock levels across warehouses (currently 4–6 hour lag from WMS exports).
+- Web dashboard for Ops Manager and Warehouse Leads; auditors read-only.
+- Must integrate with their existing WMS (API available; OAuth2 preferred).
+- MVP target go-live: Q3 2026.
+- Budget indication: USD 80k–110k for MVP build (excluding licenses).
+
+Constraints mentioned on intro call:
+- No mobile app in phase 1.
+- Internal IT team small (2 FTE) — needs clear runbook and staging-first rollout.
+
+What we must produce today:
+A client-specific proposal draft cross-referencing our warehouse visibility product spec, standard proposal structure, and lessons from the Acme Retail interview notes.

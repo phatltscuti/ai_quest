@@ -1,0 +1,24 @@
+ANNUAL OPERATIONS REVIEW — FY 2025 (PDF source text)
+Prepared by: PMO / Operations Analytics
+
+────────────────────────────────────────
+1. Year in review
+────────────────────────────────────────
+FY2025 ended with recovery in Q4 after Q3 migration impact. Full-year uptime averaged 99.48% (target 99.5%). Customer NPS finished at year-high 46.
+
+────────────────────────────────────────
+2. Quarter-over-quarter narrative
+────────────────────────────────────────
+Q1: Solid baseline; uptime slightly below target.
+Q2: Best operational quarter — lowest P1 count, highest sprint completion.
+Q3: Migration caused uptime dip and NPS drop; spend spike.
+Q4: Stabilization — uptime and delivery metrics rebounded; cost optimization reduced run-rate.
+
+────────────────────────────────────────
+3. Strategic recommendations for 2026
+────────────────────────────────────────
+1) Schedule major infra changes outside peak support windows.
+2) Automate quarterly metric roll-up into a single dashboard (reduce manual sheet consolidation).
+3) Tie incident comms playbook to NPS recovery targets within 30 days of P1 events.
+
+(Paste into Google Doc → export PDF as REPORT_FY2025_Annual_Operations_Review.pdf for demo.)

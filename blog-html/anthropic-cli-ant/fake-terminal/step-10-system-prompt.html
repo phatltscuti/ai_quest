@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>ant CLI — Step 10: system prompt</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h2 class="page-title">Ảnh Step 10 — System prompt</h2>
+    <p class="page-hint">Chụp khung terminal → lưu <span class="save-as">images/step-10-system-prompt.png</span></p>
+    <div class="vscode-panel">
+        <div class="vscode-tabs">
+            <div class="v-tab active">Terminal</div>
+            <div class="v-actions">>_ PowerShell</div>
+        </div>
+        <div class="terminal-content" style="min-height: 400px;">
+            <div class="ps-block">
+                <div class="ps-line"><span class="ps-prompt">PS C:\anthropic-cli-ant\tools&gt;</span> <span class="ps-cmd">.\ant.exe messages create `</span></div>
+                <div class="ps-line"><span class="ps-cont">>> </span><span class="ps-cmd">  --model claude-sonnet-4-5-20250929 `</span></div>
+                <div class="ps-line"><span class="ps-cont">>> </span><span class="ps-cmd">  --max-tokens 150 `</span></div>
+                <div class="ps-line"><span class="ps-cont">>> </span><span class="ps-cmd">  --system 'You are a helpful assistant that answers in exactly 2 sentences.' `</span></div>
+                <div class="ps-line"><span class="ps-cont">>> </span><span class="ps-cmd">  --message "{role: user, content: 'Explain quantum computing'}" `</span></div>
+                <div class="ps-line"><span class="ps-cont">>> </span><span class="ps-cmd">  --transform "content.#(type==`"text`").text" --raw-output</span></div>
+                <pre class="term-out term-ok">Quantum computing uses quantum mechanical phenomena like superposition and entanglement to process information in ways classical computers cannot. This enables solving certain complex problems faster in areas like cryptography, drug discovery, and optimization.</pre>
+            </div>
+            <div class="ps-line cursor-line"><span class="ps-prompt">PS C:\anthropic-cli-ant\tools&gt;</span> <span class="cursor"></span></div>
+        </div>
+        <div class="status-bar">--system &nbsp;|&nbsp; constraint respected</div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,525 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Build an estimate + proposal routine in Workspace Studio (meeting → minutes template → proposal draft → notify)</title>
+    <style>
+      *{box-sizing:border-box}
+      body{margin:0;font-family:'Segoe UI',Arial,sans-serif;background:#fff;color:#1a1a1a;line-height:1.75}
+      a{color:#1a73e8;text-decoration:none}
+      a:hover{text-decoration:underline}
+      .wrap{max-width:1020px;margin:0 auto;padding:24px}
+      h1{margin:0 0 10px;font-size:28px;color:#1a73e8}
+      h2{margin:34px 0 14px;font-size:22px;border-bottom:3px solid #1a73e8;padding-bottom:8px;color:#202124}
+      h3{margin:22px 0 10px;font-size:18px;color:#333}
+      h4{margin:16px 0 8px;font-size:15px;color:#444}
+      ul,ol{margin:8px 0;padding-left:24px}
+      li{margin-bottom:6px}
+      p{margin:12px 0}
+      code{background:#e8f0fe;border:1px solid #d2e3fc;padding:2px 6px;font-size:13px;font-family:Consolas,monospace;border-radius:3px;color:#174ea6}
+      pre{white-space:pre-wrap;word-break:break-word;border:1px solid #dadce0;background:#f8f9fa;padding:14px;font-size:12px;font-family:Consolas,monospace;margin:12px 0;border-radius:8px;overflow:auto}
+      .hero{border:2px solid #1a73e8;padding:22px 26px;margin-bottom:22px;background:linear-gradient(135deg,#e8f0fe 0%,#f8f9fa 100%);border-radius:12px}
+      .hero .subtitle{color:#5f6368;font-size:15px;margin-top:8px}
+      .tip{border-left:4px solid #34a853;padding:12px 16px;background:#e6f4ea;margin:14px 0;border-radius:0 8px 8px 0}
+      .warning{border-left:4px solid #ea4335;padding:12px 16px;background:#fce8e6;margin:14px 0;border-radius:0 8px 8px 0}
+      .info{border-left:4px solid #4285f4;padding:12px 16px;background:#e8f0fe;margin:14px 0;border-radius:0 8px 8px 0}
+      table{border-collapse:collapse;width:100%;margin:16px 0;border-radius:8px;overflow:hidden;font-size:14px}
+      th,td{border:1px solid #dadce0;padding:10px 12px;text-align:left;vertical-align:top}
+      th{background:#1a73e8;color:#fff;font-weight:600}
+      tr:nth-child(even){background:#f8f9fa}
+      .toc{background:#f8f9fa;border:1px solid #dadce0;border-radius:8px;padding:16px 22px;margin:20px 0}
+      .toc ul{list-style:none;padding-left:0}
+      .toc li{padding:4px 0}
+      .toc li::before{content:'\2794 ';color:#1a73e8}
+      .footer{margin-top:40px;font-size:13px;color:#5f6368;border-top:2px solid #dadce0;padding-top:18px}
+      .demo-fig{margin:20px 0;text-align:center}
+      .demo-fig img{max-width:100%;height:auto;border:2px solid #dadce0;border-radius:8px;box-shadow:0 2px 10px rgba(0,0,0,.08)}
+      .demo-fig figcaption{font-size:13px;color:#5f6368;margin-top:8px;font-style:italic;text-align:center}
+      .ref-list{font-size:14px}
+      .flow-diagram{background:#f8f9fa;border:2px solid #dadce0;border-radius:12px;padding:20px;margin:16px 0;text-align:center;line-height:1.9}
+      .flow-step{display:inline-block;background:#fff;border:2px solid #1a73e8;border-radius:8px;padding:8px 14px;margin:4px;font-weight:600;color:#1a73e8;font-size:13px;vertical-align:middle}
+      .flow-step.starter{background:#34a853;border-color:#34a853;color:#fff}
+      .flow-step.action{background:#4285f4;border-color:#4285f4;color:#fff}
+      .flow-step.ai{background:#fbbc04;border-color:#fbbc04;color:#333}
+      .flow-arrow{display:inline-block;font-size:20px;color:#5f6368;margin:0 2px;vertical-align:middle}
+      .kbd{font-family:Consolas,monospace;background:#eee;padding:1px 6px;border-radius:4px;border:1px solid #ccc;font-size:12px}
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="hero">
+        <h1>Building an Estimate & Proposal Workflow in Workspace Studio (Meeting → Minutes → Proposal → Notification)</h1>
+      </div>
+
+      <h2 id="intro">Giới thiệu tổng quan</h2>
+      <p>
+        <b>Google Workspace Studio</b> là nền tảng no-code/low-code để nối các ứng dụng trong Google Workspace thành quy trình tự động, ví dụ Calendar, Chat, Docs, Drive và Sheets.
+        Người dùng có thể thiết kế flow bằng giao diện kéo-thả thay vì viết script phức tạp, phù hợp cho team vận hành nghiệp vụ, PM/presales hoặc admin nội bộ.
+      </p>
+      <p>
+        Các chức năng chính được dùng trong bài gồm: <b>Starter</b> (kích hoạt theo sự kiện thời gian/meeting), <b>Actions</b> (ghi Doc, thêm dòng Sheet, gửi Chat),
+        <b>Template hóa</b> tài liệu để chuẩn hóa đầu ra, <b>AI Extract</b> để trích thông tin từ biên bản, và <b>Run history</b> để theo dõi lần chạy và xử lý lỗi/idempotency.
+      </p>
+      <p>
+        Trên nền đó, bài viết triển khai routine <b>Estimate + Proposal</b> theo chuỗi <b>meeting → minutes template → proposal draft → notify</b>,
+        với bối cảnh buổi phỏng vấn yêu cầu khách hàng 30 phút trong mô hình IT contracting.
+        Nội dung thực hành bám theo 3 nguồn tham khảo chính:
+        <a href="https://ximix.niandc.co.jp/blog/google-workspace-flows-minutes" target="_blank" rel="noopener">NI&amp;DC</a>,
+        <a href="https://zenn.dev/google_cloud_jp/articles/google-workspace-studio-templates-meeting" target="_blank" rel="noopener">Zenn</a>,
+        <a href="https://medium.com/@stephane.giron/mastering-google-flows-a-guide-to-building-powerful-workflows-with-steps-c2f41f0a9e97" target="_blank" rel="noopener">Medium</a>.
+        Bài demo triển khai thực tế bằng Calendar, Chat, Docs và Sheets, có ảnh Step 1-20 và run logs.
+      </p>
+      <p>
+        <b>Checklist mục tiêu trong bài:</b> (1) Trigger từ Calendar để tạo/cập nhật minutes doc từ template; (2) gửi pre-meeting checklist lên Google Chat; (3) sau họp trích key points từ minutes để điền proposal doc; (4) append ít nhất 1 work item vào estimate sheet mà không nhập tay; (5) kiểm chứng tối thiểu 3 điểm dễ hỏng như quyền truy cập, đổi template ID, biến động tên event, chạy trùng; (6) tài liệu hóa cấu trúc template/folder và phần tham số để người khác có thể dựng lại.
+      </p>
+
+      <h2 id="scenario">Kịch bản nghiệp vụ &amp; dummy project</h2>
+      <p>
+        <b>Bối cảnh:</b> công ty IT outsourcing nhận brief sơ từ khách bán lẻ, cần chuẩn hóa phút họp 30 phút, đề xuất phạm vi kỹ thuật, và một dòng ước lượng đại diện trên Sheet trước khi PM refine tay.
+      </p>
+      <table>
+        <thead>
+          <tr>
+            <th>Mục</th>
+            <th>Giá trị mẫu</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Khách hàng</td>
+            <td>Acme Retail Co., Ltd.</td>
+          </tr>
+          <tr>
+            <td>Dự án</td>
+            <td>Customer loyalty mini-portal (MVP) — tích hợp POS hiện có</td>
+          </tr>
+          <tr>
+            <td>Tiêu đề Calendar (quy ước)</td>
+            <td><code>[REQ] Acme Retail — Loyalty portal (30m interview)</code></td>
+          </tr>
+          <tr>
+            <td>Thời lượng</td>
+            <td>30 phút</td>
+          </tr>
+          <tr>
+            <td>Work item chính (để Sheet)</td>
+            <td>API integration — Loyalty engine ↔ POS catalog (REST, OAuth2 client)</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2 id="architecture">Kiến trúc đề xuất (Calendar → Doc → Chat → Sheet)</h2>
+      <p>Tách <b>ba flow</b> để dễ debug quyền và idempotency thay vì một flow quá dài:</p>
+      <ol>
+        <li><b>Flow A — Pre-meeting:</b> trigger thời gian <i>trước</i> sự kiện → gửi Google Chat checklist.</li>
+        <li><b>Flow B — Minutes update:</b> trigger theo meeting → <code>Add to a doc</code> để append block “Meeting notes (auto)” vào <code>TEMPLATE_Minutes_IT_Intake</code> (đúng theo ảnh demo Step 11-13).</li>
+        <li><b>Flow C — Post-meeting:</b> trigger theo meeting → <code>Extract</code> key points → <code>Add to a doc</code> (proposal) → <code>Add a row</code> (estimate sheet) → <code>Notify me in Chat</code>.</li>
+      </ol>
+
+      <div class="flow-diagram" aria-label="Sơ đồ ba luồng">
+        <div style="margin-bottom:12px"><b>Flow A — Pre-meeting</b></div>
+        <span class="flow-step starter">Calendar: before start</span>
+        <span class="flow-arrow">→</span>
+        <span class="flow-step action">Chat checklist</span>
+        <hr style="border:none;border-top:1px solid #dadce0;margin:16px 0" />
+        <div style="margin-bottom:12px"><b>Flow B — Minutes Doc</b></div>
+        <span class="flow-step starter">Based on a meeting</span>
+        <span class="flow-arrow">→</span>
+        <span class="flow-step action">Add to TEMPLATE_Minutes</span>
+        <hr style="border:none;border-top:1px solid #dadce0;margin:16px 0" />
+        <div style="margin-bottom:12px"><b>Flow C — Proposal + Estimate</b></div>
+        <span class="flow-step starter">Based on a meeting</span>
+        <span class="flow-arrow">→</span>
+        <span class="flow-step ai">Extract</span>
+        <span class="flow-arrow">→</span>
+        <span class="flow-step action">Add to Proposal Doc</span>
+        <span class="flow-arrow">+</span>
+        <span class="flow-step action">Append Sheet</span>
+        <span class="flow-arrow">→</span>
+        <span class="flow-step action">Chat notify</span>
+      </div>
+
+      <h2 id="repro">Tái lập triển khai (reproducibility)</h2>
+      <h3>Quy tắc đặt tên thư mục Drive (gốc: <code>WS_Client_Intake_Pipeline</code>)</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Đường dẫn</th>
+            <th>Vai trò</th>
+            <th>Tham số / cố định</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>00_Templates</code></td>
+            <td>Chỉ chứa file mẫu <b>master</b> (không ghi đè tay khi chạy flow)</td>
+            <td>Cố định tên thư mục; nội dung template version theo ngày trong footer Doc</td>
+          </tr>
+          <tr>
+            <td><code>10_Minutes</code></td>
+            <td>Nơi lưu biên bản từng cuộc họp (khuyến nghị production)</td>
+            <td>Trong ảnh demo hiện tại, flow B đang append trực tiếp vào <code>TEMPLATE_Minutes_IT_Intake</code>; production nên đổi sang bản copy theo <code>eventId</code>.</td>
+          </tr>
+          <tr>
+            <td><code>20_Proposals</code></td>
+            <td>Đề xuất đã điền</td>
+            <td>Tên file: <code>PROP_{{projectCode}}_{{eventId}}</code></td>
+          </tr>
+          <tr>
+            <td><code>30_Estimates</code></td>
+            <td>Google Sheet ước lượng (một file / deal hoặc một master + tab theo deal)</td>
+            <td>Tham số: <code>spreadsheetId</code> trong cấu hình flow hoặc lookup theo <code>projectCode</code></td>
+          </tr>
+          <tr>
+            <td><code>99_Logs</code></td>
+            <td>Sheet log chạy flow (idempotency, audit)</td>
+            <td>Cố định schema cột (xem bảng dưới)</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2 id="implement">Cài đặt trong Workspace Studio (theo khối logic)</h2>
+      <p>
+        Phần dưới dùng <b>tên khối logic</b> (starter Calendar, bước Drive/Docs/Chat/Sheets, Gemini extract) để bạn ánh xạ sang giao diện thực tế trong tenant của mình.
+      </p>
+
+      <h3>Flow A — Checklist trước họp (Google Chat)</h3>
+      <ol>
+        <li><b>Starter:</b> Google Calendar — <i>Event starting soon</i> (ví dụ 60 phút hoặc 15 phút trước giờ bắt đầu; chọn lịch làm việc của team).</li>
+        <li><b>Condition (khuyến nghị):</b> title chứa prefix <code>[REQ]</code> hoặc description chứa <code>"projectCode"</code> (regex đơn giản).</li>
+        <li><b>Action:</b> Google Chat — gửi vào Space đã chọn. Nội dung tin nhắn (tiếng Việt hoặc song ngữ):</li>
+      </ol>
+      <pre>[Pre-meeting] Client requirements interview (30m)
+
+Meeting: Acme Retail — Loyalty portal
+Start time: (see Calendar event)
+
+Purpose:
+• Clarify loyalty MVP scope (earn/burn only vs campaigns).
+
+Key questions:
+1) POS version + staging URL for AcmePOS v12?
+2) OAuth2: client_id for integration user or internal service account?
+3) Desired uptime / support window for MVP?
+
+Assumptions:
+• POS catalog is the source of truth.
+• No native mobile app in MVP.</pre>
+
+      <h3>Flow B — Tạo Doc biên bản từ template khi tới giờ họp</h3>
+      <ol>
+        <li><b>Starter:</b> <i>Based on a meeting</i> (như ảnh Step 11).</li>
+        <li><b>Action:</b> <i>Add to a doc</i> trỏ vào <code>TEMPLATE_Minutes_IT_Intake</code>.</li>
+        <li><b>Where to add new content:</b> <code>After existing content</code>.</li>
+        <li><b>Content to add:</b> block tối thiểu gồm Meeting title + Start time + Generated by Flow B (như ảnh Step 12).</li>
+        <li><b>Kết quả:</b> mở doc để thấy phần <code>Meeting notes (auto)</code> đã được append (Step 13).</li>
+      </ol>
+
+      <h3>Flow C — Sau họp: điền proposal + append Sheet + notify</h3>
+      <ol>
+        <li><b>Starter:</b> <i>Based on a meeting</i> (như ảnh Step 14).</li>
+        <li><b>Step 2 — Extract:</b> trích nội dung từ meeting/minutes thành các trường summary + estimate (ảnh Step 15).</li>
+        <li><b>Step 3 — Add to a doc:</b> append vào proposal doc <code>20_Proposal_IT_Intake</code> (ảnh Step 16).</li>
+        <li><b>Step 4 — Add a row:</b> map <code>work_package / role / md_low / md_high / source</code> vào sheet <code>20_Estimate_IT</code> (ảnh Step 17).</li>
+        <li><b>Step 5 — Notify me in Chat:</b> gửi thông báo hoàn tất sau họp (ảnh Step 18).</li>
+      </ol>
+      <p>Schema gợi ý cho phần Extract (tham chiếu logic mapping):</p>
+      <pre>{
+  "executive_summary": "string",
+  "work_package": "string",
+  "role": "string",
+  "md_low": 0,
+  "md_high": 0
+}</pre>
+      <ol start="6">
+        <li><b>Run history:</b> xác minh từng step success trong panel execution (ảnh Step 19).</li>
+        <li><b>Idempotency check:</b> chụp ảnh tổng hợp Sheet + Doc + Chat khi run lại cùng event (ảnh Step 20).</li>
+      </ol>
+
+      <h2 id="demo-screens">Các bước Demo</h2>
+      <div class="info">
+        <p><b>Hướng dẫn Step 1:</b> Mở Google Drive và vào thư mục gốc pipeline. Hiển thị đầy đủ các thư mục con <code>00_Templates</code>, <code>10_Minutes</code>, <code>20_Proposals</code>, <code>30_Estimates</code>, <code>99_Logs</code>.</p>
+      </div>
+      <figure class="demo-fig">
+        <img src="images/step-01-drive-folder-structure.png" alt="Cấu trúc thư mục Drive pipeline" width="960" loading="lazy" />
+        <figcaption>Bước 1 — Cây thư mục Drive chuẩn.</figcaption>
+      </figure>
+      <div class="info">
+        <p><b>Hướng dẫn Step 2:</b> Mở Doc template biên bản <code>TEMPLATE_Minutes_IT_Intake</code> trong <code>00_Templates</code>, cuộn để thấy rõ phần metadata + các mục chính (Goal, Key questions, Raw notes).</p>
+      </div>
+      <figure class="demo-fig">
+        <img src="images/step-02-minutes-template-open.png" alt="Template biên bản Google Doc" width="960" loading="lazy" />
+        <figcaption>Bước 2 — Template biên bản.</figcaption>
+      </figure>
+      <div class="info">
+        <p><b>Hướng dẫn Step 3:</b> Mở Doc template đề xuất <code>TEMPLATE_Proposal_IT_Intake</code>, hiển thị các phần <i>Executive summary</i>, <i>Proposed scope</i>, <i>Estimate hint</i> (hoặc các placeholder tương đương).</p>
+      </div>
+      <figure class="demo-fig">
+        <img src="images/step-03-proposal-template-open.png" alt="Template đề xuất Google Doc" width="960" loading="lazy" />
+        <figcaption>Bước 3 — Template đề xuất.</figcaption>
+      </figure>
+      <div class="info">
+        <p><b>Hướng dẫn Step 4:</b> Mở Google Sheet template trong <code>00_Templates</code>, xác nhận có đủ header <code>item_id,event_id,project_code,work_package,role,md_low,md_high,source</code>; chưa cần data mẫu.</p>
+      </div>
+      <figure class="demo-fig">
+        <img src="images/step-04-estimate-sheet-template.png" alt="Template Google Sheet dự toán" width="960" loading="lazy" />
+        <figcaption>Bước 4 — Sheet dự toán.</figcaption>
+      </figure>
+      <div class="info">
+        <p><b>Hướng dẫn Step 5:</b> Mở <a href="https://chat.google.com/" target="_blank" rel="noopener">Google Chat</a>, vào đúng space pipeline (ví dụ <code>client-intake-bot-demo</code>), hiển thị cả sidebar trái + tên space.</p>
+      </div>
+      <figure class="demo-fig">
+        <img src="images/step-05-google-chat-space.png" alt="Google Chat space" width="960" loading="lazy" />
+        <figcaption>Bước 5 — Space Chat nội bộ. Mở Chat web: <a href="https://chat.google.com/" target="_blank" rel="noopener">https://chat.google.com/</a></figcaption>
+      </figure>
+      <div class="info">
+        <p><b>Hướng dẫn Step 6:</b> Vào Workspace Studio và mở màn hình tạo flow mới.</p>
+      </div>
+      <figure class="demo-fig">
+        <img src="images/step-06-workspace-studio-home.png" alt="Trang chủ Workspace Studio" width="960" loading="lazy" />
+        <figcaption>Bước 6 — Workspace Studio home.</figcaption>
+      </figure>
+      <div class="info">
+        <p><b>Hướng dẫn Step 7:</b> Dựng Flow A với tối thiểu 2 step: <code>Step 1: Based on a meeting</code> và <code>Step 2: Notify me in Chat</code>.</p>
+      </div>
+      <figure class="demo-fig">
+        <img src="images/step-07-flow-a-pre-meeting-overview.png" alt="Flow A canvas" width="960" loading="lazy" />
+        <figcaption>Bước 7 — Flow A tổng thể.</figcaption>
+      </figure>
+      <div class="info">
+        <p><b>Hướng dẫn Step 8:</b> Mở panel trigger của <code>Based on a meeting</code>, chọn meeting ở tương lai và cấu hình <code>Before meeting</code> + time offset phù hợp.</p>
+      </div>
+      <figure class="demo-fig">
+        <img src="images/step-08-flow-a-trigger-config.png" alt="Cấu hình trigger Flow A" width="960" loading="lazy" />
+        <figcaption>Bước 8 — Trigger trước họp.</figcaption>
+      </figure>
+      <div class="info">
+        <p><b>Hướng dẫn Step 9:</b> Mở <code>Step 2: Notify me in Chat</code>, chọn đúng space và dán trực tiếp nội dung checklist dưới đây:</p>
+        <pre>[Pre-meeting] Client requirements interview (30m)
+
+Meeting: Acme Retail — Loyalty portal
+Start time: (see Calendar event)
+
+Purpose:
+• Clarify loyalty MVP scope (earn/burn only vs campaigns).
+
+Key questions:
+1) POS version + staging URL for AcmePOS v12?
+2) OAuth2: client_id for integration user or internal service account?
+3) Desired uptime / support window for MVP?
+
+Assumptions:
+• POS catalog is the source of truth.
+• No native mobile app in MVP.</pre>
+      </div>
+      <figure class="demo-fig">
+        <img src="images/step-09-flow-a-chat-message-body.png" alt="Nội dung Chat checklist trong flow A" width="960" loading="lazy" />
+        <figcaption>Bước 9 — Nội dung checklist.</figcaption>
+      </figure>
+      <div class="info">
+        <p><b>Hướng dẫn Step 10:</b> <code>Save/Turn on</code> flow A, đợi đến mốc trigger để tin nhắn thực tế được post vào Chat space.</p>
+      </div>
+      <figure class="demo-fig">
+        <img src="images/step-10-chat-pre-meeting-message-result.png" alt="Kết quả tin Chat trước họp" width="960" loading="lazy" />
+        <figcaption>Bước 10 — Chat đã nhận checklist.</figcaption>
+      </figure>
+      <div class="info">
+        <p><b>Hướng dẫn Step 11:</b> Trong Flow B, ở Actions bấm <code>Choose a step</code> và chọn step Docs/Drive tương đương (<code>Create a doc</code> hoặc <code>Add to a doc</code> hoặc copy template). Đảm bảo canvas có đủ <code>Step 1</code> + <code>Step 2</code>.</p>
+      </div>
+      <figure class="demo-fig">
+        <img src="images/step-11-flow-b-minutes-overview.png" alt="Flow B canvas" width="960" loading="lazy" />
+        <figcaption>Bước 11 — Flow B tạo biên bản.</figcaption>
+      </figure>
+      <div class="tip">
+        <p><b>Hướng dẫn Step 12:</b> Trong panel phải của <code>Step 2: Add to a doc</code>, chọn doc đích bằng <code>+ Document</code>, để <code>Where to add new content = After existing content</code>, rồi dán nội dung tối thiểu:</p>
+        <pre>Meeting notes (auto):
+- Meeting title: [Meeting title]
+- Start time: [Meeting start time]
+- Generated by Flow B.</pre>
+      </div>
+      <figure class="demo-fig">
+        <img src="images/step-12-flow-b-copy-template-config.png" alt="Cấu hình copy template Flow B" width="960" loading="lazy" />
+        <figcaption>Bước 12 — Copy template + folder đích.</figcaption>
+      </figure>
+      <div class="info">
+        <p><b>Hướng dẫn Step 13:</b> Chạy test run hoặc trigger meeting thật, vào Drive mở folder <code>10_Minutes</code> và kiểm tra file minutes đã được tạo/cập nhật.</p>
+      </div>
+      <figure class="demo-fig">
+        <img src="images/step-13-minutes-doc-in-drive-result.png" alt="File biên bản trong Drive" width="960" loading="lazy" />
+        <figcaption>Bước 13 — Biên bản đã tạo.</figcaption>
+      </figure>
+      <div class="info">
+        <p><b>Hướng dẫn Step 14:</b> Tạo <code>Flow C - Proposal + Estimate</code>, sau đó thêm lần lượt các step để canvas có đủ chuỗi: <code>Starter (Based on a meeting)</code> → <code>Extract</code> → <code>Add to a doc/Create a doc</code> → <code>Add a row (Sheets)</code> → <code>Notify me in Chat</code>. Đảm bảo đã có đủ 5 khối trong flow.</p>
+      </div>
+      <figure class="demo-fig">
+        <img src="images/step-14-flow-c-post-meeting-overview.png" alt="Flow C canvas" width="960" loading="lazy" />
+        <figcaption>Bước 14 — Flow C proposal + estimate.</figcaption>
+      </figure>
+      <div class="info">
+        <p><b>Hướng dẫn Step 15 (điền Extract):</b></p>
+        <ol>
+          <li>Click <code>Step 2: Extract</code> để mở panel cấu hình bên phải.</li>
+          <li>Ở <code>Content to analyze</code>, bấm <code>+ Variables</code> và chọn nguồn nội dung từ meeting/minutes (ví dụ title/description/notes).</li>
+          <li>Ở <code>What to extract</code>, dùng <code>Custom content</code> thay vì để trống predefined.</li>
+          <li>Thêm tối thiểu 5 trường:
+            <code>executive_summary</code>, <code>work_package</code>, <code>role</code>, <code>md_low</code>, <code>md_high</code>.
+          </li>
+        </ol>
+      </div>
+      <div class="tip">
+        <p><b>Mẫu mô tả cho từng trường (copy nhanh):</b></p>
+        <ul>
+          <li><code>executive_summary</code>: One concise summary sentence of the meeting outcome.</li>
+          <li><code>work_package</code>: The main implementation work item for estimate, phrased as a deliverable.</li>
+          <li><code>role</code>: Primary role responsible for the work package (Backend, PM, QA, etc.).</li>
+          <li><code>md_low</code>: Lower-bound effort estimate in man-days as a number.</li>
+          <li><code>md_high</code>: Upper-bound effort estimate in man-days as a number.</li>
+        </ul>
+      </div>
+      <figure class="demo-fig">
+        <img src="images/step-15-gemini-extract-config.png" alt="Cấu hình Gemini extract" width="960" loading="lazy" />
+        <figcaption>Bước 15 — Gemini extract schema.</figcaption>
+      </figure>
+      <div class="info">
+        <p><b>Hướng dẫn Step 16 (điền Proposal doc):</b></p>
+        <ol>
+          <li>Click <code>Step 3: Add to a doc</code> trong Flow C.</li>
+          <li>Ở <code>Doc to update</code>, bấm <code>+ Document</code> và chọn proposal doc/template (ví dụ <code>TEMPLATE_Proposal_IT_Intake</code>).</li>
+          <li>Điền <code>Content to add</code> bằng nội dung map từ Extract, rồi <code>Save changes</code> và chạy <code>Test run</code>.</li>
+          <li>Mở proposal doc trên Drive để xác nhận nội dung đã được điền từ Step 2.</li>
+        </ol>
+      </div>
+      <div class="tip">
+        <p><b>Block mẫu cho <code>Content to add</code>:</b></p>
+        <pre>Executive summary:
+- [Step 2: executive_summary]
+
+Proposed scope:
+- [Step 2: work_package]
+
+Estimate hint:
+- Role: [Step 2: role]
+- MD range: [Step 2: md_low] - [Step 2: md_high]</pre>
+      </div>
+      <figure class="demo-fig">
+        <img src="images/step-16-proposal-doc-filled-result.png" alt="Proposal đã điền" width="960" loading="lazy" />
+        <figcaption>Bước 16 — Proposal sau khi điền.</figcaption>
+      </figure>
+      <div class="info">
+        <p><b>Hướng dẫn Step 17 (append dòng estimate vào Sheet):</b></p>
+        <ol>
+          <li>Click <code>Step 4: Add a row</code> trong Flow C.</li>
+          <li>Chọn đúng spreadsheet estimate (ví dụ <code>TEMPLATE_Estimate_IT</code>) và đúng tab chứa header.</li>
+          <li>Map tối thiểu các cột:
+            <code>work_package</code> → <code>Step 2: work_package</code>,
+            <code>role</code> → <code>Step 2: role</code>,
+            <code>md_low</code> → <code>Step 2: md_low</code>,
+            <code>md_high</code> → <code>Step 2: md_high</code>,
+            <code>source</code> → text cố định <code>studio_flow_v1</code>.
+          </li>
+          <li>Hoàn tất cấu hình <b>đủ cả 5 step</b> của Flow C (Starter + Extract + Add to a doc + Add a row + Notify me in Chat), đảm bảo không còn trường bắt buộc bị đỏ.</li>
+          <li>Sau đó mới <code>Save changes</code> và chạy <code>Test run</code>.</li>
+          <li>Mở Google Sheet và xác nhận có ít nhất 1 dòng mới được append.</li>
+        </ol>
+      </div>
+    
+      <figure class="demo-fig">
+        <img src="images/step-17-estimate-sheet-appended-rows.png" alt="Hàng Sheet được append" width="960" loading="lazy" />
+        <figcaption>Bước 17 — Hàng dự toán do flow append.</figcaption>
+      </figure>
+      <div class="info">
+        <p><b>Hướng dẫn Step 18 (post-meeting chat notify):</b> Click <code>Step 5: Notify me in Chat</code>, điền đầy đủ trường bắt buộc (space + message), sau đó <code>Save changes</code> và chạy flow. Dùng trực tiếp mẫu message dưới đây:</p>
+        <pre>Post-meeting draft generated.
+
+- Proposal updated (Step 3)
+- Estimate row appended (Step 4)
+
+Please review proposal and estimate sheet.</pre>
+      </div>
+      <figure class="demo-fig">
+        <img src="images/step-18-chat-post-meeting-notify.png" alt="Chat thông báo sau họp" width="960" loading="lazy" />
+        <figcaption>Bước 18 — Thông báo hoàn tất.</figcaption>
+      </figure>
+      <div class="info">
+        <p><b>Hướng dẫn Step 19 (execution/run log):</b> Trong Workspace Studio, mở panel lịch sử chạy của Flow C (run detail) và kiểm tra các step <code>Extract</code>, <code>Add to a doc</code>, <code>Add a row</code>, <code>Notify me in Chat</code> cùng trạng thái <code>success</code>/<code>failed</code>.</p>
+      </div>
+      <figure class="demo-fig">
+        <img src="images/step-19-execution-run-log.png" alt="Run history Workspace Studio" width="960" loading="lazy" />
+        <figcaption>Bước 19 — Execution / run history.</figcaption>
+      </figure>
+      <div class="info">
+        <p><b>Hướng dẫn Step 20 (ảnh tổng hợp idempotency):</b> thay vì chỉ chụp mỗi Sheet, hãy ghép <b>3 phần vào một ảnh</b> gồm: (1) Sheet estimate/log, (2) Proposal Doc, (3) Chat notify. Mục tiêu là chứng minh khi run lại cùng event, hệ thống không tạo hiệu ứng nhân bản mất kiểm soát. Có thể ghép bằng Paint và thêm nhãn nhỏ <code>Sheet</code>, <code>Doc</code>, <code>Chat</code>.</p>
+      </div>
+      <figure class="demo-fig">
+        <img src="images/step-20-idempotency-sheet-log.png" alt="Composite idempotency evidence: Sheet Doc Chat" width="960" loading="lazy" />
+        <figcaption>Bước 20 — Ảnh tổng hợp chống trùng (Sheet + Doc + Chat).</figcaption>
+      </figure>
+
+      <h2 id="failures">Kiểm chứng các điểm dễ hỏng (≥3)</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Rủi ro</th>
+            <th>Cách tái hiện / quan sát</th>
+            <th>Mitigation</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><b>1. Quyền Drive / Chat</b></td>
+            <td>Chạy flow bằng user không có quyền ghi folder đích hoặc bot/app chưa được add vào Chat Space → bước fail trong run history.</td>
+            <td>Folder gốc share với nhóm triển khai Studio; dùng Space “nội bộ” có quyền post cho automation; ghi rõ service account (nếu có) trong tài liệu nội bộ.</td>
+          </tr>
+          <tr>
+            <td><b>2. Template ID / file bị di chuyển</b></td>
+            <td>Đổi tên hoặc move master template → bước “copy template” lỗi <i>file not found</i>.</td>
+            <td>Lưu <code>templateFileId</code> trong một Google Doc “config” versioned; flow đọc config trước khi copy; khóa quyền chỉnh sửa thư mục <code>00_Templates</code>.</td>
+          </tr>
+          <tr>
+            <td><b>3. Tiêu đề sự kiện không đồng nhất</b></td>
+            <td>Sự kiện thiếu <code>[REQ]</code> hoặc tiếng Việt không dấu / ký tự đặc biệt làm condition sai.</td>
+            <td>Chuẩn hóa prefix + parse JSON trong description; fallback: bất kỳ sự kiện nào trên calendar “Sales intake”.</td>
+          </tr>
+          <tr>
+            <td><b>4. Chạy trùng (idempotency)</b></td>
+            <td>Lưu Doc hai lần hoặc append Sheet trùng khi người dùng bấm “Run again” hoặc trigger kép (event end + file updated).</td>
+            <td>Trước khi tạo file mới: tra <code>Flow_Execution_Log</code> theo <code>event_id</code> + <code>step</code>. Đã có → skip hoặc update-in-place. Với Sheet: dùng <code>item_id</code> deterministic (hash event_id + work_package).</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2 id="conclusion">Kết luận và đánh giá</h2>
+      <p>
+        Demo đã xác nhận pipeline chạy end-to-end: pre-meeting checklist lên Chat, minutes được cập nhật tự động, proposal được điền từ Extract, estimate được append vào Sheet, và có run history để đối soát.
+        Với team presales/PM, mô hình này đủ dùng làm <b>chuẩn vận hành đầu funnel</b> trước khi chuyển sang estimate chi tiết hoặc SOW chính thức.
+      </p>
+      <h3>Ưu điểm</h3>
+      <ul>
+        <li><b>Dễ triển khai:</b> không cần server/app riêng; toàn bộ nằm trong Workspace quen thuộc.</li>
+        <li><b>Dễ kiểm chứng:</b> có ảnh chứng minh theo từng step và run detail theo từng flow.</li>
+        <li><b>Dễ bàn giao:</b> có template và checklist thao tác trong chính bài viết để người khác dựng lại nhanh.</li>
+        <li><b>Giảm thao tác lặp:</b> cùng dữ liệu meeting được tái dùng cho Docs, Sheets và Chat.</li>
+      </ul>
+      <h3>Hạn chế và rủi ro vận hành</h3>
+      <ul>
+        <li><b>Phụ thuộc quyền:</b> sai permission Drive/Chat/Calendar sẽ fail ngay ở runtime.</li>
+        <li><b>Rủi ro duplicate:</b> nếu run lại mà không có check idempotency, Sheet/Doc có thể bị append trùng.</li>
+        <li><b>Độ chính xác Extract:</b> nội dung minutes thiếu chi tiết sẽ làm output proposal/estimate kém chất lượng.</li>
+        <li><b>Khác biệt tenant:</b> tên step, vị trí nút, và trường cấu hình có thể thay đổi theo phiên bản Studio.</li>
+      </ul>
+      <h3>Đánh giá tổng thể</h3>
+      <p>
+        Đây là hướng triển khai có ROI tốt cho team đã dùng Google Workspace: chi phí chính nằm ở chuẩn hóa template và cấu hình flow ban đầu.
+        Nên xem Studio là <b>lớp tự động hóa hỗ trợ quyết định</b> (khởi tạo tài liệu, đồng bộ dữ liệu, nhắc việc), còn phần chốt phạm vi/chi phí cuối cùng vẫn do PM và team delivery quyết định.
+      </p>
+
+      <h2 id="references">Tài liệu tham khảo</h2>
+      <ul class="ref-list">
+        <li><a href="https://ximix.niandc.co.jp/blog/google-workspace-flows-minutes" target="_blank" rel="noopener">Google Workspace Flows minutes (NI&amp;DC)</a></li>
+        <li><a href="https://zenn.dev/google_cloud_jp/articles/google-workspace-studio-templates-meeting" target="_blank" rel="noopener">Google Workspace Studio templates meeting (Zenn)</a></li>
+        <li><a href="https://medium.com/@stephane.giron/mastering-google-flows-a-guide-to-building-powerful-workflows-with-steps-c2f41f0a9e97" target="_blank" rel="noopener">Mastering Google Flows (Medium)</a></li>
+      </ul>
+    </div>
+  </body>
+</html>

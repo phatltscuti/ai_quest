@@ -1,0 +1,725 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Google Workspace Studio: Automate Work with AI - Complete Guide</title>
+    <style>
+      *{box-sizing:border-box}
+      body{ margin:0; font-family: 'Segoe UI', Arial, sans-serif; background: #fff; color: #1a1a1a; line-height: 1.7; }
+      a{ color: #1a73e8; text-decoration: none; }
+      a:hover{ text-decoration: underline; }
+      .wrap{ max-width: 980px; margin:0 auto; padding: 24px; }
+      h1{ margin:0 0 10px 0; font-size: 30px; color: #1a73e8; }
+      h2{ margin: 32px 0 14px; font-size: 24px; border-bottom: 3px solid #1a73e8; padding-bottom: 8px; color: #202124; }
+      h3{ margin: 22px 0 10px; font-size: 19px; color: #333; }
+      h4{ margin: 16px 0 8px; font-size: 16px; color: #444; }
+      ul,ol{ margin: 8px 0; padding-left: 22px; }
+      li{ margin-bottom: 4px; }
+      p{ margin: 12px 0; }
+      code{ background: #e8f0fe; border: 1px solid #d2e3fc; padding: 2px 6px; font-size: 13px; font-family: 'Consolas', monospace; border-radius: 3px; color: #1a73e8; }
+      pre{ white-space: pre-wrap; word-wrap: break-word; border: 1px solid #dadce0; background: #f8f9fa; padding: 14px; overflow:auto; font-size: 13px; font-family: 'Consolas', monospace; margin: 12px 0; border-radius: 8px; }
+      .hero{ border: 2px solid #1a73e8; padding: 24px 28px; margin-bottom: 24px; background: linear-gradient(135deg, #e8f0fe 0%, #f8f9fa 100%); border-radius: 12px; }
+      .hero .subtitle{ color: #5f6368; font-size: 15px; margin-top: 8px; }
+      .tip{ border-left: 4px solid #34a853; padding: 12px 16px; background: #e6f4ea; margin: 14px 0; border-radius: 0 8px 8px 0; }
+      .warning{ border-left: 4px solid #ea4335; padding: 12px 16px; background: #fce8e6; margin: 14px 0; border-radius: 0 8px 8px 0; }
+      .info{ border-left: 4px solid #4285f4; padding: 12px 16px; background: #e8f0fe; margin: 14px 0; border-radius: 0 8px 8px 0; }
+      .highlight{ border-left: 4px solid #fbbc04; padding: 12px 16px; background: #fef7e0; margin: 14px 0; border-radius: 0 8px 8px 0; }
+      table{ border-collapse: collapse; width: 100%; margin: 16px 0; border-radius: 8px; overflow: hidden; }
+      th,td{ border: 1px solid #dadce0; padding: 10px 14px; text-align: left; }
+      th{ background: #1a73e8; color: #fff; font-weight: 600; }
+      tr:nth-child(even){ background: #f8f9fa; }
+      .flow-diagram{ background: #f8f9fa; border: 2px solid #dadce0; border-radius: 12px; padding: 20px; margin: 16px 0; text-align: center; }
+      .flow-step{ display: inline-block; background: #fff; border: 2px solid #1a73e8; border-radius: 8px; padding: 10px 18px; margin: 6px; font-weight: 600; color: #1a73e8; }
+      .flow-step.starter{ background: #34a853; border-color: #34a853; color: #fff; }
+      .flow-step.ai{ background: #fbbc04; border-color: #fbbc04; color: #333; }
+      .flow-step.action{ background: #4285f4; border-color: #4285f4; color: #fff; }
+      .flow-arrow{ display: inline-block; font-size: 24px; color: #5f6368; margin: 0 4px; vertical-align: middle; }
+      .toc{ background: #f8f9fa; border: 1px solid #dadce0; border-radius: 8px; padding: 16px 24px; margin: 20px 0; }
+      .toc ul{ list-style: none; padding-left: 0; }
+      .toc li{ padding: 4px 0; }
+      .badge{ display: inline-block; background: #34a853; color: #fff; padding: 2px 10px; border-radius: 12px; font-size: 12px; font-weight: 600; margin-left: 8px; }
+      .badge.alpha{ background: #ea4335; }
+      .footer{ margin-top: 36px; font-size: 13px; color: #5f6368; border-top: 2px solid #dadce0; padding-top: 20px; }
+      .demo-fig{ margin: 18px 0; text-align: center; }
+      .demo-fig img{ max-width: 100%; height: auto; border: 2px solid #dadce0; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+      .demo-fig figcaption{ font-size: 13px; color: #5f6368; margin-top: 6px; font-style: italic; }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+
+      <!-- HERO -->
+      <div class="hero">
+        <h1>Google Workspace Studio: Automate Work with Agentic AI</h1>
+        <p class="subtitle">Complete Guide &mdash; Overview, Template Workflow, and Custom Workflow from Scratch</p>
+        <p style="margin:4px 0 0;font-size:13px;color:#80868b;">
+          Written: 03/18/2026 &bull; References:
+          <a href="https://www.youtube.com/watch?v=ZOAszesMBGc" target="_blank">Video 1</a> &bull;
+          <a href="https://www.youtube.com/watch?v=vHrQ-Yd7XwI" target="_blank">Video 2</a> &bull;
+          <a href="https://workspace.google.com/studio/" target="_blank">Official Page</a>
+        </p>
+      </div>
+
+      <!-- TABLE OF CONTENTS -->
+      <div class="toc">
+        <h3 style="margin-top:0;">Table of Contents</h3>
+        <ul>
+          <li><a href="#overview">1. Overview of Google Workspace Studio</a></li>
+          <li><a href="#how-it-works">2. How It Works &mdash; Flow Architecture</a></li>
+          <li><a href="#interface">3. The Workspace Studio Interface</a></li>
+          <li><a href="#starters-steps">4. Complete Starters &amp; Steps Reference</a></li>
+          <li><a href="#three-ways">5. Three Ways to Create a Flow</a></li>
+          <li><a href="#template-workflow">6. Template Workflow: Daily Email Summary</a></li>
+          <li><a href="#scratch-workflow">7. From-Scratch Workflow: Auto-reply Invoice Emails</a></li>
+          <li><a href="#custom-workflow">8. Custom Workflow: Smart Meeting Notes Pipeline</a></li>
+          <li><a href="#tips">9. Tips &amp; Best Practices</a></li>
+          <li><a href="#availability">10. Availability &amp; Requirements</a></li>
+          <li><a href="#conclusion">11. Conclusion</a></li>
+        </ul>
+      </div>
+
+      <!-- 1. OVERVIEW -->
+      <h2 id="overview">1. Overview of Google Workspace Studio</h2>
+
+      <p>
+        <b>Google Workspace Studio</b> is Google's latest AI-powered workflow automation tool,
+        deeply integrated with the Google Workspace ecosystem (Gmail, Drive, Sheets, Docs, Chat,
+        Calendar, Forms, Tasks) and powered by <b>Gemini AI</b> as its intelligent processing engine.
+      </p>
+
+      <p>
+        Workspace Studio is the generally available (GA) evolution of the previously alpha-released
+        <b>Google Workspace Flows</b>. It enables users to create automated <b>flows</b> (workflows)
+        <b>without writing any code</b>, saving time on repetitive daily tasks.
+      </p>
+
+      <div class="info">
+        <b>Key Highlights:</b>
+        <ul>
+          <li><b>No-code:</b> No programming required &mdash; drag-and-drop, select steps, or describe in natural language.</li>
+          <li><b>AI-powered:</b> Gemini auto-generates flows, summarizes emails, extracts data, and makes decisions.</li>
+          <li><b>Cross-app:</b> Connects Gmail, Sheets, Drive, Chat, Calendar, Forms, Tasks + third-party apps (Salesforce, Asana, Jira, Slack, Mailchimp, Confluence).</li>
+          <li><b>Direct access:</b> Available at <a href="https://studio.workspace.google.com" target="_blank">studio.workspace.google.com</a> or from within Workspace apps.</li>
+        </ul>
+      </div>
+
+      <!-- 2. HOW IT WORKS -->
+      <h2 id="how-it-works">2. How It Works &mdash; Flow Architecture</h2>
+
+      <p>Every flow in Workspace Studio has <b>2 main components</b>:</p>
+
+      <div class="flow-diagram">
+        <span class="flow-step starter">STARTER (Trigger)</span>
+        <span class="flow-arrow">&rarr;</span>
+        <span class="flow-step action">STEP 1</span>
+        <span class="flow-arrow">&rarr;</span>
+        <span class="flow-step ai">STEP 2 (AI)</span>
+        <span class="flow-arrow">&rarr;</span>
+        <span class="flow-step action">STEP 3</span>
+        <span class="flow-arrow">&rarr;</span>
+        <span class="flow-step" style="background:#5f6368;color:#fff;">...</span>
+      </div>
+
+      <h3>2.1. Starter (Trigger)</h3>
+      <p>
+        A Starter is the event that launches your flow. When the event occurs, the flow runs automatically.
+        Examples: receiving a new email, a scheduled time, a new file added to Drive, a form submission, etc.
+      </p>
+
+      <h3>2.2. Steps (Actions)</h3>
+      <p>
+        Steps are the tasks the flow performs after being triggered. Each flow can have multiple steps,
+        which execute sequentially &mdash; each step completes before the next begins.
+      </p>
+
+      <h3>2.3. Variables (Dynamic Data)</h3>
+      <p>
+        Variables are placeholders for data from the starter or previous steps.
+        They allow you to pass dynamic data between steps, making flows powerful and flexible.
+      </p>
+      <div class="tip">
+        <b>Example:</b> When an email arrives, you can use the <code>[Email subject]</code> variable
+        from the starter to insert the email subject into a Chat message in the next step. To insert a
+        variable, click in a text field and press <code>@</code> or click the <b>Variables +</b> button.
+      </div>
+
+      <!-- 3. INTERFACE -->
+      <h2 id="interface">3. The Workspace Studio Interface</h2>
+
+      <p>Workspace Studio has 3 main pages:</p>
+
+      <h3>3.1. Discover Page</h3>
+      <p>This is the home page at <a href="https://studio.workspace.google.com" target="_blank">studio.workspace.google.com</a>. From here you can:</p>
+      <ul>
+        <li><b>My flows:</b> View a list of all flows you've created.</li>
+        <li><b>Create from scratch:</b> Build a custom flow from a blank canvas.</li>
+        <li><b>Use flow templates:</b> Browse pre-built flows by app or use case.</li>
+        <li><b>Create with AI:</b> Describe what you want in natural language and Gemini builds the flow.</li>
+      </ul>
+
+      <figure class="demo-fig">
+        <img src="images/step-01-discover-page.png" alt="Workspace Studio Discover Page">
+        <figcaption>Fig 1: Discover Page &mdash; the main interface of Google Workspace Studio</figcaption>
+      </figure>
+
+      <figure class="demo-fig">
+        <img src="images/step-02-templates-list.png" alt="Templates List">
+        <figcaption>Fig 2: Templates List &mdash; pre-built flows organized by app and use case</figcaption>
+      </figure>
+
+      <h3>3.2. Flow Editor</h3>
+      <p>When you open or create a flow, the editor allows you to:</p>
+      <ul>
+        <li>Select and configure the Starter and Steps.</li>
+        <li>Add, delete, and reorder steps.</li>
+        <li>Insert variables from previous steps.</li>
+        <li>Rename, copy, delete, and share the flow.</li>
+        <li><b>Test run:</b> Execute the flow immediately to verify.</li>
+        <li><b>Turn on:</b> Activate the flow to run automatically.</li>
+      </ul>
+
+      <h3>3.3. Activity Page</h3>
+      <p>After a flow runs, review its history here:</p>
+      <ul>
+        <li>Expand details for each run.</li>
+        <li>Filter by status: Completed, In Progress, Error.</li>
+        <li>View start times for each run.</li>
+        <li>Refresh for the latest data.</li>
+      </ul>
+
+      <figure class="demo-fig">
+        <img src="images/step-03-my-flows.png" alt="My Flows Page">
+        <figcaption>Fig 3: My Flows Page &mdash; list of all flows you've created</figcaption>
+      </figure>
+
+      <!-- 4. STARTERS & STEPS -->
+      <h2 id="starters-steps">4. Complete Starters &amp; Steps Reference</h2>
+
+      <h3>4.1. All Available Starters</h3>
+      <table>
+        <thead>
+          <tr><th>Starter</th><th>Description</th><th>Example</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><b>On a schedule</b></td><td>Flow runs at specific date/time</td><td>Every Monday morning, create a new Google Doc for weekly meeting notes</td></tr>
+          <tr><td><b>When I get an email</b></td><td>Runs when new email arrives (filter by label, sender, subject, attachment)</td><td>When an email with subject "Invoice" and attachment arrives, save to Drive</td></tr>
+          <tr><td><b>When someone joins a space</b></td><td>Runs when someone joins a Chat space</td><td>Send welcome message with project document links</td></tr>
+          <tr><td><b>When I get a chat message</b></td><td>Runs when a message is posted in a Chat space</td><td>If message contains "urgent", create a high-priority task</td></tr>
+          <tr><td><b>When I'm mentioned</b></td><td>Runs when you're @mentioned in Chat</td><td>Auto-create a task in your to-do list</td></tr>
+          <tr><td><b>When an emoji reaction is added</b></td><td>Runs when someone reacts with a specific emoji</td><td>When someone reacts with a check mark, send an "approved" email</td></tr>
+          <tr><td><b>When a sheet changes</b></td><td>Runs when a value in a specific column/row changes</td><td>When status changes to "Complete", archive the row</td></tr>
+          <tr><td><b>When an item is added to a folder</b></td><td>Runs when a new file/folder is added to a Drive folder</td><td>When new contract PDF is added, send a copy to the legal team</td></tr>
+          <tr><td><b>When a file is edited</b></td><td>Runs when a specific file's content is modified</td><td>Notify Chat space when "Project Plan" is edited</td></tr>
+          <tr><td><b>When an item in a folder is edited</b></td><td>Runs when a file within a folder is modified</td><td>Post in team Chat when marketing docs are updated</td></tr>
+          <tr><td><b>Based on a meeting</b></td><td>Runs before/after a Calendar event</td><td>15 minutes before meeting, send agenda link to Chat</td></tr>
+          <tr><td><b>When a meeting transcript is ready</b></td><td>Runs when a meeting transcript becomes available</td><td>Summarize transcript and create tasks with action items</td></tr>
+          <tr><td><b>When a form response comes in</b></td><td>Runs when a new form response is submitted</td><td>Add info to Sheet and send confirmation email</td></tr>
+        </tbody>
+      </table>
+
+      <h3>4.2. All Available Steps</h3>
+
+      <h4>AI Steps</h4>
+      <table>
+        <thead>
+          <tr><th>Step</th><th>Description</th><th>Example</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><b>Ask Gemini</b></td><td>Custom prompt for Gemini to generate text, answers, or transform data</td><td>Draft a polite response to high-priority client emails</td></tr>
+          <tr><td><b>Ask a Gem</b> <span class="badge alpha">Preview</span></td><td>Use a specialized AI agent (Gem) for specific tasks</td><td>Use "Brainstormer" Gem to generate marketing taglines</td></tr>
+          <tr><td><b>Recap unread emails</b></td><td>AI-generated summary of important unread emails</td><td>End of day recap posted to a private Chat space</td></tr>
+          <tr><td><b>Extract</b></td><td>Gemini finds and pulls specific information from content</td><td>Extract "Order Number" and "Shipping Address" from confirmation emails</td></tr>
+          <tr><td><b>Decide</b></td><td>Gemini makes a true/false decision based on content analysis</td><td>Determine if an email is "urgent" to control flow branching</td></tr>
+          <tr><td><b>Summarize</b></td><td>Gemini generates a summary from documents, meetings, or emails</td><td>Summarize a project proposal and post key points to Chat</td></tr>
+        </tbody>
+      </table>
+
+      <h4>Tool Steps</h4>
+      <table>
+        <thead>
+          <tr><th>Step</th><th>Description</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><b>Check if</b></td><td>Continue the flow only if specific conditions are met (conditional logic)</td></tr>
+          <tr><td><b>Filter a list</b></td><td>Process only certain items from a list generated by a previous step</td></tr>
+        </tbody>
+      </table>
+
+      <h4>App Steps (Gmail, Chat, Sheets, Drive, Docs, Tasks)</h4>
+      <table>
+        <thead>
+          <tr><th>App</th><th>Available Steps</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><b>Gmail</b></td><td>Draft an email, Draft a reply, Add/remove labels, Mark read/unread, Star/unstar, Archive, Notify me by email</td></tr>
+          <tr><td><b>Chat</b></td><td>Notify me in Chat</td></tr>
+          <tr><td><b>Sheets</b></td><td>Add a row, Update rows, Clear rows, Get sheet contents</td></tr>
+          <tr><td><b>Drive</b></td><td>Add email attachments to Drive, Create a folder</td></tr>
+          <tr><td><b>Docs</b></td><td>Create a Google doc, Add to a doc</td></tr>
+          <tr><td><b>Tasks</b></td><td>Create a task</td></tr>
+        </tbody>
+      </table>
+
+      <h4>Third-party Integrations <span class="badge alpha">Alpha</span></h4>
+      <table>
+        <thead>
+          <tr><th>App</th><th>Capabilities</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><b>Asana</b></td><td>Create projects, sections, tasks, subtasks</td></tr>
+          <tr><td><b>Confluence</b></td><td>Create pages</td></tr>
+          <tr><td><b>Jira</b></td><td>Create issues and comments</td></tr>
+          <tr><td><b>Mailchimp</b></td><td>Manage subscribers and campaigns</td></tr>
+          <tr><td><b>Slack</b></td><td>Send messages in Slack workspace</td></tr>
+        </tbody>
+      </table>
+
+      <!-- 5. THREE WAYS -->
+      <h2 id="three-ways">5. Three Ways to Create a Flow</h2>
+
+      <table>
+        <thead>
+          <tr><th>Method</th><th>Description</th><th>Best For</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><b>1. Use a Template</b></td>
+            <td>Select a pre-built flow with logic already configured; just customize parameters</td>
+            <td>Quick start with common tasks</td>
+          </tr>
+          <tr>
+            <td><b>2. Create from Scratch</b></td>
+            <td>Choose your own starter, add steps, configure variables manually</td>
+            <td>Full control, unique use cases</td>
+          </tr>
+          <tr>
+            <td><b>3. Describe with AI</b></td>
+            <td>Write a natural language description and Gemini builds the flow for you</td>
+            <td>Fastest creation, edit afterward</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="tip">
+        <b>AI Tip:</b> Be specific in your description: include what the flow should do, which apps to use, and when it should run.<br>
+        <b>Good:</b> <i>"Notify me in Google Chat whenever I get an email from person@example.com"</i><br>
+        <b>Bad:</b> <i>"Handle emails from person@example.com"</i>
+      </div>
+
+      <!-- 6. TEMPLATE WORKFLOW -->
+      <h2 id="template-workflow">6. Template Workflow: Daily Email Summary</h2>
+
+      <p>The most popular starter workflow &mdash; automatically summarize unread emails and send yourself a daily digest via Google Chat.</p>
+
+      <div class="flow-diagram">
+        <span class="flow-step starter">On a schedule<br><small>Weekday morning</small></span>
+        <span class="flow-arrow">&rarr;</span>
+        <span class="flow-step ai">Recap unread emails<br><small>From "Yesterday"</small></span>
+        <span class="flow-arrow">&rarr;</span>
+        <span class="flow-step action">Notify me in Chat<br><small>Send summary</small></span>
+      </div>
+
+      <h3>Step 1: Choose the Template</h3>
+      <ol>
+        <li>Go to <a href="https://studio.workspace.google.com" target="_blank">studio.workspace.google.com</a>.</li>
+        <li>On the Discover page, find the <b>"Get a daily summary of unread emails"</b> template.</li>
+        <li>Click it &rarr; the Flow Editor opens with pre-built logic.</li>
+      </ol>
+
+      <figure class="demo-fig">
+        <img src="images/step-04-select-template.png" alt="Select Daily Email Summary template">
+        <figcaption>Fig 4: Selecting the "Get a daily summary of unread emails" template &mdash; Flow Editor opens with 3 pre-built steps</figcaption>
+      </figure>
+
+      <h3>Step 2: Configure the Flow</h3>
+      <p>The template comes with 3 steps pre-configured. Click through each to understand how it works:</p>
+
+      <h4>Step 1: On a schedule (Starter)</h4>
+      <ul>
+        <li>This is the starter &mdash; it determines <b>when</b> the flow runs.</li>
+        <li>Default: every weekday morning.</li>
+        <li>You can change the frequency (daily, weekly) and time to fit your routine.</li>
+      </ul>
+
+      <figure class="demo-fig">
+        <img src="images/step-05-configure-schedule.png" alt="Configure On a schedule starter">
+        <figcaption>Fig 5: Configuring the "On a schedule" Starter &mdash; set frequency and run time</figcaption>
+      </figure>
+
+      <h4>Step 2: Recap unread emails (AI Step)</h4>
+      <ul>
+        <li>This AI-powered step scans your unread emails.</li>
+        <li>Configured to look at emails from <b>"Yesterday"</b>.</li>
+        <li>Gemini generates a concise summary of the content.</li>
+        <li>You can keep the default prompt/settings or customize them.</li>
+      </ul>
+
+      <figure class="demo-fig">
+        <img src="images/step-06-configure-ai-recap.png" alt="Configure Recap unread emails AI step">
+        <figcaption>Fig 6: Configuring the AI Step "Recap unread emails" &mdash; Gemini summarizes emails from Yesterday</figcaption>
+      </figure>
+
+      <h4>Step 3: Notify me in Chat (Action Step)</h4>
+      <ul>
+        <li>Sends a direct message to you via Google Chat.</li>
+        <li>The "Message" field contains a blue <b>variable chip</b>: <code>[Step 2: Summary of unread email]</code>.</li>
+        <li>This variable takes the AI summary from Step 2 and inserts it into the message.</li>
+      </ul>
+
+      <figure class="demo-fig">
+        <img src="images/step-07-configure-chat-notify.png" alt="Configure Notify me in Chat with Variable">
+        <figcaption>Fig 7: Configuring "Notify me in Chat" &mdash; variable chip [Summary] passes data from the previous step</figcaption>
+      </figure>
+
+      <h3>Step 3: Test &amp; Turn On</h3>
+      <div class="warning">
+        <b>Important:</b> A test run performs real actions &mdash; it will send messages, update files, and create events.
+        Verify your configuration before testing.
+      </div>
+      <ol>
+        <li>Click <b>Test run</b> &rarr; <b>Start</b> at the bottom of the flow editor.</li>
+        <li>The flow runs immediately. If successful:
+          <ul>
+            <li>You receive a summary message in Google Chat.</li>
+            <li>The editor shows <b>"Run Completed"</b>.</li>
+          </ul>
+        </li>
+        <li>If everything looks good, click <b>Turn on</b> to activate the flow.</li>
+      </ol>
+
+      <figure class="demo-fig">
+        <img src="images/step-08-test-run-template.png" alt="Test run template flow">
+        <figcaption>Fig 8: Test run &mdash; Flow executed successfully, showing "Run Completed"</figcaption>
+      </figure>
+
+      <figure class="demo-fig">
+        <img src="images/step-09-chat-result.png" alt="Email summary result in Google Chat">
+        <figcaption>Fig 9: Result in Google Chat &mdash; AI-generated email summary message</figcaption>
+      </figure>
+
+      <div class="highlight">
+        <b>Result:</b> Every weekday morning, you'll receive an AI-generated summary of your unread emails
+        right in Google Chat &mdash; no need to open Gmail and read each email individually.
+      </div>
+
+      <!-- 7. SCRATCH WORKFLOW -->
+      <h2 id="scratch-workflow">7. From-Scratch Workflow: Auto-reply Invoice Emails</h2>
+
+      <p>Build a flow from scratch that automatically drafts a reply whenever you receive an email containing the word "Invoice".</p>
+
+      <div class="flow-diagram">
+        <span class="flow-step starter">When I get an email<br><small>Contains "Invoice"</small></span>
+        <span class="flow-arrow">&rarr;</span>
+        <span class="flow-step action">Draft a reply<br><small>With dynamic content</small></span>
+      </div>
+
+      <h3>Step 1: Choose Your Starter</h3>
+      <ol>
+        <li>Go to <a href="https://studio.workspace.google.com" target="_blank">studio.workspace.google.com</a>.</li>
+        <li>Click <b>"Create from scratch"</b>.</li>
+        <li>From the Starters list, select <b>"When I get an email"</b>.</li>
+        <li>In the filter field, enter: <code>Invoice</code>.</li>
+        <li>This tells the flow to only trigger when an email contains "Invoice" in its subject or body.</li>
+      </ol>
+
+      <figure class="demo-fig">
+        <img src="images/step-10-create-from-scratch.png" alt="Create flow from scratch">
+        <figcaption>Fig 10: Create from scratch &mdash; blank canvas with Starters selection</figcaption>
+      </figure>
+
+      <figure class="demo-fig">
+        <img src="images/step-11-select-email-starter.png" alt="Select When I get an email starter">
+        <figcaption>Fig 11: Selecting "When I get an email" Starter with "Invoice" filter</figcaption>
+      </figure>
+
+      <h3>Step 2: Add a Step</h3>
+      <ol>
+        <li>Below your starter, click <b>"Choose a step"</b>.</li>
+        <li>Under the <b>"Gmail"</b> category, select <b>"Draft a reply"</b>.</li>
+      </ol>
+
+      <figure class="demo-fig">
+        <img src="images/step-12-add-draft-reply-step.png" alt="Add Draft a reply step">
+        <figcaption>Fig 12: Adding the "Draft a reply" Step from the Gmail category</figcaption>
+      </figure>
+
+      <h3>Step 3: Use Variables for Dynamic Content</h3>
+      <p>In the draft reply message field:</p>
+      <ol>
+        <li>Type: <code>Hello,</code></li>
+        <li>New line, type: <code>I received the invoice regarding:</code></li>
+        <li>Click <b>Variables +</b> or type <code>@</code> &rarr; select <code>[Email subject]</code> from the starter.</li>
+        <li>New line, type: <code>I will review it and get back to you.</code></li>
+      </ol>
+
+      <div class="info">
+        <b>The draft message will look like this:</b>
+        <pre>Hello,
+
+I received the invoice regarding: [Email subject]
+
+I will review it and get back to you.</pre>
+        <p>Where <code>[Email subject]</code> is a variable chip that gets replaced with the actual email subject when the flow runs.</p>
+      </div>
+
+      <figure class="demo-fig">
+        <img src="images/step-13-configure-variables.png" alt="Configure draft reply with Variables">
+        <figcaption>Fig 13: Composing the draft reply with the [Email subject] variable chip</figcaption>
+      </figure>
+
+      <h3>Step 4: Name, Test &amp; Turn On</h3>
+      <ol>
+        <li>Click the flow name at the top to rename it, e.g., <b>"Auto-reply Invoice Emails"</b>.</li>
+        <li>Click <b>Test run</b>.</li>
+        <li>A new window appears allowing you to select a recent email matching your starter conditions.</li>
+        <li>In the "Email received" field, enter: <code>Invoice</code> to find matching emails.</li>
+        <li>Select an email &rarr; Click <b>Start</b>.</li>
+        <li>If successful: <b>"Run Completed"</b> appears and a new draft is in your Gmail Drafts folder.</li>
+        <li>Click <b>Turn on</b> to activate the flow.</li>
+      </ol>
+
+      <figure class="demo-fig">
+        <img src="images/step-14-test-run-scratch.png" alt="Test run from-scratch flow">
+        <figcaption>Fig 14: Test run &mdash; selecting a matching "Invoice" email and running the test</figcaption>
+      </figure>
+
+      <figure class="demo-fig">
+        <img src="images/step-15-gmail-draft-result.png" alt="Draft result in Gmail">
+        <figcaption>Fig 15: Result in Gmail Drafts &mdash; auto-generated reply draft with actual email subject</figcaption>
+      </figure>
+
+      <div class="highlight">
+        <b>Result:</b> Whenever you receive an email containing "Invoice", Gmail automatically creates a
+        polite draft reply. You just review and send &mdash; saving valuable response time.
+      </div>
+
+      <!-- 8. CUSTOM WORKFLOW -->
+      <h2 id="custom-workflow">8. Custom Workflow: Smart Meeting Notes Pipeline</h2>
+
+      <p>
+        This is a custom-designed workflow that combines multiple powerful Workspace Studio features
+        to create a <b>fully automated intelligent meeting processing pipeline</b>.
+      </p>
+
+      <div class="flow-diagram">
+        <span class="flow-step starter">Transcript ready</span>
+        <span class="flow-arrow">&rarr;</span>
+        <span class="flow-step ai">Summarize</span>
+        <span class="flow-arrow">&rarr;</span>
+        <span class="flow-step ai">Extract items</span>
+        <span class="flow-arrow">&rarr;</span>
+        <span class="flow-step action">Log to Sheet</span>
+        <span class="flow-arrow">&rarr;</span>
+        <span class="flow-step action">Create task</span>
+        <span class="flow-arrow">&rarr;</span>
+        <span class="flow-step action">Notify Chat</span>
+      </div>
+
+      <h3>Goal</h3>
+      <p>When a meeting ends and its transcript becomes available:</p>
+      <ol>
+        <li>Gemini automatically summarizes the meeting.</li>
+        <li>Gemini extracts action items (tasks to be done).</li>
+        <li>Meeting information is logged to a Google Sheet for tracking.</li>
+        <li>A task is created in Google Tasks for follow-up.</li>
+        <li>The team is notified via Google Chat with the summary and action items.</li>
+      </ol>
+
+      <h3>Detailed Build Steps</h3>
+
+      <h4>Starter: When a meeting transcript is ready</h4>
+      <ul>
+        <li>Select the <b>"When a meeting transcript is ready"</b> starter.</li>
+        <li>The flow automatically triggers when a Google Calendar event gets a new transcript.</li>
+        <li>No filter needed &mdash; applies to all meetings with transcripts.</li>
+      </ul>
+
+      <h4>Step 1: Summarize (AI Step)</h4>
+      <ul>
+        <li>Select <b>"Summarize"</b> from the AI Steps category.</li>
+        <li>Input: the transcript from the starter (using the <code>[Meeting transcript]</code> variable).</li>
+        <li>Gemini creates a concise summary covering: main topics, decisions made, and key discussion points.</li>
+      </ul>
+
+      <h4>Step 2: Extract (AI Step)</h4>
+      <ul>
+        <li>Select <b>"Extract"</b> from the AI Steps category.</li>
+        <li>Input: the transcript from the starter.</li>
+        <li>Configure Gemini to extract: <b>Action items</b>, <b>Responsible person</b>, <b>Deadline</b>.</li>
+      </ul>
+
+      <h4>Step 3: Add a row to Sheet</h4>
+      <ul>
+        <li>Select <b>"Add a row"</b> from the Sheets category.</li>
+        <li>Choose a pre-created Google Sheet called "Meeting Log".</li>
+        <li>Map the columns:
+          <ul>
+            <li><b>Date:</b> Variable <code>[Meeting date]</code> from starter</li>
+            <li><b>Meeting Title:</b> Variable <code>[Meeting title]</code> from starter</li>
+            <li><b>Summary:</b> Variable <code>[Step 1: Summary]</code></li>
+            <li><b>Action Items:</b> Variable <code>[Step 2: Extracted data]</code></li>
+          </ul>
+        </li>
+      </ul>
+
+      <h4>Step 4: Create a task</h4>
+      <ul>
+        <li>Select <b>"Create a task"</b> from the Tasks category.</li>
+        <li>Title: combine <code>[Meeting title]</code> + "Follow-up".</li>
+        <li>Description: use <code>[Step 2: Extracted data]</code> containing the action items list.</li>
+      </ul>
+
+      <h4>Step 5: Notify me in Chat</h4>
+      <ul>
+        <li>Select <b>"Notify me in Chat"</b>.</li>
+        <li>Compose the message using variables:</li>
+      </ul>
+      <pre>Meeting Notes: [Meeting title]
+
+Summary:
+[Step 1: Summary]
+
+Action Items:
+[Step 2: Extracted data]
+
+Logged to Meeting Sheet. Task created.</pre>
+
+      <h3>Test &amp; Turn On</h3>
+      <ol>
+        <li>Rename the flow: <b>"Smart Meeting Notes Pipeline"</b>.</li>
+        <li>Click <b>Test run</b> &rarr; select a recent meeting with a transcript.</li>
+        <li>Verify: Sheet has a new row? Task created? Chat notification received?</li>
+        <li>If everything works, click <b>Turn on</b>.</li>
+      </ol>
+
+      <div class="highlight">
+        <b>Result:</b> After every meeting, you don't need to manually take notes. AI summarizes the discussion,
+        extracts action items, logs everything to a Sheet for tracking, creates a reminder task, and notifies the team.
+        The entire pipeline executes within seconds of the transcript becoming available.
+      </div>
+
+      <div class="info">
+        <b>Extensions:</b> You can add a <b>"Check if"</b> step to only process meetings with specific keywords
+        (e.g., "Sprint Review"), or add a <b>"Decide"</b> step for Gemini to classify meeting importance
+        before sending notifications.
+      </div>
+
+      <!-- 9. TIPS -->
+      <h2 id="tips">9. Tips &amp; Best Practices</h2>
+
+      <h3>9.1. Effective Flow Design</h3>
+      <ul>
+        <li><b>Start simple:</b> Create flows with 2-3 steps first, test thoroughly, then expand.</li>
+        <li><b>Use templates as a base:</b> Even for custom flows, starting from the closest template and modifying it is faster.</li>
+        <li><b>Name clearly:</b> Give flows descriptive names for easy management when you have many.</li>
+        <li><b>Always test first:</b> Always Test run before Turn on. Remember that tests perform real actions.</li>
+      </ul>
+
+      <h3>9.2. Smart AI Steps</h3>
+      <ul>
+        <li><b>Write specific prompts:</b> Instead of "summarize this", write "Summarize the key decisions and action items from this meeting in bullet points".</li>
+        <li><b>Combine Decide + Check if:</b> Use Decide for AI evaluation, then Check if for logic branching.</li>
+        <li><b>Extract over Summarize:</b> When you need structured data (names, numbers, dates), use Extract instead of Summarize.</li>
+      </ul>
+
+      <h3>9.3. Variables Are Key</h3>
+      <ul>
+        <li>Always use variable chips (press <code>@</code>) instead of hardcoding data.</li>
+        <li>Variables let flows process actual runtime data, not static values.</li>
+        <li>Combine static text + variables for professional, personalized content.</li>
+      </ul>
+
+      <h3>9.4. Sharing &amp; Collaboration</h3>
+      <ul>
+        <li>Flows can be shared via link &mdash; recipients can copy and customize.</li>
+        <li>Use the Activity page to debug when flows encounter errors.</li>
+        <li>Filter by status (Error) to quickly identify issues.</li>
+      </ul>
+
+      <!-- 10. AVAILABILITY -->
+      <h2 id="availability">10. Availability &amp; Requirements</h2>
+
+      <table>
+        <thead>
+          <tr><th>Requirement</th><th>Details</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><b>Google Workspace Edition</b></td>
+            <td>
+              Business Starter, Standard, Plus<br>
+              Enterprise Standard, Plus<br>
+              Education Fundamentals, Standard, Plus, Teaching &amp; Learning add-on
+            </td>
+          </tr>
+          <tr>
+            <td><b>AI Features</b></td>
+            <td>
+              Requires Gemini to be enabled by admin<br>
+              Google AI Ultra for Business or Google AI Pro for Education
+            </td>
+          </tr>
+          <tr>
+            <td><b>Age Restriction</b></td>
+            <td>School accounts under 18 cannot use AI features</td>
+          </tr>
+          <tr>
+            <td><b>App Access</b></td>
+            <td>Templates appear based on which apps you have access to</td>
+          </tr>
+          <tr>
+            <td><b>Third-party</b></td>
+            <td>Asana, Confluence, Jira, Mailchimp, Slack (currently in Alpha)</td>
+          </tr>
+          <tr>
+            <td><b>Access</b></td>
+            <td><a href="https://studio.workspace.google.com" target="_blank">studio.workspace.google.com</a> or from within Workspace apps</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- 11. CONCLUSION -->
+      <h2 id="conclusion">11. Conclusion</h2>
+
+      <p>
+        <b>Google Workspace Studio</b> represents a significant leap in bringing AI automation to every Google Workspace user.
+        With its intuitive no-code interface, built-in Gemini AI capabilities, and multi-app connectivity,
+        Workspace Studio helps you:
+      </p>
+      <ul>
+        <li><b>Save time:</b> Automate repetitive tasks (emails, meeting notes, form processing).</li>
+        <li><b>Reduce errors:</b> AI processes consistently without missing steps.</li>
+        <li><b>Focus on what matters:</b> Let machines handle admin tasks while you focus on creative work.</li>
+        <li><b>Easy to start:</b> Pre-built templates or natural language descriptions to Gemini.</li>
+      </ul>
+
+      <p>
+        Whether you're a beginner or experienced with automation, Workspace Studio provides the tools
+        from simple templates to complex multi-step flows with conditional logic and AI.
+        Start with the "Daily Email Summary" template and gradually build flows that match your workflow.
+      </p>
+
+      <div class="tip">
+        <b>Get started now:</b> Visit <a href="https://studio.workspace.google.com" target="_blank">studio.workspace.google.com</a>
+        and create your first flow!
+      </div>
+
+      <!-- FOOTER -->
+      <div class="footer">
+        <p>
+          <b>References:</b><br>
+          &bull; <a href="https://www.youtube.com/watch?v=ZOAszesMBGc" target="_blank">Video: Get started with Google Workspace Studio</a><br>
+          &bull; <a href="https://www.youtube.com/watch?v=vHrQ-Yd7XwI" target="_blank">Video: Google Workspace Studio - Everything You Need to Know</a><br>
+          &bull; <a href="https://workspace.google.com/studio/" target="_blank">Google Workspace Studio Official Page</a><br>
+          &bull; <a href="https://support.google.com/workspace-studio/answer/16444479" target="_blank">Get started with Google Workspace Studio (Help Center)</a><br>
+          &bull; <a href="https://support.google.com/workspace-studio/answer/16447954" target="_blank">Create a flow from scratch (Help Center)</a><br>
+          &bull; <a href="https://support.google.com/workspace-studio/answer/16765661" target="_blank">Guide to Starters &amp; Steps (Help Center)</a><br>
+          &bull; <a href="https://support.google.com/workspace-studio/answer/16447677" target="_blank">Navigate the Workspace Studio interface (Help Center)</a>
+        </p>
+        <p>Written by AI &bull; 03/18/2026 &bull; AI Quest LTP</p>
+      </div>
+
+    </div>
+  </body>
+</html>

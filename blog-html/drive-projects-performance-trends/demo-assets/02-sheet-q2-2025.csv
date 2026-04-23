@@ -1,0 +1,10 @@
+period,metric_category,metric_name,value,unit,notes
+2025-Q2,Reliability,Platform uptime,99.58,percent,Above target
+2025-Q2,Incidents,P1 incidents,2,count,Best quarter
+2025-Q2,Incidents,Mean time to resolve (P1),4.1,hours,
+2025-Q2,Delivery,Sprint completion rate,91,percent,
+2025-Q2,Delivery,Story points delivered,338,points,
+2025-Q2,Cost,Cloud spend,45100,USD,
+2025-Q2,Cost,Budget utilization,75,percent,
+2025-Q2,Customer,NPS,44,score,
+2025-Q2,Customer,Support tickets closed,1920,count,

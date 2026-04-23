@@ -1,0 +1,217 @@
+/* VS Code Terminal — PowerShell + ant CLI (dark theme)
+   Virtual project root: C:\anthropic-cli-ant\
+   Demo flow: assumes OAuth/API key configured */
+body {
+    background: #111111;
+    padding: 20px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: #d4d4d4;
+    margin: 0;
+}
+
+.page-title {
+    font-family: "Segoe UI", sans-serif;
+    color: #ffffff;
+    margin: 0 0 8px;
+    font-size: 22px;
+}
+
+.page-hint {
+    font-family: "Segoe UI", sans-serif;
+    color: #a0a0a0;
+    margin-bottom: 20px;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.page-hint code {
+    background: #333;
+    padding: 2px 6px;
+    border-radius: 4px;
+    color: #d4d4d4;
+}
+
+.save-as {
+    color: #d97706;
+    font-weight: 600;
+}
+
+.vscode-panel {
+    background: #1e1e1e;
+    border: 1px solid #3c3c3c;
+    width: 920px;
+    margin-bottom: 40px;
+    border-radius: 4px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    font-family: Consolas, "Courier New", monospace;
+    font-size: 14px;
+    color: #d4d4d4;
+    overflow: hidden;
+}
+
+.vscode-tabs {
+    display: flex;
+    background: #252526;
+    border-bottom: 1px solid #383b3d;
+    height: 35px;
+    align-items: center;
+    padding-left: 10px;
+}
+
+.v-tab {
+    padding: 0 12px;
+    color: #969696;
+    font-family: "Segoe UI", sans-serif;
+    font-size: 13px;
+    cursor: default;
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.v-tab.active {
+    background: #1e1e1e;
+    color: #ffffff;
+    border-top: 2px solid #d97706;
+}
+
+.v-actions {
+    margin-left: auto;
+    padding-right: 15px;
+    color: #969696;
+    display: flex;
+    gap: 12px;
+    font-family: "Segoe UI", sans-serif;
+    font-size: 13px;
+    align-items: center;
+}
+
+.terminal-content {
+    padding: 16px 20px;
+    background: #1e1e1e;
+    min-height: 320px;
+    line-height: 1.55;
+    color: #d4d4d4;
+}
+
+/* ant CLI welcome strip */
+.ant-strip {
+    border: 1px solid #d97706;
+    border-radius: 6px;
+    position: relative;
+    background: #2a2218;
+    margin-bottom: 20px;
+    padding: 18px 20px 14px;
+}
+
+.ant-strip::before {
+    content: " Anthropic CLI (ant) v1.10.0 ";
+    position: absolute;
+    top: -10px;
+    left: 20px;
+    background: #1e1e1e;
+    color: #fbbf24;
+    padding: 0 8px;
+    font-weight: 500;
+    font-size: 13px;
+}
+
+.ant-strip-title {
+    color: #fde68a;
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
+.ant-strip-meta {
+    color: #9ca3af;
+    font-size: 13px;
+}
+
+.ps-block {
+    margin-bottom: 14px;
+}
+
+.ps-line {
+    margin-bottom: 4px;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.ps-prompt {
+    color: #4ec9b0;
+}
+
+.ps-cmd {
+    color: #dcdcaa;
+}
+
+.ps-cont {
+    color: #569cd6;
+}
+
+.term-out {
+    color: #cccccc;
+    white-space: pre-wrap;
+    margin: 0;
+    padding-left: 0;
+}
+
+.term-out-muted {
+    color: #8c8c8c;
+}
+
+.term-err {
+    color: #f48771;
+}
+
+.term-ok {
+    color: #4ec9b0;
+}
+
+.term-json .jk {
+    color: #9cdcfe;
+}
+
+.term-json .js {
+    color: #ce9178;
+}
+
+.term-json .jn {
+    color: #b5cea8;
+}
+
+.term-json .jp {
+    color: #d4d4d4;
+}
+
+.cursor-line {
+    margin-top: 8px;
+}
+
+.cursor {
+    display: inline-block;
+    width: 8px;
+    height: 15px;
+    background: #d4d4d4;
+    vertical-align: middle;
+    animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+    50% { opacity: 0; }
+}
+
+.status-bar {
+    border-top: 1px solid #383b3d;
+    padding: 6px 20px;
+    color: #8c8c8c;
+    font-size: 13px;
+    font-family: Consolas, monospace;
+    background: #252526;
+}
+
+.status-bar code {
+    color: #fbbf24;
+    background: none;
+    font-weight: bold;
+}

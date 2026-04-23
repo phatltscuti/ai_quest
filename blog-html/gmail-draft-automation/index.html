@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tự động tạo Bản nháp Gmail với Workspace Studio: Quyền năng của Phản hồi Tức thì</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap">
+</head>
+
+<body>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="badge">AI_QUEST_LTP Automation Series</div>
+    <h1>Tự động tạo Bản nháp Gmail với Workspace Studio</h1>
+    <p class="subtitle">Biến Gmail thành một trợ lý phản hồi tự động: Từ việc lọc yêu cầu quan trọng đến chuẩn bị nội dung nháp dựa trên ngữ cảnh hội thoại.</p>
+  </div>
+
+  <div class="container">
+
+    <!-- TABLE OF CONTENTS -->
+    <nav class="toc">
+      <h2>Nội dung cẩm nang</h2>
+      <ol>
+        <li><a href="#intro">Mở bài: Tự động hóa – Giải thoát khỏi gánh nặng Email</a></li>
+        <li><a href="#scenario">Kịch bản Vận hành: Chăm sóc Khách hàng sau Triển lãm</a></li>
+        <li><a href="#setup">Thiết lập chi tiết: Luồng vận hành 3 giai đoạn</a></li>
+        <li><a href="#logic-depth">Thân bài: Sức mạnh Suy luận của Gemini trong Gmail</a></li>
+        <li><a href="#demo">Demo Từng Bước: Tự động hóa Phản hồi Gmail</a></li>
+        <li><a href="#exception">Xử lý Ngoại lệ: Khi nào AI cần lùi bước?</a></li>
+        <li><a href="#conclusion">Kết bài: Tương lai của Giao tiếp Doanh nghiệp</a></li>
+      </ol>
+    </nav>
+
+    <!-- SECTION: INTRODUCTION -->
+    <section id="intro">
+      <h2>1. Mở bài: Tự động hóa – Giải thoát khỏi gánh nặng Email</h2>
+      <p>Trong môi trường kinh doanh hiện đại, email không chỉ là công cụ giao tiếp mà còn là một "gánh nặng nhận thức" (Cognitive Load) khổng lồ. Mỗi ngày, một nhân viên văn phòng trung bình dành hơn 28% thời gian làm việc để xử lý hòm thư. Thách thức lớn nhất không phải là việc viết email, mà là việc <strong>nghiền ngẫm lại ngữ cảnh</strong> của các cuộc hội thoại cũ để đưa ra phản hồi chính xác.</p>
+      <p><strong>Google Workspace Studio</strong> xuất hiện như một "kiến trúc sư" cho quy trình làm việc, cho phép bạn xây dựng các Agent tự động có khả năng tư duy. Thay vì phải copy-paste nội dung sang ChatGPT rồi dán ngược lại, hệ thống này tích hợp trực tiếp <em>AI Reasoning</em> vào luồng nhận thư, giúp chuẩn bị sẵn sàng các bản nháp chất lượng cao ngay khi email vừa chạm hộp thư đến. Đây không chỉ là tiết kiệm thời gian, mà là sự giải phóng để con người tập trung vào những quyết định chiến lược.</p>
+    </section>
+
+    <!-- SECTION: SCENARIO -->
+    <section id="scenario">
+      <h2>2. Kịch bản: AI Expo 2026 Follow-up</h2>
+      <p>Hãy tưởng tượng bạn vừa kết thúc <strong>AI Expo 2026</strong>. Hàng trăm khách hàng tiềm năng gửi email hỏi về giải pháp "AI Quest" của bạn. Mỗi email có một nhu cầu riêng: người hỏi về giá, người hỏi về kỹ thuật, người muốn đặt lịch demo.</p>
+      <div class="highlight-box">
+        <span class="label">MỤC TIÊU VẬN HÀNH</span>
+        <p>Hệ thống phải tự động nhận diện các email liên quan đến sự kiện, đọc hiểu thread hội thoại trước đó (nếu có), và soạn thảo một bản nháp phản hồi đầy đủ thông tin, mang tính cá nhân hóa cao.</p>
+      </div>
+    </section>
+
+    <!-- SECTION: SETUP -->
+    <section id="setup">
+      <h2>3. Thiết lập chi tiết: Luồng vận hành 3 giai đoạn</h2>
+
+      <h3>Giai đoạn 1: Lọc Email "Actionable" (Filtering)</h3>
+      <p>Bước đầu tiên là xác định chính xác "nguyên liệu" cho AI. Sử dụng Starter Gmail với query:</p>
+      <code>in:inbox is:unread -from:aiquest.com subject:("AI Expo" OR "Collaboration" OR "Báo giá")</code>
+      <div class="screenshot-wrap">
+        <div class="icon">📸</div>
+        [Ảnh 1: Cấu hình Starter Gmail với query lọc nâng cao]
+      </div>
+
+      <h3>Giai đoạn 2: Trình soạn thảo thông minh (Gemini Reasoning)</h3>
+      <p>Đây là phần quan trọng nhất. AI không chỉ viết lách, nó phải <strong>suy luận</strong> dựa trên dữ liệu. Prompt tiếng Anh chuẩn hóa để đạt độ chính xác cao nhất:</p>
+      <pre>
+"You are a professional Business Development Assistant. 
+Analyze the provided email thread history.
+Your Task: Generate a contextual reply draft that:
+1. Greets the sender and references the meeting at AI Expo 2026.
+2. Summarizes previous discussions and addresses all technical/pricing questions.
+3. Suggests a clear next action (e.g., a 15-minute demo call).
+4. Includes 3 intelligent clarifying questions to ensure no information is missed.
+Tone: Professional, helpful, and concise.
+Constraint: DO NOT hallucinate facts not present in the thread."</pre>
+      <div class="screenshot-wrap">
+        <div class="icon">📸</div>
+        [Ảnh 2: Bước Gemini Reasoning với Prompt tiếng Anh chuẩn]
+      </div>
+
+      <h3>Giai đoạn 3: Lưu trữ & Phân loại (Action)</h3>
+      <p>Lưu kết quả vào Gmail Drafts và gán nhãn <code>Draft-created</code> để nhân viên dễ dàng nhận diện và kiểm duyệt.</p>
+    </section>
+
+    <!-- SECTION: BODY DETAIL -->
+    <section id="logic-depth">
+      <h2>4. Thân bài: Sức mạnh Suy luận của Gemini trong Gmail</h2>
+      <p>Tại sao chúng ta cần <strong>Gemini</strong> thay vì các mẫu trả lời tự động truyền thống? Câu trả lời nằm ở khả năng "Thread Awareness" (Nhận thức luồng hội thoại). Một email phản hồi hiệu quả phải là sự tiếp nối của những gì đã trao đổi trước đó.</p>
+      
+      <h3>Khả năng Thấu hiểu Hội thoại (Context Integration)</h3>
+      <p>Trong Workspace Studio, Gemini có khả năng truy cập vào đối tượng <code>Thread history</code>. Nó có thể phân biệt được khách hàng A đã đồng ý về giá nhưng đang băn khoăn về bảo mật, trong khi khách hàng B chỉ mới đang tìm hiểu sơ bộ. Các "Clarifying Questions" (Câu hỏi làm rõ) do AI tự sinh ra giúp bộ phận Sales bỏ qua các bước hỏi đáp vụn vặt và đi thẳng vào chốt deal.</p>
+
+      <h3>Bảng đối soát chất lượng (Quality Gate)</h3>
+      <table class="qa-gate">
+        <thead>
+          <tr>
+            <th>Statement in Draft</th>
+            <th>Snippet from Source Thread</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>"Glad we met at booth #5"</td><td>"I visited your booth (#5) at the Expo..."</td><td>✅ OK</td></tr>
+          <tr><td>"Regarding the API integration..."</td><td>"Does your system support REST API?"</td><td>✅ OK</td></tr>
+          <tr><td>"Sending the Enterprise quote"</td><td>"Interested in Enterprise tier pricing."</td><td>✅ OK</td></tr>
+          <tr><td>"Meeting next Tuesday morning"</td><td>"Let's catch up next Tuesday morning."</td><td>✅ OK</td></tr>
+          <tr><td>"Noted your current CRM is Salesforce"</td><td>"We are currently using Salesforce..."</td><td>✅ OK</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- SECTION: DEMO -->
+    <section id="demo">
+      <h2>5. Demo Từng Bước: Tự động hóa Phản hồi Gmail</h2>
+      <p>Quan sát luồng vận hành thực tế qua các ảnh mô phỏng UI dưới đây:</p>
+      
+      <div class="highlight-box">
+        <span class="label">BƯỚC 1: BIỂU ĐỒ LUỒNG PHẢN HỒI</span>
+        <p>Sơ đồ kết nối giữa lọc email, suy luận Gemini và tạo bản nháp.</p>
+        <img src="../demo-assets/gmail_flow.png" alt="Gmail Flow Canvas" style="width: 100%; border-radius: 12px; margin-top: 15px; border: 1px solid rgba(255,255,255,0.1);">
+      </div>
+
+      <div class="highlight-box">
+        <span class="label">BƯỚC 2: KẾT QUẢ ĐỐI SOÁT (QA)</span>
+        <p>Dữ liệu được trích xuất và đối chiếu chính xác từ nội dung email gốc.</p>
+        <img src="../demo-assets/sheets_result.png" alt="Sheets Result" style="width: 100%; border-radius: 12px; margin-top: 15px; border: 1px solid rgba(255,255,255,0.1);">
+      </div>
+    </section>
+
+    <!-- SECTION: EXCEPTION -->
+    <section id="exception">
+      <h2>6. Xử lý Ngoại lệ: Khi nào AI cần lùi bước?</h2>
+      <p>Sự an toàn trong vận hành là ưu tiên hàng đầu. Chúng ta thiết lập một nhánh logic riêng (Conditional Branching) để xử lý các vấn đề nhạy cảm.</p>
+      <div class="highlight-box">
+        <span class="label">LOGIC NGOẠI LỆ</span>
+        <p>Nếu tiêu đề hoặc nội dung email chứa từ khóa: <code>Complaint</code>, <code>Legal</code>, hoặc <code>Negotiation</code>.</p>
+        <p><strong>Hành động:</strong> AI sẽ dừng việc tạo bản nháp. Thay vào đó, hệ thống gửi một <strong>Google Chat Alert</strong> đến quản lý cấp cao kèm link trực tiếp đến email để xử lý khẩn cấp.</p>
+      </div>
+    </section>
+
+    <!-- SECTION: CONCLUSION -->
+    <section id="conclusion">
+      <h2>7. Kết bài: Tương lai của Giao tiếp Doanh nghiệp</h2>
+      <p>Việc triển khai hệ thống tự động tạo bản nháp Gmail không chỉ là một thủ thuật tiết kiệm thời gian; đó là sự thay đổi trong <strong>triết lý vận hành</strong>. Chúng ta đang tiến tới kỷ nguyên mà "AI làm nền, Con người làm điểm tựa". Khi các tác vụ lặp đi lặp lại được xử lý ở tốc độ mili giây, con người sẽ có đủ không gian và thời gian để kiến tạo những mối quan hệ khách hàng sâu sắc và chân thành hơn.</p>
+      <p>Hãy bắt đầu xây dựng Agent đầu tiên của bạn ngay hôm nay để trải nghiệm sự khác biệt mà Workspace Studio mang lại cho doanh nghiệp của bạn.</p>
+    </section>
+
+  </div>
+
+  <div class="footer">
+    &copy; 2026 AI_QUEST_LTP Automation Blueprint. Built with Google Workspace Studio.
+  </div>
+
+</body>
+
+</html>

@@ -1,0 +1,10 @@
+period,metric_category,metric_name,value,unit,notes
+2025-Q3,Reliability,Platform uptime,99.31,percent,Below target — DB migration week
+2025-Q3,Incidents,P1 incidents,6,count,Spike during migration
+2025-Q3,Incidents,Mean time to resolve (P1),6.8,hours,
+2025-Q3,Delivery,Sprint completion rate,84,percent,Two sprints impacted
+2025-Q3,Delivery,Story points delivered,295,points,
+2025-Q3,Cost,Cloud spend,48900,USD,Migration overhead
+2025-Q3,Cost,Budget utilization,82,percent,
+2025-Q3,Customer,NPS,39,score,Dip tied to outage comms
+2025-Q3,Customer,Support tickets closed,2105,count,

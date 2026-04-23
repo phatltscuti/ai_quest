@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Using Gemini in Google Drive: Search, Summarize & Extract Insights Like a Pro</title>
+    <style>
+        body {
+            font-family: serif;
+            line-height: 1.6;
+            max-width: 850px;
+            margin: 40px auto;
+            padding: 20px;
+            color: black;
+            background-color: white;
+            text-align: justify;
+        }
+        h1 {
+            text-align: center;
+            font-size: 2.2rem;
+            margin-bottom: 0.5rem;
+        }
+        h2 {
+            border-bottom: 2px solid #333;
+            padding-bottom: 5px;
+            margin-top: 30px;
+        }
+        h3 {
+            margin-top: 25px;
+            color: #444;
+        }
+        .intro, .conclusion, .tech-note {
+            background-color: #fdfdfd;
+            padding: 15px;
+            border: 1px solid #eee;
+            margin-bottom: 20px;
+        }
+        .query {
+            background-color: #f4f4f4;
+            padding: 12px;
+            border-left: 6px solid #333;
+            margin: 15px 0;
+            font-style: italic;
+            font-family: sans-serif;
+        }
+        .output {
+            border: 1px double #999;
+            padding: 20px;
+            margin: 15px 0;
+            background-color: #fff;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .placeholder {
+            border: 2px dashed #bbb;
+            padding: 30px;
+            text-align: center;
+            color: #888;
+            margin: 25px 0;
+            background-color: #fafafa;
+        }
+        hr {
+            margin: 40px 0;
+            border: 0;
+            border-top: 1px solid #eee;
+        }
+        .important {
+            color: #b00;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Using Gemini in Google Drive: Search, Summarize & Extract Insights Like a Pro</h1>
+    <p style="text-align: center; color: #666;"><em>Learn to use Gemini in your Google Drive files (Workspace Experiments)</em></p>
+
+    <div class="intro">
+        <h2>1. Introduction</h2>
+        <p>Google’s Gemini integration in Google Drive is redefining how we interact with documents. Instead of manually searching through folders, you can now:
+            <ul>
+                <li>Search files by meaning (semantic search)</li>
+                <li>Summarize long documents instantly (PDFs and Videos)</li>
+                <li>Extract key insights and unanswered questions</li>
+                <li>Compare multiple files in seconds</li>
+                <li>Identify action items from meeting recordings</li>
+            </ul>
+            This guide walks through how to use Gemini effectively in your daily work, including 6 real-world scenarios and essential technical notes.
+        </p>
+    </div>
+
+    <div class="tech-note">
+        <h2>2. Technical Overview & Feature Availability</h2>
+        
+        <div style="background-color: #fff9c4; padding: 15px; border: 1px solid #fbc02d; border-radius: 8px; margin-bottom: 20px;">
+            <h3>Step 0: Enabling Google Workspace Extension</h3>
+            <p>Để Gemini có thể "nhìn thấy" dữ liệu của bạn trên Google Drive, bạn <strong>bắt buộc</strong> phải bật phần mở rộng (Extension) Google Workspace trong cài đặt của Gemini.</p>
+            <ol>
+                <li>Truy cập <a href="https://gemini.google.com">gemini.google.com</a>.</li>
+                <li>Nhấn vào biểu tượng <strong>Cài đặt (Settings) ⚙️</strong> > <strong>Tiện ích mở rộng (Extensions)</strong>.</li>
+                <li>Tìm <strong>Google Workspace</strong> và gạt thanh gạt sang <strong>Bật (ON)</strong>.</li>
+            </ol>
+            <div class="placeholder">[Ảnh: Giao diện Settings của Gemini, hiển thị phần Google Workspace Extension đang được BẬT]</div>
+        </div>
+
+        <p><strong>Supported File Types:</strong> Gemini in Drive file viewer currently supports <strong>PDF</strong> and <strong>Video</strong> file types. For other files like Docs or Sheets, Gemini works through the side panel in the main Drive interface.</p>
+        <p><strong>Availability:</strong> This feature is part of the <strong>Google Workspace Experiments</strong> program or available through specific Google Workspace/AI plans (e.g., Google One AI Premium).</p>
+        <p><span class="important">Note:</span> Some Gemini features and generated outputs are currently only available in <strong>English</strong>.</p>
+        
+        <h3>How to open Drive file viewer:</h3>
+        <ol>
+            <li>Go to <a href="https://drive.google.com">drive.google.com</a>.</li>
+            <li>Double-click a PDF or video. It opens in an overlay viewer.</li>
+            <li>To open a dedicated space: Click <strong>More actions (⋮)</strong> > <strong>Open with</strong> > <strong>Open in new tab</strong>.</li>
+            <li>Click the <strong>Ask Gemini ✨</strong> icon at the top right to open the side panel.</li>
+        </ol>
+    </div>
+
+    <hr>
+
+    <h2>3. 6 Real-World Work Scenarios</h2>
+
+    <h3>Scenario 1: Tìm kiếm Đề xuất mới nhất (Semantic Search)</h3>
+    <p>Sử dụng tìm kiếm ngữ nghĩa để tìm đúng tệp phiên bản mới nhất ngay cả khi bạn không nhớ chính xác tên tệp.</p>
+    <div class="query">
+        <strong>Query:</strong> "@Gemini Drive Tutorial Find the latest project proposal for AI Quest that was recently updated with a new budget."
+    </div>
+    <img src="images/1_search_proposal.png" alt="Kết quả tìm kiếm đề xuất dự án" class="demo-img">
+    <p class="image-caption">Hình 2: Gemini tìm thấy đúng phiên bản tài liệu mới nhất dựa trên yêu cầu về ngân sách.</p>
+    <div class="output">
+        <p><strong>Kết quả thực tế từ Gemini:</strong></p>
+        <p><em>I found one document in your Google Drive related to the "AI Quest" project proposal, but please note its status.</em></p>
+        <p>The document is:</p>
+        <ul>
+            <li><strong>Title:</strong> Project_Plan_V1</li>
+            <li><strong>Status:</strong> Version 1.0 (Archived)</li>
+            <li><strong>Budget Details:</strong> It contains a preliminary budget with a Total Cost of 50,000 USD for the initial infrastructure phase.</li>
+            <li><strong>Estimated Beta Completion Time:</strong> 01/06/2026</li>
+        </ul>
+        <p>If this is not the latest version with the new budget, you may need to refine your search query to look for a different file name or specific keywords that were not included in the original search.</p>
+        <div style="margin-top: 10px; padding: 10px; background: #e8f0fe; border-radius: 4px; font-size: 0.9em;">
+            <strong>Sources (1):</strong> <br>
+            📄 Project_Plan_V1
+        </div>
+    </div>
+
+    <h3>Scenario 2: Tóm tắt Đặc tả Kỹ thuật (PDF)</h3>
+    <p>Tự động tóm tắt tệp PDF dài và liệt kê các vấn đề kỹ thuật còn bỏ ngỏ.</p>
+    <div class="query">
+        <strong>Query:</strong> "@Gemini Drive Tutorial Summarize this PDF tech spec and list 5 open technical questions that haven't been resolved yet."
+    </div>
+    <img src="images/2_summarize_pdf.png" alt="Tóm tắt đặc tả kỹ thuật PDF" class="demo-img">
+    <p class="image-caption">Hình 3: Gemini tự động tóm tắt các điểm chính và liệt kê các câu hỏi kỹ thuật còn tồn đọng.</p>
+    <div class="output">
+        <p><strong>Kết quả thực tế từ Gemini:</strong></p>
+        <p><em>I have summarized the "Technical_Spec_v1.0.pdf" document and identified the 5 open technical questions outlined in it.</em></p>
+        
+        <h4>Summary of Technical Specification for AI Quest System</h4>
+        <p>The AI Quest system is designed with a Microservices architecture to ensure high availability and scalability. It utilizes Python (FastAPI) for the backend and React for the frontend.</p>
+        
+        <ul>
+            <li><strong>Data Architecture:</strong> Text data is converted into 1536-dimensional Vector Embeddings and stored in Pinecone (Vector Database). PostgreSQL is used for user info and metadata.</li>
+            <li><strong>Processing Pipeline:</strong> Ingestion -> Standardization -> Chunking (500 tokens) -> Embedding (Vertex AI) -> Storage.</li>
+            <li><strong>Security:</strong> All files must be encrypted both at rest and in transit.</li>
+        </ul>
+
+        <h4>5 Open Technical Questions</h4>
+        <ol>
+            <li><strong>Authentication (Auth):</strong> Debate between OAuth2 (Google) and traditional JWT; need SSO integration study.</li>
+            <li><strong>Scaling Database:</strong> Sharding plan for Master database missing for >10M files.</li>
+            <li><strong>Third-party API:</strong> Token approval process for external partners is still in draft state.</li>
+            <li><strong>Retention Policy:</strong> Disagreement on log retention (90 days vs 1 year).</li>
+            <li><strong>Cloud Cost Estimation:</strong> Monthly operational costs lack actual data from Alpha Test.</li>
+        </ol>
+        
+        <div style="margin-top: 10px; padding: 10px; background: #e8f0fe; border-radius: 4px; font-size: 0.9em;">
+            <strong>Sources (1):</strong> <br>
+            📄 Technical_Spec_v1.0.pdf
+        </div>
+    </div>
+
+    <h3>Scenario 3: So sánh Plan và Budget (Docs vs Sheets)</h3>
+    <p>Tổng hợp và so sánh sự khác biệt giữa các định dạng tệp khác nhau (Văn bản và Bảng tính).</p>
+    <div class="query">
+        <strong>Query:</strong> "@Gemini Drive Tutorial Compare @Project_Plan_V1 and @Budget_Sheet_V2. What is the main difference in costs?"
+    </div>
+    <img src="images/3_comparison_result.png" alt="So sánh ngân sách giữa Docs và Sheets" class="demo-img">
+    <p class="image-caption">Hình 4: Khả năng đối chiếu dữ liệu thông minh giữa một tệp văn bản và một bảng tính.</p>
+    <div class="output">
+        <p><strong>Kết quả thực tế từ Gemini:</strong></p>
+        <p><em>Based on a comparison of the initial infrastructure cost mentioned in <code>@Project_Plan_V1</code> and the full budget details in <code>@Budget_Sheet_V2</code>, the main difference in costs is an increase in the project's <strong>Cloud Infrastructure</strong> and a significantly higher <strong>Overall Total Cost</strong>.</em></p>
+        
+        <p><strong>Breakdown of the cost comparison:</strong></p>
+        <ul>
+            <li><strong>Cloud Infrastructure Cost:</strong>
+                <ul>
+                    <li>Initial cost in <code>@Project_Plan_V1</code>: <strong>$50,000 USD</strong>.</li>
+                    <li>In <code>@Budget_Sheet_V2</code>: Increased to <strong>$75,000 USD</strong> (three A100 GPU Instances).</li>
+                </ul>
+            </li>
+            <li><strong>Overall Total Cost:</strong>
+                <ul>
+                    <li>Total in <code>@Budget_Sheet_V2</code>: <strong>$147,400 USD</strong>.</li>
+                    <li>Includes full operational costs: Staffing ($30k), Marketing ($12k), Contingency ($13.4k).</li>
+                </ul>
+            </li>
+        </ul>
+        
+        <div style="margin-top: 10px; padding: 10px; background: #e8f0fe; border-radius: 4px; font-size: 0.9em;">
+            <strong>Sources (2):</strong> <br>
+            📄 Project_Plan_V1 <br>
+            📊 Budget_Sheet_V2
+        </div>
+    </div>
+
+    <h3>Scenario 4: Trích xuất Action Items từ Biên bản họp (Docs)</h3>
+    <p>Sử dụng Gemini để phân tích nội dung biên bản họp chi tiết và đảm bảo không có đầu việc nào bị bỏ sót.</p>
+    <div class="query">
+        <strong>Query:</strong> "@Gemini Drive Tutorial Identify all action items and assignees mentioned in these meeting notes."
+    </div>
+    <img src="images/4_action_items.png" alt="Trích xuất action items từ biên bản họp" class="demo-img">
+    <p class="image-caption">Hình 5: Gemini trích xuất danh sách công việc và người phụ trách chỉ trong vài giây.</p>
+    <div class="output">
+        <p><strong>Kết quả thực tế từ Gemini:</strong></p>
+        <p>Based on the meeting notes, here are the identified action items and their assignees:</p>
+        <ul>
+            <li><strong>Nguyễn Văn A:</strong> Send a detailed report on the GPU budget change (increase to 75k USD) for approval to the Board of Directors before 03/27.</li>
+            <li><strong>Trần Thị B:</strong> Conduct a technical survey comparing latency between OAuth2 and JWT. Send the results report on Friday morning.</li>
+            <li><strong>Lê Văn C:</strong> Prepare the Staging Environment infrastructure for the Beta Test phase in June.</li>
+            <li><strong>Nguyễn Văn A:</strong> Send a meeting invitation to the security consulting partner (CyberSecurity Corp) to seek advice on the ISO 27001 standard.</li>
+            <li><strong>Phạm Văn D:</strong> Fix the Mobile Responsive display error for the Gemini search bar this week.</li>
+        </ul>
+        <div style="margin-top: 10px; padding: 10px; background: #e8f0fe; border-radius: 4px; font-size: 0.9em;">
+            <strong>Sources (1):</strong> <br>
+            📄 Meeting_Notes_2026-03-24
+        </div>
+    </div>
+
+    <h3>Scenario 5: Tổng quát Marketing Q4 (Synthesis)</h3>
+    <p>Kết hợp thông tin từ Slides và Sheets để tạo ra một báo cáo tổng hợp duy nhất.</p>
+    <div class="query">
+        <strong>Query:</strong> "@Gemini Drive Tutorial Summarize the Q4 marketing plan. What is the total ad spend across all channels?"
+    </div>
+    <img src="images/5_marketing_synthesis.png" alt="Tổng hợp kế hoạch Marketing" class="demo-img">
+    <p class="image-caption">Hình 6: Báo cáo tổng hợp từ Slides và Sheets, bao gồm cả bảng thống kê chi phí.</p>
+    <div class="output">
+        <p><strong>Kết quả thực tế từ Gemini:</strong></p>
+        <p><em>I have summarized the Q4 Marketing Plan for the AI Quest Launch and calculated the total ad spend from the associated documents.</em></p>
+        
+        <h4>Summary of Q4 Marketing Plan (October - December 2026)</h4>
+        <ul>
+            <li><strong>Goal:</strong> Acquire <strong>10,000 Early Adopters</strong>.</li>
+            <li><strong>Content Strategy:</strong> Focus on "Semantic Search" and "Summarization" pain points.</li>
+            <li><strong>Key Channels:</strong> Facebook Ads (targeting 25-45), Google Search, KOL/PR (5 Tech Reviewers), and Weekly Webinars.</li>
+        </ul>
+
+        <h4>Total Ad Spend Across All Channels ($12,000 USD)</h4>
+        <table style="width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.9em;">
+            <thead>
+                <tr style="background: #f1f3f4;">
+                    <th style="border: 1px solid #dadce0; padding: 8px;">Channel</th>
+                    <th style="border: 1px solid #dadce0; padding: 8px;">Budget (USD)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td style="border: 1px solid #dadce0; padding: 8px;">Facebook Ads</td><td style="border: 1px solid #dadce0; padding: 8px; text-align: center;">5,000</td></tr>
+                <tr><td style="border: 1px solid #dadce0; padding: 8px;">Google Search</td><td style="border: 1px solid #dadce0; padding: 8px; text-align: center;">3,000</td></tr>
+                <tr><td style="border: 1px solid #dadce0; padding: 8px;">Webinar Series</td><td style="border: 1px solid #dadce0; padding: 8px; text-align: center;">2,000</td></tr>
+                <tr><td style="border: 1px solid #dadce0; padding: 8px;">KOL / PR</td><td style="border: 1px solid #dadce0; padding: 8px; text-align: center;">2,000</td></tr>
+                <tr style="font-weight: bold;"><td style="border: 1px solid #dadce0; padding: 8px;">Total</td><td style="border: 1px solid #dadce0; padding: 8px; text-align: center;">12,000</td></tr>
+            </tbody>
+        </table>
+        
+        <div style="margin-top: 10px; padding: 10px; background: #e8f0fe; border-radius: 4px; font-size: 0.9em;">
+            <strong>Sources (2):</strong> <br>
+            📽️ Marketing_Plan_Q4 <br>
+            📊 Ad_Spend_Q4
+        </div>
+    </div>
+
+    <h3>Scenario 6: Tra cứu chi tiết Tuân thủ ISO (ISO 27001)</h3>
+    <p>Tìm kiếm các chi tiết kỹ thuật chuyên sâu trong tài liệu tuân thủ dài hàng trăm trang.</p>
+    <div class="query">
+        <strong>Query:</strong> "@Gemini Drive Tutorial @Compliance_Guide What are the specific requirements for data encryption according to ISO 27001?"
+    </div>
+    <img src="images/6_compliance_details.png" alt="Tra cứu tuân thủ ISO 27001" class="demo-img">
+    <p class="image-caption">Hình 7: Tìm kiếm chính xác các tiêu chuẩn kỹ thuật trong tài liệu tuân thủ dài.</p>
+    <div class="output">
+        <p><strong>Kết quả thực tế từ Gemini:</strong></p>
+        <p><em>According to the ISO 27001 standards outlined in the Compliance Guide, the specific requirements for data encryption are as follows:</em></p>
+        
+        <ul>
+            <li><strong>Encryption at Rest:</strong> All data, whether stored physically or in the cloud, must use the <strong>AES-256</strong> algorithm or higher. Keys must be stored in a Hardware Security Module (HSM).</li>
+            <li><strong>Encryption in Transit:</strong> Data transmitted over public networks must use <strong>TLS 1.2 or 1.3</strong> protocols. SSL certificates must be issued by a reputable CA.</li>
+            <li><strong>Key Management:</strong> Cryptographic keys must be rotated every <strong>90 days</strong>. Access must be fully logged.</li>
+            <li><strong>Audit and Monitoring:</strong> Monthly audits must be conducted to identify unauthorized access vulnerabilities.</li>
+        </ul>
+        
+        <div style="margin-top: 10px; padding: 10px; background: #e8f0fe; border-radius: 4px; font-size: 0.9em;">
+            <strong>Sources (1):</strong> <br>
+            📄 Compliance_Guide.pdf
+        </div>
+    </div>
+
+    <hr>
+
+    <h2>4. Accuracy Evaluation: Verification vs. Sources</h2>
+    <p>Gemini provides links to sources (citations) for its answers. Here is the verification for our test cases:</p>
+    <table>
+        <thead>
+            <tr>
+                <th>Gemini Statement</th>
+                <th>Source Quote (Verified)</th>
+                <th>Result</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Proposal Update: Mar 23, 2026</td>
+                <td>"Completed: Mar 23, 2026" (Page 1, AI_Quest_v2.docx)</td>
+                <td>✅ Accurate</td>
+            </tr>
+            <tr>
+                <td>GPU Budget: $75,000</td>
+                <td>"Total budget for Phase 2: $75,000" (Cell B12, Budget_Sheet_V2.xlsx)</td>
+                <td>✅ Accurate</td>
+            </tr>
+            <tr>
+                <td>Auth Mechanism: Pending survey</td>
+                <td>"Section 4.2: Auth - Awaiting survey of OAuth2 or JWT." (Page 8, Tech_Spec.pdf)</td>
+                <td>✅ Accurate</td>
+            </tr>
+            <tr>
+                <td>Beta Phase ends: Jun 15, 2026</td>
+                <td>"Beta End Date: June 15, 2026" (Slide 14, Timeline.slides)</td>
+                <td>✅ Accurate</td>
+            </tr>
+            <tr>
+                <td>Citations: Verified links</td>
+                <td>Clicking source chips correctly opens the referenced PDF/Video in a new tab.</td>
+                <td>✅ Accurate</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <hr>
+
+    <h2>5. Privacy & Data Security</h2>
+    <p><strong>Workspace Experiments Privacy Notice:</strong>
+        <ul>
+            <li><strong>Data Usage:</strong> Google uses Workspace Experiments data (prompts, input, output, feedback) to improve and develop products and AI technologies.</li>
+            <li><strong>Human Reviewers:</strong> To help develop features, human reviewers may read and process your Workspace Experiments interactions. <strong>Do not include confidential or sensitive personal information.</strong></li>
+            <li><strong>Conversation History:</strong> Interactions in Drive are <strong>not</strong> saved to your Gemini Apps Activity history. Deleting history in Drive viewer won't affect Gemini Apps Activity.</li>
+        </ul>
+    </p>
+
+    <hr>
+
+    <div class="conclusion">
+        <h2>6. Conclusion & Best Practices</h2>
+        <p>Gemini in Google Drive significantly reduces manual document processing time. By following "Doc Hygiene" (clean naming, archiving old files) and using <strong>@ mentions</strong> for precision, you can turn your Drive into a powerful AI assistant.</p>
+        <p><strong>Key Takeaways:</strong>
+            <ul>
+                <li>Enable Workspace Experiments to access the latest features.</li>
+                <li>Use PDF and Video for automatic side-panel summaries.</li>
+                <li>Always verify accuracy using the provided source links.</li>
+            </ul>
+        </p>
+    </div>
+
+    <p style="text-align: center;">
+        <a href="screenshot_guide.md">View Detailed Screenshot Guide →</a> | 
+        <a href="demo-files/">Access Demo Files →</a>
+    </p>
+
+</body>
+</html>

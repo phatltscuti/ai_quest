@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>ant CLI — Step 07: transform (success)</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <h2 class="page-title">Ảnh Step 07 — --transform trích text từ response</h2>
+    <p class="page-hint">
+        Chụp khung terminal → lưu <span class="save-as">images/step-07-transform-error.png</span>
+    </p>
+
+    <div class="vscode-panel">
+        <div class="vscode-tabs">
+            <div class="v-tab">Problems</div>
+            <div class="v-tab">Output</div>
+            <div class="v-tab">Debug Console</div>
+            <div class="v-tab active">Terminal</div>
+            <div class="v-tab">Ports</div>
+            <div class="v-actions">>_ PowerShell &nbsp; ⚠ &nbsp; + ∨ &nbsp; 🗑️ &nbsp; ...</div>
+        </div>
+        <div class="terminal-content" style="min-height: 380px;">
+
+            <div class="ps-block">
+                <div class="ps-line"><span class="ps-prompt">PS C:\anthropic-cli-ant\tools&gt;</span> <span class="ps-cmd">.\ant.exe messages create `</span></div>
+                <div class="ps-line"><span class="ps-cont">>> </span><span class="ps-cmd">  --model claude-sonnet-4-5-20250929 `</span></div>
+                <div class="ps-line"><span class="ps-cont">>> </span><span class="ps-cmd">  --max-tokens 256 `</span></div>
+                <div class="ps-line"><span class="ps-cont">>> </span><span class="ps-cmd">  --message "{role: user, content: 'Summarize what ant CLI does in one sentence.'}" `</span></div>
+                <div class="ps-line"><span class="ps-cont">>> </span><span class="ps-cmd">  --transform "content.#(type==`"text`").text" `</span></div>
+                <div class="ps-line"><span class="ps-cont">>> </span><span class="ps-cmd">  --raw-output</span></div>
+                <pre class="term-out term-ok">ant is Anthropic's official command-line client for the Claude Developer Platform, exposing every API resource as a typed terminal command for scripting and automation.</pre>
+            </div>
+
+            <div class="ps-block">
+                <div class="ps-line"><span class="ps-prompt">PS C:\anthropic-cli-ant\tools&gt;</span> <span class="ps-cmd">.\ant.exe models list --transform "data.0.id" --raw-output</span></div>
+                <pre class="term-out term-ok">claude-opus-4-8</pre>
+            </div>
+
+            <div class="ps-line cursor-line"><span class="ps-prompt">PS C:\anthropic-cli-ant\tools&gt;</span> <span class="cursor"></span></div>
+        </div>
+        <div class="status-bar">--transform &nbsp;|&nbsp; GJSON &nbsp;|&nbsp; <code>200 OK</code></div>
+    </div>
+
+</body>
+</html>

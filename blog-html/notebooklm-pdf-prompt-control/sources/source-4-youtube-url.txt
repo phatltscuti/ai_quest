@@ -1,0 +1,20 @@
+SOURCE 4: YouTube URL — Video về AI in Education
+
+Dùng MỘT trong các YouTube URL thật sau để upload vào NotebookLM dạng "YouTube":
+(Tất cả đã được verify hoạt động ngày 19/03/2026)
+
+Option A (Sal Khan TED Talk - How AI Could Save Education, 15 phút, English) ✅ KHUYẾN NGHỊ:
+https://www.youtube.com/watch?v=hJP5GqnTrNo
+
+---
+
+CÁCH UPLOAD:
+1. Trong NotebookLM, click "Add source"
+2. Chọn "YouTube"
+3. Paste YouTube URL (khuyến nghị Option A — nội dung phong phú, có phụ đề)
+4. NotebookLM sẽ tự lấy transcript/nội dung video
+
+LƯU Ý: 
+- Video cần có phụ đề (subtitles/captions) để NotebookLM đọc được nội dung
+- Option A (Sal Khan) rất phù hợp vì nội dung về AI in Education, tầm nhìn giáo dục
+- Nếu muốn nguồn tiếng Việt, dùng Option B

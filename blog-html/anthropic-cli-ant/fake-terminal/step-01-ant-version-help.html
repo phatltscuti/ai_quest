@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>ant CLI — Step 01: version &amp; help</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <h2 class="page-title">Ảnh Step 01 — Kiểm tra version và danh sách lệnh</h2>
+    <p class="page-hint">
+        Chụp khung terminal → lưu <span class="save-as">images/step-01-ant-version-help.png</span>
+    </p>
+
+    <div class="vscode-panel">
+        <div class="vscode-tabs">
+            <div class="v-tab">Problems</div>
+            <div class="v-tab">Output</div>
+            <div class="v-tab">Debug Console</div>
+            <div class="v-tab active">Terminal</div>
+            <div class="v-tab">Ports</div>
+            <div class="v-actions">>_ PowerShell &nbsp; ⚠ &nbsp; + ∨ &nbsp; 🗑️ &nbsp; ...</div>
+        </div>
+        <div class="terminal-content" style="min-height: 520px;">
+
+            <div class="ant-strip">
+                <div class="ant-strip-title">Claude Developer Platform — terminal client</div>
+                <div class="ant-strip-meta">C:\anthropic-cli-ant\tools</div>
+            </div>
+
+            <div class="ps-block">
+                <div class="ps-line"><span class="ps-prompt">PS C:\anthropic-cli-ant\tools&gt;</span> <span class="ps-cmd">.\ant.exe --version</span></div>
+                <pre class="term-out term-ok">ant version 1.10.0</pre>
+            </div>
+
+            <div class="ps-block">
+                <div class="ps-line"><span class="ps-prompt">PS C:\anthropic-cli-ant\tools&gt;</span> <span class="ps-cmd">.\ant.exe --help</span></div>
+                <pre class="term-out">NAME:
+   ant - CLI for the Claude Developer Platform
+
+USAGE:
+   ant [global options] [command [command options]]
+
+VERSION:
+   1.10.0
+
+COMMANDS:
+   auth     Manage authentication
+   profile  Manage configuration profiles
+
+   API RESOURCE:
+     completions
+     messages
+     messages:batches
+     models
+     beta:models
+     beta:messages
+     beta:messages:batches
+     beta:agents
+     beta:agents:versions
+     beta:environments
+     beta:environments:work
+     beta:sessions
+     beta:sessions:events
+     beta:sessions:resources
+     beta:sessions:threads
+     beta:sessions:threads:events
+     beta:vaults
+     beta:files
+     beta:skills
+     beta:memory-stores
+     ...
+
+   SELF-HOSTED:
+     beta:worker  Run a self-hosted environment worker (poll for work and/or run tools).
+
+GLOBAL OPTIONS:
+   --api-key string               [%ANTHROPIC_API_KEY%]
+   --format string               (auto, explore, json, jsonl, pretty, raw, yaml)
+   --transform string            The GJSON transformation for data output.
+   --transform-error string      The GJSON transformation for errors.
+   --help, -h                    show help
+   --version, -v                 print the version</pre>
+            </div>
+
+            <div class="ps-line cursor-line"><span class="ps-prompt">PS C:\anthropic-cli-ant\tools&gt;</span> <span class="cursor"></span></div>
+        </div>
+        <div class="status-bar">ant v1.10.0 &nbsp;|&nbsp; profile <code>default</code> &nbsp;|&nbsp; api.anthropic.com</div>
+    </div>
+
+</body>
+</html>

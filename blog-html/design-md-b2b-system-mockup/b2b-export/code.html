@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Sentinel Core - System Management Dashboard</title>
+<!-- Google Fonts: Inter -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "on-secondary-fixed": "#334052",
+                        "on-secondary-fixed-variant": "#4f5c70",
+                        "error-container": "#fe8983",
+                        "background": "#f9f9ff",
+                        "outline": "#617aae",
+                        "on-primary-fixed": "#004075",
+                        "inverse-on-surface": "#959db2",
+                        "on-background": "#143161",
+                        "on-error-container": "#752121",
+                        "surface-container-highest": "#d8e2ff",
+                        "tertiary-fixed-dim": "#7ceea1",
+                        "secondary-fixed-dim": "#c8d5ec",
+                        "on-tertiary-fixed": "#004c26",
+                        "on-primary-fixed-variant": "#235d9a",
+                        "surface-container-low": "#f1f3ff",
+                        "primary-container": "#d3e4ff",
+                        "error": "#9f403d",
+                        "on-tertiary": "#e8ffe9",
+                        "on-primary-container": "#135390",
+                        "primary-fixed-dim": "#bbd6ff",
+                        "surface-dim": "#cbdaff",
+                        "secondary-fixed": "#d6e3fb",
+                        "primary-dim": "#145490",
+                        "tertiary-dim": "#006032",
+                        "surface-variant": "#d8e2ff",
+                        "surface-tint": "#27609d",
+                        "on-tertiary-fixed-variant": "#006c39",
+                        "on-surface-variant": "#455f90",
+                        "secondary-container": "#d6e3fb",
+                        "on-error": "#fff7f6",
+                        "surface": "#f9f9ff",
+                        "inverse-primary": "#89bcff",
+                        "secondary": "#536073",
+                        "secondary-dim": "#475467",
+                        "on-secondary-container": "#465365",
+                        "outline-variant": "#99b2e9",
+                        "on-primary": "#f6f7ff",
+                        "tertiary-container": "#8afdaf",
+                        "inverse-surface": "#060e1e",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-high": "#e0e8ff",
+                        "surface-bright": "#f9f9ff",
+                        "on-secondary": "#f8f8ff",
+                        "on-surface": "#143161",
+                        "primary": "#27609d",
+                        "surface-container": "#e9edff",
+                        "primary-fixed": "#d3e4ff",
+                        "tertiary": "#006e3a",
+                        "tertiary-fixed": "#8afdaf",
+                        "on-tertiary-container": "#006132",
+                        "error-dim": "#4e0309"
+                    },
+                    fontFamily: {
+                        "headline": ["Inter"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #d8e2ff; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #617aae; }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body antialiased selection:bg-primary-container selection:text-on-primary-container">
+<!-- Sidebar Shell -->
+<aside class="fixed left-0 top-0 h-full w-64 bg-slate-100 dark:bg-slate-950 flex flex-col p-4 z-40 border-r border-slate-200 dark:border-slate-800">
+<div class="mb-8 px-2">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 bg-primary rounded flex items-center justify-center text-on-primary font-bold">SC</div>
+<div>
+<h1 class="text-sm font-bold text-on-surface tracking-tight leading-none">System Admin</h1>
+<p class="text-[10px] uppercase tracking-widest text-on-surface-variant font-medium mt-1">Enterprise Tier</p>
+</div>
+</div>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 px-3 py-2.5 text-xs uppercase tracking-wider font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined text-[18px]">dashboard</span>
+                Overview
+            </a>
+<a class="flex items-center gap-3 px-3 py-2.5 text-xs uppercase tracking-wider font-bold bg-white dark:bg-slate-900 text-blue-700 dark:text-blue-300 shadow-sm rounded-md" href="#">
+<span class="material-symbols-outlined text-[18px]">warning</span>
+                Incidents
+            </a>
+<a class="flex items-center gap-3 px-3 py-2.5 text-xs uppercase tracking-wider font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined text-[18px]">group</span>
+                Users
+            </a>
+<a class="flex items-center gap-3 px-3 py-2.5 text-xs uppercase tracking-wider font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined text-[18px]">extension</span>
+                Integrations
+            </a>
+<a class="flex items-center gap-3 px-3 py-2.5 text-xs uppercase tracking-wider font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined text-[18px]">payments</span>
+                Billing
+            </a>
+<a class="flex items-center gap-3 px-3 py-2.5 text-xs uppercase tracking-wider font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined text-[18px]">history</span>
+                Audit
+            </a>
+</nav>
+<div class="mt-auto pt-4 space-y-1 border-t border-slate-200 dark:border-slate-800">
+<a class="flex items-center gap-3 px-3 py-2.5 text-xs uppercase tracking-wider font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined text-[18px]">contact_support</span>
+                Support
+            </a>
+<a class="flex items-center gap-3 px-3 py-2.5 text-xs uppercase tracking-wider font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined text-[18px]">menu_book</span>
+                Documentation
+            </a>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="ml-64 min-h-screen flex flex-col">
+<!-- TopAppBar Shell -->
+<header class="h-16 flex justify-between items-center px-6 w-full sticky top-0 z-50 bg-slate-50 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800">
+<div class="flex items-center gap-6 flex-1">
+<span class="text-lg font-semibold text-blue-900 dark:text-blue-100">Sentinel Core</span>
+<div class="px-3 py-1 bg-tertiary-container text-on-tertiary-container text-[10px] font-bold uppercase tracking-widest rounded">
+                    Environment: Production
+                </div>
+<div class="relative w-full max-w-md">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">search</span>
+<input class="w-full h-9 pl-10 pr-4 bg-slate-100 dark:bg-slate-800 border-none rounded-md text-sm focus:ring-2 focus:ring-primary focus:bg-white transition-all" placeholder="Global system search..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="w-10 h-10 flex items-center justify-center text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="w-10 h-10 flex items-center justify-center text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors">
+<span class="material-symbols-outlined">settings</span>
+</button>
+<div class="h-8 w-px bg-slate-200 dark:bg-slate-800 mx-2"></div>
+<div class="flex items-center gap-3 pl-2">
+<img alt="User avatar" class="w-8 h-8 rounded-full border border-slate-200" data-alt="System operator profile portrait" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCHE5nZvapQXfb8NPuvZ4NSnXGbfMpGPKcExdmxrBNhhnR2iViTG0bhlU-ozuKBINB-ak4h-85ptSn0PWS_a7pCAjOHLGsxxsmsBw36iKwwUp7EewuSSLWT6zaJ6ER5Ug7BaRWnlCYazTGyZ6Z4zsJUbTZkuraDK8ydPVu3sQyYOfQEvm03emeqhC1qUEggP-xc0n7QHawIQ9hkkLfKXw1NTFpB5xVWPHjZIO6eNefsQtdc7qafLtLoToswDCgFejmq6OVZMfThoyI"/>
+</div>
+</div>
+</header>
+<!-- Viewport Grid -->
+<div class="flex-1 p-6 flex flex-col gap-6 max-w-[1600px] w-full mx-auto">
+<!-- KPI Row: Architectural Ledger Style -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+<div class="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant/15 flex flex-col">
+<span class="text-[10px] uppercase tracking-[0.1em] text-on-surface-variant font-bold mb-1">Uptime (24H)</span>
+<div class="flex items-baseline gap-2">
+<span class="text-2xl font-bold text-on-surface">99.98%</span>
+<span class="text-tertiary text-xs font-semibold">▲ 0.02%</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant/15 flex flex-col">
+<span class="text-[10px] uppercase tracking-[0.1em] text-on-surface-variant font-bold mb-1">Active Incidents</span>
+<div class="flex items-baseline gap-2">
+<span class="text-2xl font-bold text-on-surface">14</span>
+<span class="text-on-surface-variant text-xs">8 Critical</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant/15 flex flex-col">
+<span class="text-[10px] uppercase tracking-[0.1em] text-on-surface-variant font-bold mb-1">Queue Backlog</span>
+<div class="flex items-baseline gap-2">
+<span class="text-2xl font-bold text-on-surface">1,248</span>
+<span class="text-error text-xs font-semibold">▲ 12%</span>
+</div>
+</div>
+<div class="bg-error-container/20 p-6 rounded-xl border border-error/20 flex flex-col relative overflow-hidden">
+<div class="absolute right-0 top-0 h-full w-1 bg-error"></div>
+<span class="text-[10px] uppercase tracking-[0.1em] text-on-error-container font-bold mb-1">SLA Breach Risk</span>
+<div class="flex items-baseline gap-2">
+<span class="text-2xl font-bold text-on-error-container">High</span>
+<span class="text-on-error-container/70 text-xs">3 Assets At Risk</span>
+</div>
+</div>
+</div>
+<!-- Content Split: Table + Details -->
+<div class="flex flex-col lg:flex-row gap-6 flex-1 min-h-0">
+<!-- Incident Table Canvas -->
+<section class="flex-[2] bg-surface-container-lowest rounded-xl border border-outline-variant/15 overflow-hidden flex flex-col">
+<div class="px-6 py-4 flex items-center justify-between border-b border-surface-container-low">
+<h2 class="text-base font-bold text-on-surface">Incident Management</h2>
+<div class="flex gap-2">
+<button class="px-3 py-1.5 text-xs font-medium text-on-surface hover:bg-surface-container-low rounded border border-outline-variant/30 transition-colors">Export Logs</button>
+<button class="px-3 py-1.5 text-xs font-bold text-white bg-primary hover:brightness-110 rounded transition-all">New Incident</button>
+</div>
+</div>
+<div class="overflow-auto flex-1">
+<table class="w-full text-left border-collapse">
+<thead class="sticky top-0 bg-surface-container-low z-10">
+<tr>
+<th class="px-6 h-12 text-[11px] font-bold text-on-surface-variant uppercase tracking-wider">Severity</th>
+<th class="px-6 h-12 text-[11px] font-bold text-on-surface-variant uppercase tracking-wider">Incident ID</th>
+<th class="px-6 h-12 text-[11px] font-bold text-on-surface-variant uppercase tracking-wider">Owner</th>
+<th class="px-6 h-12 text-[11px] font-bold text-on-surface-variant uppercase tracking-wider">Status</th>
+<th class="px-6 h-12 text-[11px] font-bold text-on-surface-variant uppercase tracking-wider text-right">Updated</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-surface-container-low">
+<!-- Table Row 1 -->
+<tr class="hover:bg-surface-container-high/50 cursor-pointer transition-colors">
+<td class="px-6 h-[48px]">
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-error"></div>
+<span class="text-[13px] font-semibold text-error">Critical</span>
+</div>
+</td>
+<td class="px-6 h-[48px] text-[13px] font-mono font-medium">INC-9042-88</td>
+<td class="px-6 h-[48px] text-[13px] text-on-surface">M. Thompson</td>
+<td class="px-6 h-[48px]">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-bold bg-error-container/20 text-on-error-container uppercase">Active</span>
+</td>
+<td class="px-6 h-[48px] text-[13px] text-on-surface-variant text-right">2m ago</td>
+</tr>
+<!-- Table Row 2 (Selected State) -->
+<tr class="bg-surface-container-low/60 border-l-2 border-primary">
+<td class="px-6 h-[48px]">
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-error"></div>
+<span class="text-[13px] font-semibold text-error">Critical</span>
+</div>
+</td>
+<td class="px-6 h-[48px] text-[13px] font-mono font-medium">INC-8812-41</td>
+<td class="px-6 h-[48px] text-[13px] text-on-surface">J. Chen</td>
+<td class="px-6 h-[48px]">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-bold bg-primary-container text-on-primary-container uppercase">Investigating</span>
+</td>
+<td class="px-6 h-[48px] text-[13px] text-on-surface-variant text-right">14m ago</td>
+</tr>
+<!-- Table Row 3 -->
+<tr class="hover:bg-surface-container-high/50 cursor-pointer transition-colors">
+<td class="px-6 h-[48px]">
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-on-secondary-container"></div>
+<span class="text-[13px] font-semibold text-on-secondary-container">Warning</span>
+</div>
+</td>
+<td class="px-6 h-[48px] text-[13px] font-mono font-medium">INC-7729-00</td>
+<td class="px-6 h-[48px] text-[13px] text-on-surface">Unassigned</td>
+<td class="px-6 h-[48px]">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-bold bg-surface-container-high text-on-surface-variant uppercase">New</span>
+</td>
+<td class="px-6 h-[48px] text-[13px] text-on-surface-variant text-right">45m ago</td>
+</tr>
+<!-- Table Row 4 -->
+<tr class="hover:bg-surface-container-high/50 cursor-pointer transition-colors">
+<td class="px-6 h-[48px]">
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-tertiary"></div>
+<span class="text-[13px] font-semibold text-tertiary">Success</span>
+</div>
+</td>
+<td class="px-6 h-[48px] text-[13px] font-mono font-medium">INC-5512-19</td>
+<td class="px-6 h-[48px] text-[13px] text-on-surface">S. Williams</td>
+<td class="px-6 h-[48px]">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-bold bg-tertiary-container text-on-tertiary-container uppercase">Resolved</span>
+</td>
+<td class="px-6 h-[48px] text-[13px] text-on-surface-variant text-right">2h ago</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<!-- Right Action Panel: Details Card -->
+<aside class="flex-1 min-w-[340px] flex flex-col gap-4">
+<div class="bg-surface-container-lowest rounded-xl border border-outline-variant/15 p-6 flex-1 flex flex-col">
+<div class="flex items-center justify-between mb-6">
+<span class="text-[11px] font-bold text-primary uppercase tracking-[0.2em]">Incident Details</span>
+<span class="text-[11px] font-mono text-on-surface-variant">INC-8812-41</span>
+</div>
+<div class="space-y-6 flex-1">
+<div>
+<h3 class="text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-2">Summary</h3>
+<p class="text-[13px] text-on-surface leading-relaxed">
+                                    Memory leak detected in <span class="font-bold">auth-service-pod-04</span>. Garbage collection cycle failing intermittently. Potential impact on login latency for EU-West clusters.
+                                </p>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="p-3 bg-surface-container-low rounded">
+<p class="text-[10px] uppercase font-bold text-on-surface-variant/70 mb-1">Impact Radius</p>
+<p class="text-xs font-semibold text-on-surface">24 Services</p>
+</div>
+<div class="p-3 bg-surface-container-low rounded">
+<p class="text-[10px] uppercase font-bold text-on-surface-variant/70 mb-1">Time Elapsed</p>
+<p class="text-xs font-semibold text-on-surface">42m 12s</p>
+</div>
+</div>
+<div class="space-y-3">
+<h3 class="text-xs font-bold text-on-surface-variant uppercase tracking-wider">System Logs (Live)</h3>
+<div class="bg-slate-900 rounded p-3 font-mono text-[11px] text-blue-300 h-48 overflow-auto space-y-1">
+<p><span class="text-slate-500">[14:22:01]</span> <span class="text-error">FATAL</span> OOM Killer invoked</p>
+<p><span class="text-slate-500">[14:22:05]</span> <span class="text-warning">WARN</span> Respawning instance...</p>
+<p><span class="text-slate-500">[14:23:12]</span> <span class="text-blue-400">INFO</span> Heap dump analysis started</p>
+<p><span class="text-slate-500">[14:25:44]</span> <span class="text-error">ERR</span> Leak detected at io.sentinel.auth</p>
+<p><span class="text-slate-500">[14:28:02]</span> <span class="text-blue-400">INFO</span> Traceback logged to S3</p>
+</div>
+</div>
+</div>
+<div class="mt-6 space-y-2">
+<button class="w-full py-2.5 bg-surface-container-high text-on-primary-fixed-variant text-xs font-bold uppercase tracking-widest hover:brightness-105 transition-all">Assign Owner</button>
+<button class="w-full py-2.5 bg-surface-container-high text-on-primary-fixed-variant text-xs font-bold uppercase tracking-widest hover:brightness-105 transition-all">Escalate</button>
+<button class="w-full py-3 bg-gradient-to-br from-primary to-primary-dim text-white text-xs font-bold uppercase tracking-widest shadow-lg shadow-primary/10 hover:brightness-110 active:scale-[0.98] transition-all">Resolve Incident</button>
+</div>
+</div>
+</aside>
+</div>
+</div>
+</main>
+</body></html>

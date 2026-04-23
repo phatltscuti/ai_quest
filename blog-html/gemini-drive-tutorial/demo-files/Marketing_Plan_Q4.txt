@@ -1,0 +1,19 @@
+# KẾ HOẠCH MARKETING Q4 - AI QUEST LAUNCHING
+**Giai đoạn:** Tháng 10 - Tháng 12/2026
+**Mục tiêu:** 10,000 Early Adopters
+
+## 1. Chiến lược nội dung
+Tập trung vào chuỗi bài viết giải quyết nỗi đau của nhân viên văn phòng trong việc quản lý tài liệu.
+- Chủ đề 1: "Tạm biệt keyword search, chào mừng Semantic Search".
+- Chủ đề 2: "Cách Gemini tóm tắt 100 trang PDF trong 5 giây".
+
+## 2. Các kênh quảng cáo (Channels)
+- **Facebook Ads:** Chạy video hướng dẫn (tutorial) nhắm đến dân văn phòng 25-45 tuổi.
+- **Google Search:** Bid các từ khóa nóng: "Quản lý file AI", "AI cho Google Drive".
+- **Hệ sinh thái KOL:** Hợp tác với 5 Tech Reviewers nổi tiếng tại Việt Nam để làm video thực tế.
+
+## 3. Quản lý sự kiện
+Tổ chức 1 series Webinar hàng tuần "AI Quest Live Demo" để giải đáp thắc mắc khách hàng.
+
+---
+*Tham khảo tệp chi tiết Ad_Spend_Q4.xlsx*

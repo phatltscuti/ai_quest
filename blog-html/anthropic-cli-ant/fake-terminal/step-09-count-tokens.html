@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>ant CLI — Step 09: count-tokens</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h2 class="page-title">Ảnh Step 09 — Đếm token trước khi gửi (count-tokens)</h2>
+    <p class="page-hint">Chụp khung terminal → lưu <span class="save-as">images/step-09-count-tokens.png</span></p>
+    <div class="vscode-panel">
+        <div class="vscode-tabs">
+            <div class="v-tab active">Terminal</div>
+            <div class="v-actions">>_ PowerShell</div>
+        </div>
+        <div class="terminal-content" style="min-height: 320px;">
+            <div class="ps-block">
+                <div class="ps-line"><span class="ps-prompt">PS C:\anthropic-cli-ant\tools&gt;</span> <span class="ps-cmd">.\ant.exe messages count-tokens `</span></div>
+                <div class="ps-line"><span class="ps-cont">>> </span><span class="ps-cmd">  --model claude-sonnet-4-5-20250929 `</span></div>
+                <div class="ps-line"><span class="ps-cont">>> </span><span class="ps-cmd">  --message "{role: user, content: 'This is a test message to count tokens'}"</span></div>
+                <pre class="term-out term-json"><span class="jp">{</span>
+  <span class="jk">"input_tokens"</span><span class="jp">: </span><span class="jn">15</span>
+<span class="jp">}</span></pre>
+            </div>
+            <div class="ps-line cursor-line"><span class="ps-prompt">PS C:\anthropic-cli-ant\tools&gt;</span> <span class="cursor"></span></div>
+        </div>
+        <div class="status-bar">count-tokens &nbsp;|&nbsp; <code>200 OK</code> &nbsp;|&nbsp; zero cost pre-flight</div>
+    </div>
+</body>
+</html>

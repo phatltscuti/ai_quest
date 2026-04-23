@@ -1,0 +1,49 @@
+CLIENT PROPOSAL — {{CLIENT_NAME}}
+
+Project: {{PROJECT_NAME}}
+Date: {{PROPOSAL_DATE}}
+Prepared by: {{ACCOUNT_OWNER}}
+
+════════════════════════════════════════
+
+Executive summary
+(2–3 paragraphs: client context, proposed solution, expected business outcome.)
+
+Client context & objectives
+- Industry / scale:
+- Primary pain points:
+- Success criteria for MVP:
+
+Proposed scope
+
+In scope
+- (bullet list aligned with product spec)
+
+Out of scope
+- (explicit exclusions to manage expectations)
+
+Solution approach
+- Architecture summary (integration, dashboard, security).
+- Assumptions and dependencies on client side.
+
+Timeline & milestones
+Phase        | Duration   | Deliverable
+Discovery    | 2 weeks    | Integration map + signed API access
+Build        | 8–10 weeks | MVP on staging
+UAT & go-live| 2 weeks    | Production handover
+
+Commercial outline
+- Effort range (man-days) by work package.
+- Optional support retainer (post go-live).
+
+Risks & mitigations
+Risk | Impact | Mitigation
+     |        |
+
+Next steps
+1. Technical workshop with client IT / WMS vendor.
+2. Confirm staging credentials and firewall rules.
+3. Sign SOW and kickoff within 5 business days.
+
+════════════════════════════════════════
+Template version: TEMPLATE_Proposal_IT_Intake — do not remove section headers.

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>ant CLI — Step 00: cài đặt Windows</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <h2 class="page-title">Ảnh Step 00 — Tải và cài ant trên Windows</h2>
+    <p class="page-hint">
+        Chụp khung terminal → lưu <span class="save-as">images/step-00-install-windows.png</span>
+    </p>
+
+    <div class="vscode-panel">
+        <div class="vscode-tabs">
+            <div class="v-tab">Problems</div>
+            <div class="v-tab">Output</div>
+            <div class="v-tab">Debug Console</div>
+            <div class="v-tab active">Terminal</div>
+            <div class="v-tab">Ports</div>
+            <div class="v-actions">>_ PowerShell &nbsp; ⚠ &nbsp; + ∨ &nbsp; 🗑️ &nbsp; ...</div>
+        </div>
+        <div class="terminal-content" style="min-height: 400px;">
+
+            <div class="ps-block">
+                <div class="ps-line"><span class="ps-prompt">PS C:\anthropic-cli-ant\demo-assets&gt;</span> <span class="ps-cmd">.\01-install-windows.ps1</span></div>
+                <pre class="term-out term-out-muted">Downloading https://github.com/anthropics/anthropic-cli/releases/download/v1.10.0/ant_1.10.0_windows_amd64.zip ...
+ant version 1.10.0
+Installed: C:\anthropic-cli-ant\tools\ant.exe</pre>
+            </div>
+
+            <div class="ps-block">
+                <div class="ps-line"><span class="ps-prompt">PS C:\anthropic-cli-ant\tools&gt;</span> <span class="ps-cmd">Get-ChildItem</span></div>
+                <pre class="term-out">    Directory: C:\anthropic-cli-ant\tools
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        09/06/2026  10:04 AM                completions
+d-----        09/06/2026  10:04 AM                man
+-a----        28/05/2026   5:01 PM       22983680 ant.exe
+-a----        09/06/2026  10:04 AM        7288330 ant_1.10.0_windows_amd64.zip</pre>
+            </div>
+
+            <div class="ps-line cursor-line"><span class="ps-prompt">PS C:\anthropic-cli-ant\tools&gt;</span> <span class="cursor"></span></div>
+        </div>
+        <div class="status-bar">install &nbsp;|&nbsp; windows_amd64 &nbsp;|&nbsp; <code>v1.10.0</code></div>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,542 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Build an estimate + proposal routine in Workspace Studio (meeting → minutes template → proposal draft → notify)</title>
+    <style>
+      *{box-sizing:border-box}
+      body{margin:0;font-family:'Segoe UI',Arial,sans-serif;background:#fff;color:#1a1a1a;line-height:1.75}
+      a{color:#1a73e8;text-decoration:none}
+      a:hover{text-decoration:underline}
+      .wrap{max-width:1020px;margin:0 auto;padding:24px}
+      h1{margin:0 0 10px;font-size:28px;color:#1a73e8}
+      h2{margin:34px 0 14px;font-size:22px;border-bottom:3px solid #1a73e8;padding-bottom:8px;color:#202124}
+      h3{margin:22px 0 10px;font-size:18px;color:#333}
+      h4{margin:16px 0 8px;font-size:15px;color:#444}
+      ul,ol{margin:8px 0;padding-left:24px}
+      li{margin-bottom:6px}
+      p{margin:12px 0}
+      code{background:#e8f0fe;border:1px solid #d2e3fc;padding:2px 6px;font-size:13px;font-family:Consolas,monospace;border-radius:3px;color:#174ea6}
+      pre{white-space:pre-wrap;word-break:break-word;border:1px solid #dadce0;background:#f8f9fa;padding:14px;font-size:12px;font-family:Consolas,monospace;margin:12px 0;border-radius:8px;overflow:auto}
+      .hero{border:2px solid #1a73e8;padding:22px 26px;margin-bottom:22px;background:linear-gradient(135deg,#e8f0fe 0%,#f8f9fa 100%);border-radius:12px}
+      .hero .subtitle{color:#5f6368;font-size:15px;margin-top:8px}
+      .tip{border-left:4px solid #34a853;padding:12px 16px;background:#e6f4ea;margin:14px 0;border-radius:0 8px 8px 0}
+      .warning{border-left:4px solid #ea4335;padding:12px 16px;background:#fce8e6;margin:14px 0;border-radius:0 8px 8px 0}
+      .info{border-left:4px solid #4285f4;padding:12px 16px;background:#e8f0fe;margin:14px 0;border-radius:0 8px 8px 0}
+      table{border-collapse:collapse;width:100%;margin:16px 0;border-radius:8px;overflow:hidden;font-size:14px}
+      th,td{border:1px solid #dadce0;padding:10px 12px;text-align:left;vertical-align:top}
+      th{background:#1a73e8;color:#fff;font-weight:600}
+      tr:nth-child(even){background:#f8f9fa}
+      .toc{background:#f8f9fa;border:1px solid #dadce0;border-radius:8px;padding:16px 22px;margin:20px 0}
+      .toc ul{list-style:none;padding-left:0}
+      .toc li{padding:4px 0}
+      .toc li::before{content:'\2794 ';color:#1a73e8}
+      .footer{margin-top:40px;font-size:13px;color:#5f6368;border-top:2px solid #dadce0;padding-top:18px}
+      .demo-fig{margin:20px 0;text-align:center}
+      .demo-fig img{max-width:100%;height:auto;border:2px solid #dadce0;border-radius:8px;box-shadow:0 2px 10px rgba(0,0,0,.08)}
+      .demo-fig figcaption{font-size:13px;color:#5f6368;margin-top:8px;font-style:italic;text-align:center}
+      .ref-list{font-size:14px}
+      .flow-diagram{background:#f8f9fa;border:2px solid #dadce0;border-radius:12px;padding:20px;margin:16px 0;text-align:center;line-height:1.9}
+      .flow-step{display:inline-block;background:#fff;border:2px solid #1a73e8;border-radius:8px;padding:8px 14px;margin:4px;font-weight:600;color:#1a73e8;font-size:13px;vertical-align:middle}
+      .flow-step.starter{background:#34a853;border-color:#34a853;color:#fff}
+      .flow-step.action{background:#4285f4;border-color:#4285f4;color:#fff}
+      .flow-step.ai{background:#fbbc04;border-color:#fbbc04;color:#333}
+      .flow-arrow{display:inline-block;font-size:20px;color:#5f6368;margin:0 2px;vertical-align:middle}
+      .kbd{font-family:Consolas,monospace;background:#eee;padding:1px 6px;border-radius:4px;border:1px solid #ccc;font-size:12px}
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="hero">
+        <h1>Building an Estimate & Proposal Workflow in Workspace Studio (Meeting → Minutes → Proposal → Notification)</h1>
+      </div>
+
+      <h2 id="intro">Overview</h2>
+      <p>
+        <b>Google Workspace Studio</b> is a no-code/low-code automation layer that connects Google Workspace apps into practical business workflows, including Calendar, Chat, Docs, Drive, and Sheets.
+        Teams can build flows visually with drag-and-drop blocks instead of writing complex scripts.
+      </p>
+      <p>
+        Core capabilities used in this tutorial: <b>Starter</b> (time/meeting trigger), <b>Actions</b> (write to Docs, append rows to Sheets, post to Chat),
+        <b>Template-driven output</b>, <b>AI Extract</b> for structured information extraction, and <b>Run history</b> for troubleshooting and idempotency checks.
+      </p>
+      <p>
+        This article implements an <b>Estimate + Proposal routine</b> following the sequence <b>meeting -> minutes template -> proposal draft -> notify</b>,
+        using a 30-minute client intake interview scenario for a typical IT contracting team.
+        The flow and demo approach are aligned with:
+        <a href="https://ximix.niandc.co.jp/blog/google-workspace-flows-minutes" target="_blank" rel="noopener">NI&amp;DC</a>,
+        <a href="https://zenn.dev/google_cloud_jp/articles/google-workspace-studio-templates-meeting" target="_blank" rel="noopener">Zenn</a>,
+        and <a href="https://medium.com/@stephane.giron/mastering-google-flows-a-guide-to-building-powerful-workflows-with-steps-c2f41f0a9e97" target="_blank" rel="noopener">Medium</a>.
+      </p>
+      <p>
+        <b>Target outcomes:</b> (1) Calendar-triggered minutes creation/update from template; (2) automated pre-meeting checklist in Chat;
+        (3) proposal draft populated from extracted meeting points; (4) at least one estimate work item appended to Sheets with no manual row typing;
+        (5) validation of at least 3 failure-prone points; (6) reproducible template and folder documentation.
+      </p>
+
+      <h2 id="scenario">Business scenario and dummy project</h2>
+      <p>
+        <b>Context:</b> an IT outsourcing team receives an early project brief from a retail client and needs to standardize intake notes, proposal draft, and initial estimate output immediately after a 30-minute requirements interview.
+      </p>
+      <table>
+        <thead>
+          <tr>
+            <th>Item</th>
+            <th>Sample value</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Client</td>
+            <td>Acme Retail Co., Ltd.</td>
+          </tr>
+          <tr>
+            <td>Project</td>
+            <td>Customer loyalty mini-portal (MVP) with existing POS integration</td>
+          </tr>
+          <tr>
+            <td>Calendar title convention</td>
+            <td><code>[REQ] Acme Retail - Loyalty portal (30m interview)</code></td>
+          </tr>
+          <tr>
+            <td>Meeting duration</td>
+            <td>30 minutes</td>
+          </tr>
+          <tr>
+            <td>Primary estimate work item</td>
+            <td>API integration - Loyalty engine to POS catalog (REST, OAuth2 client)</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2 id="architecture">Suggested architecture (Calendar -> Doc -> Chat -> Sheet)</h2>
+      <p>Split into <b>three flows</b> for easier debugging and safer runtime behavior:</p>
+      <ol>
+        <li><b>Flow A - Pre-meeting:</b> time-based trigger before event start -> send checklist to Google Chat.</li>
+        <li><b>Flow B - Minutes update:</b> trigger from meeting -> <code>Add to a doc</code> appends "Meeting notes (auto)" to <code>TEMPLATE_Minutes_IT_Intake</code> (as shown in Step 11-13).</li>
+        <li><b>Flow C - Post-meeting:</b> trigger from meeting -> <code>Extract</code> key points -> <code>Add to a doc</code> (proposal) -> <code>Add a row</code> (estimate sheet) -> <code>Notify me in Chat</code>.</li>
+      </ol>
+
+      <div class="flow-diagram" aria-label="Three-flow architecture">
+        <div style="margin-bottom:12px"><b>Flow A - Pre-meeting</b></div>
+        <span class="flow-step starter">Calendar: before start</span>
+        <span class="flow-arrow">-></span>
+        <span class="flow-step action">Chat checklist</span>
+        <hr style="border:none;border-top:1px solid #dadce0;margin:16px 0" />
+        <div style="margin-bottom:12px"><b>Flow B - Minutes Doc</b></div>
+        <span class="flow-step starter">Based on a meeting</span>
+        <span class="flow-arrow">-></span>
+        <span class="flow-step action">Add to TEMPLATE_Minutes</span>
+        <hr style="border:none;border-top:1px solid #dadce0;margin:16px 0" />
+        <div style="margin-bottom:12px"><b>Flow C - Proposal + Estimate</b></div>
+        <span class="flow-step starter">Based on a meeting</span>
+        <span class="flow-arrow">-></span>
+        <span class="flow-step ai">Extract</span>
+        <span class="flow-arrow">-></span>
+        <span class="flow-step action">Add to Proposal Doc</span>
+        <span class="flow-arrow">+</span>
+        <span class="flow-step action">Append Sheet</span>
+        <span class="flow-arrow">-></span>
+        <span class="flow-step action">Chat notify</span>
+      </div>
+
+      <h2 id="repro">Reproducibility setup</h2>
+      <h3>Drive folder naming rules (root: <code>WS_Client_Intake_Pipeline</code>)</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Path</th>
+            <th>Role</th>
+            <th>Parameterized vs fixed</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>00_Templates</code></td>
+            <td>Master templates only (avoid manual overwrite during flow runs)</td>
+            <td>Folder name fixed; template version can be tracked in Doc footer</td>
+          </tr>
+          <tr>
+            <td><code>10_Minutes</code></td>
+            <td>Minutes destination in production</td>
+            <td>Current demo appends directly to <code>TEMPLATE_Minutes_IT_Intake</code>; production should use event-based copied docs</td>
+          </tr>
+          <tr>
+            <td><code>20_Proposals</code></td>
+            <td>Generated proposal drafts</td>
+            <td>Suggested naming: <code>PROP_{{projectCode}}_{{eventId}}</code></td>
+          </tr>
+          <tr>
+            <td><code>30_Estimates</code></td>
+            <td>Estimate sheet location</td>
+            <td>Use fixed <code>spreadsheetId</code> or project-based lookup</td>
+          </tr>
+          <tr>
+            <td><code>99_Logs</code></td>
+            <td>Execution and idempotency audit logs</td>
+            <td>Keep a fixed schema for stable analysis</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2 id="implement">Workspace Studio setup (by logic blocks)</h2>
+      <p>
+        The steps below describe logic blocks so you can map them to your own tenant UI labels if names differ slightly.
+      </p>
+
+      <h3>Flow A - Pre-meeting checklist (Google Chat)</h3>
+      <ol>
+        <li><b>Starter:</b> Google Calendar - <i>Event starting soon</i> (for example 60 or 15 minutes before start).</li>
+        <li><b>Condition (recommended):</b> event title includes <code>[REQ]</code> or description includes <code>projectCode</code>.</li>
+        <li><b>Action:</b> Google Chat post to selected Space, for example:</li>
+      </ol>
+      <pre>[Pre-meeting] Client requirements interview (30m)
+
+Meeting: Acme Retail - Loyalty portal
+Start time: (see Calendar event)
+
+Purpose:
+- Clarify loyalty MVP scope (earn/burn only vs campaigns).
+
+Key questions:
+1) POS version and staging URL for AcmePOS v12?
+2) OAuth2: client_id for integration user or internal service account?
+3) Desired uptime and support window for MVP?
+
+Assumptions:
+- POS catalog is the source of truth.
+- No native mobile app in MVP.</pre>
+
+      <h3>Flow B - Update minutes Doc from template at meeting time</h3>
+      <ol>
+        <li><b>Starter:</b> <i>Based on a meeting</i> (as shown in Step 11).</li>
+        <li><b>Action:</b> <i>Add to a doc</i> and select <code>TEMPLATE_Minutes_IT_Intake</code>.</li>
+        <li><b>Where to add new content:</b> <code>After existing content</code>.</li>
+        <li><b>Content:</b> include at least Meeting title, Start time, and generated marker.</li>
+        <li><b>Result:</b> open the Doc and verify that <code>Meeting notes (auto)</code> was appended (Step 13).</li>
+      </ol>
+
+      <h3>Flow C - Post-meeting proposal + estimate + notify</h3>
+      <ol>
+        <li><b>Starter:</b> <i>Based on a meeting</i> (Step 14).</li>
+        <li><b>Step 2 - Extract:</b> parse meeting/minutes content into summary and estimate fields (Step 15).</li>
+        <li><b>Step 3 - Add to a doc:</b> append into proposal doc <code>20_Proposal_IT_Intake</code> (Step 16).</li>
+        <li><b>Step 4 - Add a row:</b> map <code>work_package / role / md_low / md_high / source</code> into <code>20_Estimate_IT</code> (Step 17).</li>
+        <li><b>Step 5 - Notify me in Chat:</b> post completion notification (Step 18).</li>
+      </ol>
+      <p>Suggested schema for the Extract step:</p>
+      <pre>{
+  "executive_summary": "string",
+  "work_package": "string",
+  "role": "string",
+  "md_low": 0,
+  "md_high": 0
+}</pre>
+      <ol start="6">
+        <li><b>Run history:</b> verify each step status in execution panel (Step 19).</li>
+        <li><b>Idempotency check:</b> capture merged evidence image (Sheet + Doc + Chat) when re-running same event (Step 20).</li>
+      </ol>
+
+      <h2 id="demo-screens">Demo steps</h2>
+      <div class="info">
+        <p><b>Step 1 instruction:</b> Open Google Drive pipeline root folder and show subfolders <code>00_Templates</code>, <code>10_Minutes</code>, <code>20_Proposals</code>, <code>30_Estimates</code>, <code>99_Logs</code>.</p>
+      </div>
+      <figure class="demo-fig">
+        <img src="images/step-01-drive-folder-structure.png" alt="Drive folder structure for pipeline" width="960" loading="lazy" />
+        <figcaption>Step 1 - Standard Drive folder structure.</figcaption>
+      </figure>
+
+      <div class="info">
+        <p><b>Step 2 instruction:</b> Open minutes template Doc <code>TEMPLATE_Minutes_IT_Intake</code> and show metadata and core sections (Goal, Key questions, Raw notes).</p>
+      </div>
+      <figure class="demo-fig">
+        <img src="images/step-02-minutes-template-open.png" alt="Minutes template Google Doc" width="960" loading="lazy" />
+        <figcaption>Step 2 - Minutes template.</figcaption>
+      </figure>
+
+      <div class="info">
+        <p><b>Step 3 instruction:</b> Open proposal template Doc <code>TEMPLATE_Proposal_IT_Intake</code> and display sections such as <i>Executive summary</i>, <i>Proposed scope</i>, and <i>Estimate hint</i>.</p>
+      </div>
+      <figure class="demo-fig">
+        <img src="images/step-03-proposal-template-open.png" alt="Proposal template Google Doc" width="960" loading="lazy" />
+        <figcaption>Step 3 - Proposal template.</figcaption>
+      </figure>
+
+      <div class="info">
+        <p><b>Step 4 instruction:</b> Open estimate Sheet template and verify headers <code>item_id,event_id,project_code,work_package,role,md_low,md_high,source</code>.</p>
+      </div>
+      <figure class="demo-fig">
+        <img src="images/step-04-estimate-sheet-template.png" alt="Estimate Google Sheet template" width="960" loading="lazy" />
+        <figcaption>Step 4 - Estimate sheet template.</figcaption>
+      </figure>
+
+      <div class="info">
+        <p><b>Step 5 instruction:</b> Open <a href="https://chat.google.com/" target="_blank" rel="noopener">Google Chat</a> and enter the target space (example: <code>client-intake-bot-demo</code>).</p>
+      </div>
+      <figure class="demo-fig">
+        <img src="images/step-05-google-chat-space.png" alt="Google Chat space" width="960" loading="lazy" />
+        <figcaption>Step 5 - Internal Chat space.</figcaption>
+      </figure>
+
+      <div class="info">
+        <p><b>Step 6 instruction:</b> Open Workspace Studio and go to the new-flow screen.</p>
+      </div>
+      <figure class="demo-fig">
+        <img src="images/step-06-workspace-studio-home.png" alt="Workspace Studio home" width="960" loading="lazy" />
+        <figcaption>Step 6 - Workspace Studio home.</figcaption>
+      </figure>
+
+      <div class="info">
+        <p><b>Step 7 instruction:</b> Build Flow A with two minimum steps: <code>Step 1: Based on a meeting</code> and <code>Step 2: Notify me in Chat</code>.</p>
+      </div>
+      <figure class="demo-fig">
+        <img src="images/step-07-flow-a-pre-meeting-overview.png" alt="Flow A canvas" width="960" loading="lazy" />
+        <figcaption>Step 7 - Flow A overview.</figcaption>
+      </figure>
+
+      <div class="info">
+        <p><b>Step 8 instruction:</b> Configure the trigger for a future meeting and set it to run <code>Before meeting</code> with the preferred offset.</p>
+      </div>
+      <figure class="demo-fig">
+        <img src="images/step-08-flow-a-trigger-config.png" alt="Flow A trigger configuration" width="960" loading="lazy" />
+        <figcaption>Step 8 - Pre-meeting trigger configuration.</figcaption>
+      </figure>
+
+      <div class="info">
+        <p><b>Step 9 instruction:</b> Open <code>Step 2: Notify me in Chat</code>, select the correct space, and paste the checklist message:</p>
+        <pre>[Pre-meeting] Client requirements interview (30m)
+
+Meeting: Acme Retail - Loyalty portal
+Start time: (see Calendar event)
+
+Purpose:
+- Clarify loyalty MVP scope (earn/burn only vs campaigns).
+
+Key questions:
+1) POS version and staging URL for AcmePOS v12?
+2) OAuth2: client_id for integration user or internal service account?
+3) Desired uptime and support window for MVP?
+
+Assumptions:
+- POS catalog is the source of truth.
+- No native mobile app in MVP.</pre>
+      </div>
+      <figure class="demo-fig">
+        <img src="images/step-09-flow-a-chat-message-body.png" alt="Checklist body in Flow A Chat step" width="960" loading="lazy" />
+        <figcaption>Step 9 - Checklist message body.</figcaption>
+      </figure>
+
+      <div class="info">
+        <p><b>Step 10 instruction:</b> Save and turn on Flow A, then wait for trigger time and confirm the checklist message is posted to Chat.</p>
+      </div>
+      <figure class="demo-fig">
+        <img src="images/step-10-chat-pre-meeting-message-result.png" alt="Pre-meeting Chat message result" width="960" loading="lazy" />
+        <figcaption>Step 10 - Checklist delivered to Chat.</figcaption>
+      </figure>
+
+      <div class="info">
+        <p><b>Step 11 instruction:</b> In Flow B, choose the Docs action step (<code>Create a doc</code> or <code>Add to a doc</code>) so the canvas includes both starter and action blocks.</p>
+      </div>
+      <figure class="demo-fig">
+        <img src="images/step-11-flow-b-minutes-overview.png" alt="Flow B canvas" width="960" loading="lazy" />
+        <figcaption>Step 11 - Flow B overview for minutes.</figcaption>
+      </figure>
+
+      <div class="tip">
+        <p><b>Step 12 instruction:</b> In <code>Step 2: Add to a doc</code>, select target doc, keep <code>Where to add new content = After existing content</code>, and use this minimum block:</p>
+        <pre>Meeting notes (auto):
+- Meeting title: [Meeting title]
+- Start time: [Meeting start time]
+- Generated by Flow B.</pre>
+      </div>
+      <figure class="demo-fig">
+        <img src="images/step-12-flow-b-copy-template-config.png" alt="Flow B doc action configuration" width="960" loading="lazy" />
+        <figcaption>Step 12 - Minutes update configuration.</figcaption>
+      </figure>
+
+      <div class="info">
+        <p><b>Step 13 instruction:</b> Run test or wait for actual trigger, then open the minutes Doc and verify the auto-added block.</p>
+      </div>
+      <figure class="demo-fig">
+        <img src="images/step-13-minutes-doc-in-drive-result.png" alt="Minutes Doc result in Drive" width="960" loading="lazy" />
+        <figcaption>Step 13 - Minutes document updated.</figcaption>
+      </figure>
+
+      <div class="info">
+        <p><b>Step 14 instruction:</b> Build Flow C and ensure all 5 steps exist: <code>Based on a meeting</code> -> <code>Extract</code> -> <code>Add to a doc/Create a doc</code> -> <code>Add a row</code> -> <code>Notify me in Chat</code>.</p>
+      </div>
+      <figure class="demo-fig">
+        <img src="images/step-14-flow-c-post-meeting-overview.png" alt="Flow C canvas" width="960" loading="lazy" />
+        <figcaption>Step 14 - Flow C overview (proposal + estimate).</figcaption>
+      </figure>
+
+      <div class="info">
+        <p><b>Step 15 instruction (Extract setup):</b></p>
+        <ol>
+          <li>Click <code>Step 2: Extract</code>.</li>
+          <li>In <code>Content to analyze</code>, select meeting/minutes source variables.</li>
+          <li>In <code>What to extract</code>, choose custom fields.</li>
+          <li>Add at least 5 fields: <code>executive_summary</code>, <code>work_package</code>, <code>role</code>, <code>md_low</code>, <code>md_high</code>.</li>
+        </ol>
+      </div>
+      <div class="tip">
+        <p><b>Field descriptions (quick copy):</b></p>
+        <ul>
+          <li><code>executive_summary</code>: One concise summary sentence of the meeting outcome.</li>
+          <li><code>work_package</code>: Main implementation work item described as a deliverable.</li>
+          <li><code>role</code>: Responsible role (Backend, PM, QA, etc.).</li>
+          <li><code>md_low</code>: Lower-bound estimate in man-days (number).</li>
+          <li><code>md_high</code>: Upper-bound estimate in man-days (number).</li>
+        </ul>
+      </div>
+      <figure class="demo-fig">
+        <img src="images/step-15-gemini-extract-config.png" alt="Gemini Extract configuration" width="960" loading="lazy" />
+        <figcaption>Step 15 - Extract schema configuration.</figcaption>
+      </figure>
+
+      <div class="info">
+        <p><b>Step 16 instruction (populate proposal Doc):</b></p>
+        <ol>
+          <li>Click <code>Step 3: Add to a doc</code>.</li>
+          <li>Select the proposal doc/template.</li>
+          <li>Map Extract outputs into <code>Content to add</code>, then save and run test.</li>
+          <li>Open the proposal Doc and confirm content was inserted from Step 2 outputs.</li>
+        </ol>
+      </div>
+      <div class="tip">
+        <p><b>Sample content block:</b></p>
+        <pre>Executive summary:
+- [Step 2: executive_summary]
+
+Proposed scope:
+- [Step 2: work_package]
+
+Estimate hint:
+- Role: [Step 2: role]
+- MD range: [Step 2: md_low] - [Step 2: md_high]</pre>
+      </div>
+      <figure class="demo-fig">
+        <img src="images/step-16-proposal-doc-filled-result.png" alt="Populated proposal doc result" width="960" loading="lazy" />
+        <figcaption>Step 16 - Proposal content generated.</figcaption>
+      </figure>
+
+      <div class="info">
+        <p><b>Step 17 instruction (append estimate row):</b></p>
+        <ol>
+          <li>Click <code>Step 4: Add a row</code> in Flow C.</li>
+          <li>Select the correct spreadsheet and tab.</li>
+          <li>Map columns:
+            <code>work_package</code> <- <code>Step 2: work_package</code>,
+            <code>role</code> <- <code>Step 2: role</code>,
+            <code>md_low</code> <- <code>Step 2: md_low</code>,
+            <code>md_high</code> <- <code>Step 2: md_high</code>,
+            <code>source</code> <- fixed text <code>studio_flow_v1</code>.
+          </li>
+          <li>Ensure all 5 Flow C steps are fully configured and no required fields remain.</li>
+          <li>Save and run test, then verify at least one new row was appended.</li>
+        </ol>
+      </div>
+      <figure class="demo-fig">
+        <img src="images/step-17-estimate-sheet-appended-rows.png" alt="Estimate rows appended in Sheet" width="960" loading="lazy" />
+        <figcaption>Step 17 - Flow-appended estimate row.</figcaption>
+      </figure>
+
+      <div class="info">
+        <p><b>Step 18 instruction (post-meeting Chat notify):</b> Configure <code>Step 5: Notify me in Chat</code> with required fields (space and message), then run using this message:</p>
+        <pre>Post-meeting draft generated.
+
+- Proposal updated (Step 3)
+- Estimate row appended (Step 4)
+
+Please review proposal and estimate sheet.</pre>
+      </div>
+      <figure class="demo-fig">
+        <img src="images/step-18-chat-post-meeting-notify.png" alt="Post-meeting chat notification" width="960" loading="lazy" />
+        <figcaption>Step 18 - Completion notification.</figcaption>
+      </figure>
+
+      <div class="info">
+        <p><b>Step 19 instruction (execution logs):</b> Open Flow C run history and verify status for <code>Extract</code>, <code>Add to a doc</code>, <code>Add a row</code>, and <code>Notify me in Chat</code>.</p>
+      </div>
+      <figure class="demo-fig">
+        <img src="images/step-19-execution-run-log.png" alt="Workspace Studio execution log panel" width="960" loading="lazy" />
+        <figcaption>Step 19 - Execution run history.</figcaption>
+      </figure>
+
+      <div class="info">
+        <p><b>Step 20 instruction (idempotency evidence):</b> Create one combined image with 3 areas: (1) estimate Sheet, (2) proposal Doc, (3) Chat notification.
+        This proves re-runs on the same event do not create uncontrolled duplicates.</p>
+      </div>
+      <figure class="demo-fig">
+        <img src="images/step-20-idempotency-sheet-log.png" alt="Composite idempotency evidence sheet doc chat" width="960" loading="lazy" />
+        <figcaption>Step 20 - Duplicate-control evidence (Sheet + Doc + Chat).</figcaption>
+      </figure>
+
+      <h2 id="failures">Failure-prone points validation (3+)</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Risk</th>
+            <th>How to reproduce / observe</th>
+            <th>Mitigation</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><b>1. Drive / Chat permissions</b></td>
+            <td>Run flow with insufficient write/post rights -> failing steps in run history.</td>
+            <td>Share root folders with automation operators; ensure bot/app can post in target Chat Space.</td>
+          </tr>
+          <tr>
+            <td><b>2. Template ID changes or moved files</b></td>
+            <td>Rename or move template file -> doc action fails with not found behavior.</td>
+            <td>Store template IDs in controlled config doc; protect <code>00_Templates</code> from accidental edits.</td>
+          </tr>
+          <tr>
+            <td><b>3. Event naming variability</b></td>
+            <td>Missing prefix or inconsistent naming breaks trigger conditions.</td>
+            <td>Standardize title prefixes and/or use fallback calendar-based filters.</td>
+          </tr>
+          <tr>
+            <td><b>4. Duplicate execution (idempotency)</b></td>
+            <td>Manual rerun or duplicate trigger appends duplicate rows/content.</td>
+            <td>Check execution log by <code>event_id</code> and step before write; use deterministic <code>item_id</code> for Sheets.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2 id="conclusion">Conclusion and evaluation</h2>
+      <p>
+        The demo confirms an end-to-end intake pipeline: pre-meeting checklist in Chat, automated minutes update, proposal draft generation from Extract output,
+        estimate row append in Sheets, and execution visibility through run history.
+      </p>
+      <h3>Strengths</h3>
+      <ul>
+        <li><b>Fast rollout:</b> no custom backend is required for this version.</li>
+        <li><b>Operational visibility:</b> each flow has clear run details for debugging.</li>
+        <li><b>Easy handover:</b> templates and instructions are embedded directly in the blog.</li>
+        <li><b>Reduced repetitive work:</b> one meeting source drives Docs, Sheets, and Chat outputs.</li>
+      </ul>
+      <h3>Limitations and risks</h3>
+      <ul>
+        <li><b>Permission-sensitive:</b> incorrect Drive/Chat/Calendar permissions break runtime.</li>
+        <li><b>Duplicate risk:</b> without idempotency checks, Docs/Sheets can be appended twice.</li>
+        <li><b>Extract quality depends on notes:</b> weak minutes produce weak proposal/estimate outputs.</li>
+        <li><b>Tenant UI differences:</b> step names and field placement can vary by version.</li>
+      </ul>
+      <h3>Overall assessment</h3>
+      <p>
+        For teams already operating in Google Workspace, this approach has strong ROI.
+        Most effort goes into initial template standards and flow setup, while day-to-day intake operations become much faster and more consistent.
+      </p>
+
+      <h2 id="references">References</h2>
+      <ul class="ref-list">
+        <li><a href="https://ximix.niandc.co.jp/blog/google-workspace-flows-minutes" target="_blank" rel="noopener">Google Workspace Flows minutes (NI&amp;DC)</a></li>
+        <li><a href="https://zenn.dev/google_cloud_jp/articles/google-workspace-studio-templates-meeting" target="_blank" rel="noopener">Google Workspace Studio templates meeting (Zenn)</a></li>
+        <li><a href="https://medium.com/@stephane.giron/mastering-google-flows-a-guide-to-building-powerful-workflows-with-steps-c2f41f0a9e97" target="_blank" rel="noopener">Mastering Google Flows (Medium)</a></li>
+      </ul>
+    </div>
+  </body>
+</html>

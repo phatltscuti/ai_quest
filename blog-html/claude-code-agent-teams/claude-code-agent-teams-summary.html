@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Claude Code Agent Teams: Executive Summary và Hướng dẫn</title>
+    <style>
+      *{box-sizing:border-box}
+      body{ margin:0; font-family: Arial, sans-serif; background: #fff; color: #000; line-height: 1.6; }
+      a{ color: #0066cc; text-decoration: none; }
+      a:hover{ text-decoration: underline; }
+      .wrap{ max-width: 980px; margin:0 auto; padding: 20px; }
+      h1{ margin:0 0 10px 0; font-size: 28px; }
+      h2{ margin: 24px 0 12px; font-size: 22px; border-bottom: 2px solid #ddd; padding-bottom: 8px; }
+      h3{ margin: 18px 0 10px; font-size: 18px; }
+      ul,ol{ margin: 8px 0; padding-left: 20px; }
+      p{ margin: 12px 0; }
+      code{ background: #f5f5f5; border: 1px solid #ddd; padding: 2px 6px; font-size: 13px; font-family: monospace; }
+      pre{ white-space: pre-wrap; word-wrap: break-word; border: 1px solid #ddd; background: #f5f5f5; padding: 12px; overflow:auto; font-size: 13px; font-family: monospace; margin: 12px 0; }
+      .hero{ border: 1px solid #ddd; padding: 20px; margin-bottom: 20px; background: #f9f9f9; }
+      .tip{ border-left: 3px solid #00cc66; padding: 10px 12px; background: #f0fff4; margin: 12px 0; }
+      .warning{ border-left: 3px solid #ff9900; padding: 10px 12px; background: #fff8e1; margin: 12px 0; }
+      table{ border-collapse: collapse; width: 100%; margin: 16px 0; }
+      th,td{ border: 1px solid #ddd; padding: 8px 12px; text-align: left; }
+      th{ background: #f5f5f5; }
+      .demo-img{ max-width: 100%; height: auto; border: 1px solid #ddd; border-radius: 4px; }
+      .footer{ margin-top: 30px; font-size: 12px; color: #666; border-top: 1px solid #ddd; padding-top: 20px; }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="hero">
+        <h1>Claude Code Agent Teams: Executive Summary và Hướng dẫn</h1>
+      </div>
+
+      <h2 id="exec-summary">1. Executive Summary</h2>
+      <p>
+        <b>Agent Teams</b> là tính năng thử nghiệm của Claude Code cho phép điều phối nhiều phiên Claude Code hoạt động song song như một đội. 
+        Một phiên đóng vai <b>team lead</b>, phân công công việc và tổng hợp kết quả; các <b>teammate</b> là các phiên Claude Code độc lập, 
+        mỗi phiên có context window riêng, có thể gửi tin nhắn trực tiếp cho nhau và tự phối hợp qua shared task list. 
+        Khác với Subagents (chạy trong cùng session và chỉ báo cáo về main agent), Agent Teams cho phép bạn tương tác trực tiếp với từng teammate mà không cần qua lead.
+      </p>
+      <p>
+        Agent Teams phù hợp nhất khi <b>parallel exploration</b> mang lại giá trị thực: research/review đa góc nhìn, phát triển feature mới (mỗi teammate phụ trách một phần), 
+        debug với nhiều giả thuyết song song, hay thay đổi xuyên frontend/backend/tests. Tính năng đang tắt mặc định và có một số hạn chế về session resumption, task coordination, shutdown.
+      </p>
+
+      <h2 id="features">2. Tính năng chính và điểm tiện lợi</h2>
+      <h3>2.1. Kiến trúc</h3>
+      <ul>
+        <li><b>Team lead:</b> Phiên chính tạo team, spawn teammates, điều phối công việc.</li>
+        <li><b>Teammates:</b> Các phiên Claude Code độc lập, mỗi phiên làm việc trên task được giao.</li>
+        <li><b>Task list:</b> Danh sách task dùng chung, teammates tự claim hoặc lead gán.</li>
+        <li><b>Mailbox:</b> Hệ thống tin nhắn giữa các agent.</li>
+      </ul>
+
+      <h3>2.2. Điểm tiện lợi</h3>
+      <ul>
+        <li><b>Giao tiếp peer-to-peer:</b> Teammates nhắn tin trực tiếp cho nhau, không chỉ qua lead.</li>
+        <li><b>Self-coordination:</b> Shared task list, dependencies tự động unblock khi task phụ thuộc hoàn thành.</li>
+        <li><b>Tương tác trực tiếp:</b> Bạn có thể chọn teammate và gửi lệnh riêng (Shift+Up/Down trong in-process mode).</li>
+        <li><b>Plan approval:</b> Có thể yêu cầu teammate lên plan trước, lead duyệt rồi mới implement.</li>
+        <li><b>Delegate mode:</b> Lead chỉ điều phối, không tự implement, tránh “lead tự làm thay teammate”.</li>
+        <li><b>Display modes:</b> In-process (mọi terminal) hoặc split panes (tmux / iTerm2) để xem output nhiều teammate cùng lúc.</li>
+        <li><b>Hooks:</b> TeammateIdle, TaskCompleted để enforce quality gate (feedback, chặn hoàn thành nếu chưa đạt).</li>
+      </ul>
+
+      <h2 id="vs-subagents">3. So sánh Agent Teams vs Subagents</h2>
+      <table>
+        <thead>
+          <tr><th>Khía cạnh</th><th>Subagents</th><th>Agent Teams</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><b>Context</b></td><td>Context window riêng; kết quả trả về caller</td><td>Context window riêng; hoàn toàn độc lập</td></tr>
+          <tr><td><b>Giao tiếp</b></td><td>Chỉ báo cáo kết quả về main agent</td><td>Teammates nhắn tin trực tiếp cho nhau</td></tr>
+          <tr><td><b>Điều phối</b></td><td>Main agent quản lý toàn bộ</td><td>Shared task list, self-coordination</td></tr>
+          <tr><td><b>Phù hợp khi</b></td><td>Task tập trung, chỉ cần kết quả</td><td>Công việc phức tạp cần thảo luận và hợp tác</td></tr>
+          <tr><td><b>Chi phí token</b></td><td>Thấp hơn: kết quả tóm tắt về main context</td><td>Cao hơn: mỗi teammate là một phiên Claude riêng</td></tr>
+        </tbody>
+      </table>
+      <p>
+        <b>Dùng Subagents</b> khi cần worker nhanh, tập trung: research câu hỏi, verify claim, review file. Subagent làm xong và trả về tóm tắt.
+      </p>
+      <p>
+        <b>Dùng Agent Teams</b> khi teammates cần chia sẻ phát hiện, thách thức lẫn nhau, và tự phối hợp. Ví dụ: research với competing hypotheses, parallel code review (security / performance / test coverage), phát triển feature mới (mỗi teammate phụ trách một module).
+      </p>
+      <p>
+        <b>Chuyển đổi:</b> Nếu chạy nhiều subagents song song và chạm context limit, hoặc subagents cần giao tiếp với nhau, Agent Teams là bước tiếp theo hợp lý.
+      </p>
+
+      <h2 id="setup">4. Cài đặt và hoạt động trong môi trường của bạn</h2>
+      <h3>4.1. Bật Agent Teams</h3>
+      <p>Agent Teams tắt mặc định. Bật bằng biến môi trường <code>CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1</code>:</p>
+      <ul>
+        <li><b>settings.json</b> (Claude Code): <code>{"env": {"CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"}}</code></li>
+        <li><b>Shell:</b> export CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1 (Linux/macOS) hoặc set CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1 (Windows CMD)</li>
+      </ul>
+
+      <h3>4.2. Chạy team đầu tiên</h3>
+      <p>Mô tả task và cấu trúc team bằng natural language, ví dụ:</p>
+      <pre>I'm designing an English center management system (courses, students, teachers). 
+Create an agent team to explore this from different angles: one teammate on UX/user flow, 
+one on technical architecture, one playing devil's advocate.</pre>
+      <p>Claude tạo team, spawn teammates, điều phối theo prompt. Lead hiển thị danh sách teammates và task; dùng Shift+Up/Down để chọn teammate và nhắn trực tiếp.</p>
+
+      <h3>4.3. Display mode</h3>
+      <ul>
+        <li><b>In-process:</b> Tất cả teammate chạy trong terminal chính. Hoạt động mọi terminal.</li>
+        <li><b>Split panes:</b> Mỗi teammate một pane. Cần tmux hoặc iTerm2 (it2 CLI). Mặc định "auto": dùng split nếu đang trong tmux, ngược lại in-process.</li>
+      </ul>
+      <p>Để ép in-process: <code>{"teammateMode": "in-process"}</code> trong settings.json hoặc <code>claude --teammate-mode in-process</code>.</p>
+
+      <h3>4.4. Lưu trữ team & task</h3>
+      <ul>
+        <li><b>Team config:</b> <code>~/.claude/teams/{team-name}/config.json</code></li>
+        <li><b>Task list:</b> <code>~/.claude/tasks/{team-name}/</code></li>
+      </ul>
+
+      <h3>4.5. Hạn chế (limitations)</h3>
+      <ul>
+        <li>Không resume in-process teammates khi dùng /resume, /rewind.</li>
+        <li>Task status có thể lag; teammate đôi khi không mark complete, block task phụ thuộc.</li>
+        <li>Một session chỉ quản lý một team; phải cleanup trước khi tạo team mới.</li>
+        <li>Teammates không spawn team hay teammate khác; chỉ lead quản lý.</li>
+        <li>Lead cố định; không promote teammate lên lead.</li>
+        <li>Split panes cần tmux hoặc iTerm2; không hỗ trợ VS Code integrated terminal, Windows Terminal, Ghostty.</li>
+      </ul>
+
+      <h2 id="opinions">5. Ý kiến: Cách dùng trong dự án của chúng ta</h2>
+      <h3>5.1. Use case phù hợp</h3>
+      <ul>
+        <li><b>Code review song song:</b> 3 reviewer – security, performance, test coverage – mỗi người một góc nhìn, lead tổng hợp.</li>
+        <li><b>Debug competing hypotheses:</b> Nhiều teammate điều tra giả thuyết khác nhau, tranh luận để loại trừ, tìm root cause nhanh hơn.</li>
+        <li><b>Feature mới / module mới:</b> Mỗi teammate phụ trách một phần (frontend, backend, test) để tránh conflict file.</li>
+        <li><b>Refactor lớn:</b> Chia module refactor thành task độc lập, mỗi teammate một tập file riêng.</li>
+      </ul>
+
+      <h3>5.2. Khuyến nghị</h3>
+      <ul>
+        <li><b>Bắt đầu với research/review:</b> Nếu mới dùng Agent Teams, nên bắt đầu với PR review, research library, hay investigate bug thay vì implement code ngay. Các task này ranh giới rõ, ít conflict file.</li>
+        <li><b>Tránh chỉnh cùng file:</b> Phân công sao cho mỗi teammate sở hữu một tập file riêng để tránh overwrite.</li>
+        <li><b>Plan approval cho task rủi ro:</b> Với refactor lớn hoặc thay đổi auth/DB, yêu cầu teammate nộp plan trước, lead duyệt rồi mới implement.</li>
+        <li><b>Delegate mode khi cần:</b> Nếu lead hay tự implement thay vì chờ teammate, bật delegate mode (Shift+Tab) để ép lead chỉ điều phối.</li>
+        <li><b>Kiểm soát chi phí:</b> Agent Teams tốn token nhiều hơn single session. Dùng cho task thực sự hưởng lợi từ parallel exploration; task thường nhật nên dùng single session hoặc Subagents.</li>
+      </ul>
+
+      <h2 id="demo">6. Demo</h2>
+      <p>
+        Phần demo minh họa luồng: bật Agent Teams → tạo team → xem task list → chọn teammate → nhắn tin trực tiếp → shutdown request từ team-lead.
+      </p>
+
+      <h3>Hình 1: Cấu hình bật Agent Teams</h3>
+      <p><img src="images/step-01-enable-agent-teams.png" alt="Cấu hình bật Agent Teams" class="demo-img" /></p>
+      <p>Thêm <code>CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1</code> vào settings.json hoặc biến môi trường.</p>
+
+      <h3>Hình 2: Khởi động Claude Code</h3>
+      <p><img src="images/step-02-claude-code-start.png" alt="Claude Code khởi động" class="demo-img" /></p>
+      <p>Chạy Claude Code trong thư mục project, sẵn sàng nhận prompt.</p>
+
+      <h3>Hình 3: Prompt tạo agent team</h3>
+      <p><img src="images/step-03-prompt-create-team.png" alt="Prompt tạo team" class="demo-img" /></p>
+      <p>Gửi prompt mô tả task và cấu trúc team (ví dụ: 3 teammates – UX, architecture, devil's advocate).</p>
+
+      <h3>Hình 4: Lead spawn teammates</h3>
+      <p><img src="images/step-04-lead-spawns-teammates.png" alt="Lead spawn teammates" class="demo-img" /></p>
+      <p>Lead tạo team, spawn teammates và hiển thị danh sách.</p>
+
+      <h3>Hình 5: Task list (Ctrl+T)</h3>
+      <p><img src="images/step-05-task-list.png" alt="Shared task list" class="demo-img" /></p>
+      <p>Shared task list điều phối công việc giữa teammates.</p>
+
+      <h3>Hình 6: Chọn teammate (Shift+Up/Down)</h3>
+      <p><img src="images/step-06-select-teammate.png" alt="Chọn teammate" class="demo-img" /></p>
+      <p>Chọn teammate để xem và tương tác trực tiếp trong in-process mode.</p>
+
+      <h3>Hình 7: Nhắn tin trực tiếp cho teammate</h3>
+      <p><img src="images/step-07-message-teammate.png" alt="Nhắn tin teammate" class="demo-img" /></p>
+      <p>Gửi message trực tiếp cho teammate mà không qua lead.</p>
+
+      <h3>Hình 8: Shutdown request từ team-lead</h3>
+      <p><img src="images/step-08-shutdown-request.png" alt="Shutdown request from team-lead" class="demo-img" /></p>
+      <p>Khi tất cả tasks hoàn thành, lead tự gửi shutdown request (ví dụ: "Shutdown request from team-lead – Reason: All tasks complete..."). Teammates nhận thông báo và dừng hoạt động.</p>
+
+      <h2 id="ket-luan">7. Kết luận</h2>
+      <p>
+        <b>Agent Teams</b> là tính năng mạnh mẽ cho phép điều phối nhiều phiên Claude Code song song, với team lead, shared task list, và giao tiếp peer-to-peer giữa teammates. 
+        Điểm mạnh: phù hợp cho <b>parallel research</b> (nhiều góc nhìn cùng lúc), <b>code review đa tiêu chí</b> (security, performance, test coverage), <b>debug với competing hypotheses</b>, và <b>phát triển feature mới</b> (mỗi teammate một module riêng).
+      </p>
+      <p>
+        So với Subagents: dùng <b>Subagents</b> khi chỉ cần worker nhanh, tập trung, trả về tóm tắt; dùng <b>Agent Teams</b> khi teammates cần chia sẻ phát hiện, thách thức lẫn nhau và tự phối hợp. 
+        Chi phí token cao hơn nhưng bù lại giá trị cho bài toán phức tạp.
+      </p>
+      <p>
+        Lưu ý: Agent Teams đang ở chế độ <b>experimental</b>, cần bật <code>CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1</code> và chấp nhận các hạn chế (session resumption, task status lag, split panes chỉ hỗ trợ tmux/iTerm2 trên một số OS). 
+        Nên bắt đầu với task research/review, tránh chỉnh cùng file, và giám sát tiến độ để tối ưu hiệu quả.
+      </p>
+      <p>
+        Demo trên đây minh họa luồng cơ bản từ bật tính năng → tạo team → xem task list → chọn teammate → nhắn tin trực tiếp → shutdown. 
+        Bạn có thể áp dụng tương tự cho các project như quản lý trung tâm tiếng Anh, thiết kế kiến trúc mới, hoặc review PR lớn.
+      </p>
+
+      <h2 id="refs">8. Nguồn tham khảo</h2>
+      <ul>
+        <li><a href="https://code.claude.com/docs/en/agent-teams" target="_blank">Claude Code Docs – Orchestrate teams of Claude Code sessions</a></li>
+        <li><a href="https://code.claude.com/docs/en/features-overview#subagent-vs-agent-team" target="_blank">Claude Code Docs – Subagent vs Agent team</a></li>
+      </ul>
+
+      <div class="footer">
+        <p>File: <code>blog-html/claude-code-agent-teams/claude-code-agent-teams-summary.html</code></p>
+        <p style="margin-top: 8px; font-size: 11px; color: #666;">Last updated: <script>document.write(new Date().toLocaleDateString('vi-VN'))</script></p>
+      </div>
+    </div>
+  </body>
+</html>

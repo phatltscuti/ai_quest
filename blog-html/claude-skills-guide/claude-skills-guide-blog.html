@@ -1,0 +1,325 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>H&#432;&#7899;ng d&#7851;n x&#226;y d&#7921;ng Skills cho Claude &#8211; D&#7841;y AI l&#224;m vi&#7879;c theo c&#225;ch c&#7911;a b&#7841;n</title>
+    <style>
+      *{box-sizing:border-box}
+      body{margin:0;font-family:Arial,sans-serif;background:#fff;color:#222;line-height:1.7}
+      a{color:#0066cc;text-decoration:none}
+      a:hover{text-decoration:underline}
+      .wrap{max-width:980px;margin:0 auto;padding:20px}
+      h1{margin:0 0 10px;font-size:28px}
+      h2{margin:28px 0 14px;font-size:22px;border-bottom:2px solid #ddd;padding-bottom:8px}
+      h3{margin:20px 0 10px;font-size:18px}
+      ul,ol{margin:8px 0;padding-left:22px}
+      p{margin:12px 0}
+      code{background:#f5f5f5;border:1px solid #ddd;padding:2px 6px;font-size:13px;font-family:monospace}
+      pre{white-space:pre-wrap;word-wrap:break-word;border:1px solid #ddd;background:#f5f5f5;padding:12px;overflow:auto;font-size:13px;font-family:monospace;margin:12px 0}
+      .hero{border:1px solid #ddd;padding:20px;margin-bottom:20px;background:#f9f9f9}
+      .highlight{background:#fffbe6;border-left:4px solid #f5c542;padding:12px 16px;margin:16px 0}
+      .comparison{width:100%;border-collapse:collapse;margin:16px 0}
+      .comparison th,.comparison td{border:1px solid #ddd;padding:10px 12px;text-align:left}
+      .comparison th{background:#f0f0f0;font-weight:bold}
+      .footer{margin-top:30px;font-size:12px;color:#666;border-top:1px solid #ddd;padding-top:20px}
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+
+      <!-- ==================== M&#7902; B&#192;I ==================== -->
+      <div class="hero">
+        <h1>H&#432;&#7899;ng d&#7851;n x&#226;y d&#7921;ng Skills cho Claude &#8211; D&#7841;y AI l&#224;m vi&#7879;c theo c&#225;ch c&#7911;a b&#7841;n</h1>
+        <p>
+          Ph&#226;n t&#237;ch v&#224; nh&#7853;n &#273;&#7883;nh t&#7915; t&#224;i li&#7879;u
+          <a href="https://resources.anthropic.com/hubfs/The-Complete-Guide-to-Building-Skill-for-Claude.pdf" target="_blank">
+            <i>The Complete Guide to Building Skills for Claude</i></a> (Anthropic, 2026).
+        </p>
+        <p>
+          N&#7871;u b&#7841;n &#273;ang d&#249;ng Claude &#273;&#7875; l&#224;m vi&#7879;c h&#224;ng ng&#224;y &#8211; vi&#7871;t code, t&#7841;o t&#224;i li&#7879;u, qu&#7843;n l&#253; workflow &#8211;
+          c&#243; l&#7869; b&#7841;n &#273;&#227; t&#7915;ng g&#7863;p t&#236;nh hu&#7889;ng ph&#7843;i l&#7863;p &#273;i l&#7863;p l&#7841;i c&#249;ng m&#7897;t &#273;o&#7841;n prompt m&#7895;i ng&#224;y.
+          <b>Skills</b> l&#224; c&#225;ch Anthropic gi&#7843;i quy&#7871;t v&#7845;n &#273;&#7873; n&#224;y:
+          b&#7841;n &#8220;d&#7841;y&#8221; Claude m&#7897;t l&#7847;n, v&#224; n&#243; s&#7869; nh&#7899; c&#225;ch l&#224;m vi&#7879;c &#273;&#243; m&#227;i.
+        </p>
+        <p>
+          B&#224;i vi&#7871;t n&#224;y kh&#244;ng ph&#7843;i b&#7843;n d&#7883;ch c&#7911;a t&#224;i li&#7879;u g&#7889;c.
+          M&#7909;c ti&#234;u l&#224; <b>r&#250;t ra nh&#7919;ng b&#224;i h&#7885;c th&#7921;c t&#7871;</b>,
+          ph&#226;n t&#237;ch l&#7907;i &#237;ch, v&#224; &#273;&#432;a ra g&#243;c nh&#236;n c&#225; nh&#226;n v&#7873; c&#225;ch &#225;p d&#7909;ng Skills v&#224;o c&#244;ng vi&#7879;c h&#224;ng ng&#224;y.
+        </p>
+      </div>
+
+      <!-- ==================== TH&#194;N B&#192;I ==================== -->
+
+      <h2>1. Skills l&#224; g&#236;?</h2>
+      <p>
+        M&#7897;t <b>Skill</b> l&#224; m&#7897;t <b>th&#432; m&#7909;c ch&#7913;a t&#7853;p h&#7907;p h&#432;&#7899;ng d&#7851;n</b> (d&#432;&#7899;i d&#7841;ng Markdown + YAML) &#273;&#7875; d&#7841;y Claude c&#225;ch x&#7917; l&#253;
+        m&#7897;t lo&#7841;i c&#244;ng vi&#7879;c c&#7909; th&#7875;. Thay v&#236; gi&#7843;i th&#237;ch l&#7841;i m&#7895;i l&#7847;n h&#7887;i,
+        b&#7841;n &#273;&#243;ng g&#243;i ki&#7871;n th&#7913;c, quy tr&#236;nh, v&#224; best practices v&#224;o m&#7897;t folder &#8211;
+        Claude s&#7869; t&#7921; &#273;&#7897;ng &#225;p d&#7909;ng khi c&#7847;n.
+      </p>
+      <p>C&#7845;u tr&#250;c m&#7897;t Skill folder:</p>
+      <pre>your-skill-name/
+&#9500;&#9472;&#9472; SKILL.md          # B&#7855;t bu&#7897;c &#8211; file h&#432;&#7899;ng d&#7851;n ch&#237;nh (Markdown + YAML frontmatter)
+&#9500;&#9472;&#9472; scripts/          # T&#249;y ch&#7885;n &#8211; code th&#7921;c thi (Python, Bash...)
+&#9500;&#9472;&#9472; references/       # T&#249;y ch&#7885;n &#8211; t&#224;i li&#7879;u tham kh&#7843;o
+&#9492;&#9472;&#9472; assets/           # T&#249;y ch&#7885;n &#8211; template, font, icon...</pre>
+
+      <div class="highlight">
+        <b>&#272;i&#7875;m m&#7845;u ch&#7889;t:</b> Skill kh&#244;ng ph&#7843;i l&#224; plugin hay extension ph&#7913;c t&#7841;p.
+        N&#243; ch&#7881; l&#224; m&#7897;t folder v&#7899;i file <code>SKILL.md</code> &#8211; &#273;&#417;n gi&#7843;n nh&#432;ng r&#7845;t m&#7841;nh.
+      </div>
+
+      <h2>2. T&#7841;i sao n&#234;n d&#249;ng Skills? (L&#7907;i &#237;ch th&#7921;c t&#7871;)</h2>
+
+      <h3>2.1. Kh&#244;ng c&#7847;n l&#7863;p l&#7841;i prompt</h3>
+      <p>
+        V&#7845;n &#273;&#7873; l&#7899;n nh&#7845;t khi l&#224;m vi&#7879;c v&#7899;i AI l&#224; <b>m&#7895;i cu&#7897;c h&#7897;i tho&#7841;i m&#7899;i b&#7855;t &#273;&#7847;u t&#7915; s&#7889; 0</b>.
+        B&#7841;n ph&#7843;i gi&#7843;i th&#237;ch l&#7841;i coding convention, style guide, workflow m&#7895;i l&#7847;n.
+        Skill gi&#7843;i quy&#7871;t tri&#7879;t &#273;&#7875;: d&#7841;y m&#7897;t l&#7847;n, Claude nh&#7899; m&#227;i.
+      </p>
+
+      <h3>2.2. K&#7871;t qu&#7843; nh&#7845;t qu&#225;n</h3>
+      <p>
+        Khi c&#7843; team d&#249;ng chung m&#7897;t Skill, m&#7885;i ng&#432;&#7901;i s&#7869; nh&#7853;n &#273;&#432;&#7907;c output theo c&#249;ng m&#7897;t chu&#7849;n &#8211;
+        kh&#244;ng ph&#7909; thu&#7897;c v&#224;o kh&#7843; n&#259;ng vi&#7871;t prompt c&#7911;a t&#7915;ng ng&#432;&#7901;i.
+      </p>
+
+      <h3>2.3. Ti&#7871;t ki&#7879;m token v&#224; th&#7901;i gian</h3>
+      <p>
+        T&#224;i li&#7879;u Anthropic cho th&#7845;y m&#7897;t v&#237; d&#7909; so s&#225;nh: kh&#244;ng c&#243; Skill th&#236; m&#7845;t 15 tin nh&#7855;n qua l&#7841;i + 12,000 token;
+        c&#243; Skill ch&#7881; c&#7847;n 2 c&#226;u h&#7887;i l&#224;m r&#245; + 6,000 token. <b>Gi&#7843;m 50% token v&#224; 85% s&#7889; tin nh&#7855;n.</b>
+      </p>
+
+      <h3>2.4. Ho&#7841;t &#273;&#7897;ng &#273;a n&#7873;n t&#7843;ng</h3>
+      <p>
+        M&#7897;t Skill vi&#7871;t m&#7897;t l&#7847;n ch&#7841;y &#273;&#432;&#7907;c tr&#234;n c&#7843; <b>Claude.ai</b>, <b>Claude Code</b>, v&#224; <b>API</b> &#8211;
+        kh&#244;ng c&#7847;n s&#7917;a &#273;&#7893;i g&#236;.
+      </p>
+
+      <h3>2.5. K&#7871;t h&#7907;p v&#7899;i MCP (Model Context Protocol)</h3>
+      <p>
+        N&#7871;u b&#7841;n &#273;ang d&#249;ng MCP &#273;&#7875; k&#7871;t n&#7889;i Claude v&#7899;i c&#225;c d&#7883;ch v&#7909; (Notion, Linear, GitHub, Sentry...),
+        Skill ch&#237;nh l&#224; l&#7899;p <b>&#8220;ki&#7871;n th&#7913;c&#8221;</b> tr&#234;n l&#7899;p <b>&#8220;k&#7871;t n&#7889;i&#8221;</b>:
+      </p>
+      <table class="comparison">
+        <tr><th>MCP (K&#7871;t n&#7889;i)</th><th>Skill (Ki&#7871;n th&#7913;c)</th></tr>
+        <tr><td>K&#7871;t n&#7889;i Claude v&#7899;i d&#7883;ch v&#7909; (Notion, Linear...)</td><td>D&#7841;y Claude c&#225;ch d&#249;ng d&#7883;ch v&#7909; hi&#7879;u qu&#7843;</td></tr>
+        <tr><td>Cung c&#7845;p d&#7919; li&#7879;u real-time v&#224; tool</td><td>&#272;&#243;ng g&#243;i workflow v&#224; best practices</td></tr>
+        <tr><td>Claude <i>c&#243; th&#7875;</i> l&#224;m g&#236;</td><td>Claude <i>n&#234;n</i> l&#224;m g&#236;</td></tr>
+      </table>
+      <p>
+        Anthropic v&#237; von: MCP l&#224; <b>c&#259;n b&#7871;p chuy&#234;n nghi&#7879;p</b> (d&#7909;ng c&#7909;, nguy&#234;n li&#7879;u),
+        Skill l&#224; <b>c&#244;ng th&#7913;c n&#7845;u &#259;n</b> (h&#432;&#7899;ng d&#7851;n t&#7915;ng b&#432;&#7899;c).
+        C&#243; c&#259;n b&#7871;p m&#224; kh&#244;ng c&#243; c&#244;ng th&#7913;c th&#236; v&#7851;n n&#7845;u &#273;&#432;&#7907;c, nh&#432;ng kh&#244;ng nh&#7845;t qu&#225;n v&#224; ph&#7843;i th&#7917; nhi&#7873;u l&#7847;n.
+      </p>
+
+      <h2>3. Nguy&#234;n t&#7855;c thi&#7871;t k&#7871; c&#7889;t l&#245;i (3 tr&#7909; c&#7897;t)</h2>
+
+      <h3>3.1. Progressive Disclosure (Ti&#7871;t l&#7897; d&#7847;n)</h3>
+      <p>Skill d&#249;ng h&#7879; th&#7889;ng 3 t&#7847;ng &#273;&#7875; ti&#7871;t ki&#7879;m token:</p>
+      <ol>
+        <li><b>T&#7847;ng 1 &#8211; YAML frontmatter:</b> Lu&#244;n &#273;&#432;&#7907;c load v&#224;o system prompt. Ch&#7881; ch&#7913;a t&#234;n v&#224; m&#244; t&#7843; ng&#7855;n &#273;&#7875; Claude bi&#7871;t <i>khi n&#224;o</i> c&#7847;n d&#249;ng skill n&#224;y.</li>
+        <li><b>T&#7847;ng 2 &#8211; SKILL.md body:</b> Ch&#7881; load khi Claude th&#7845;y skill ph&#249; h&#7907;p. Ch&#7913;a to&#224;n b&#7897; h&#432;&#7899;ng d&#7851;n chi ti&#7871;t.</li>
+        <li><b>T&#7847;ng 3 &#8211; File li&#234;n k&#7871;t:</b> Ch&#7881; &#273;&#432;&#7907;c &#273;&#7885;c khi th&#7921;c s&#7921; c&#7847;n (scripts, references, assets).</li>
+      </ol>
+      <div class="highlight">
+        <b>B&#224;i h&#7885;c:</b> &#272;&#226;y l&#224; m&#7897;t ki&#7871;n tr&#250;c r&#7845;t th&#244;ng minh.
+        Thay v&#236; nh&#7891;i h&#7871;t m&#7885;i th&#7913; v&#224;o context, Claude ch&#7881; load nh&#7919;ng g&#236; c&#7847;n thi&#7871;t &#8211;
+        gi&#7889;ng nh&#432; lazy loading trong web development.
+      </div>
+
+      <h3>3.2. Composability (K&#7871;t h&#7907;p &#273;&#432;&#7907;c)</h3>
+      <p>
+        Claude c&#243; th&#7875; load nhi&#7873;u Skill c&#249;ng l&#250;c. M&#7895;i Skill n&#234;n ho&#7841;t &#273;&#7897;ng &#273;&#7897;c l&#7853;p,
+        kh&#244;ng gi&#7843; &#273;&#7883;nh m&#236;nh l&#224; Skill duy nh&#7845;t.
+      </p>
+
+      <h3>3.3. Portability (Di &#273;&#7897;ng)</h3>
+      <p>
+        M&#7897;t Skill ho&#7841;t &#273;&#7897;ng gi&#7889;ng nhau tr&#234;n Claude.ai, Claude Code v&#224; API.
+        Vi&#7871;t m&#7897;t l&#7847;n, ch&#7841;y m&#7885;i n&#417;i.
+      </p>
+
+      <h2>4. T&#243;m t&#7855;t c&#225;c &#273;i&#7875;m ch&#237;nh t&#7915; t&#224;i li&#7879;u</h2>
+
+      <h3>4.1. 3 lo&#7841;i Skill ph&#7893; bi&#7871;n</h3>
+      <table class="comparison">
+        <tr><th>Lo&#7841;i</th><th>M&#7909;c &#273;&#237;ch</th><th>V&#237; d&#7909;</th></tr>
+        <tr>
+          <td><b>Category 1:</b> T&#7841;o t&#224;i li&#7879;u &amp; asset</td>
+          <td>T&#7841;o output nh&#7845;t qu&#225;n (code, document, design, slide...)</td>
+          <td><code>frontend-design</code> &#8211; t&#7841;o giao di&#7879;n web production-grade</td>
+        </tr>
+        <tr>
+          <td><b>Category 2:</b> T&#7921; &#273;&#7897;ng h&#243;a workflow</td>
+          <td>Quy tr&#236;nh nhi&#7873;u b&#432;&#7899;c c&#7847;n nh&#7845;t qu&#225;n</td>
+          <td><code>skill-creator</code> &#8211; h&#432;&#7899;ng d&#7851;n t&#7841;o Skill m&#7899;i</td>
+        </tr>
+        <tr>
+          <td><b>Category 3:</b> N&#226;ng cao MCP</td>
+          <td>Th&#234;m workflow cho MCP server c&#243; s&#7861;n</td>
+          <td><code>sentry-code-review</code> &#8211; t&#7921; &#273;&#7897;ng review code t&#7915; Sentry data</td>
+        </tr>
+      </table>
+
+      <h3>4.2. C&#225;ch vi&#7871;t YAML frontmatter hi&#7879;u qu&#7843;</h3>
+      <p>Frontmatter l&#224; ph&#7847;n quan tr&#7885;ng nh&#7845;t &#8211; quy&#7871;t &#273;&#7883;nh Claude c&#243; load skill hay kh&#244;ng:</p>
+      <pre>---
+name: sprint-planner
+description: Manages Linear project workflows including sprint
+  planning, task creation, and status tracking. Use when user
+  mentions "sprint", "Linear tasks", "project planning", or
+  asks to "create tickets".
+---</pre>
+      <p><b>Quy t&#7855;c v&#224;ng:</b></p>
+      <ul>
+        <li><code>name</code>: d&#249;ng kebab-case, kh&#244;ng vi&#7871;t hoa, kh&#244;ng d&#7845;u c&#225;ch</li>
+        <li><code>description</code>: ph&#7843;i g&#7891;m <b>skill l&#224;m g&#236;</b> + <b>khi n&#224;o d&#249;ng</b> (trigger phrases)</li>
+        <li>Kh&#244;ng d&#249;ng XML tag (<code>&lt; &gt;</code>) trong frontmatter (l&#253; do b&#7843;o m&#7853;t)</li>
+        <li>Kh&#244;ng &#273;&#7863;t t&#234;n c&#243; ch&#7919; &#8220;claude&#8221; ho&#7863;c &#8220;anthropic&#8221; (reserved)</li>
+      </ul>
+
+      <h3>4.3. 5 Pattern thi&#7871;t k&#7871; Skill</h3>
+      <ol>
+        <li><b>Sequential Workflow:</b> Quy tr&#236;nh nhi&#7873;u b&#432;&#7899;c theo th&#7913; t&#7921; (onboard kh&#225;ch h&#224;ng, deploy pipeline...)</li>
+        <li><b>Multi-MCP Coordination:</b> K&#7871;t h&#7907;p nhi&#7873;u MCP server (Figma &#8594; Google Drive &#8594; Linear &#8594; Slack)</li>
+        <li><b>Iterative Refinement:</b> L&#7863;p l&#7841;i &#273;&#7875; c&#7843;i thi&#7879;n ch&#7845;t l&#432;&#7907;ng (t&#7841;o b&#225;o c&#225;o, ki&#7875;m tra, s&#7917;a, l&#7863;p l&#7841;i)</li>
+        <li><b>Context-aware Tool Selection:</b> Ch&#7885;n tool t&#249;y ng&#7919; c&#7843;nh (file l&#7899;n &#8594; cloud, code &#8594; GitHub, doc &#8594; Notion)</li>
+        <li><b>Domain-specific Intelligence:</b> Nh&#250;ng ki&#7871;n th&#7913;c chuy&#234;n m&#244;n (compliance, quy tr&#236;nh n&#7897;i b&#7897;...)</li>
+      </ol>
+
+      <h3>4.4. Testing v&#224; Iteration</h3>
+      <p>T&#224;i li&#7879;u &#273;&#7873; xu&#7845;t 3 c&#7845;p &#273;&#7897; test:</p>
+      <ol>
+        <li><b>Triggering test:</b> Skill c&#243; t&#7921; &#273;&#7897;ng load khi c&#7847;n kh&#244;ng? C&#243; load nh&#7847;m kh&#244;ng?</li>
+        <li><b>Functional test:</b> Output c&#243; &#273;&#250;ng kh&#244;ng? API call c&#243; th&#224;nh c&#244;ng kh&#244;ng?</li>
+        <li><b>Performance comparison:</b> So s&#225;nh v&#7899;i/kh&#244;ng c&#243; Skill (token, s&#7889; b&#432;&#7899;c, &#273;&#7897; ch&#237;nh x&#225;c)</li>
+      </ol>
+      <div class="highlight">
+        <b>M&#7865;o hay t&#7915; Anthropic:</b> H&#227;y iterate tr&#234;n <b>m&#7897;t task duy nh&#7845;t</b> cho &#273;&#7871;n khi Claude l&#224;m &#273;&#250;ng,
+        r&#7891;i m&#7899;i tr&#237;ch xu&#7845;t c&#225;ch l&#224;m th&#224;nh c&#244;ng &#273;&#243; th&#224;nh Skill.
+        &#272;&#7915;ng vi&#7871;t Skill r&#7891;i m&#7899;i test &#8211; l&#224;m ng&#432;&#7907;c l&#7841;i s&#7869; nhanh h&#417;n.
+      </p>
+      </div>
+
+      <h3>4.5. Ph&#226;n ph&#7889;i v&#224; chia s&#7867;</h3>
+      <ul>
+        <li><b>C&#225; nh&#226;n:</b> Upload file zip l&#234;n Claude.ai (Settings &gt; Capabilities &gt; Skills) ho&#7863;c &#273;&#7863;t v&#224;o th&#432; m&#7909;c Skills c&#7911;a Claude Code</li>
+        <li><b>T&#7893; ch&#7913;c:</b> Admin deploy Skill to&#224;n workspace (t&#237;nh n&#259;ng t&#7915; 12/2025)</li>
+        <li><b>C&#7897;ng &#273;&#7891;ng:</b> Host tr&#234;n GitHub v&#7899;i README v&#224; h&#432;&#7899;ng d&#7851;n c&#224;i &#273;&#7863;t</li>
+        <li><b>API:</b> D&#249;ng endpoint <code>/v1/skills</code> cho &#7913;ng d&#7909;ng v&#224; agent t&#7921; &#273;&#7897;ng</li>
+      </ul>
+      <p>
+        &#272;&#7863;c bi&#7879;t, Anthropic &#273;&#227; c&#244;ng b&#7889; <b>Agent Skills l&#224; m&#7897;t open standard</b> &#8211;
+        gi&#7889;ng nh&#432; MCP, Skills &#273;&#432;&#7907;c thi&#7871;t k&#7871; &#273;&#7875; ho&#7841;t &#273;&#7897;ng &#273;a n&#7873;n t&#7843;ng,
+        kh&#244;ng ch&#7881; ri&#234;ng Claude.
+      </p>
+
+      <h2>5. Nh&#7919;ng b&#224;i h&#7885;c r&#250;t ra</h2>
+
+      <h3>5.1. &#8220;D&#7841;y&#8221; AI thay v&#236; &#8220;ra l&#7879;nh&#8221; AI</h3>
+      <p>
+        Skill thay &#273;&#7893;i c&#225;ch t&#432; duy v&#7873; AI: thay v&#236; vi&#7871;t prompt m&#7895;i l&#7847;n (ra l&#7879;nh),
+        b&#7841;n <b>&#273;&#243;ng g&#243;i ki&#7871;n th&#7913;c</b> &#273;&#7875; AI t&#7921; bi&#7871;t c&#225;ch l&#224;m (d&#7841;y).
+        &#272;&#226;y l&#224; b&#432;&#7899;c ti&#7871;n quan tr&#7885;ng t&#7915; &#8220;AI assistant&#8221; sang &#8220;AI colleague&#8221;.
+      </p>
+
+      <h3>5.2. Ki&#7871;n th&#7913;c chuy&#234;n m&#244;n l&#224; l&#7907;i th&#7871; c&#7841;nh tranh</h3>
+      <p>
+        AI c&#243; th&#7875; vi&#7871;t code, nh&#432;ng kh&#244;ng bi&#7871;t <i>quy tr&#236;nh n&#7897;i b&#7897;</i> c&#7911;a team b&#7841;n,
+        <i>coding convention</i> ri&#234;ng, hay <i>business logic</i> &#273;&#7863;c th&#249;.
+        Ng&#432;&#7901;i n&#224;o &#273;&#243;ng g&#243;i &#273;&#432;&#7907;c ki&#7871;n th&#7913;c n&#224;y th&#224;nh Skill s&#7869; c&#243; l&#7907;i th&#7871; l&#7899;n.
+      </p>
+
+      <h3>5.3. &#272;&#417;n gi&#7843;n nh&#432;ng kh&#244;ng t&#7847;m th&#432;&#7901;ng</h3>
+      <p>
+        V&#7873; m&#7863;t k&#7929; thu&#7853;t, Skill ch&#7881; l&#224; m&#7897;t folder v&#7899;i file Markdown.
+        Nh&#432;ng s&#7913;c m&#7841;nh n&#7857;m &#7903; <b>ki&#7871;n tr&#250;c Progressive Disclosure</b> &#8211;
+        ch&#7881; load nh&#7919;ng g&#236; c&#7847;n, khi c&#7847;n.
+        &#272;&#226;y l&#224; m&#7897;t b&#224;i h&#7885;c thi&#7871;t k&#7871; &#273;&#225;ng h&#7885;c cho b&#7845;t k&#7923; h&#7879; th&#7889;ng n&#224;o.
+      </p>
+
+      <h3>5.4. Skill l&#224; &#8220;t&#224;i li&#7879;u s&#7889;ng&#8221;</h3>
+      <p>
+        Anthropic nh&#7845;n m&#7841;nh: Skill kh&#244;ng ph&#7843;i vi&#7871;t m&#7897;t l&#7847;n l&#224; xong.
+        B&#7841;n c&#7847;n theo d&#245;i, ph&#225;t hi&#7879;n under-triggering / over-triggering, v&#224; c&#7853;p nh&#7853;t li&#234;n t&#7909;c.
+        Gi&#7889;ng nh&#432; maintain code v&#7853;y.
+      </p>
+
+      <h2>6. G&#243;c nh&#236;n c&#225; nh&#226;n: &#193;p d&#7909;ng Skills v&#224;o d&#7921; &#225;n th&#7921;c t&#7871;</h2>
+
+      <h3>6.1. Skill cho Laravel/PHP project</h3>
+      <p>
+        V&#7899;i t&#432; c&#225;ch PHP Developer, m&#236;nh th&#7845;y ti&#7873;m n&#259;ng l&#7899;n nh&#7845;t l&#224; t&#7841;o Skill cho:
+      </p>
+      <ul>
+        <li><b>Laravel coding convention:</b> D&#7841;y Claude c&#225;ch &#273;&#7863;t t&#234;n controller, service, repository, migration... theo chu&#7849;n team</li>
+        <li><b>API response format:</b> &#272;&#7843;m b&#7843;o m&#7885;i API Claude t&#7841;o &#273;&#7873;u tr&#7843; v&#7873; &#273;&#250;ng format <code>{data, message, status}</code></li>
+        <li><b>Database migration workflow:</b> Quy tr&#236;nh t&#7841;o migration &#8594; model &#8594; factory &#8594; seeder &#8594; test theo &#273;&#250;ng th&#7913; t&#7921;</li>
+        <li><b>Code review checklist:</b> Claude t&#7921; ki&#7875;m tra N+1 query, mass assignment, validation rules... tr&#432;&#7899;c khi tr&#7843; code</li>
+      </ul>
+
+      <h3>6.2. Skill cho team workflow</h3>
+      <ul>
+        <li><b>Sprint planning skill:</b> K&#7871;t h&#7907;p v&#7899;i Linear/Jira MCP &#273;&#7875; Claude t&#7921; t&#7841;o task t&#7915; requirement doc</li>
+        <li><b>PR review skill:</b> K&#7871;t h&#7907;p v&#7899;i GitHub MCP + Sentry MCP &#273;&#7875; review code d&#7921;a tr&#234;n error data th&#7921;c t&#7871;</li>
+        <li><b>Documentation skill:</b> T&#7921; &#273;&#7897;ng t&#7841;o API doc, changelog t&#7915; commit history</li>
+      </ul>
+
+      <h3>6.3. Skill cho c&#225; nh&#226;n</h3>
+      <ul>
+        <li><b>Blog writing skill:</b> D&#7841;y Claude vi&#7871;t blog theo phong c&#225;ch ri&#234;ng (structure, tone, format HTML)</li>
+        <li><b>Video script skill:</b> T&#7841;o script video YouTube theo template c&#7889; &#273;&#7883;nh (hook &#8594; n&#7897;i dung &#8594; CTA)</li>
+        <li><b>Learning note skill:</b> Claude t&#7893;ng h&#7907;p t&#224;i li&#7879;u th&#224;nh d&#7841;ng ghi ch&#250; c&#225; nh&#226;n h&#243;a</li>
+      </ul>
+
+      <div class="highlight">
+        <b>Nh&#7853;n &#273;&#7883;nh:</b> Skill kh&#244;ng ch&#7881; d&#224;nh cho developer.
+        B&#7845;t k&#7923; ai c&#243; workflow l&#7863;p l&#7841;i &#273;&#7873;u c&#243; th&#7875; h&#432;&#7903;ng l&#7907;i:
+        marketing, content, HR, finance...
+        Ch&#7881; c&#7847;n bi&#7871;t vi&#7871;t Markdown l&#224; c&#243; th&#7875; t&#7841;o Skill.
+      </div>
+
+      <h2>7. B&#7855;t &#273;&#7847;u nhanh trong 15 ph&#250;t</h2>
+      <p>T&#224;i li&#7879;u Anthropic n&#243;i b&#7841;n c&#243; th&#7875; t&#7841;o Skill &#273;&#7847;u ti&#234;n trong 15-30 ph&#250;t. &#272;&#226;y l&#224; c&#225;c b&#432;&#7899;c:</p>
+      <ol>
+        <li><b>X&#225;c &#273;&#7883;nh use case:</b> Ch&#7885;n 1 workflow l&#7863;p l&#7841;i nhi&#7873;u nh&#7845;t c&#7911;a b&#7841;n</li>
+        <li><b>T&#7841;o folder:</b> <code>mkdir my-first-skill</code></li>
+        <li><b>Vi&#7871;t SKILL.md:</b> B&#7855;t &#273;&#7847;u v&#7899;i YAML frontmatter (name + description) r&#7891;i th&#234;m h&#432;&#7899;ng d&#7851;n chi ti&#7871;t</li>
+        <li><b>Upload &amp; test:</b> Upload l&#234;n Claude.ai (Settings &gt; Capabilities &gt; Skills) v&#224; th&#7917; v&#7899;i c&#225;c prompt kh&#225;c nhau</li>
+        <li><b>Iterate:</b> S&#7917;a description n&#7871;u skill kh&#244;ng trigger &#273;&#250;ng, th&#234;m h&#432;&#7899;ng d&#7851;n n&#7871;u output ch&#432;a &#273;&#7841;t</li>
+      </ol>
+      <p>Ho&#7863;c d&#249;ng <b>skill-creator</b> (c&#243; s&#7861;n trong Claude.ai): g&#245; <code>&#8220;Use the skill-creator skill to help me build a skill for [use case]&#8221;</code></p>
+
+      <!-- ==================== K&#7870;T B&#192;I ==================== -->
+
+      <h2>8. K&#7871;t lu&#7853;n</h2>
+      <p>
+        <i>The Complete Guide to Building Skills for Claude</i> kh&#244;ng ch&#7881; l&#224; t&#224;i li&#7879;u k&#7929; thu&#7853;t &#8211;
+        n&#243; cho th&#7845;y <b>h&#432;&#7899;ng &#273;i c&#7911;a Anthropic</b>: bi&#7871;n Claude t&#7915; chatbot th&#224;nh n&#7873;n t&#7843;ng c&#243; th&#7875; tu&#7923; bi&#7871;n s&#226;u.
+      </p>
+      <p>
+        V&#7899;i Skills, b&#7841;n kh&#244;ng ch&#7881; d&#249;ng AI &#8211; b&#7841;n <b>&#273;&#224;o t&#7841;o AI</b> theo c&#225;ch c&#7911;a m&#236;nh.
+        &#272;&#226;y l&#224; l&#7907;i th&#7871; m&#224; kh&#244;ng ph&#7843;i c&#244;ng c&#7909; AI n&#224;o c&#361;ng cung c&#7845;p.
+      </p>
+      <p><b>3 &#273;i&#7873;u n&#234;n l&#224;m ngay:</b></p>
+      <ol>
+        <li>&#272;&#7885;c t&#224;i li&#7879;u g&#7889;c (link &#7903; &#273;&#7847;u b&#224;i) &#273;&#7875; n&#7855;m chi ti&#7871;t k&#7929; thu&#7853;t</li>
+        <li>Th&#7917; t&#7841;o 1 Skill &#273;&#417;n gi&#7843;n cho workflow l&#7863;p l&#7841;i nhi&#7873;u nh&#7845;t c&#7911;a b&#7841;n</li>
+        <li>Chia s&#7867; Skill v&#7899;i team &#273;&#7875; chu&#7849;n h&#243;a c&#225;ch l&#224;m vi&#7879;c v&#7899;i AI</li>
+      </ol>
+
+      <h2>T&#224;i li&#7879;u tham kh&#7843;o</h2>
+      <ul>
+        <li><a href="https://resources.anthropic.com/hubfs/The-Complete-Guide-to-Building-Skill-for-Claude.pdf" target="_blank">The Complete Guide to Building Skills for Claude (PDF)</a> &#8211; Anthropic</li>
+        <li><a href="https://docs.anthropic.com/en/docs/agents-and-tools/skills" target="_blank">Skills Documentation</a> &#8211; Anthropic Docs</li>
+        <li><a href="https://modelcontextprotocol.io/" target="_blank">Model Context Protocol (MCP)</a></li>
+      </ul>
+
+      <div class="footer">
+        <p>File: <code>blog-html/claude-skills-guide/claude-skills-guide-blog.html</code></p>
+      </div>
+    </div>
+  </body>
+</html>

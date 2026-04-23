@@ -1,0 +1,9 @@
+# Sao chép file này thành ids-da-dien.txt (hoặc tên khác) và điền — KHÔNG commit file đã điền ID lên repo công khai nếu policy cấm.
+
+TEMPLATE_Minutes_DOC_ID=
+TEMPLATE_Proposal_DOC_ID=
+ESTIMATE_SPREADSHEET_ID=
+FLOW_LOG_SPREADSHEET_ID=
+FLOW_LOG_SHEET_TAB_NAME=Log
+CHAT_SPACE_NAME_OR_URL=
+CALENDAR_ID_PRIMARY=primary

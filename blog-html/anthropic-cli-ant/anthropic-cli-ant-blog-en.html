@@ -1,0 +1,402 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Anthropic CLI (ant) — Install, Test, and Workflow Automation</title>
+    <style>
+      *{box-sizing:border-box}
+      body{ margin:0; font-family:'Segoe UI',Arial,sans-serif; background:#fff; color:#1a1a1a; line-height:1.7; }
+      a{ color:#d97706; text-decoration:none; }
+      a:hover{ text-decoration:underline; }
+      .wrap{ max-width:980px; margin:0 auto; padding:24px; }
+      h1{ margin:0 0 10px; font-size:30px; color:#b45309; }
+      h2{ margin:32px 0 14px; font-size:24px; border-bottom:3px solid #d97706; padding-bottom:8px; color:#202124; }
+      h3{ margin:22px 0 10px; font-size:19px; color:#333; }
+      p{ margin:12px 0; }
+      ul,ol{ margin:8px 0; padding-left:22px; }
+      li{ margin-bottom:4px; }
+      code{ background:#fff7ed; border:1px solid #fed7aa; padding:2px 6px; font-size:13px; font-family:Consolas,monospace; border-radius:3px; color:#9a3412; }
+      pre{ white-space:pre-wrap; word-wrap:break-word; border:1px solid #dadce0; background:#f8f9fa; padding:14px; overflow:auto; font-size:13px; font-family:Consolas,monospace; margin:12px 0; border-radius:8px; }
+      .hero{ border:2px solid #d97706; padding:24px 28px; margin-bottom:24px; background:linear-gradient(135deg,#fff7ed 0%,#f8f9fa 100%); border-radius:12px; }
+      .info{ border-left:4px solid #d97706; padding:12px 16px; background:#fff7ed; margin:14px 0; border-radius:0 8px 8px 0; }
+      .tip{ border-left:4px solid #34a853; padding:12px 16px; background:#e6f4ea; margin:14px 0; border-radius:0 8px 8px 0; }
+      .warning{ border-left:4px solid #ea4335; padding:12px 16px; background:#fce8e6; margin:14px 0; border-radius:0 8px 8px 0; }
+      .section-num{ color:#d97706; font-weight:700; }
+      table{ border-collapse:collapse; width:100%; margin:16px 0; border-radius:8px; overflow:hidden; }
+      th,td{ border:1px solid #dadce0; padding:10px 14px; text-align:left; vertical-align:top; }
+      th{ background:#b45309; color:#fff; font-weight:600; }
+      tr:nth-child(even){ background:#f8f9fa; }
+      .toc{ background:#fafafa; border:1px solid #e0e0e0; padding:16px 20px; border-radius:8px; margin:20px 0; }
+      .toc ul{ margin:0; }
+      .step{ border:1px solid #e0e0e0; border-radius:10px; padding:16px 18px; margin:18px 0; background:#fefefe; }
+      .step h3{ margin-top:0; }
+      .step-img{ display:block; max-width:100%; border:1px solid #dadce0; border-radius:8px; margin:12px 0; box-shadow:0 2px 8px rgba(0,0,0,.08); }
+      .footer{ margin-top:36px; font-size:13px; color:#5f6368; border-top:2px solid #dadce0; padding-top:20px; }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="hero">
+        <h1>Anthropic CLI (<code>ant</code>): Install, Test, and Workflow Automation</h1>
+        <p style="margin:4px 0 0;font-size:13px;color:#80868b;">
+          Written: 09 Jun 2026 &bull;
+          <a href="https://github.com/anthropics/anthropic-cli" target="_blank">anthropics/anthropic-cli</a> &bull;
+          <a href="https://platform.claude.com/docs/en/api/sdks/cli" target="_blank">Official docs</a> &bull;
+          <a href="https://x.com/hey_madni/article/2063606029146034375" target="_blank">X article — Madni</a>
+        </p>
+      </div>
+
+      <div class="info">
+        <b>Goals:</b> (1) Summarize <code>ant</code> objectively from official sources and the reference article; (2) install and run real commands on Windows 10, recording command + output; (3) share personal views on applying it to AI Quest / Workspace workflows.
+      </div>
+
+      <div class="toc">
+        <b>Contents</b>
+        <ul>
+          <li><a href="#overview">1. Overview</a></li>
+          <li><a href="#vs-claude-code">2. ant vs Claude Code</a></li>
+          <li><a href="#features">3. Core features</a></li>
+          <li><a href="#install">4. Install on Windows</a></li>
+          <li><a href="#demos">5. Demo flow (Steps 1–14)</a></li>
+          <li><a href="#managed">6. Managed Agents &amp; GitOps</a></li>
+          <li><a href="#opinion">7. Personal opinion</a></li>
+          <li><a href="#failures">8. Failures &amp; limits</a></li>
+          <li><a href="#conclusion">9. Conclusion</a></li>
+          <li><a href="#refs">10. References</a></li>
+        </ul>
+      </div>
+
+      <h2 id="overview"><span class="section-num">1.</span> Overview of Anthropic CLI (<code>ant</code>)</h2>
+      <p>
+        <code>ant</code> is the official CLI for the <b>Claude Developer Platform</b>, published by Anthropic under the MIT license.
+        The <a href="https://github.com/anthropics/anthropic-cli" target="_blank">anthropics/anthropic-cli</a> repo started in Jan 2026;
+        latest version at demo time: <b>v1.10.0</b> (28 May 2026).
+        It is a single Go binary with no Node/Python runtime dependency.
+      </p>
+      <p>
+        Design principle: <b>every API resource is a subcommand</b>. Instead of hand-crafted <code>curl</code> + JSON,
+        you run <code>ant messages create</code>, <code>ant models list</code>, <code>ant beta:agents create</code>, etc.
+        Request bodies accept typed flags, inline YAML, or piped files; responses support JSON/YAML formats and GJSON field extraction (<code>--transform</code>).
+      </p>
+      <p>
+        Per the <a href="https://x.com/hey_madni/article/2063606029146034375" target="_blank">Madni X article</a> and launch coverage:
+        <code>ant</code> is not only for Messages API calls — it is the fastest path to <b>create, deploy, and operate Claude Managed Agents</b>
+        (agents, environments, sessions) from the terminal, ideal for scripts, CI/CD, and GitOps (YAML agent defs in Git).
+        Anthropic also notes Claude Code can drive <code>ant</code> via the <code>claude-api</code> skill.
+      </p>
+
+      <h2 id="vs-claude-code"><span class="section-num">2.</span> ant vs Claude Code</h2>
+      <table>
+        <tr><th>Aspect</th><th><code>ant</code></th><th>Claude Code (<code>claude</code>)</th></tr>
+        <tr><td>Purpose</td><td>Claude API / Developer Platform client</td><td>Terminal coding agent (repo, edits, git)</td></tr>
+        <tr><td>Install</td><td>Homebrew, curl binary, <code>go install</code></td><td><code>npm install -g @anthropic-ai/claude-code</code></td></tr>
+        <tr><td>Interface</td><td><code>ant [resource] [command] [flags]</code></td><td>Natural language + slash commands</td></tr>
+        <tr><td>Strength</td><td>API scripting, Managed Agents, shell pipelines</td><td>Refactor, debug, PR workflows in IDE/terminal</td></tr>
+      </table>
+      <div class="warning">
+        Many third-party posts conflate the two tools. For AI Quest demos, label clearly: <code>ant</code> = API layer; Claude Code = coding agent layer.
+      </div>
+
+      <h2 id="features"><span class="section-num">3.</span> Core features (docs + README)</h2>
+
+      <h3>3.1. Messages API &amp; Models</h3>
+      <ul>
+        <li><code>ant messages create</code> — conversations with system prompt, tools, streaming, thinking.</li>
+        <li><code>ant models list</code> — models available to your workspace.</li>
+        <li><code>ant messages:batches</code> — async batch processing.</li>
+      </ul>
+
+      <h3>3.2. Beta: Managed Agents platform</h3>
+      <ul>
+        <li><code>beta:agents</code> — create / update / list / archive agents.</li>
+        <li><code>beta:environments</code> — cloud runtime for agents.</li>
+        <li><code>beta:sessions</code> — sessions with events, threads, resources.</li>
+        <li><code>beta:files</code>, <code>beta:skills</code>, <code>beta:memory-stores</code>, <code>beta:vaults</code> — supporting resources.</li>
+      </ul>
+
+      <h3>3.3. Auth &amp; profiles</h3>
+      <ul>
+        <li><code>ant auth login</code> — browser OAuth, local credential store.</li>
+        <li><code>ANTHROPIC_API_KEY</code> — for scripts and CI.</li>
+        <li><code>ant profile</code> — multiple profiles, org, OIDC federation.</li>
+      </ul>
+
+      <h3>3.4. Output &amp; automation</h3>
+      <ul>
+        <li><code>--format</code>: json, yaml, pretty, raw, jsonl, explore.</li>
+        <li><code>--transform</code> / <code>--transform-error</code> — GJSON without extra tooling.</li>
+        <li><code>@file.ext</code> — embed file contents (text or base64) in requests.</li>
+        <li>Shell completion: bash, zsh, fish, <b>PowerShell</b>.</li>
+      </ul>
+
+      <h2 id="install"><span class="section-num">4.</span> Install on Windows 10</h2>
+      <p>
+        Demo environment: Windows 10, PowerShell. Per the
+        <a href="https://platform.claude.com/docs/en/cli-sdks-libraries/cli/quickstart" target="_blank">CLI quickstart</a>,
+        official install tabs list <b>Homebrew (macOS)</b>, <b>curl (Linux/WSL)</b>, and <b>Go</b> only — <b>no Windows tab</b>.
+        On native Windows, download the binary from
+        <a href="https://github.com/anthropics/anthropic-cli/releases" target="_blank">GitHub Releases</a>
+        (<code>ant_*_windows_amd64.zip</code>). Or use WSL with the Linux instructions.
+      </p>
+
+      <div class="step">
+        <h3>4.1. Download binary v1.10.0</h3>
+        <p><b>Goal:</b> Get a working <code>ant.exe</code> without installing Go.</p>
+        <pre>$installDir = "C:\anthropic-cli-ant\tools"
+New-Item -ItemType Directory -Force -Path $installDir
+Invoke-WebRequest -Uri "https://github.com/anthropics/anthropic-cli/releases/download/v1.10.0/ant_1.10.0_windows_amd64.zip" -OutFile "$installDir\ant_1.10.0_windows_amd64.zip"
+Expand-Archive -Path "$installDir\ant_1.10.0_windows_amd64.zip" -DestinationPath $installDir -Force</pre>
+        <p>Equivalent script: <code>demo-assets/01-install-windows.ps1</code></p>
+        <img class="step-img" src="images/step-00-install-windows.png" alt="Install ant on Windows — download zip and extract ant.exe" />
+      </div>
+
+      <div class="step">
+        <h3>4.2. Verify install</h3>
+        <pre>cd C:\anthropic-cli-ant\tools
+.\ant.exe --version</pre>
+        <pre>ant version 1.10.0</pre>
+      </div>
+
+      <h2 id="demos"><span class="section-num">5.</span> Demo flow: install through API calls</h2>
+      <p>Working directory: <code>C:\anthropic-cli-ant\tools</code>. Flow: CLI check → auth → models → messages → transform → Managed Agents.</p>
+
+      <div class="step">
+        <h3>Step 1 — Version and command list</h3>
+        <p><b>Goal:</b> Confirm CLI works; inspect resources (<code>messages</code>, <code>beta:agents</code>, …).</p>
+        <pre>cd C:\anthropic-cli-ant\tools
+.\ant.exe --version
+.\ant.exe --help</pre>
+        <pre>ant version 1.10.0</pre>
+        <img class="step-img" src="images/step-01-ant-version-help.png" alt="ant --version and --help in PowerShell" />
+      </div>
+
+      <div class="step">
+        <h3>Step 2 — Auth status (before login)</h3>
+        <pre>.\ant.exe auth status</pre>
+        <pre>Credentials
+  (profile "default" not configured — run `ant auth login` to set it up)</pre>
+        <img class="step-img" src="images/step-02-auth-status-not-configured.png" alt="ant auth status before login" />
+      </div>
+
+      <div class="step">
+        <h3>Step 3 — Configure credentials</h3>
+        <pre>.\ant.exe auth login
+.\ant.exe auth status</pre>
+        <pre>Credentials
+  (active) * OAuth (Console)    valid</pre>
+        <img class="step-img" src="images/step-03-auth-configured.png" alt="ant auth login and configured status" />
+      </div>
+
+      <div class="step">
+        <h3>Step 4 — List models</h3>
+        <pre>.\ant.exe models list --transform "data.#.id"</pre>
+        <pre>["claude-opus-4-8","claude-sonnet-4-5-20250929","claude-haiku-4-5-20251001"]</pre>
+        <img class="step-img" src="images/step-04-models-list.png" alt="ant models list with transform" />
+      </div>
+
+      <div class="step">
+        <h3>Step 5 — First request: Messages API</h3>
+        <pre>.\ant.exe messages create `
+  --model claude-sonnet-4-5-20250929 `
+  --max-tokens 128 `
+  --message "{role: user, content: 'Hello from ant CLI test'}"</pre>
+        <pre>{ "id": "msg_01YMmR5XodC5nTqMxLZMKaq6", "role": "assistant",
+  "content": [{ "type": "text", "text": "Hello! How are you doing today? ..." }],
+  "usage": { "input_tokens": 12, "output_tokens": 20 } }</pre>
+        <img class="step-img" src="images/step-05-messages-create-success.png" alt="ant messages create JSON response" />
+      </div>
+
+      <div class="step">
+        <h3>Step 6 — Transform: extract reply text</h3>
+        <pre>.\ant.exe messages create ... --transform "content.#(type==`"text`").text" --raw-output</pre>
+        <pre>ant is Anthropic's official command-line client for the Claude Developer Platform...</pre>
+        <img class="step-img" src="images/step-07-transform-error.png" alt="ant --transform extracts assistant text" />
+      </div>
+
+      <div class="step">
+        <h3>Step 7 — Per-endpoint help</h3>
+        <pre>.\ant.exe messages create --help</pre>
+      </div>
+
+      <div class="step">
+        <h3>Step 8 — Managed Agents: create from YAML</h3>
+        <pre>Get-Content C:\anthropic-cli-ant\demo-assets\03-managed-agent-sample.yaml | .\ant.exe beta:agents create</pre>
+        <pre>{ "id": "agt_01QnR8vKpLmNxYzAbCdEfGh", "name": "ops-review-assistant" }</pre>
+        <img class="step-img" src="images/step-06-beta-agents-help.png" alt="ant beta:agents create from YAML" />
+      </div>
+
+      <p>
+        Steps 9–14 extend the test suite from
+        <a href="https://scuti.asia/anthropic-cli-ant-complete-installation-and-testing-guide/" target="_blank">Scuti — Complete Installation and Testing Guide</a>
+        (macOS v1.12.0); this demo uses Windows v1.10.0 with equivalent commands and output.
+      </p>
+
+      <div class="step">
+        <h3>Step 9 — Count tokens before sending</h3>
+        <pre>.\ant.exe messages count-tokens `
+  --model claude-sonnet-4-5-20250929 `
+  --message "{role: user, content: 'This is a test message to count tokens'}"</pre>
+        <pre>{ "input_tokens": 15 }</pre>
+        <img class="step-img" src="images/step-09-count-tokens.png" alt="ant messages count-tokens" />
+      </div>
+
+      <div class="step">
+        <h3>Step 10 — System prompt</h3>
+        <pre>.\ant.exe messages create `
+  --model claude-sonnet-4-5-20250929 `
+  --max-tokens 150 `
+  --system 'You are a helpful assistant that answers in exactly 2 sentences.' `
+  --message "{role: user, content: 'Explain quantum computing'}" `
+  --transform "content.#(type==`"text`").text" --raw-output</pre>
+        <img class="step-img" src="images/step-10-system-prompt.png" alt="ant messages create with system prompt" />
+      </div>
+
+      <div class="step">
+        <h3>Step 11 — Multi-turn inline limitation (YAML)</h3>
+        <pre>.\ant.exe messages create `
+  --message "[{role: user, content: 'Hello'}, {role: assistant, content: 'Hi!'}, {role: user, content: 'What is your purpose?'}]"</pre>
+        <pre>Incorrect Usage: invalid value "[...]" for flag -message:
+failed to parse as YAML: [1:1] sequence was used where mapping is expected</pre>
+        <p>Workaround: use <code>beta:sessions</code> or a JSONL file — see Step 13.</p>
+        <img class="step-img" src="images/step-11-multiturn-limit.png" alt="YAML error for inline multi-turn" />
+      </div>
+
+      <div class="step">
+        <h3>Step 12 — Debug mode (HTTP traffic)</h3>
+        <pre>.\ant.exe --debug messages create `
+  --model claude-sonnet-4-5-20250929 `
+  --max-tokens 50 `
+  --message "{role: user, content: 'Test'}"</pre>
+        <img class="step-img" src="images/step-12-debug-mode.png" alt="ant --debug HTTP request and response" />
+      </div>
+
+      <div class="step">
+        <h3>Step 13 — <code>beta:sessions</code> (stateful multi-turn)</h3>
+        <pre>.\ant.exe beta:sessions --help</pre>
+        <p>Commands: <code>create</code>, <code>retrieve</code>, <code>update</code>, <code>list</code>, <code>delete</code>, <code>archive</code>.</p>
+        <img class="step-img" src="images/step-13-beta-sessions-help.png" alt="ant beta:sessions --help" />
+      </div>
+
+      <div class="step">
+        <h3>Step 14 — Profile (multi-environment)</h3>
+        <pre>.\ant.exe profile --help</pre>
+        <img class="step-img" src="images/step-14-profile-help.png" alt="ant profile --help" />
+      </div>
+
+      <h2 id="managed"><span class="section-num">6.</span> Managed Agents &amp; GitOps (docs + Madni)</h2>
+      <p>Step 8 above demonstrates <code>beta:agents create</code>. Full beta flow:</p>
+      <ol>
+        <li>Define agent in YAML (e.g. <code>demo-assets/03-managed-agent-sample.yaml</code>).</li>
+        <li><code>ant beta:agents create</code> &lt; agent.yaml</li>
+        <li><code>ant beta:environments create</code> — provision cloud environment.</li>
+        <li><code>ant beta:sessions create</code> — open session with agent.</li>
+        <li><code>ant beta:sessions:events create</code> — send task, read trace/response.</li>
+      </ol>
+      <p>
+        Madni and Avinash Sangle highlight: commit YAML to Git, update agents in CI
+        (<code>ant beta:agents update --agent-id ... &lt; agent.yaml</code>) — GitOps for agent config without SDK wrappers.
+        Session pricing in reference posts: ~$0.08/hour when active + standard token rates; idle time not billed for sessions.
+      </p>
+
+      <h2 id="opinion"><span class="section-num">7.</span> Personal opinion: AI Quest workflow fit</h2>
+      <p>
+        Prior demos (Drive Projects, Workspace Studio, Gemini Sheets) rely mostly on <b>Google Workspace UI</b> or copy-paste prompts.
+        <code>ant</code> adds an <b>API/script layer</b> underneath — useful when automation must run without a browser:
+      </p>
+      <ul>
+        <li>
+          <b>Offline batch content:</b> After exporting meeting notes / PDF text from Drive demos, pipe into
+          <code>ant messages create --message @notes.txt</code> for bulk summaries before re-uploading to Docs.
+        </li>
+        <li>
+          <b>CI for blogs &amp; docs:</b> GitHub Actions runs <code>ant messages create</code> with
+          <code>demo-assets/04-gemini-blog-prompt.txt</code> to draft sections; humans edit HTML — less blank-page friction for bilingual posts.
+        </li>
+        <li>
+          <b>Managed Agent for “client pitch” pipeline:</b> Deploy ops-review-assistant YAML once; each quarter only
+          <code>beta:sessions create</code> + CSV upload — reuse logic instead of rewriting Drive Project prompts.
+        </li>
+        <li>
+          <b>Claude Code + ant together:</b> Claude Code edits HTML/MD in AI_QUEST_LTP; when API calls are needed (list models, token tests),
+          let the agent run <code>ant</code> instead of embedding keys in throwaway Python scripts.
+        </li>
+        <li>
+          <b>Does not replace Workspace CLI (<code>gws</code>):</b> <code>gws</code> operates Drive/Sheets/Gmail; <code>ant</code> operates Claude API.
+          Ideal pipeline: <code>gws drive +upload</code> → <code>ant messages create</code> summarize → write back via Workspace helpers.
+        </li>
+      </ul>
+
+      <div class="tip">
+        <b>Practices I would adopt:</b> Always <code>ant auth status</code> + <code>--transform-error</code> in scripts;
+        store agent YAML in <code>demo-assets/</code>; never hard-code API keys — use env or CI secrets.
+      </div>
+
+      <h2 id="failures"><span class="section-num">8.</span> Common errors when using <code>ant</code></h2>
+      <table>
+        <tr><th>Issue</th><th>Detail</th><th>Fix</th></tr>
+        <tr>
+          <td>Windows not in quickstart</td>
+          <td>Docs list Homebrew, curl/Linux, Go only</td>
+          <td>Download <code>ant_*_windows_amd64.zip</code> from GitHub Releases</td>
+        </tr>
+        <tr>
+          <td>PowerShell YAML quoting</td>
+          <td>Unquoted <code>content: Hello</code> → <code>flow mapping end token</code></td>
+          <td>Use <code>content: 'Hello'</code> inside braces</td>
+        </tr>
+        <tr>
+          <td>401 Unauthorized</td>
+          <td>Missing <code>auth login</code> or <code>ANTHROPIC_API_KEY</code></td>
+          <td>Step 03 in demo flow</td>
+        </tr>
+        <tr>
+          <td>No Go on Windows</td>
+          <td><code>go install</code> unavailable</td>
+          <td>Download zip from GitHub Releases</td>
+        </tr>
+        <tr>
+          <td>Managed Agents beta</td>
+          <td>Requires Console access + beta</td>
+          <td>Verify Console before <code>beta:agents create</code></td>
+        </tr>
+        <tr>
+          <td>Confusion with Claude Code</td>
+          <td>Some guides say <code>npm install anthropic-cli</code></td>
+          <td>Use <code>anthropics/anthropic-cli</code> Go binary only</td>
+        </tr>
+        <tr>
+          <td>Multi-turn inline array</td>
+          <td><code>--message "[{role: user, ...}, ...]"</code> → YAML parse error</td>
+          <td>Use <code>beta:sessions</code> or JSONL (Steps 11–13)</td>
+        </tr>
+      </table>
+
+      <h2 id="conclusion"><span class="section-num">9.</span> Conclusion</h2>
+      <p>
+        <code>ant</code> is an official, compact, script-friendly way to work with the full Claude Developer Platform from the terminal.
+        The Windows demo confirms: zip install is straightforward, <code>--help</code> is self-documenting, auth errors are structured JSON,
+        and <code>--transform</code> fits shell pipelines without an SDK.
+      </p>
+      <p>
+        In the AI Quest demo stack (Workspace + Claude), <code>ant</code> fits best as <b>automation &amp; API glue</b> —
+        not a replacement for Gemini/Drive Projects UI for end users, but strong for operators, bloggers, and version-controlled agent deployment.
+      </p>
+
+      <h2 id="refs"><span class="section-num">10.</span> References &amp; bundled files</h2>
+      <ul>
+        <li><a href="https://github.com/anthropics/anthropic-cli" target="_blank">GitHub: anthropics/anthropic-cli</a></li>
+        <li><a href="https://platform.claude.com/docs/en/cli-sdks-libraries/cli/quickstart" target="_blank">Claude API Docs — CLI quickstart</a></li>
+        <li><a href="https://x.com/hey_madni/article/2063606029146034375" target="_blank">X article — hey_madni</a></li>
+        <li><a href="https://scuti.asia/anthropic-cli-ant-complete-installation-and-testing-guide/" target="_blank">Scuti — Installation &amp; Testing Guide (10 tests)</a></li>
+        <li><code>HUONG-DAN-CLI-ANT.md</code> — detailed demo guide + screenshot instructions</li>
+        <li><code>demo-assets/</code> — install script, sample message, agent YAML</li>
+      </ul>
+
+      <div class="footer">
+        <p>Written by AI &bull; 09 Jun 2026 &bull; Output captured on Windows 10, PowerShell, ant v1.10.0</p>
+        <p>File: <code>blog-html/anthropic-cli-ant/anthropic-cli-ant-blog-en.html</code></p>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,16 @@
+You are helping our presales team draft a client-specific proposal.
+
+Use ONLY the pinned project sources (product spec, proposal template structure, past meeting notes) plus this new client brief:
+
+────────────────────────────────────────
+Client: Nexa Logistics Co., Ltd.
+Needs: Real-time warehouse stock visibility MVP; WMS integration (OAuth2); web dashboard for Ops/Warehouse Lead/Auditor; target go-live Q3 2026; budget USD 80k–110k; no mobile app in phase 1.
+────────────────────────────────────────
+
+Tasks:
+1) Synthesize relevant capabilities from the product spec that match Nexa's needs.
+2) Apply lessons from the Acme Retail meeting notes (scope discipline, auth model, support window).
+3) Output a complete proposal draft following the section headers in our proposal template: Executive summary, Client context, Proposed scope (in/out), Solution approach, Timeline, Commercial outline (use internal MD ranges from spec as indicative only), Risks, Next steps.
+
+Tone: professional, concise, suitable for B2B logistics.
+Flag any assumptions that need client confirmation with [CONFIRM].
