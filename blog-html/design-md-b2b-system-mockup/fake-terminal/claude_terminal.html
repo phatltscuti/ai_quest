@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <style>
+        /* CSS to perfectly mimic VS Code Terminal with Claude Code - Dark Theme */
+        body {
+            background: #111111;
+            padding: 20px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            color: #d4d4d4;
+        }
+
+        .vscode-panel {
+            background: #1e1e1e;
+            border: 1px solid #3c3c3c;
+            width: 900px;
+            margin-bottom: 40px;
+            border-radius: 4px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+            font-family: Consolas, "Courier New", monospace;
+            font-size: 14px;
+            color: #d4d4d4;
+            overflow: hidden;
+        }
+
+        .vscode-tabs {
+            display: flex;
+            background: #252526;
+            border-bottom: 1px solid #383b3d;
+            height: 35px;
+            align-items: center;
+            padding-left: 10px;
+        }
+
+        .v-tab {
+            padding: 0 12px;
+            color: #969696;
+            font-family: "Segoe UI", sans-serif;
+            font-size: 13px;
+            cursor: default;
+            height: 100%;
+            display: flex;
+            align-items: center;
+        }
+
+        .v-tab.active {
+            background: #1e1e1e;
+            color: #ffffff;
+            border-top: 2px solid #007acc;
+        }
+
+        .v-actions {
+            margin-left: auto;
+            padding-right: 15px;
+            color: #969696;
+            display: flex;
+            gap: 12px;
+            font-family: "Segoe UI", sans-serif;
+            font-size: 13px;
+            align-items: center;
+        }
+
+        /* Claude Box */
+        .terminal-content {
+            padding: 16px 20px;
+            background: #1e1e1e;
+            min-height: 400px;
+            line-height: 1.6;
+            color: #d4d4d4;
+        }
+
+        .claude-box {
+            border: 1px solid #a85845;
+            border-radius: 6px;
+            position: relative;
+            display: flex;
+            background: #251e1c;
+            margin-top: 10px;
+            margin-bottom: 24px;
+        }
+
+        .claude-box::before {
+            content: " Claude Code v2.1.80 ";
+            position: absolute;
+            top: -10px;
+            left: 20px;
+            background: #1e1e1e;
+            color: #dd8d78;
+            padding: 0 8px;
+            font-weight: 500;
+        }
+
+        .box-left {
+            flex: 1;
+            padding: 24px 20px;
+            text-align: center;
+            border-right: 1px solid #a85845;
+        }
+
+        .box-right {
+            flex: 1;
+            padding: 20px 24px;
+            color: #d89684;
+            font-family: Consolas, monospace;
+        }
+
+        .ascii-crab {
+            color: #dd8d78;
+            font-weight: bold;
+            white-space: pre;
+            line-height: 1.1;
+            margin: 12px 0;
+            margin-left: -195px;
+        }
+
+        .box-meta {
+            color: #999999;
+        }
+
+        .right-title {
+            font-weight: bold;
+            margin-top: 8px;
+            margin-bottom: 4px;
+            color: #e5b3a5;
+        }
+
+        .right-desc {
+            color: #999999;
+            margin-bottom: 16px;
+        }
+
+        /* Terminal interactions */
+        .prompt-line {
+            font-weight: bold;
+            color: #d4d4d4;
+            margin-top: 24px;
+            margin-bottom: 16px;
+        }
+
+        .prompt-char {
+            color: #858585;
+            font-weight: normal;
+        }
+
+        .tool-run {
+            margin-bottom: 16px;
+        }
+
+        .tool-name {
+            font-weight: 600;
+            color: #4fc1ff;
+        }
+
+        .tool-name::before {
+            content: "● ";
+            color: #4ac26b;
+        }
+
+        .tool-output {
+            color: #8c8c8c;
+            margin-left: 12px;
+            margin-top: 4px;
+            white-space: pre-wrap;
+        }
+
+        .text-response {
+            margin-bottom: 16px;
+            padding-left: 12px;
+            border-left: 2px solid transparent;
+        }
+
+        .md-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+            font-family: "Segoe UI", sans-serif;
+            font-size: 13px;
+            background: #1e1e1e;
+        }
+
+        .md-table th,
+        .md-table td {
+            border: 1px solid #444444;
+            padding: 8px 12px;
+            text-align: left;
+            color: #d4d4d4;
+        }
+
+        .md-table th {
+            background: #2d2d2d;
+            font-weight: 600;
+        }
+
+        .cursor {
+            display: inline-block;
+            width: 8px;
+            height: 15px;
+            background: #d4d4d4;
+            vertical-align: middle;
+        }
+
+        .status-bar {
+            border-top: 1px solid #383b3d;
+            padding: 6px 20px;
+            color: #8c8c8c;
+            font-size: 13px;
+            font-family: Consolas, monospace;
+            background: #252526;
+        }
+
+        .status-bar code {
+            color: #4ac26b;
+            background: none;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h2 style="font-family:sans-serif; color: #ffffff;">Ảnh 1 (Dành cho chụp Step 7: Kết nối MCP)</h2>
+    <p style="font-family:sans-serif; color:#a0a0a0; margin-bottom: 20px;">Bạn có thể bấm tổ hợp
+        <code style="background: #333; padding: 2px 6px; border-radius: 4px;">Windows + Shift + S</code> chụp nội dung
+        trong khung viền dưới đây.
+    </p>
+
+    <div class="vscode-panel">
+        <div class="vscode-tabs">
+            <div class="v-tab">Problems</div>
+            <div class="v-tab">Output</div>
+            <div class="v-tab">Debug Console</div>
+            <div class="v-tab active">Terminal</div>
+            <div class="v-tab">Ports</div>
+            <div class="v-actions">
+                >_ node &nbsp; ⚠ &nbsp; + ∨ &nbsp; 🗑️ &nbsp; ...
+            </div>
+        </div>
+        <div class="terminal-content">
+            <div class="claude-box">
+                <div class="box-left">
+                    <strong>Welcome back lytanphat!</strong>
+                    <div class="ascii-crab">
+                        
+                        ██████████
+                        ██ ████ ██
+                        ▀▀██████████▀▀
+                        ██ ██
+                    </div>
+                    <div class="box-meta">
+                        Opus 4.6 (1M context) · Claude Pro ·<br>
+                        C:\desktop\phatlt\design-md-b2b-system-mockup
+                    </div>
+                </div>
+                <div class="box-right">
+                    <div class="right-title">Tips for getting started</div>
+                    <div class="right-desc">Run /init to create a CLAUDE.md file with instructions for Claude.</div>
+
+                    <div class="right-title">Recent activity</div>
+                    <div class="right-desc">No recent activity</div>
+                </div>
+            </div>
+
+            <div class="prompt-line">
+                <span class="prompt-char">❯</span> Show me the list of my Stitch projects.
+            </div>
+
+            <div class="tool-run">
+                <div class="tool-name">stitch - list_projects (MCP)</div>
+                <div class="tool-output">└ {"projects":[{"createTime":"2026-03-20T13:15:41.291659Z","title":"AcmeOps B2B
+                    Dashboard","environment":"Production"... +437 lines (ctrl+o to expand)</div>
+            </div>
+
+            <div class="text-response">
+                ● Here is the list of your projects on Stitch:
+
+                <table class="md-table">
+                    <tr>
+                        <th>#</th>
+                        <th>Project Title</th>
+                        <th>Created Date</th>
+                        <th>Updated Date</th>
+                        <th>Screens</th>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td><strong>AcmeOps B2B Dashboard</strong></td>
+                        <td>2026-03-23 10:15</td>
+                        <td>2026-03-23 11:30</td>
+                        <td>8</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>Legacy ERP System</td>
+                        <td>2026-03-10 09:00</td>
+                        <td>2026-03-15 14:20</td>
+                        <td>45</td>
+                    </tr>
+                </table>
+
+                Project #1 "AcmeOps B2B Dashboard" is the latest project you created today.<br>
+                Would you like to perform any actions on this project?
+            </div>
+
+            <div class="prompt-line">
+                <span class="prompt-char">❯</span>
+                <div class="cursor"></div>
+            </div>
+        </div>
+        <div class="status-bar">
+            Opus 4.6 (1M context) &nbsp;|&nbsp; ctx <code>::</code> &nbsp;&nbsp; 4% &nbsp;|&nbsp; 5h <code>::</code>
+            &nbsp; 15% &nbsp;|&nbsp; 7d <code>::</code> &nbsp; 5%
+        </div>
+    </div>
+
+
+    <br><br>
+    <h2 style="font-family:sans-serif; color: #ffffff;">Ảnh 2 (Dành cho chụp Step 8: Micro-fix)</h2>
+    <div class="vscode-panel">
+        <div class="vscode-tabs">
+            <div class="v-tab">Problems</div>
+            <div class="v-tab">Output</div>
+            <div class="v-tab">Debug Console</div>
+            <div class="v-tab active">Terminal</div>
+            <div class="v-tab">Ports</div>
+            <div class="v-actions">
+                >_ node &nbsp; ⚠ &nbsp; + ∨ &nbsp; 🗑️ &nbsp; ...
+            </div>
+        </div>
+        <div class="terminal-content" style="min-height: 450px;">
+
+            <div class="prompt-line" style="margin-top:0;">
+                <span class="prompt-char">❯</span> Download the "AcmeOps B2B Dashboard" project from Stitch.<br>
+                &nbsp; Can you update the Top Navigation background to be a bit darker?<br>
+                &nbsp; Please make sure to rely on the color variables defined in DESIGN.md.<br>
+            </div>
+
+            <div class="tool-run">
+                <div class="tool-name">stitch - export_project (MCP)</div>
+                <div class="tool-output">└ {"status":"success","files_downloaded": 14, "destination":"./design-md-b2b-system-mockup"}
+                </div>
+            </div>
+
+            <div class="tool-run">
+                <div class="tool-name">read_file - design-md-b2b-system-mockup/DESIGN.md</div>
+                <div class="tool-output">└ {"content":"# Design System Specification: Enterprise Precision & T... +108
+                    lines (ctrl+o to expand)</div>
+            </div>
+
+            <div class="tool-run">
+                <div class="tool-name">edit_file - design-md-b2b-system-mockup/index.html</div>
+                <div class="tool-output">└ {"diff":"- .mockup .top { background: #27609d; ...\n+ .mockup .top {
+                    background: linear-gradient(135de... +12 lines}</div>
+            </div>
+
+            <div class="text-response">
+                I have successfully pulled the source code to the <code>./design-md-b2b-system-mockup</code> directory.<br><br>
+                <strong>Making changes (Micro-fix):</strong><br>
+                I analyzed and updated the <code>.mockup .top</code> class in the HTML file. Instead of using the static
+                initial Hex code, I reconfigured the Top Navigation surface to use the <code>primary</code> color
+                (#27609d) precisely defined in <code>DESIGN.md</code>.<br>
+                I also applied a 135-degree subtle linear gradient to <code>primary_dim</code> (#145490) based on the
+                "Signature Texture" rule, to achieve the darker, more contrasted "machined" look you requested.<br><br>
+                The core Design Stability rules (Brand colors, Tonal Layering) from DESIGN.md have been strictly
+                maintained.<br>
+                Please check the preview to verify the changes.
+            </div>
+
+            <div class="prompt-line">
+                <span class="prompt-char">❯</span>
+                <div class="cursor"></div>
+            </div>
+        </div>
+        <div class="status-bar">
+            Opus 4.6 (1M context) &nbsp;|&nbsp; ctx <code>::</code> &nbsp;&nbsp; 12% &nbsp;|&nbsp; 5h <code>::</code>
+            &nbsp; 18% &nbsp;|&nbsp; 7d <code>::</code> &nbsp; 6%
+        </div>
+    </div>
+
+</body>
+
+</html>

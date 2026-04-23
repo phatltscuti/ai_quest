@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Practice and verify the procedure for creating a mockup of a B2B system management screen using DESIGN.md
+    </title>
+    <style>
+        :root {
+            --primary: #1f4b99;
+            --secondary: #0e9f6e;
+            --warning: #f79009;
+            --critical: #d92d20;
+            --bg: #f7f9fc;
+            --card: #ffffff;
+            --text: #111827;
+            --muted: #4b5563;
+            --border: #e5e7eb;
+            --code: #1f2937;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: inherit, Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #1f4b99, #2563eb);
+            color: #fff;
+            padding: 54px 20px;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .hero p {
+            max-width: 840px;
+            margin: 0 auto;
+            opacity: 0.95;
+        }
+
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 28px 18px 48px;
+        }
+
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 22px;
+            margin-bottom: 18px;
+        }
+
+        .toc ol {
+            padding-left: 22px;
+        }
+
+        .toc li {
+            margin: 4px 0;
+        }
+
+        h2 {
+            color: var(--primary);
+            margin: 28px 0 12px;
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 8px;
+        }
+
+        h3 {
+            margin: 18px 0 8px;
+        }
+
+        p,
+        li {
+            color: var(--text);
+        }
+
+        ul,
+        ol {
+            padding-left: 20px;
+            margin: 10px 0 14px;
+        }
+
+        .prompt-box {
+            background: var(--code);
+            color: #d1d5db;
+            border-radius: 10px;
+            padding: 16px;
+            font-family: Consolas, monospace;
+            white-space: pre-wrap;
+            margin: 12px 0;
+            font-size: 0.9rem;
+        }
+
+        .mockup {
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 14px 0;
+            background: #fff;
+        }
+
+        .mockup .top {
+            background: #1f4b99;
+            color: #fff;
+            padding: 10px 14px;
+            font-size: 0.9rem;
+        }
+
+        .mockup .main {
+            display: grid;
+            grid-template-columns: 220px 1fr;
+            min-height: 360px;
+        }
+
+        .mockup .left {
+            background: #f9fafb;
+            border-right: 1px solid var(--border);
+            padding: 12px;
+            font-size: 0.9rem;
+        }
+
+        .mockup .right {
+            padding: 14px;
+        }
+
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .kpi {
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 10px;
+            background: #fff;
+        }
+
+        .kpi .num {
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        .table {
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .row {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr 1fr 1fr;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .row:last-child {
+            border-bottom: none;
+        }
+
+        .cell {
+            padding: 8px 10px;
+            font-size: 0.88rem;
+        }
+
+        .head {
+            background: #f3f4f6;
+            font-weight: 600;
+        }
+
+        .badge {
+            padding: 2px 8px;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            display: inline-block;
+        }
+
+        .b-ok {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .b-warn {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .b-err {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        code {
+            background: #eef2ff;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        .step-container {
+            margin: 24px 0;
+            padding: 18px;
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+        }
+
+        .step-action {
+            margin-bottom: 12px;
+            color: var(--text);
+            border-left: 4px solid var(--primary);
+            padding-left: 10px;
+            background: #f0fdf4;
+            padding: 10px;
+            border-radius: 4px;
+        }
+
+        .img-wrapper {
+            position: relative;
+            margin-bottom: 10px;
+            border-radius: 6px;
+            overflow: hidden;
+            background: #f8fafc;
+            border: 1px dashed #cbd5e1;
+        }
+
+        .img-placeholder-v2 {
+            padding: 40px 20px;
+            text-align: center;
+            color: var(--muted);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-size: 0.95rem;
+        }
+
+        .img-real-v2 {
+            width: 100%;
+            display: none;
+            margin: 0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .img-caption {
+            text-align: center;
+            font-size: 0.9rem;
+            font-style: italic;
+            color: #64748b;
+            margin-top: 8px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="hero">
+        <h1>Practice and verify the procedure for creating a mockup of a B2B system management screen using DESIGN.md
+        </h1>
+        <p>Summarizing the reference tutorial workflow, creating a specialized B2B system management mockup, and
+            evaluating "Design Stability" capabilities through DESIGN.md.</p>
+    </div>
+
+    <div class="container">
+        <div class="card toc">
+            <h3>Table of Contents</h3>
+            <ol>
+                <li><a href="#m1">Objectives and Scope</a></li>
+                <li><a href="#m2">Objective Summary of the Reference Tutorial</a></li>
+                <li><a href="#m3">Hands-on: Building a B2B System Management Mockup</a></li>
+                <li><a href="#m4">B2B Mockup Render Results</a></li>
+                <li><a href="#m5">Thoughts on Design Stability via DESIGN.md</a></li>
+                <li><a href="#m6">Practical Application in Real Workflows</a></li>
+            </ol>
+        </div>
+
+        <section id="m1">
+            <h2>1) Objectives and Scope</h2>
+            <div class="card">
+                <p>Based on the practical requirements, this article focuses on the following objectives:</p>
+                <ul>
+                    <li><strong>Process Summary:</strong> Objectively read and summarize the reference article,
+                        highlighting how to maintain design consistency through Google Stitch's <code>DESIGN.md</code>
+                        feature.</li>
+                    <li><strong>Creative New Use Case (B2B Dashboard):</strong> Instead of re-using the self-intro
+                        website example from the original post, I will act as a Product Manager/Designer to design a
+                        highly specific enterprise B2B System Management screen.</li>
+                    <li><strong>Application Analysis:</strong> Provide personal viewpoints on how this method solves
+                        daily "pain-points" in the Design-to-Dev handoff process.</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="m2">
+            <h2>2) Objective Summary of the Reference Tutorial</h2>
+            <div class="card">
+                <p>The reference article <em>(Google Stitchがだいたい理解できるハンズオンマニュアル)</em> presents a highly practical 8-step
+                    process for "Non-designers" to create applicable designs:</p>
+                <ol>
+                    <li><strong>Step 1: Login and setup:</strong> Log into Google Stitch, define needs, and select the
+                        appropriate mode (Web or App).</li>
+                    <li><strong>Step 2: Define direction (Policy First):</strong> Before drawing the UI, define 4 core
+                        elements: Target audience, Screen objective, desired Tone & Mood, and Impressions to avoid.</li>
+                    <li><strong>Step 3: Create a rough draft:</strong> Feed those 4 elements into the system for the AI
+                        to generate an initial draft. Don't focus on aesthetic details yet.</li>
+                    <li><strong>Step 4: Extract Design System & DESIGN.md:</strong> Instruct Stitch to standardize the
+                        draft into a complete Design System (Colors, Typography, Layout spacing) and crucially export
+                        these rules to a text file named <code>DESIGN.md</code>.</li>
+                    <li><strong>Step 5: Apply Design System:</strong> Use the newly created rule set and apply it back
+                        to the initial draft page, enforcing consistency in visual hierarchy and styles.</li>
+                    <li><strong>Step 6: Prototype Validation:</strong> Run Preview/Prototype mode to ensure the UX flow
+                        makes sense (users can scan information quickly).</li>
+                    <li><strong>Step 7: Connect Claude Code via MCP:</strong> Establish an API connection (Model Context
+                        Protocol) between Google Stitch and the AI programming tool (Claude Code).</li>
+                    <li><strong>Step 8: Code Micro-Fixes:</strong> Ask Claude Code to pull the UI source code to a local
+                        environment and make minor edits directly in the codebase instead of manually tweaking the
+                        design tool, fully respecting the <code>DESIGN.md</code> rules.</li>
+                </ol>
+                <p><strong>Core Takeaway:</strong> The article advocates "Set rules first - polish later". Utilizing
+                    <code>DESIGN.md</code> is the ultimate key to preventing "style drift", a common flaw in previous
+                    generation AI generators.
+                </p>
+            </div>
+        </section>
+
+        <section id="m3">
+            <h2>3) Hands-on: Building a B2B System Management Mockup</h2>
+            <div class="card">
+                <h3>3.1 Initialize Policy (Input Brief)</h3>
+                <p>Aiming for a professional B2B system rather than a Consumer App, I mapped out the following
+                    direction:</p>
+                <ul>
+                    <li><strong>Audience:</strong> Operation managers, Support leads.</li>
+                    <li><strong>Objective:</strong> Real-time system health monitoring (KPIs), incident handling, queue
+                        management.</li>
+                    <li><strong>Desired Feeling:</strong> Intuitive, Reliable, Control Tower, Modern but serious.</li>
+                    <li><strong>Impressions to avoid:</strong> Overly flashy, playful, space-consuming marketing
+                        graphics. Requires excellent "Data Density".</li>
+                </ul>
+
+                <div class="step-container">
+                    <div class="step-action"><strong>👉 Action step 1:</strong> Open the Google Stitch homepage, login,
+                        and <strong>select Web mode</strong>.</div>
+                    <div class="img-wrapper">
+                        <div class="img-placeholder-v2">📸 Awaiting Image: <code>step-01-stitch-home.png</code></div>
+                        <img data-src="images/step-01-stitch-home.png" class="img-real-v2" alt="Stitch Home">
+                    </div>
+                    <div class="img-caption">Image 1: Google Stitch Homepage</div>
+                </div>
+
+                <div class="step-container">
+                    <div class="step-action"><strong>👉 Action step 2:</strong> Open Notepad, draft 4 direction lines
+                        (Policy) to serve as a project compass.</div>
+                    <div class="img-wrapper">
+                        <div class="img-placeholder-v2">📸 Awaiting Image: <code>step-02-direction-brief.png</code>
+                        </div>
+                        <img data-src="images/step-02-direction-brief.png" class="img-real-v2" alt="Direction Brief">
+                    </div>
+                    <div class="img-caption">Image 2: Drafting project direction (Brief) on Notepad</div>
+                </div>
+
+                <h3>3.2 Enter Prompt for Rough Draft (Rough Mockup)</h3>
+                <div class="prompt-box">Design a desktop B2B system management dashboard for enterprise operations.
+                    Audience: operation managers and compliance teams.
+                    Main sections:
+                    - Top navigation with environment badge and global search
+                    - Left side navigation (Overview, Incidents, Users, Integrations, Billing, Audit)
+                    - KPI row: Uptime, Active Incidents, Queue Backlog, SLA Breach Risk
+                    - Incident table with severity, owner, status, updated time
+                    - Right action panel for "Assign owner", "Escalate", "Resolve"
+                    Style: professional, standard data density, high readability.
+                    Avoid playful visuals and avoid marketing-style hero blocks. Focus on utility.</div>
+
+                <div class="step-container">
+                    <div class="step-action"><strong>👉 Action step 3:</strong> Paste the detailed Prompt into Stitch's
+                        Chat box to let AI start working. Do not press Enter yet.</div>
+                    <div class="img-wrapper">
+                        <div class="img-placeholder-v2">📸 Awaiting Image: <code>step-03-first-prompt.png</code></div>
+                        <img data-src="images/step-03-first-prompt.png" class="img-real-v2" alt="First Prompt">
+                    </div>
+                    <div class="img-caption">Image 3: Entering the first detailed prompt to build the B2B system</div>
+                </div>
+
+                <div class="step-container">
+                    <div class="step-action"><strong>👉 Action step 4:</strong> Press Send (Enter) and wait for the AI
+                        to draw the rough screen (Rough Mockup). Zoom out and capture the overall view.</div>
+                    <div class="img-wrapper">
+                        <div class="img-placeholder-v2">📸 Awaiting Image: <code>step-04-rough-mockup.png</code></div>
+                        <img data-src="images/step-04-rough-mockup.png" class="img-real-v2" alt="Rough Mockup">
+                    </div>
+                    <div class="img-caption">Image 4: The Rough Mockup generated by AI</div>
+                </div>
+
+                <div class="step-container">
+                    <div class="step-action"><strong>👉 Action step 5:</strong> Click on the Data Table, a mini-tool
+                        will appear, enter a prompt requesting warning colors (red/yellow) for the Status column.</div>
+                    <div class="img-wrapper">
+                        <div class="img-placeholder-v2">📸 Awaiting Image: <code>step-05-iteration-prompts.png</code>
+                        </div>
+                        <img data-src="images/step-05-iteration-prompts.png" class="img-real-v2"
+                            alt="Iteration Prompts">
+                    </div>
+                    <div class="img-caption">Image 5: Local micro-iteration on a UI element (Table)</div>
+                </div>
+
+                <h3>3.3 Extract DESIGN.md Rules Prompt</h3>
+                <div class="prompt-box">From this B2B dashboard draft, create a reusable enterprise design system.
+                    Organize into:
+                    - Color roles (Primary, Warning, Critical, Backgrounds)
+                    - Typography (Headers, Body, Dense Table Data)
+                    - Spacing (Rhythm for high-density cards)
+                    - Components (nav, KPI cards, table, status badges, action area)
+                    - Layout principles (Grid distribution, Sidebar behavior)
+                    Prioritize consistency, auditability, and enterprise clarity over decoration. Generate a DESIGN.md
+                    containing these precise metrics and hex codes.</div>
+
+                <div class="step-container">
+                    <div class="step-action"><strong>👉 Action step 6:</strong> Paste the Design System prompt into
+                        Chat. A color palette and typography board will be drawn alongside it.</div>
+                    <div class="img-wrapper">
+                        <div class="img-placeholder-v2">📸 Awaiting Image: <code>step-06-design-system-board.png</code>
+                        </div>
+                        <img data-src="images/step-06-design-system-board.png" class="img-real-v2"
+                            alt="Design System Board">
+                    </div>
+                    <div class="img-caption">Image 6: Design System Board</div>
+                </div>
+
+                <div class="step-container">
+                    <div class="step-action"><strong>👉 Action step 7:</strong> Ask AI to export those rules into source
+                        code format <code>DESIGN.md</code> (Generate the DESIGN.md code).</div>
+                    <div class="img-wrapper">
+                        <div class="img-placeholder-v2">📸 Awaiting Image: <code>step-07-design-md-panel.png</code>
+                        </div>
+                        <img data-src="images/step-07-design-md-panel.png" class="img-real-v2" alt="Design MD Panel">
+                    </div>
+                    <div class="img-caption">Image 7: Exporting rule sets to DESIGN.md file</div>
+                </div>
+
+                <h3>3.4 Apply Design System Prompt</h3>
+                <div class="prompt-box">Apply the generated design system (from the DESIGN.md rules) strictly back to
+                    this dashboard screen.
+                    Align the heading hierarchy, spacing rhythm, table density, and component consistency automatically.
+                    Keep the information architecture (KPIs, Tables, Sidemenu) exactly the same, only homogenize the
+                    visual language.</div>
+
+                <div class="step-container">
+                    <div class="step-action"><strong>👉 Action step 8:</strong> Re-select your initial draft frame.
+                        Paste the Apply prompt to force AI to map the DESIGN.md colors/spacing.</div>
+                    <div class="img-wrapper">
+                        <div class="img-placeholder-v2">📸 Awaiting Image: <code>step-08-apply-design-system.png</code>
+                        </div>
+                        <img data-src="images/step-08-apply-design-system.png" class="img-real-v2"
+                            alt="Apply Design System">
+                    </div>
+                    <div class="img-caption">Image 8: Applying standard color systems back to the draft</div>
+                </div>
+
+                <div class="step-container">
+                    <div class="step-action"><strong>👉 Action step 9:</strong> Open Paint, place the old draft (left)
+                        and the newly applied version (right) side-by-side to compare.</div>
+                    <div class="img-wrapper">
+                        <div class="img-placeholder-v2">📸 Awaiting Image: <code>step-09-before-after.png</code></div>
+                        <img data-src="images/step-09-before-after.png" class="img-real-v2" alt="Before/After">
+                    </div>
+                    <div class="img-caption">Image 9: Before (Draft) and After (Standardized) comparison</div>
+                </div>
+
+                <div class="step-container">
+                    <div class="step-action"><strong>👉 Action step 10:</strong> Click Play/Preview on the top right UI
+                        to test hovering interactions over the 'Resolve' button.</div>
+                    <div class="img-wrapper">
+                        <div class="img-placeholder-v2">📸 Awaiting Image: <code>step-10-prototype-check.png</code>
+                        </div>
+                        <img data-src="images/step-10-prototype-check.png" class="img-real-v2" alt="Prototype Check">
+                    </div>
+                    <div class="img-caption">Image 10: Testing Hover interaction effects (Prototype)</div>
+                </div>
+
+                <div class="step-container">
+                    <div class="step-action"><strong>👉 Action step 11:</strong> Open VS Code Terminal, use Claude Code
+                        MCP to connect to Stitch and list the projects.</div>
+                    <div class="img-wrapper">
+                        <div class="img-placeholder-v2">📸 Awaiting Image: <code>step-11-claude-mcp.png</code></div>
+                        <img data-src="images/step-11-claude-mcp.png" class="img-real-v2" alt="Claude MCP">
+                    </div>
+                    <div class="img-caption">Image 11: Connect Claude Code via MCP to list projects</div>
+                </div>
+
+                <div class="step-container">
+                    <div class="step-action"><strong>👉 Action step 12:</strong> Command Claude to pull the source code
+                        and perform a micro-fix on the Top Navigation using DESIGN.md rules.</div>
+                    <div class="img-wrapper">
+                        <div class="img-placeholder-v2">📸 Awaiting Image: <code>step-12-claude-microfix.png</code>
+                        </div>
+                        <img data-src="images/step-12-claude-microfix.png" class="img-real-v2" alt="Claude Micro-fix">
+                    </div>
+                    <div class="img-caption">Image 12: Auto-pulling code and tweaking UI perfectly adhering to the
+                        design system</div>
+                </div>
+            </div>
+        </section>
+
+        <section id="m4">
+            <h2>4) B2B Mockup Render Results</h2>
+            <div class="card">
+                <p>After the system applied the standard rule set, below is the simulated UI interface representing a
+                    B2B Control Center prioritizing practicality, strict palettes, and spacing:</p>
+
+                <div class="mockup">
+                    <div class="top"><strong>AcmeOps Control Center</strong> &nbsp;|&nbsp; Environment: <span
+                            style="background:#0e9f6e; padding:1px 6px; border-radius:4px; font-size:0.8rem;">Production</span>
+                        &nbsp;|&nbsp; 🔍 Search Incidents... &nbsp;|&nbsp; 🔔 Alerts (3)</div>
+                    <div class="main">
+                        <div class="left">
+                            <p style="color:var(--primary); font-weight:600; padding:4px 0;">📊 Overview</p>
+                            <p style="color:var(--muted); padding:4px 0;">🚨 Incidents</p>
+                            <p style="color:var(--muted); padding:4px 0;">👥 Users</p>
+                            <p style="color:var(--muted); padding:4px 0;">🔌 Integrations</p>
+                            <p style="color:var(--muted); padding:4px 0;">💳 Billing</p>
+                            <p style="color:var(--muted); padding:4px 0;">📋 Audit Logs</p>
+                        </div>
+                        <div class="right">
+                            <h3 style="margin-top:0;">Real-time System Status</h3>
+                            <div class="kpi-grid">
+                                <div class="kpi" style="border-top: 3px solid var(--secondary);">
+                                    <div>Uptime 24h</div>
+                                    <div class="num" style="color:var(--secondary);">99.95%</div>
+                                </div>
+                                <div class="kpi" style="border-top: 3px solid var(--critical);">
+                                    <div>Open Incidents</div>
+                                    <div class="num" style="color:var(--critical);">7</div>
+                                </div>
+                                <div class="kpi" style="border-top: 3px solid var(--warning);">
+                                    <div>Queue Backlog</div>
+                                    <div class="num" style="color:var(--warning);">43</div>
+                                </div>
+                                <div class="kpi">
+                                    <div>SLA Breach Risk</div>
+                                    <div class="num">12%</div>
+                                </div>
+                            </div>
+
+                            <h3 style="margin-top:20px;">Incident Watchlist</h3>
+                            <div class="table">
+                                <div class="row head">
+                                    <div class="cell">Incident Name</div>
+                                    <div class="cell">Severity</div>
+                                    <div class="cell">Assignee</div>
+                                    <div class="cell">Status</div>
+                                </div>
+                                <div class="row">
+                                    <div class="cell" style="font-weight:600;">API timeout - Payment Gateway</div>
+                                    <div class="cell" style="color:var(--critical);">High (P1)</div>
+                                    <div class="cell">N. Tran</div>
+                                    <div class="cell"><span class="badge b-err">Investigating</span></div>
+                                </div>
+                                <div class="row">
+                                    <div class="cell" style="font-weight:600;">Webhook retry spike</div>
+                                    <div class="cell" style="color:var(--warning);">Medium (P2)</div>
+                                    <div class="cell">M. Le</div>
+                                    <div class="cell"><span class="badge b-warn">Monitoring</span></div>
+                                </div>
+                                <div class="row">
+                                    <div class="cell">Data sync delayed</div>
+                                    <div class="cell">Low (P3)</div>
+                                    <div class="cell">K. Vu</div>
+                                    <div class="cell"><span class="badge b-ok">Resolved</span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <p><strong>Published Artifact:</strong> The <code>DESIGN.md</code> file acts as the "Source of Truth" to
+                    be handed off to AI Coding Agents (like Claude Code in Step 7) to continue programming without fear
+                    of straying from the system's design conventions.</p>
+
+                <div class="step-container">
+                    <div class="step-action"><strong>👉 Action step 13:</strong> Exit Preview. Click the
+                        <strong>Export</strong> button on the top right, choose formats like "Code to Clipboard" or
+                        "MCP" to export HTML code.
+                    </div>
+                    <div class="img-wrapper">
+                        <div class="img-placeholder-v2">📸 Awaiting Image: <code>step-13-export-or-handoff.png</code>
+                        </div>
+                        <img data-src="images/step-13-export-or-handoff.png" class="img-real-v2"
+                            alt="Export or Handoff">
+                    </div>
+                    <div class="img-caption">Image 13: Export Options Interface (Handoff)</div>
+                </div>
+
+                <div class="step-container">
+                    <div class="step-action"><strong>👉 Action step 14:</strong> Bundle all HTML files, DESIGN.md layout
+                        files, and exactly 14 .png images together into a project folder locally.</div>
+                    <div class="img-wrapper">
+                        <div class="img-placeholder-v2">📸 Awaiting Image: <code>step-14-final-result-local.png</code>
+                        </div>
+                        <img data-src="images/step-14-final-result-local.png" class="img-real-v2"
+                            alt="Final Result Local">
+                    </div>
+                    <div class="img-caption">Image 14: Managing all project assets locally in IDE (VS Code)</div>
+                </div>
+            </div>
+        </section>
+
+        <section id="m5">
+            <h2>5) Thoughts on "Design Stability" using DESIGN.md</h2>
+            <div class="card">
+                <p>Generating random designs with AI is easy, but maintaining consistency across iterations is the real
+                    challenge. Based on this practice, here are objective viewpoints:</p>
+                <ul>
+                    <li><strong>Maintaining Visual Stability:</strong> Hierarchical colors (Primary, Warning, Danger)
+                        and Typographic Spacing between data cards are securely locked during generation. Design.md
+                        forces AI to respect hex code constraints accurately.</li>
+                    <li><strong>Preserving Information Architecture (IA Stability):</strong> Despite prompt requests
+                        making minor edits (like coloring a table), the core structure of the B2B screen (Top Nav, Left
+                        Sidebar, KPI area) never breaks or repositions unexpectedly.</li>
+                    <li><strong>Minimizing Alignment Waste:</strong> Traditionally, Design & Dev teams waste vast
+                        amounts of time aligning pixels and matching colors. With Design.md acting as a "Smart
+                        Contract", code misinterpretations during handoffs are minimized.</li>
+                    <li><strong>Warnings and Limitations:</strong> <code>DESIGN.md</code> must contain absolute
+                        quantitative data (Hex colors, math offsets, Padding = 16px). If the `.md` file only features
+                        vague statements (e.g., "Make it look clean"), stability fractures immediately on the subsequent
+                        scaled prompts.</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="m6">
+            <h2>6) Practical Application in Real Workflows (Personal Opinion)</h2>
+            <div class="card">
+                <p>Correlating this workflow with the B2B product cycles within my organization, relying on Google
+                    Stitch alongside a structured <code>DESIGN.md</code> (Or syncing MCP into Claude Code) is an
+                    absolute game-changer:</p>
+                <ol>
+                    <li><strong>A Perfect Contract Between Product - Design - Dev:</strong> <code>DESIGN.md</code> isn't
+                        just a static document; it is a machine-readable protocol. Frontend Engineers can feed this file
+                        into their IDE to instantly generate CSS/Tailwind Variable sets, heavily reducing time spent
+                        measuring Figma frames.</li>
+                    <li><strong>Smoother Handoff via MCP:</strong> Instead of sending UI mockups and forcing Front-end
+                        to "recreate" them, integrating Stitch into Claude Code allows for atomic, automated UI
+                        rendering. Devs handle the complex JS logic, while AI bridges the UI components based strictly
+                        on MD rules. Huge win for Full-stack teams lacking visual skills.</li>
+                    <li><strong>Solving B2B "Mass Screen Production":</strong> Internal Enterprise solutions often
+                        consist of dozens of structurally similar CRUD / Settings screens. Once 1 sturdy
+                        <code>DESIGN.md</code> config is completed, Product Managers themselves can prompt-build
+                        auxiliary screens with zero fear of Style inconsistencies.
+                    </li>
+                    <li><strong>Preventing Code Fragmentation:</strong> Bringing <code>DESIGN.md</code> natively into
+                        Version Control (Git) ensures whenever companies "rebrand" or adjust color sets, AI can
+                        systematically refactor massive chunks of frontend layout precisely.</li>
+                </ol>
+                <p><strong>Conclusion:</strong> Instead of terminating UX Designer positions, this pipeline actually
+                    kills the repetitive "Pixel Shifting & Dropper Tooling" phase. It empowers Product Managers (PM) and
+                    Software Engineering teams to materialize complex blueprints into commercial-grade mockups out of
+                    mere text prompts.</p>
+            </div>
+        </section>
+
+        <div class="card">
+            <h3>Project Assets List</h3>
+            <ul>
+                <li><code>design-md-b2b-system-mockup-blog-en.html</code> - The HTML blog report documenting this
+                    result.</li>
+                <li><code>DESIGN.md</code> - The extracted Design System rules (Tailored for AI interpretation).</li>
+                <li><code>HUONG-DAN-DEMO-CHUP-ANH.md</code> - The comprehensive checklist guide for generating the 12
+                    screenshots.</li>
+                <li><code>images/</code> - Root directory containing all 12 validation images.</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const realImages = document.querySelectorAll('.img-real-v2');
+            realImages.forEach(img => {
+                const originalSrc = img.getAttribute('data-src');
+                const placeholder = img.previousElementSibling;
+
+                img.onload = function () {
+                    this.style.display = 'block';
+                    if (placeholder) {
+                        placeholder.style.display = 'none';
+                    }
+                };
+
+                img.onerror = function () {
+                    this.style.display = 'none';
+                    if (placeholder) {
+                        placeholder.style.display = 'flex';
+                    }
+                };
+
+                img.src = originalSrc + '?t=' + new Date().getTime();
+            });
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,8 @@
+{
+  "clientName": "Acme Retail Co., Ltd.",
+  "projectCode": "ACM-LOY-2026",
+  "primaryUseCase": "Earn/burn loyalty points at checkout",
+  "systems": ["POS: AcmePOS v12", "Identity: Google Workspace"],
+  "budgetSignal": "Target MVP under 80 MD (indicative)",
+  "contactEmail": "procurement@example.com"
+}

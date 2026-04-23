@@ -1,0 +1,309 @@
+---------------------------------- ---------------------------------- Từ 20/3 - 2 slot (Phúc, Phát)
+Link: https://scuti.slack.com/archives/C08CW371YHF/p1773983187787519
+@channel AI Quest Type 2 (Investigate How)
+
+Investigate the capabilities of Google Workspace CLI and demonstrate practical usage through hands-on examples
+
+https://github.com/googleworkspace/cli
+https://www.youtube.com/watch?v=a8sq2fHxlDA
+
+
+Requirements:
+
+Summarize the core features and what can be achieved using the Google Workspace CLI based on the official repository.
+Try at least two practical examples (e.g., tasks introduced in the reference video) in your own environment and objectively document the specific commands used and their execution results.
+Provide your own opinion, specifically explaining how you can apply the Google Workspace CLI to streamline, improve, or automate your own daily work tasks.
+---------------------------------- ---------------------------------- từ 23/3/2026 - 2 SLot (a Dương tháng 3, Phát tháng 4)
+Link: https://scuti.slack.com/archives/C08CW371YHF/p1774229400240209
+@channel AI Quest Type 2 (Investigate How)
+
+Schedule multi-interviewer interviews using Google Calendar Appointment schedules with Co-hosts (only common availability slots)
+https://www.youtube.com/watch?v=YTP_yMUuAJ0
+https://canvasinfo.blogs.rice.edu/google-calendar-appointment-slots-replaced-by-appointment-schedules/
+https://teamdynamix.umich.edu/TDClient/30/Portal/KB/ArticleDet?ID=14469
+
+Requirements:
+Create one Appointment schedule and add 2+ co-hosts (multiple interviewers).
+Configure it so the booking page shows only time slots when all co-hosts are available (include screenshots of the “availability check” settings).
+Set and verify constraints: working hours, meeting duration, buffer time, minimum notice, and time zone handling.
+Provide the exact candidate email text that sends the booking link + instructions + fallback contact.
+Document at least 3 failure modes (calendar permission, visibility, external users, conflicts) and how you validated them.
+
+
+---------------------------------- 1 ------------------------------------------ 2 Slot (Phát, Thưởng)
+Link: https://scuti.slack.com/archives/C08CW371YHF/p1775007000530429
+@channel AI Quest Type 2 (Investigate How)
+Enable Google Meet transcripts and prove the transcript is saved to Google Drive (verification is the #1 goal)
+https://www.youtube.com/watch?v=HUkQ8Bz7CoQ
+https://ticnote.com/en/blog/transcribe-google-meet
+https://www.youtube.com/watch?v=uDeBiGrQ1S8
+
+Requirements:
+Run a realistic meeting scenario: client requirements interview (15–30 min) with 2–3 speakers and clear topic changes.
+Must include screenshots that prove:
+Transcription was started (in-meeting UI evidence).
+After the meeting, a transcript file exists in Google Drive (show the Drive location and filename).
+The transcript has timestamps/speaker labels (or clearly state what metadata appeared).
+Verify the saving behavior:
+Show how you found it (Drive search keywords, folder path, calendar-event link if applicable).
+Confirm who owns the transcript (organizer/host) and how sharing works (test with another internal user).
+Add a troubleshooting checklist you validated (storage space, permissions, host/co-host settings, device/browser constraints).
+Provide one “standard operating procedure” for PMs: meeting naming rules → transcript retrieval rules → how to link it to the project folder.
+
+---------------------------------- 2 ------------------------------------------
+Link: https://scuti.slack.com/archives/C08CW371YHF/p1775007000954279
+@channel AI Quest Type 2 (Investigate How)
+Run a “large internal training” in Google Meet using Breakout rooms + Polls + Q&A + Noise cancellation
+https://www.youtube.com/watch?v=3GBnACaytPw
+https://workspace.google.com/resources/video-conferencing/
+https://www.youtube.com/watch?v=ZENedgNfAgg
+
+Requirements:
+Use a realistic scenario: 60-minute internal training (e.g., “AI security basics”, “new coding standard”, “sales playbook”).
+Design the meeting with a minute-by-minute plan that explicitly uses:
+2 breakout sessions (small group exercise + report back)
+2 polls (understanding check + decision)
+Q&A segment (collect & prioritize questions)
+Noise cancellation (show where it’s enabled and when it matters)
+Provide screenshots of the host controls/settings and describe the participant experience.
+Include “what went wrong” (at least 3) and mitigations (late joiners, breakout assignment, poll visibility, noise cancellation device constraints).
+
+---------------------------------- 3 ------------------------------------------ 2 Slot (Thưởng, Phúc) - Đại, Phát up slack sau
+Link: https://scuti.slack.com/archives/C08CW371YHF/p1775007001045239
+Use Gemini in Google Docs to produce a real deliverable: a 2-page proposal/plan draft from rough bullets + Drive references
+https://www.youtube.com/watch?v=8wH_guBXdeU
+https://www.computerworld.com/article/1627842/how-to-use-help-me-write-ai-writing-tool-google-docs-gmail.html
+https://www.youtube.com/watch?v=ZETNGVqdCl8
+
+Requirements:
+Scenario must be concrete: e.g., client proposal draft, project kickoff doc, or internal policy.
+Provide the initial input (rough bullets) and the target structure (headings, sections, tone).
+Demonstrate at least 3 Gemini actions inside Docs:
+Create the first draft (Help me write / side panel).
+Rewrite for a specific tone (formal Japanese, concise executive summary, etc.).
+Summarize or extract action items into a table.
+Include exact prompts and before/after screenshots.
+Add a “quality gate”: identify 5 factual claims and validate them with linked source docs (no invented facts).
+
+---------------------------------- 4 ------------------------------------------ 2 Slot (Phát, Trường)
+Link: https://scuti.slack.com/archives/C08CW371YHF/p1775007001163719
+Create a real internal video using Google Vids (AI-powered): “How to do X” training video with Help me create + recording studio
+
+https://workspace.google.com/products/vids/
+https://workspaceupdates.googleblog.com/2025/03/new-capabilities-for-google-vids-help-me-create.html
+https://www.youtube.com/watch?v=c_2HQgsyiyA
+
+Requirements:
+Choose a concrete business topic: e.g., how to file expenses, how to write a weekly status, how to label leads, how to run a client kickoff.
+Use “Help me create” to generate the first draft from a prompt + one Drive file reference (doc or slide).
+Must include:
+Storyboard/scene plan generated by Vids (screenshot)
+At least 1 screen recording clip (recording studio)
+At least 1 AI-generated asset (e.g., suggested scenes/stock media selection, AI voiceover if available)
+Explain your editing workflow (what you accepted vs what you changed) and the final runtime target (e.g., 2–4 minutes).
+Provide a publishing/sharing plan: Drive location, access control, and how you’ll keep the video up to date.
+
+---------------------------------- 5 ------------------------------------------ 2 Slot (Phát, Trường)
+Link: https://scuti.slack.com/archives/C08CW371YHF/p1775007001264599
+Use Google Drive eSignature to execute a realistic NDA/contract signing flow (PDF + status tracking + audit trail)
+
+https://workspace.google.com/resources/esignature/
+https://knowledge.workspace.google.com/admin/drive/turn-esignature-on-or-off-for-users
+https://www.youtube.com/watch?v=u3F1Hjz4vvM
+
+Requirements:
+Scenario must be concrete: NDA with a vendor OR statement of work (use a dummy PDF template; do not upload sensitive real contracts).
+Show the full flow with screenshots:
+Prepare PDF in Drive → start eSignature → assign roles/signers → send request.
+Track status (pending/signed) and confirm the completed artifact + audit trail exists.
+Include operational rules you used: signer identity, reminders, cancellation/re-send, version control (what happens if the PDF is updated).
+Confirm where the signed file and related records live in Drive (folder placement/search strategy).
+Provide a “failure mode” section with at least 3 issues and fixes (e.g., permissions, signer can’t access, wrong email, PDF lock behavior).
+
+---------------------------------- 6 ------------------------------------------ 2 Slot (Phát, Phúc)
+Link: https://scuti.slack.com/archives/C08CW371YHF/p1775007001884749
+Use Gemini in Google Slides (side panel) to build a 5-slide mini deck with consistent story + at least 2 AI-generated images
+
+https://www.youtube.com/watch?v=wxNq_TMK930
+https://www.youtube.com/watch?v=kuwE6NVSyWE
+https://www.computerworld.com/article/4129528/gemini-help-make-google-slides-presentations.html
+
+Requirements:
+Scenario must be concrete: e.g., client progress report, internal monthly KPI, new hire onboarding, exhibition booth pitch.
+Deck must be exactly 5 slides: Title, Problem, Approach, Proof/Numbers, Next actions.
+Use Gemini side panel for:
+Slide content generation (at least 3 slides).
+Image generation (at least 2 images) + 1 iteration each (re-prompt to improve relevance).
+Demonstrate consistency controls: fonts/colors/layout guidance (even if approximate) and what you did to keep style coherent.
+Include before/after screenshots and the prompts used per slide.
+---------------------------------- 7 ------------------------------------------ 2 Slot rồi (Trường, Phúc)
+Link: https://scuti.slack.com/archives/C08CW371YHF/p1775007002687749
+Use Gemini in Gmail (side panel) to handle a real “post-exhibition follow-up” inbox workflow end-to-end (extract + summarize + draft)
+
+https://workspace.google.com/products/gmail/ai/
+https://www.youtube.com/watch?v=61AOvMaVQgM
+https://www.youtube.com/watch?v=DPn2QXFSUlA
+
+
+Requirements:
+Assume a concrete scenario: you attended an exhibition and have 30 inbound/outbound emails (threads) with prospects + internal notes; explain the scenario in 3–5 lines.
+Demonstrate 3 tasks inside Gmail using the Gemini side panel (show screenshots for each):
+Extract specific facts from threads (e.g., promised delivery date, requested docs, next action owner).
+Compare two vendors/clients based on email content (pros/cons table).
+Draft a reply email that references the extracted facts (no hallucinations).
+
+Include the exact prompts you typed and the final email draft output.
+Add a verification section: pick 5 factual statements in Gemini’s output and prove each with the source email (quote/snippet + screenshot).
+Document limitations you hit (what Gemini could not find/understand) and how you mitigated them.
+
+---------------------------------- 8 ------------------------------------------ 2 Slot (Phát, Phúc)
+Link: https://scuti.slack.com/archives/C08CW371YHF/p1775007002714209
+Use Gemini in Google Sheets (side panel) to clean, structure, and analyze a realistic operations dataset (PM/back-office)
+
+https://www.youtube.com/watch?v=QPmuAS1V7oI
+https://www.youtube.com/watch?v=hPglmtJqv7k
+https://www.computerworld.com/article/3845447/google-workspace-how-to-use-gemini-ai-side-panel.html
+
+Requirements:
+Use a concrete dataset (create dummy data if needed): example options: project timesheets, issue backlog, monthly expenses, lead list, support ticket log.
+Show 3 types of work done via Gemini in Sheets (screenshots + prompts):
+Cleanup/standardization (dedupe, normalize company names, fill missing fields, classify categories).
+Analysis (top drivers, trends, outliers) with a written interpretation.
+Output formatting (create a pivot table / conditional formatting / summary dashboard outline).
+Include exact prompts and the actual changes applied to the sheet.
+Add a verification step: randomly sample 10 rows and show correctness of cleanup/classification.
+
+---------------------------------- 9 ---------------------------------- 1 Slot (Phát)
+Link: https://scuti.slack.com/archives/C08CW371YHF/p1775181650134259
+@channel AI Quest Type 2 (Investigate How)
+
+Build an estimate + proposal routine in Workspace Studio (meeting → minutes template → proposal draft → notify)
+
+https://ximix.niandc.co.jp/blog/google-workspace-flows-minutes
+https://zenn.dev/google_cloud_jp/articles/google-workspace-studio-templates-meeting
+https://medium.com/@stephane.giron/mastering-google-flows-a-guide-to-building-powerful-workflows-with-steps-c2f41f0a9e97
+
+
+Requirements:
+
+Define a concrete business scenario: 30-minute client requirements interview → proposal draft → estimate draft (typical IT contracting). Dummy project data is OK.
+In Workspace Studio, implement at least the following and attach screenshots + execution logs:
+Use a Calendar event as a trigger to auto-create a “meeting minutes” Google Doc from a template and save it to a specified Drive folder.
+Before the meeting, auto-post to Google Chat a pre-meeting checklist (purpose / key questions / assumptions to confirm).
+After the meeting, use the minutes Doc to populate a proposal Doc template (even bullet-level is fine) with extracted key points.
+
+The “estimate” does not need to be fully automated, but at minimum:
+Extract at least one work item from the proposal/minutes and append 1+ rows into an estimate Google Sheet template (no manual typing for those rows).
+
+Validate at least 3 “failure-prone” points: permissions (Drive/Chat), template ID changes, event-name variability, duplicate executions (idempotency), etc.
+Ensure reproducibility: document the template structure (folder naming rules, Doc/Sheet schema, what is parameterized vs fixed) so another employee can rebuild it.
+
+---------------------------------- 10 ---------------------------------- 1 Slot (Phúc)
+Link: https://scuti.slack.com/archives/C08CW371YHF/p1775181684660789
+
+@channel AI Quest Type 2 (Investigate How)
+
+Automate weekly/monthly administrator tasks with Workspace Studio (collect → summarize → publish)
+
+https://note.com/ai_skill/n/nf1ea921961da
+https://zenn.dev/google_cloud_jp/articles/google-workspace-studio-chat-log
+
+
+Requirements:
+
+Define a concrete scenario: choose either weekly status collection (PM) or a monthly back-office report (dummy data OK).
+In Workspace Studio, implement all of the following (screenshots required):
+A scheduled trigger (e.g., every Friday 16:00) that posts a fixed set of questions in Google Chat (this week / next week / risks / help needed).
+Collect or consolidate responses and automatically write a weekly report into Google Docs (or automatically archive the Chat log into Docs).
+Use Gemini (or equivalent) to generate a 3–7 line executive summary and post it back to Chat (with @mentions).
+
+Output quality requirements:
+Separate facts vs assumptions clearly (label assumptions explicitly).
+Extract at least 5 action items with owner / due date / dependencies.
+
+Operational requirements:
+Define the Drive storage location (Shared Drive recommended) and a naming convention for weekly/monthly docs.
+Define and test behavior for duplicate runs in the same period (append / overwrite / abort).
+
+Validate at least 3 failure modes and mitigations (Chat permissions, low response rate, formatting drift, truncation for long messages, etc.).
+
+---------------------------------- 11 ----------------------------------  2 Slot (Đại, Phúc)
+Link: https://scuti.slack.com/archives/C08CW371YHF/p1775181719984089
+
+@channel AI Quest Type 2 (Investigate How)
+
+Auto-create reply drafts in Gmail with Workspace Studio (filter “needs reply” → read thread → draft reply)
+
+https://chatgpt-lab.com/n/n648e22efaee6
+https://www.instagram.com/reel/DU2s1L9Ewp5/
+
+
+Requirements:
+
+Define a concrete scenario: choose either post-exhibition follow-up or first-line client Q&A replies. Use test threads only (no real customer data required).
+In Workspace Studio, make these 3 stages work end-to-end (screenshots + configuration values required):
+Filter “emails that need a reply,” e.g. in:inbox is:unread -from:yourdomain.com plus at least one more rule (subject keyword / sender allowlist / label, etc.).
+Generate a reply draft that explicitly reflects the thread history (summarize prior context, reference previous commitments, and state next actions).
+Save the output as a Gmail Draft (show evidence that the draft exists).
+
+Quality gate (most important):
+Select 5 factual statements in the generated draft and prove each one from the email thread (quote/snippet + screenshot). No hallucinations.
+Include at least 3 “clarifying questions” the sender should ask to avoid missing info.
+
+Exception handling:
+Define a “do-not-auto-draft” category (complaints, legal, pricing negotiations, etc.). For those cases, do NOT create drafts; instead send a Chat alert to a human reviewer.
+
+Operational requirement:
+Design a label strategy (Draft-created / Needs-review / Important) to prevent duplicate processing.
+
+---------------------------------- 12 ---------------------------------- 2 Slot (Phúc, Trường)
+Link: https://scuti.slack.com/archives/C08CW371YHF/p1775181769422649
+@channel AI Quest Type 2 (Investigate How)
+
+Trigger on PDF resumes in Drive → extract candidate fields → append to Google Sheets using Workspace Studio
+
+https://dev.to/googleworkspace/google-workspace-studio-extract-pdf-data-to-sheets-automatically-6ln
+https://www.youtube.com/watch?v=ZQ24QTudlhw
+https://www.youtube.com/watch?v=Y_GC3FOmKX4
+
+
+Requirements:
+
+Define a concrete HR scenario: candidates submit resume/CV PDFs that are saved into a Drive folder. Use dummy PDFs only (no personal data).
+In Workspace Studio, implement all of the following (screenshots required):
+Trigger when a PDF is added to a specific Drive folder.
+Read the PDF and extract (at minimum) these structured fields:
+Full name / email / phone
+Most recent role (company, period, title)
+Skills (language/framework + years, or equivalent structured format)
+At least one preference field (work style, earliest start date, etc.)
+
+Append the extracted data as the next row in Google Sheets (define the column schema explicitly).
+
+Verification (most important):
+Randomly choose 10 extracted values and validate each against the PDF source (show where it appears in the PDF). Record mis-extraction patterns.
+
+Operational requirements:
+Define a duplicate-detection rule (e.g., same email) and implement branching behavior: update existing row OR route to a review label instead of appending.
+Define behavior for scanned-image PDFs (no text layer): document what happens and whether OCR pre-processing is required.
+
+Security requirements:
+Document Drive folder permissions, Sheets sharing scope, and where logs are stored. Assume no external sharing by default.
+
+---------------------------------- 13 ---------------------------------- 
+
+---------------------------------- 14 ---------------------------------- 
+
+----------------------------------  15 ---------------------------------- 
+
+----------------------------------  16 ---------------------------------- 
+
+
+
+
+
+
+
+
+
+

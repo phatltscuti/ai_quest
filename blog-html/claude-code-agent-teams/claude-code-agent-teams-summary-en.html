@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Claude Code Agent Teams: Executive Summary and Guide</title>
+    <style>
+      *{box-sizing:border-box}
+      body{ margin:0; font-family: Arial, sans-serif; background: #fff; color: #000; line-height: 1.6; }
+      a{ color: #0066cc; text-decoration: none; }
+      a:hover{ text-decoration: underline; }
+      .wrap{ max-width: 980px; margin:0 auto; padding: 20px; }
+      h1{ margin:0 0 10px 0; font-size: 28px; }
+      h2{ margin: 24px 0 12px; font-size: 22px; border-bottom: 2px solid #ddd; padding-bottom: 8px; }
+      h3{ margin: 18px 0 10px; font-size: 18px; }
+      ul,ol{ margin: 8px 0; padding-left: 20px; }
+      p{ margin: 12px 0; }
+      code{ background: #f5f5f5; border: 1px solid #ddd; padding: 2px 6px; font-size: 13px; font-family: monospace; }
+      pre{ white-space: pre-wrap; word-wrap: break-word; border: 1px solid #ddd; background: #f5f5f5; padding: 12px; overflow:auto; font-size: 13px; font-family: monospace; margin: 12px 0; }
+      .hero{ border: 1px solid #ddd; padding: 20px; margin-bottom: 20px; background: #f9f9f9; }
+      .tip{ border-left: 3px solid #00cc66; padding: 10px 12px; background: #f0fff4; margin: 12px 0; }
+      .warning{ border-left: 3px solid #ff9900; padding: 10px 12px; background: #fff8e1; margin: 12px 0; }
+      table{ border-collapse: collapse; width: 100%; margin: 16px 0; }
+      th,td{ border: 1px solid #ddd; padding: 8px 12px; text-align: left; }
+      th{ background: #f5f5f5; }
+      .demo-img{ max-width: 100%; height: auto; border: 1px solid #ddd; border-radius: 4px; }
+      .footer{ margin-top: 30px; font-size: 12px; color: #666; border-top: 1px solid #ddd; padding-top: 20px; }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="hero">
+        <h1>Claude Code Agent Teams: Executive Summary and Guide</h1>
+      </div>
+
+      <h2 id="exec-summary">1. Executive Summary</h2>
+      <p>
+        <b>Agent Teams</b> is an experimental Claude Code feature that lets you coordinate multiple Claude Code sessions working in parallel as a team. 
+        One session acts as the <b>team lead</b>, assigning work and synthesizing results; <b>teammates</b> are independent Claude Code sessions, 
+        each with its own context window, able to message each other directly and self-coordinate via a shared task list. 
+        Unlike Subagents (which run in the same session and only report back to the main agent), Agent Teams let you interact directly with individual teammates without going through the lead.
+      </p>
+      <p>
+        Agent Teams work best when <b>parallel exploration</b> adds real value: multi-perspective research/review, new feature development (each teammate owns a piece), 
+        debugging with competing hypotheses, or changes spanning frontend, backend, and tests. The feature is disabled by default and has some limitations around session resumption, task coordination, and shutdown.
+      </p>
+
+      <h2 id="features">2. Main Features and Benefits</h2>
+      <h3>2.1. Architecture</h3>
+      <ul>
+        <li><b>Team lead:</b> The main session that creates the team, spawns teammates, and coordinates work.</li>
+        <li><b>Teammates:</b> Independent Claude Code sessions, each working on assigned tasks.</li>
+        <li><b>Task list:</b> Shared list of work items; teammates self-claim or the lead assigns.</li>
+        <li><b>Mailbox:</b> Messaging system between agents.</li>
+      </ul>
+
+      <h3>2.2. Benefits</h3>
+      <ul>
+        <li><b>Peer-to-peer communication:</b> Teammates message each other directly, not only via the lead.</li>
+        <li><b>Self-coordination:</b> Shared task list; dependencies unblock automatically when dependent tasks complete.</li>
+        <li><b>Direct interaction:</b> You can select a teammate and send commands directly (Shift+Up/Down in in-process mode).</li>
+        <li><b>Plan approval:</b> You can require teammates to submit a plan first; the lead approves before implementation.</li>
+        <li><b>Delegate mode:</b> The lead only coordinates, does not implement, avoiding the lead doing work instead of teammates.</li>
+        <li><b>Display modes:</b> In-process (any terminal) or split panes (tmux / iTerm2) to see multiple teammates’ output at once.</li>
+        <li><b>Hooks:</b> TeammateIdle, TaskCompleted to enforce quality gates (feedback, block completion if criteria not met).</li>
+      </ul>
+
+      <h2 id="vs-subagents">3. Agent Teams vs Subagents</h2>
+      <table>
+        <thead>
+          <tr><th>Aspect</th><th>Subagents</th><th>Agent Teams</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><b>Context</b></td><td>Own context window; results return to caller</td><td>Own context window; fully independent</td></tr>
+          <tr><td><b>Communication</b></td><td>Reports results back to main agent only</td><td>Teammates message each other directly</td></tr>
+          <tr><td><b>Coordination</b></td><td>Main agent manages all work</td><td>Shared task list, self-coordination</td></tr>
+          <tr><td><b>Best for</b></td><td>Focused tasks where only the result matters</td><td>Complex work requiring discussion and collaboration</td></tr>
+          <tr><td><b>Token cost</b></td><td>Lower: results summarized back to main context</td><td>Higher: each teammate is a separate Claude instance</td></tr>
+        </tbody>
+      </table>
+      <p>
+        <b>Use Subagents</b> when you need a quick, focused worker: research a question, verify a claim, review a file. The subagent does the work and returns a summary.
+      </p>
+      <p>
+        <b>Use Agent Teams</b> when teammates need to share findings, challenge each other, and coordinate on their own. Examples: research with competing hypotheses, parallel code review (security / performance / test coverage), new feature development (each teammate owns a module).
+      </p>
+      <p>
+        <b>Transition:</b> If you run parallel subagents and hit context limits, or subagents need to communicate with each other, Agent Teams is the logical next step.
+      </p>
+
+      <h2 id="setup">4. Setup and How It Works in Your Environment</h2>
+      <h3>4.1. Enable Agent Teams</h3>
+      <p>Agent Teams are disabled by default. Enable by setting <code>CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1</code>:</p>
+      <ul>
+        <li><b>settings.json</b> (Claude Code): <code>{"env": {"CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"}}</code></li>
+        <li><b>Shell:</b> export CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1 (Linux/macOS) or set CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1 (Windows CMD)</li>
+      </ul>
+
+      <h3>4.2. Run Your First Team</h3>
+      <p>Describe the task and team structure in natural language. Example:</p>
+      <pre>I'm designing an English center management system (courses, students, teachers). 
+Create an agent team to explore this from different angles: one teammate on UX/user flow, 
+one on technical architecture, one playing devil's advocate.</pre>
+      <p>Claude creates the team, spawns teammates, and coordinates based on your prompt. The lead displays the teammate list and tasks; use Shift+Up/Down to select a teammate and message directly.</p>
+
+      <h3>4.3. Display Mode</h3>
+      <ul>
+        <li><b>In-process:</b> All teammates run in your main terminal. Works in any terminal.</li>
+        <li><b>Split panes:</b> Each teammate gets its own pane. Requires tmux or iTerm2 (it2 CLI). Default "auto": use split if already in tmux, otherwise in-process.</li>
+      </ul>
+      <p>To force in-process: <code>{"teammateMode": "in-process"}</code> in settings.json or <code>claude --teammate-mode in-process</code>.</p>
+
+      <h3>4.4. Team & Task Storage</h3>
+      <ul>
+        <li><b>Team config:</b> <code>~/.claude/teams/{team-name}/config.json</code></li>
+        <li><b>Task list:</b> <code>~/.claude/tasks/{team-name}/</code></li>
+      </ul>
+
+      <h3>4.5. Limitations</h3>
+      <ul>
+        <li>No session resumption for in-process teammates with /resume, /rewind.</li>
+        <li>Task status can lag; teammates sometimes fail to mark complete, blocking dependent tasks.</li>
+        <li>One team per session; must cleanup before starting a new team.</li>
+        <li>Teammates cannot spawn teams or other teammates; only the lead manages the team.</li>
+        <li>Lead is fixed; cannot promote a teammate to lead.</li>
+        <li>Split panes require tmux or iTerm2; not supported in VS Code integrated terminal, Windows Terminal, Ghostty.</li>
+      </ul>
+
+      <h2 id="opinions">5. How to Use in Your Projects</h2>
+      <h3>5.1. Good Use Cases</h3>
+      <ul>
+        <li><b>Parallel code review:</b> 3 reviewers – security, performance, test coverage – each with a different lens, lead synthesizes.</li>
+        <li><b>Debug with competing hypotheses:</b> Multiple teammates investigate different theories, debate to narrow down, find root cause faster.</li>
+        <li><b>New feature / module:</b> Each teammate owns a piece (frontend, backend, tests) to avoid file conflicts.</li>
+        <li><b>Large refactor:</b> Break refactor into independent tasks, each teammate owns a set of files.</li>
+      </ul>
+
+      <h3>5.2. Recommendations</h3>
+      <ul>
+        <li><b>Start with research/review:</b> If new to Agent Teams, start with PR review, library research, or bug investigation instead of coding. These have clear boundaries and fewer file conflicts.</li>
+        <li><b>Avoid editing the same file:</b> Assign work so each teammate owns a distinct set of files to prevent overwrites.</li>
+        <li><b>Plan approval for risky tasks:</b> For large refactors or auth/DB changes, require teammates to submit a plan first; lead approves before implementation.</li>
+        <li><b>Delegate mode when needed:</b> If the lead tends to implement instead of waiting for teammates, enable delegate mode (Shift+Tab) to force the lead to only coordinate.</li>
+        <li><b>Manage cost:</b> Agent Teams use more tokens than a single session. Use for tasks that truly benefit from parallel exploration; routine tasks are better with a single session or Subagents.</li>
+      </ul>
+
+      <h2 id="demo">6. Demo</h2>
+      <p>
+        The demo illustrates the flow: enable Agent Teams → create team → view task list → select teammate → message directly → shutdown request from team-lead.
+      </p>
+
+      <h3>Figure 1: Enable Agent Teams</h3>
+      <p><img src="images/step-01-enable-agent-teams.png" alt="Enable Agent Teams" class="demo-img" /></p>
+      <p>Add <code>CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1</code> to settings.json or environment variables.</p>
+
+      <h3>Figure 2: Start Claude Code</h3>
+      <p><img src="images/step-02-claude-code-start.png" alt="Claude Code started" class="demo-img" /></p>
+      <p>Run Claude Code in the project folder, ready to accept prompts.</p>
+
+      <h3>Figure 3: Prompt to create agent team</h3>
+      <p><img src="images/step-03-prompt-create-team.png" alt="Prompt to create team" class="demo-img" /></p>
+      <p>Send a prompt describing the task and team structure (e.g. 3 teammates – UX, architecture, devil's advocate).</p>
+
+      <h3>Figure 4: Lead spawns teammates</h3>
+      <p><img src="images/step-04-lead-spawns-teammates.png" alt="Lead spawns teammates" class="demo-img" /></p>
+      <p>The lead creates the team, spawns teammates, and displays the list.</p>
+
+      <h3>Figure 5: Task list (Ctrl+T)</h3>
+      <p><img src="images/step-05-task-list.png" alt="Shared task list" class="demo-img" /></p>
+      <p>Shared task list coordinates work between teammates.</p>
+
+      <h3>Figure 6: Select teammate (Shift+Up/Down)</h3>
+      <p><img src="images/step-06-select-teammate.png" alt="Select teammate" class="demo-img" /></p>
+      <p>Select a teammate to view and interact directly in in-process mode.</p>
+
+      <h3>Figure 7: Message teammate directly</h3>
+      <p><img src="images/step-07-message-teammate.png" alt="Message teammate" class="demo-img" /></p>
+      <p>Send a message directly to a teammate without going through the lead.</p>
+
+      <h3>Figure 8: Shutdown request from team-lead</h3>
+      <p><img src="images/step-08-shutdown-request.png" alt="Shutdown request from team-lead" class="demo-img" /></p>
+      <p>When all tasks complete, the lead sends a shutdown request (e.g. "Shutdown request from team-lead – Reason: All tasks complete..."). Teammates receive the notification and stop.</p>
+
+      <h2 id="conclusion">7. Conclusion</h2>
+      <p>
+        <b>Agent Teams</b> is a powerful feature for coordinating multiple Claude Code sessions in parallel, with a team lead, shared task list, and peer-to-peer communication between teammates. 
+        Strengths: ideal for <b>parallel research</b> (multiple perspectives at once), <b>multi-criteria code review</b> (security, performance, test coverage), <b>debugging with competing hypotheses</b>, and <b>new feature development</b> (each teammate owns a module).
+      </p>
+      <p>
+        Versus Subagents: use <b>Subagents</b> when you need a quick, focused worker that returns a summary; use <b>Agent Teams</b> when teammates need to share findings, challenge each other, and self-coordinate. 
+        Token cost is higher but the value is justified for complex problems.
+      </p>
+      <p>
+        Note: Agent Teams is <b>experimental</b>; you must enable <code>CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1</code> and accept limitations (session resumption, task status lag, split panes only supported with tmux/iTerm2 on some OSes). 
+        Start with research/review tasks, avoid editing the same files, and monitor progress for best results.
+      </p>
+      <p>
+        The demo above illustrates the basic flow from enabling the feature → creating a team → viewing the task list → selecting a teammate → messaging directly → shutdown. 
+        You can apply this to projects such as English center management, new architecture design, or large PR reviews.
+      </p>
+
+      <h2 id="refs">8. References</h2>
+      <ul>
+        <li><a href="https://code.claude.com/docs/en/agent-teams" target="_blank">Claude Code Docs – Orchestrate teams of Claude Code sessions</a></li>
+        <li><a href="https://code.claude.com/docs/en/features-overview#subagent-vs-agent-team" target="_blank">Claude Code Docs – Subagent vs Agent team</a></li>
+      </ul>
+
+      <div class="footer">
+        <p>File: <code>blog-html/claude-code-agent-teams/claude-code-agent-teams-summary-en.html</code></p>
+        <p style="margin-top: 8px; font-size: 11px; color: #666;">Last updated: <script>document.write(new Date().toLocaleDateString('en-US'))</script></p>
+      </div>
+    </div>
+  </body>
+</html>

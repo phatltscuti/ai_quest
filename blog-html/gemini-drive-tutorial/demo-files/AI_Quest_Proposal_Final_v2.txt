@@ -1,0 +1,26 @@
+# ĐỀ XUẤT DỰ ÁN AI QUEST (PROPOSAL FINAL V2)
+**Ngày:** 23/03/2026
+**Trạng thái:** FINAL - CHỜ THU ĐỔI
+
+## 1. Tầm nhìn dự án
+AI Quest là hệ thống quản trị dữ liệu thông minh sử dụng Large Language Model để xử lý hàng triệu văn bản nội bộ. Mục tiêu là giúp doanh nghiệp giảm 70% thời gian tìm kiếm thông tin và 50% thời gian tổng hợp báo cáo.
+
+## 2. Các tính năng cốt lõi
+- **Semantic Search:** Tìm kiếm theo ngữ nghĩa, vượt xa từ khóa truyền thống.
+- **Auto-Summarization:** Tự động tóm tắt các văn bản dài hàng trăm trang.
+- **Cross-Doc Comparison:** So sánh sự khác biệt giữa các phiên bản hợp đồng, kế hoạch.
+- **Insight Extraction:** Trích xuất các Action Items và rủi ro từ biên bản họp.
+
+## 3. Ngân sách chi tiết (Cập nhật V2)
+- **Hạ tầng GPU:** 75,000 USD (Tăng 25% so với bản thảo V1 để hỗ trợ cluster A100).
+- **Nhân sự:** 120,000 USD cho đội ngũ 5 AI Engineers trong 6 tháng.
+- **Chi phí vận hành:** 15,000 USD/tháng.
+
+## 4. Lộ trình triển khai
+- **Tháng 4/2026:** Hoàn thiện hạ tầng Cloud.
+- **Tháng 5/2026:** Training Model với dữ liệu nội bộ.
+- **Tháng 6/2026:** Chạy Beta Test cho 100 khách hàng đầu tiên.
+
+---
+*Người thực hiện: Nguyễn Văn A*
+*Phê duyệt: Ban Giám Đốc AI Quest*

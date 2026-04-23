@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Clean, Structure & Analyze Operations Data with Gemini Sheets</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="badge">Google Workspace Guide</div>
+    <h1>Using Gemini in Google Sheets to Clean, Structure, and Analyze Operations Datasets</h1>
+    <p class="subtitle">A PM/Back-office guide leveraging 6 distinct prompts via the Side Panel to obliterate junk data, establish a clean structure, and harvest executive insights.</p>
+  </div>
+
+  <div class="container">
+
+    <!-- TABLE OF CONTENTS -->
+    <nav class="toc">
+      <h2>Table of Contents</h2>
+      <ol>
+        <li><a href="#s1">Introduction: The Nightmare of Raw Data</a></li>
+        <li><a href="#s2">Scenario: IT Support Ticket Log</a></li>
+        <li><a href="#s3">Phase 1: Cleanup & Structuring (Prompts 1, 2, 3)</a></li>
+        <li><a href="#s4">Phase 2: Analytics & Reporting (Prompts 4, 5, 6)</a></li>
+        <li><a href="#s6">Quality Gate: AI Verification Sampling</a></li>
+        <li><a href="#s7">Conclusion & Best Practices</a></li>
+        <li><a href="#s8">References</a></li>
+      </ol>
+    </nav>
+
+    <!-- SECTION 1 -->
+    <section id="s1">
+      <h2>1. Introduction: Unlocking Operations Datasets with Gemini</h2>
+      <p>For Project Managers (PMs) or Back-office specialists, Operations Datasets—such as support ticket logs, monthly expenses, or inventory records—often arrive in their rawest, most chaotic forms. Consequently, spreadsheet time is mostly wasted on <strong>data janitorial work</strong>: fixing typos, normalizing company names, and wrestling with unsearchable bulk text paragraphs.</p>
+      
+      <p>The topic <strong>"Using Gemini in Google Sheets to Clean, Structure, and Analyze Operations Datasets"</strong> is designed to completely disrupt that workflow. By leveraging the <strong>Gemini Side Panel</strong>, you no longer need to be a master of nested Excel formulas or Google Apps Script. The AI natively handles three core pillars:</p>
+
+      <ul style="margin-bottom: 20px; padding-left: 20px;">
+        <li style="margin-bottom: 10px;"><strong>Clean:</strong> Automatically standardizing text, rectifying typos, and normalizing messy entity variations into a single, cohesive dataset.</li>
+        <li style="margin-bottom: 10px;"><strong>Structure:</strong> Mining unstructured prose text and extracting hidden variables into distinct, sortable columns and formal categorization buckets.</li>
+        <li style="margin-bottom: 10px;"><strong>Analyze:</strong> Comprehending the sanitized dataset to automatically draft Executive Summaries, spin up functional Pivot Tables, and execute Conditional Formatting rules instantly.</li>
+      </ul>
+
+      <p>By chaining exactly 6 sequential Prompts detailed below, you can weaponize AI to transform a chaotic data swamp into a goldmine of insights in under 5 minutes.</p>
+    </section>
+
+    <!-- SECTION 2 -->
+    <section id="s2">
+      <h2>2. Scenario: IT Support Ticket Log</h2>
+      <p>You export the cross-department Helpdesk system into a CSV. Prepare by importing the <code>raw_ticket_data.csv</code> file into a blank Google Sheet using <b>File > Import</b>.</p>
+      <p>The data features: <i>Customer</i> (varying spellings), <i>Issue Description</i> (long prose describing the bug), and <i>Resolution Time</i>.</p>
+
+      <div class="screenshot-wrap">
+        <div class="img-placeholder">
+          <div class="icon">📸</div>
+          [Insert Image 1: Screenshot showing successful import of raw_ticket_data.csv onto Google Sheets. The chaotic raw text data spills across the canvas, highlighting the clear lack of uniform Category dimensions.]
+        </div>
+        <div class="caption">Preparation: Importing messy unstructured Raw Data into the workspace</div>
+      </div>
+
+      <p>The mission: Open the Side Panel and fire off 6 sequential prompts to purge the noise.</p>
+    </section>
+
+    <!-- SECTION 3 -->
+    <section id="s3">
+      <h2>3. Phase 1: Cleanup & Structuring</h2>
+      <p>Instead of manually battling complex nested Excel functions, we unleash 3 rapid-fire Prompts directing Gemini to carve out formal dimensions from the raw noise.</p>
+
+      <h3>Prompt 1: Semantic Categorization</h3>
+      <div class="prompt-box"><span class="label">PROMPT 1 - CATEGORIZE</span>Analyze the "Issue Description" column. Identify the context and create a new column categorizing each issue into exactly one label: Hardware, Software, Network, or Access.</div>
+      <div class="screenshot-wrap">
+        <div class="img-placeholder">
+          <div class="icon">📸</div>
+          [Insert Image 2: Gemini analyzes the descriptions and displays a shiny new Category column in the Side Panel ready to be inserted.]
+        </div>
+        <div class="caption">Resolving the Blind Spot: AI parsing raw prose logic into core Category buckets.</div>
+      </div>
+
+      <h3>Prompt 2: Entity Normalization</h3>
+      <div class="prompt-box"><span class="label">PROMPT 2 - NORMALIZE</span>Normalize the "Customer" column. Identify all sloppy variations like 'ggl', 'Google Inc', or 'GGL LLC' and standardize them to 'Google'. Apply the same logic for Amazon, Microsoft, Apple, and Salesforce.</div>
+      <div class="screenshot-wrap">
+        <div class="img-placeholder">
+          <div class="icon">📸</div>
+          [Insert Image 3: The Customer column being overhauled by Gemini, replacing the chaotic abbreviations with formal tech giant names.]
+        </div>
+        <div class="caption">Pivot Protection: Without normalizing, a future Pivot Table would treat the variations of Google as three entirely different companies.</div>
+      </div>
+
+      <h3>Prompt 3: Entity Extraction</h3>
+      <div class="prompt-box"><span class="label">PROMPT 3 - EXTRACT</span>Read the "Issue Description" column again. Extract any physical location or floor number mentioned into a new column called 'Location'. If not mentioned, write 'N/A'.</div>
+      <div class="screenshot-wrap">
+        <div class="img-placeholder">
+          <div class="icon">📸</div>
+          [Insert Image 4: A new Location column materializes, correctly snapping the "3rd floor" or "5th floor" references hidden deep inside the long descriptions.]
+        </div>
+        <div class="caption">The Death of REGEXEXTRACT: AI inherently isolates hidden physical variables from strings.</div>
+      </div>
+    </section>
+
+    <!-- SECTION 4 -->
+    <section id="s4">
+      <h2>4. Phase 2: Analytics & Reporting</h2>
+      <p>The dataset is now completely airtight. Let's force the AI to crunch numbers and format the UI output.</p>
+
+      <h3>Prompt 4: Executive Insights Generation</h3>
+      <div class="prompt-box"><span class="label">PROMPT 4 - INSIGHT GENERATION</span>Based on the customer and Issue Description columns, determine the category and add it to the category column.</div>
+      <div class="screenshot-wrap">
+        <div class="img-placeholder">
+          <div class="icon">📸</div>
+          [Insert Image 5: A beautifully phrased executive summary pops into the right panel proving Hardware consumes 60% of SLA time.]
+        </div>
+        <div class="caption">Bypass Copy & Paste analysis: Have Gemini draft your exact corporate email update.</div>
+      </div>
+
+      <h3>Prompt 5: Automated Dashboards</h3>
+      <div class="prompt-box"><span class="label">PROMPT 5 - PIVOT CREATION</span>Create a Pivot Table on a new sheet showing the Average Resolution Time grouped by Category. Sort them from highest to lowest time.</div>
+      <div class="screenshot-wrap">
+        <div class="img-placeholder">
+          <div class="icon">📸</div>
+          [Insert Image 6: A brand new tab opens containing a fully functional Pivot table rigged up completely by AI.]
+        </div>
+        <div class="caption">Sidestepping complex Excel configurations using plain intent.</div>
+      </div>
+
+      <h3>Prompt 6: Manipulating Canvas Visuals</h3>
+      <div class="prompt-box"><span class="label">PROMPT 6 - CONDITIONAL FORMATTING</span>Apply conditional formatting to the Resolution Time column: highlight cells containing values greater than 48 hours in light red.</div>
+      <div class="screenshot-wrap">
+        <div class="img-placeholder">
+          <div class="icon">📸</div>
+          [Insert Image 7: The main canvas instantly flashes red on slow ticket rows, with Gemini proudly announcing rule application.]
+        </div>
+        <div class="caption">Taking control of standard UI settings via conversational natural language formatting.</div>
+      </div>
+    </section>
+
+    <!-- SECTION 6 -->
+    <section id="s6">
+      <h2>5. Quality Gate: AI Verification Sampling</h2>
+      <p>Whenever deploying Prompt 1 bulk classification, an absolute must is verification checking to secure against logic Hallucination:</p>
+
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th width="10%">Ticket ID</th>
+            <th width="45%">Raw Input Description</th>
+            <th width="20%">AI Category Assigned</th>
+            <th width="25%">Reasoning Pass</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>TKT-101</td>
+            <td>"Forgot my VPN password and locked out of internal portal"</td>
+            <td>Access</td>
+            <td>Accurate credential keyword targeting (VPN, password).</td>
+          </tr>
+          <tr>
+            <td>TKT-102</td>
+            <td>"Monitor keeps flickering when connecting via HDMI cable"</td>
+            <td>Hardware</td>
+            <td>Detected physical peripheral asset (Monitor/HDMI).</td>
+          </tr>
+          <tr>
+            <td>TKT-103</td>
+            <td>"Cannot ping the local server 192.168.1.5 timing out continuously"</td>
+            <td>Network</td>
+            <td>Matched local network routing terminology (ping, server, IP).</td>
+          </tr>
+          <tr>
+            <td>TKT-104</td>
+            <td>"Excel freezes every time I try to run the monthly macro"</td>
+            <td>Software</td>
+            <td>Local environment software application failure.</td>
+          </tr>
+          <tr>
+            <td>TKT-105</td>
+            <td>"Laptop battery draining totally within 30 minutes"</td>
+            <td>Hardware</td>
+            <td>Identified physical device component breakdown.</td>
+          </tr>
+          <tr>
+            <td>TKT-106</td>
+            <td>"Need permission access to the new HR shared drive folder"</td>
+            <td>Access</td>
+            <td>Authorization route detection for folder credentials.</td>
+          </tr>
+          <tr>
+            <td>TKT-107</td>
+            <td>"Photoshop crashing with memory error code 0xc0000"</td>
+            <td>Software</td>
+            <td>Understands application core code failure.</td>
+          </tr>
+          <tr>
+            <td>TKT-108</td>
+            <td>"Office Wi-fi drops connection randomly on 3rd floor"</td>
+            <td>Network</td>
+            <td>Physical IP wave networking drop detection.</td>
+          </tr>
+          <tr>
+            <td>TKT-115</td>
+            <td>"Need to revoke access for terminated employee"</td>
+            <td>Access</td>
+            <td>Offboarding standard operational identity procedure.</td>
+          </tr>
+          <tr>
+            <td>TKT-129</td>
+            <td>"Laptop screen cracked after falling from desk"</td>
+            <td>Hardware</td>
+            <td>Mechanical damage and physical breakdown parsing.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- SECTION 7 -->
+    <section id="s7">
+      <h2>6. Conclusion & Best Practices</h2>
+      <p>By traversing through 6 calculated iterations, you've replicated an elite Data Analyst sprint entirely inside the Google ecosystem.</p>
+
+      <div class="card card-success">
+        <h4>Critical Directives:</h4>
+        <ul>
+          <li><strong>Pinning Language Boundaries:</strong> In Prompt 1, explicitly ordering <i>"exactly one of these labels"</i> acts as a mental boundary forcing the model to stick to corporate buckets.</li>
+          <li><strong>Sequential Processing:</strong> A waterfall logic ensures perfection. Force the AI to scrub the rust off the names (Prompt 2) before attempting to pull complex aggregate dashboards (Prompt 5).</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- SECTION 8 -->
+    <section id="s8">
+      <h2>7. References</h2>
+      <p>For a deeper dive into manipulating tabular data and UI elements with the Side Panel, refer to these original sources:</p>
+      <ul>
+        <li><a href="https://www.youtube.com/watch?v=QPmuAS1V7oI" target="_blank">YouTube: Cleaning Unstructured Spreadsheet Data</a></li>
+        <li><a href="https://www.youtube.com/watch?v=hPglmtJqv7k" target="_blank">YouTube: Generating Insights via Gemini Side Panel</a></li>
+        <li><a href="https://www.computerworld.com/article/3845447/google-workspace-how-to-use-gemini-ai-side-panel.html" target="_blank">ComputerWorld: Mastering UI controls and Formatting</a></li>
+      </ul>
+    </section>
+
+  </div>
+
+  <div class="footer">
+    &copy; 2026 AI_QUEST_LTP Workspace. All standard procedures configured.
+  </div>
+
+</body>
+</html>

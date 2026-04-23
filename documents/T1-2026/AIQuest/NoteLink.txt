@@ -1,0 +1,17 @@
+Quest 2: Skill authoring best practices
+https://scuti.asia/huong-dan-tao-claude-code-skills-tu-co-ban-den-best-practices/
+
+Quest 1: How to use Claude Code by the developer who won the hackathon of Anthropic
+https://scuti.asia/cau-hinh-claude-code-cua-nguoi-chien-thang-hackathon-anthropic-phan-tich-va-ap-dung/
+
+Quest 2:Skills of frontend-design
+https://scuti.asia/claude-code-frontend-design-skills-a-quick-ui-experiment/
+
+Quest 2:Do a simple E2E test by Claude in Chrome
+https://scuti.asia/e2e-testing-with-claude-chrome-extension-installation-and-demo-guide/
+
+Quest 2: Try to use code-simplifier
+https://scuti.asia/code-simplifier-cong-cu-tu-dong-don-gian-hoa-code/
+
+Quest 2:Integrate Antigravity and Claude Code and make a sample app
+https://scuti.asia/antigravity-claude-code-integration-overview-setup-and-sample-app/

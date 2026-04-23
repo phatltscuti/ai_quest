@@ -1,0 +1,16 @@
+[Pre-meeting] Client requirements interview (30m)
+
+Meeting: Acme Retail — Loyalty portal
+Start time: (see Calendar event)
+
+Purpose:
+• Clarify loyalty MVP scope (earn/burn only vs campaigns).
+
+Key questions:
+1) POS version + staging URL for AcmePOS v12?
+2) OAuth2: client_id for integration user or internal service account?
+3) Desired uptime / support window for MVP?
+
+Assumptions:
+• POS catalog is the source of truth.
+• No native mobile app in MVP.

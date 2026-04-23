@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Automated Resume Extraction with Google Workspace Studio & Gemini AI: Recruitment Operations Blueprint</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap">
+</head>
+
+<body>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="badge">AI_QUEST_LTP Automation Blueprint</div>
+    <h1>Automated Resume Extraction with Google Workspace Studio & Gemini AI</h1>
+    <p class="subtitle">Architecting a self-driving Talent Ingestion Pipeline: From raw PDF resumes in Google Drive to structured insights in Sheets.</p>
+  </div>
+
+  <div class="container">
+
+    <!-- TABLE OF CONTENTS -->
+    <nav class="toc">
+      <h2>Curriculum for Excellence</h2>
+      <ol>
+        <li><a href="#intro">Introduction: Breaking the Recruitment Bottleneck</a></li>
+        <li><a href="#philosophy">The Operational Philosophy: Ending Manual Data Entry</a></li>
+        <li><a href="#roadmap">The 12-Step Execution Flow: Configuring the AI Pipeline</a></li>
+        <li><a href="#vision-deep">Deep Dive: Gemini Vision & Structured JSON Ingestion</a></li>
+        <li><a href="#verification">The Verification Protocol: 10-Point Data Validation</a></li>
+        <li><a href="#demo">Step-by-Step Demo: Visualizing the Ingestion Flow</a></li>
+        <li><a href="#conclusion">Conclusion: Building an AI-Driven Talent Database</a></li>
+      </ol>
+    </nav>
+
+    <!-- SECTION 1: INTRODUCTION -->
+    <section id="intro">
+      <h2>1. Introduction: Breaking the Recruitment Bottleneck</h2>
+      <p>In every major hiring campaign, Human Resources (HR) departments face a common bottleneck: **Manual Data Intake**. Reading through hundreds of PDF resumes, extracting individual contact details, and documenting technical skills into an Applicant Tracking System (ATS) can consume dozens of hours per week—with a high risk of manual error.</p>
+      <p>With <strong>Google Workspace Studio</strong>, we are entering a new era of operational efficiency. By combining the natural language processing and computer vision powers of <strong>Gemini AI</strong>, the "Talent Ingestion" process can now run autonomously. This blog provides a blueprint for building an intelligent workflow that transforms raw, unformatted PDF resumes into clean, structured data rows in Google Sheets instantly.</p>
+    </section>
+
+    <!-- SECTION 2: PHILOSOPHY -->
+    <section id="philosophy">
+      <h2>2. Operational Philosophy: Intelligent Ingestion</h2>
+      <p>The core difference between this system and traditional OCR (Optical Character Recognition) tools is its <strong>Understanding capability</strong>. Instead of just scanning text, Gemini understands the hierarchical structure of a resume.</p>
+      <div class="highlight-box">
+        <span class="label">AI IN HR OPERATIONS</span>
+        <p>The system doesn't just extract names or numbers; it synthesizes years of experience with specific technologies, identifies candidate preferences, and provides a preliminary fit assessment based on context.</p>
+      </div>
+    </section>
+
+    <!-- SECTION 3: ROADMAP -->
+    <section id="roadmap">
+      <h2>3. The 12-Step Roadmap: Configuring the Pipeline</h2>
+
+      <h3>Step 1: Source Initialization (Starter)</h3>
+      <p>Create the <code>"Incoming_CVs"</code> folder on Google Drive and set up the Workspace Studio Starter: "When a file is added to folder".</p>
+
+      <h3>Step 2: Structured Data Extraction</h3>
+      <p>Configure the <strong>"Extract data with Gemini"</strong> step. To ensure high accuracy and reliable column mapping, we use a standardized English Prompt with JSON formatting:</p>
+      <pre>
+"Extract the following structured data from the attached PDF Resume. Output as a valid JSON object:
+{
+  \"full_name\": \"string\",
+  \"email\": \"string (unique)\",
+  \"phone\": \"string\",
+  \"recent_role\": {
+    \"company\": \"string\",
+    \"title\": \"string\",
+    \"duration\": \"string\"
+  },
+  \"top_skills\": [\"string (with years of experience)\"],
+  \"preferences\": {
+    \"work_style\": \"Remote | Hybrid | Onsite\",
+    \"earliest_start_date\": \"string\"
+  }
+}
+If a field is missing, use 'Not specified'."</pre>
+      <div class="screenshot-wrap">
+        <div class="icon">📸</div>
+        [Image 3: Detailed Gemini prompt with JSON schema]
+      </div>
+
+      <h3>Step 3-12: From Processing to Completion</h3>
+      <p>The sequence includes variable mapping, duplicate detection via email, logic branching, and finalized sheet injection.</p>
+    </section>
+
+    <!-- SECTION 4: VISION DEEP DIVE -->
+    <section id="vision-deep">
+      <h2>4. Deep Dive: Gemini Vision & Structured JSON Ingestion</h2>
+      <p>A major pain point for HR is "Scanned Resumes"—PDFs without a selectable text layer. Traditional tools often fail here, or require expensive OCR pre-processing. However, <strong>Gemini Multimodal</strong> in Workspace Studio can "see" and interpret pixels directly.</p>
+
+      <h3>Handling OCR-less PDFs</h3>
+      <p>When encountering a scanned image-based PDF, Gemini automatically activates its Vision capabilities. It doesn't just recognize characters; it is <strong>Layout-aware</strong>, identifying headers, footers, and sidebars accurately. Hallucinations are minimized by forcing AI to output into a pre-defined JSON schema, ensuring data fits perfectly into the target spreadsheet columns.</p>
+
+      <h3>De-duplication Strategy</h3>
+      <p>The system utilizes Email as the <strong>Unique Identifier</strong>. If the <code>var_email</code> already exists in the tracker, the system follows an update branch (Update Row) to capture the latest application timestamp for that specific talent.</p>
+    </section>
+
+    <!-- SECTION 5: VERIFICATION -->
+    <section id="verification">
+      <h2>5. Verification Protocol: 10-Point Data Validation</h2>
+      <p>Trust in automation is built through transparency. Below is our internal validation table using complex resume samples:</p>
+
+      <table class="failure-table">
+        <thead>
+          <tr>
+            <th>Data Field</th>
+            <th>PDF Location (Source)</th>
+            <th>Sheet Result</th>
+            <th>Success Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>1. Full Name</strong></td><td>Main Header</td><td>John Doe A</td><td>✅ Success</td></tr>
+          <tr><td><strong>2. Email</strong></td><td>Icon next to name</td><td>jdoe@google.com</td><td>✅ Success</td></tr>
+          <tr><td><strong>3. Phone</strong></td><td>Under name</td><td>090-xxx-xxxx</td><td>✅ Success</td></tr>
+          <tr><td><strong>4. Latest Corp</strong></td><td>Exp section (Top)</td><td>AI Lab Corp</td><td>✅ Success</td></tr>
+          <tr><td><strong>5. Job Title</strong></td><td>Exp section</td><td>Senior AI Engineer</td><td>✅ Success</td></tr>
+          <tr><td><strong>6. React Exp</strong></td><td>Skills list</td><td>4 years</td><td>✅ Success</td></tr>
+          <tr><td><strong>7. Languages</strong></td><td>Sidebar section</td><td>IELTS 7.5</td><td>✅ Success</td></tr>
+          <tr><td><strong>8. Work Style</strong></td><td>Preferences</td><td>Remote</td><td>✅ Success</td></tr>
+          <tr><td><strong>9. Start Date</strong></td><td>Preferences</td><td>ASAP</td><td>✅ Success</td></tr>
+          <tr><td><strong>10. Portfolio Link</strong></td><td>CV Footer</td><td>github.com/jdoe</td><td>✅ Success</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- SECTION: DEMO -->
+    <section id="demo">
+      <h2>5. Step-by-Step Demo: Visualizing the Ingestion Flow</h2>
+      <p>Explore the Workspace Studio configuration below to understand the technical architecture:</p>
+      
+      <div class="highlight-box">
+        <span class="label">STEP 1: THE VISUAL CANVAS</span>
+        <p>The entire pipeline from Drive to Sheets is orchestrated via drag-and-drop nodes.</p>
+        <img src="../demo-assets/cv_flow.png" alt="CV Flow Canvas" style="width: 100%; border-radius: 12px; margin-top: 15px; border: 1px solid rgba(255,255,255,0.1);">
+      </div>
+
+      <div class="highlight-box">
+        <span class="label">STEP 2: GEMINI AI BRAIN</span>
+        <p>Configuring the high-precision English JSON prompt for flawless extraction.</p>
+        <img src="../demo-assets/cv_config.png" alt="Gemini Config" style="width: 100%; border-radius: 12px; margin-top: 15px; border: 1px solid rgba(255,255,255,0.1);">
+      </div>
+
+      <div class="highlight-box">
+        <span class="label">STEP 3: AUTOMATED SHEET OUTPUT</span>
+        <p>Candidate profiles are instantly injected into the talent tracker spreadsheet.</p>
+        <img src="../demo-assets/sheets_result.png" alt="Sheets Result" style="width: 100%; border-radius: 12px; margin-top: 15px; border: 1px solid rgba(255,255,255,0.1);">
+      </div>
+    </section>
+
+    <!-- SECTION 6: CONCLUSION -->
+    <section id="conclusion">
+      <h2>6. Conclusion: Building an AI-Driven Talent Database</h2>
+      <p>Deploying this automated resume extraction flow is about more than just data entry. It is the first step in building a <strong>Strategic Talent Database</strong>. When data is structured accurately from the start, HR teams can leverage semantic searching and filters to make data-driven decisions rather than relying on intuition.</p>
+      <p>The future of recruitment belongs to those who optimize their data flow using AI, not those with the most data entry staff.</p>
+    </section>
+
+  </div>
+
+  <div class="footer">
+    &copy; 2026 AI_QUEST_LTP Editorial Team. Mastering Workspace Studio Flow Excellence.
+  </div>
+
+</body>
+
+</html>

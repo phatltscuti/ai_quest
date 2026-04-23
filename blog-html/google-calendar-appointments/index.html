@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bản Thiết Kế Vận Hành Tuyển Dụng: Lập lịch Phỏng vấn Hội đồng & Co-hosts với Google Calendar</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap">
+</head>
+
+<body>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="badge">AI_QUEST_LTP Expert Guide</div>
+    <h1>Bản Thiết Kế Vận Hành: Lập lịch Phỏng vấn Hội đồng (Co-hosts) và Đồng nhất giờ rảnh trên Google Calendar</h1>
+    <p class="subtitle">Chuyển dịch từ "Khớp lịch thủ công" sang "Điều phối tự động toàn phần": Chiến lược xóa bỏ điểm nghẽn trong quy trình tuyển dụng hiện đại.</p>
+  </div>
+
+  <div class="container">
+
+    <!-- TABLE OF CONTENTS -->
+    <nav class="toc">
+      <h2>Nội dung cẩm nang</h2>
+      <ol>
+        <li><a href="#intro">Triết lý Vận hành: Sự sụp đổ của phương pháp khớp lịch truyền thống</a></li>
+        <li><a href="#logic">Nguyên lý "Đồng nhất lịch rảnh": Cách Google Calendar đọc hiểu hội đồng</a></li>
+        <li><a href="#core-flow">Quy trình 3 Giai đoạn để thiết lập "Hệ thống tự hành"</a></li>
+        <li><a href="#security">Bảo mật & Trải nghiệm Ứng viên (Email Verification)</a></li>
+        <li><a href="#outreach">Lời mời Phỏng vấn: Trao quyền chủ động cho ứng viên</a></li>
+        <li><a href="#troubleshoot">Góc Kỹ thuật: Chẩn đoán & Khắc phục lỗi vận hành</a></li>
+        <li><a href="#conclusion">Lời kết: Chinh phục tài năng bằng sự chuyên nghiệp</a></li>
+        <li><a href="#refs">Tài liệu tham khảo đa nguồn</a></li>
+      </ol>
+    </nav>
+
+    <!-- SECTION 1 -->
+    <section id="intro">
+      <h2>1. Triết lý Vận hành: Kết thúc kỷ nguyên "Khớp lịch thủ công"</h2>
+      <p>Đối với nhiều doanh nghiệp, việc sắp xếp một buổi phỏng vấn có sự tham gia của 3+ người phỏng vấn vẫn là một quy trình lãng phí tài nguyên nhất. HR thường đóng vai trò là "người trung chuyển" thông tin, liên tục nhắn tin, gọi điện chỉ để xác định một khung giờ rảnh chung (Common Gap).</p>
+      <p><strong>Nghịch lý:</strong> Càng nhiều người trong hội đồng, xác suất xảy ra mâu thuẫn lịch (Calendar Conflicts) càng cao. Việc kéo dài thời gian sắp xếp lịch chính là kẻ thù số 1 làm mất đi những ứng viên sáng giá vào tay đối thủ có quy trình nhanh nhẹn hơn.</p>
+      <p><strong>Giải pháp:</strong> Một bản thiết kế "Không ma sát" (Zero-Friction Blueprint) sử dụng **Google Calendar Appointment Schedules**. Thay vì đi hỏi lịch, bạn mở tung các cửa sổ thời gian và để AI của Google tự động "lọc" ra những khoảnh khắc mà tất cả các sếp cùng đang sẵn sàng.</p>
+    </section>
+
+    <!-- SECTION 2 -->
+    <section id="logic">
+      <h2>2. Nguyên lý "Đồng nhất lịch rảnh": Sự khác biệt giữa mời họp và đặt lịch</h2>
+      <div class="highlight-box">
+        <span class="label">NGUYÊN TẮC VÀNG</span>
+        <p>Việc thêm **Co-hosts** vào hệ thống chỉ là điều kiện Cần. Điều kiện Đủ để hệ thống hoạt động chuẩn xác là kích hoạt tính năng <strong>"Parity Availability Check"</strong> (Kiểm tra lịch trống đồng nhất).</p>
+      </div>
+      <p>Hệ thống sẽ chạy một thuật toán thời gian thực: Chỉ khi <strong>Chủ trì (Host) + Quản lý A + Tech Lead B</strong> cùng không có sự kiện bận nào trên lịch cá nhân, khung giờ đó mới được "mở khóa" cho ứng viên thấy. Điều này bảo vệ ban phỏng vấn khỏi tình trạng bị đặt lịch đè lên các cuộc họp Sprint hay xử lý sự cố khẩn cấp.</p>
+    </section>
+
+    <!-- SECTION 3 -->
+    <section id="core-flow">
+      <h2>3. Quy trình 9 Bước: Thiết lập & Vận hành phỏng vấn đa hội đồng</h2>
+      
+      <h3>Bước 1: Khởi tạo Lịch hẹn (Create)</h3>
+      <p>Tại giao diện Google Calendar, sử dụng nút <strong>Create (+)</strong> và chọn <strong>Appointment schedule</strong>. Tiêu đề: <strong>"Technical Screening - 60 phút"</strong>.</p>
+      <div class="screenshot-wrap">
+        <div class="icon">📸</div>
+        [Ảnh 1: Menu Khởi tạo Appointment schedule]
+      </div>
+
+      <h3>Bước 2: Hợp tác Hội đồng (Co-hosting)</h3>
+      <p>Mời tất cả các thành viên vào mục **Co-hosts**. Lưu ý: Chỉ khi tất cả cùng rảnh, giờ đó mới hiện lên cho ứng viên.</p>
+      <div class="screenshot-wrap">
+        <img src="setup_page_1.png" alt="Cấu hình Co-hosts tại Trang 1" style="width:100%; border-radius:8px; margin-top:1rem;">
+        <p style="text-align:center; font-size:0.9rem; color:#666; margin-top:0.5rem;">Ảnh 2: Thêm Co-hosts (Lý Tấn Phát) để đồng bộ lịch phỏng vấn.</p>
+      </div>
+
+      <h3>Bước 3: Cửa sổ đặt lịch (Scheduling Window)</h3>
+      <p>Cấu hình thời gian ứng viên được phép đặt trước (ví dụ: tối đa 60 ngày) và giới hạn thời gian báo trước tối thiểu.</p>
+      <div class="screenshot-wrap">
+        <div class="icon">📸</div>
+        [Ảnh 3: Thiết lập Scheduling window (60 days/4 hours notice)]
+      </div>
+
+      <h3>Bước 4: Thiết lập Vùng bảo vệ (Guardian Constraints)</h3>
+      <ul>
+        <li><strong>Phòng thủ thời gian (Buffer):</strong> Đặt 30 phút đệm để ban hội đồng kịp ghi chú (Scorecards).</li>
+        <li><strong>Giới hạn ca (Max Bookings):</strong> Giới hạn 3 ca phỏng vấn/ngày để đảm bảo năng lượng tối ưu.</li>
+      </ul>
+      <div class="screenshot-wrap">
+        <div class="icon">📸</div>
+        [Ảnh 4: Cấu hình Buffer time: 30 min và Max bookings: 3]
+      </div>
+
+      <h3>Bước 5: Kiểm tra Lịch trống (Calendar Availability)</h3>
+      <p>Kích hoạt tính năng <strong>"Check calendars for availability"</strong> cho tất cả Co-hosts để AI quét giờ trống chung.</p>
+      <div class="screenshot-wrap">
+        <div class="icon">📸</div>
+        [Ảnh 5: Tích chọn Calendars để khớp giờ trống chung]
+      </div>
+    </section>
+
+    <!-- SECTION 4 -->
+    <section id="security">
+      <h2>4. Bảo mật & Biểu mẫu: Thiết lập tại Trang 2</h2>
+      
+      <h3>Bước 6: Biểu mẫu & Xác minh (Booking Form & OTP)</h3>
+      <p>Kích hoạt <strong>"Email verification"</strong>: Ứng viên phải nhận mã OTP qua email mới có thể xác nhận lịch. Thiết lập 3 biến thông tin: <strong>First Name, Last Name, Email</strong>.</p>
+      <div class="screenshot-wrap">
+        <img src="setup_page_2.png" alt="Cấu hình Trang 2: Booking form và OTP Gate" style="width:100%; border-radius:8px; margin-top:1rem;">
+        <p style="text-align:center; font-size:0.9rem; color:#666; margin-top:0.5rem;">Ảnh 6: Thiết lập Biểu mẫu 3 biến và kích hoạt OTP verification tại Trang 2.</p>
+      </div>
+    </section>
+
+      <div class="highlight-box email">
+        <span class="label">CHÍNH SÁCH HỦY LỊCH (DISCIPLINE POLICY)</span>
+        <p>Thiết lập thời gian hủy tối thiểu (Cancellations Policy) là 12-24 tiếng. Điều này rèn luyện tính kỷ luật cho ứng viên và giữ cho lịch trình của ban lãnh đạo luôn ổn định.</p>
+      </div>
+    </section>
+
+    <!-- SECTION 5 -->
+    <section id="outreach">
+      <h2>5. Vận hành Thực tế (Live Operation)</h2>
+
+      <h3>Bước 7: Soạn Email theo Template (Outreach Email)</h3>
+      <p>Mở Gmail, soạn thư theo mẫu dưới đây, dán link đặt lịch vào nội dung mail để gửi cho ứng viên.</p>
+      <div class="screenshot-wrap">
+        <div class="icon">📸</div>
+        [Ảnh 7: Giao diện soạn thảo Outreach email với link đặt lịch]
+      </div>
+
+      <div class="highlight-box email">
+        <span class="label">MẪU EMAIL TUYỂN DỤNG HIỆN ĐẠI (CTA-FOCUSED)</span>
+        <p><strong>Subject:</strong> Lên lịch phỏng vấn cùng Ban Chuyên Môn XYZ - [Họ Tên Ứng Viên]</p>
+        <p>Xin chào <strong>[Tên Ứng Viên]</strong>,</p>
+        <p>Chúng tôi rất ấn tượng với hồ sơ của bạn cho vị trí Senior Developer. Để giúp bạn chủ động hoàn toàn trong kế hoạch cá nhân, XYZ sử dụng hệ thống đặt lịch tự động trực tiếp trên lịch trống của Hội đồng phỏng vấn.</p>
+        <p>Vui lòng click vào link bên dưới và chọn cho mình một khung giờ ưng ý nhất:</p>
+        <p>👉 <strong>[Link_Booking_Cua_Ban]</strong></p>
+        <p><em>Mẹo nhỏ: Hệ thống hiển thị thời gian thực, vì vậy hãy ưu tiên lựa chọn sớm để có khung giờ đẹp nhất.</em></p>
+        <p>Nếu bạn gặp sự cố về múi giờ hoặc kỹ thuật, hãy phản hồi trực tiếp email cho Lan (HR Team) tại <strong>[email_hr]</strong>.</p>
+        <p>Chúc bạn có một buổi phỏng vấn thành công!</p>
+      </div>
+
+      <h3>Bước 8: Ứng viên chọn giờ (Candidate Booking UI)</h3>
+      <p>Ứng viên click vào link, chọn khung giờ rảnh chung và nhập thông tin vào 3 biến <strong>First Name, Last Name, Email</strong>.</p>
+      <div class="screenshot-wrap">
+        <div class="icon">📸</div>
+        [Ảnh 8: Giao diện đặt lịch gateway - Ứng viên chọn giờ]
+      </div>
+
+      <h3>Bước 9: Nhập mã xác minh (Email OTP Verification)</h3>
+      <p>Ứng viên phải nhập mã OTP 6 chữ số được gửi về email để xác nhận danh tính trước khi hoàn tất đặt chỗ.</p>
+      <div class="screenshot-wrap">
+        <div class="icon">📸</div>
+        [Ảnh 9: Giao diện nhập mã xác thực OTP từ ứng viên]
+      </div>
+
+      <h3>Bước 10: Thông báo Đặt lịch Thành công (Success confirmation)</h3>
+      <p>Màn hình xác nhận xuất hiện ngay sau khi ứng viên hoàn tất quá trình đặt lịch.</p>
+      <div class="screenshot-wrap">
+        <div class="icon">📸</div>
+        [Ảnh 10: Màn hình Success confirmation sau khi đặt lịch]
+      </div>
+    </section>
+
+    <!-- SECTION 6: MANAGEMENT -->
+    <section id="management">
+      <h2>6. Kiểm tra Đồng bộ & Quản lý (Sync & Management)</h2>
+
+      <h3>Bước 11: Kiểm tra Lịch cá nhân (Calendar Sync Check)</h3>
+      <p>Kiểm tra trên lịch của người tuyển dụng và co-hosts để đảm bảo sự kiện đã được thêm tự động.</p>
+      <div class="screenshot-wrap">
+        <div class="icon">📸</div>
+        [Ảnh 11: Sự kiện đã được thêm tự động vào Calendar]
+      </div>
+
+      <h3>Bước 12: Email Phản hồi Thành công (Final Confirmation Email)</h3>
+      <p>Cả ứng viên và bên tuyển dụng đều nhận được email xác nhận tự động có kèm link Google Meet.</p>
+      <div class="screenshot-wrap">
+        <div class="icon">📸</div>
+        [Ảnh 12: Nội dung email phản hồi book thành công từ Google]
+      </div>
+    </section>
+
+    <!-- SECTION 5.1: TESTING & UAT -->
+    <section id="uat">
+      <h2>Phụ lục: Quy trình Kiểm thử & Phân tích Hiệu suất</h2>
+      <p>Để đảm bảo bản thiết kế "Không ma sát" hoạt động hoàn hảo, bạn nên thực hiện 2 bài kiểm tra thực tế (UAT) sau đây trước khi gửi link cho ứng viên:</p>
+      
+      <div class="highlight-box" style="background:#f4f4f4; border-left:4px solid #4285f4;">
+        <span class="label" style="background:#4285f4; color:white;">BÀI TEST 1: KIỂM THỬ AN NINH (OTP GATE)</span>
+        <ol>
+          <li>Mở link đặt lịch bằng <strong>Trình duyệt ẩn danh</strong>.</li>
+          <li>Điền thông tin và bấm đặt lịch như một ứng viên thực thụ.</li>
+          <li><strong>Mục tiêu:</strong> Đảm bảo hệ thống yêu cầu mã xác minh OTP 6 chữ số gửi về email. Điều này chứng minh "chốt chặn" bảo mật của bạn đang hoạt động.</li>
+        </ol>
+      </div>
+
+      <div class="highlight-box" style="background:#f4f4f4; border-left:4px solid #34a853;">
+        <span class="label" style="background:#34a853; color:white;">BÀI TEST 2: KIỂM THỬ TRẢI NGHIỆM (CROSS-SYNC)</span>
+        <ol>
+          <li>Gửi thử email lời mời từ công cụ tuyển dụng tới một email cá nhân khác.</li>
+          <li>Kiểm tra link trên cả Desktop và Smartphone.</li>
+          <li><strong>Mục tiêu:</strong> Đảm bảo giao diện đặt lịch hiển thị mượt mà và múi giờ được nhận diện chính xác theo vị trí của ứng viên.</li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- SECTION 6 -->
+    <section id="troubleshoot">
+      <h2>6. Góc Kỹ thuật: Chẩn đoán & Khắc phục lỗi vận hành</h2>
+      <p>Sẽ có những lúc "phép màu" không xảy ra như ý, hãy kiểm tra danh sách chẩn đoán sau:</p>
+
+      <table class="failure-table">
+        <thead>
+          <tr>
+            <th>Triệu chứng (Issue)</th>
+            <th>Nguyên nhân gốc rễ</th>
+            <th>Thao tác xử lý (Action)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Lỗi "Trùng lịch ma"</strong></td>
+            <td>Admin không có quyền xem "Busy" của đồng nghiệp.</td>
+            <td>Yêu cầu Co-host share lịch ở chế độ "Free/Busy visibility".</td>
+          </tr>
+          <tr>
+            <td><strong>Lệch múi giờ quốc tế</strong></td>
+            <td>Tính năng tự động nhận diện múi giờ đang bị tắt.</td>
+            <td>Bật "Automatic Timezone Detection" trong cài đặt cấu hình Booking.</td>
+          </tr>
+          <tr>
+            <td><strong>Ứng viên không nhận OTP</strong></td>
+            <td>Mã xác minh bị chặn vào Junk/Spam của ứng viên.</td>
+            <td>Nhắc ứng viên kiểm tra thư mục Junk hoặc dùng "Share > Embedded" để tích hợp trang web.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+
+    <!-- SECTION 7: CONCLUSION -->
+    <section id="conclusion">
+      <h2>7. Lời kết: Chinh phục tài năng bằng sự chuyên nghiệp</h2>
+      <p>Việc áp dụng Google Calendar Appointment Schedules không chỉ đơn thuần là cài đặt một phần mềm, mà là thay đổi tư duy vận hành. Bằng cách tự động hóa hoàn toàn việc khớp lịch phỏng vấn đa hội đồng, đội ngũ HR có thể thoát khỏi vòng lặp "hỏi - đổi - chốt" vốn cực kỳ tốn thời gian.</p>
+      <p>Khi mọi rào cản về logistics được loại bỏ, bạn sẽ có nhiều thời gian hơn để tập trung vào giá trị cốt lõi: Con người. Hãy để công nghệ lo phần "nhắc lịch", còn bạn hãy lo phần "chinh phục tài năng" bằng một trải nghiệm ứng viên xứng tầm 5 sao.</p>
+    </section>
+
+    <!-- REFERENCES -->
+    <section id="refs">
+      <h2>8. Tài liệu tham khảo đa nguồn</h2>
+      <ul>
+        <li><a href="https://scuti.asia/how-to-schedule-multi-interviewer-interviews-with-google-calendar-appointment-schedules/" target="_blank">Scuti.asia: Hướng dẫn kỹ thuật lập lịch phỏng vấn tối ưu</a></li>
+        <li><a href="https://www.youtube.com/watch?v=YTP_yMUuAJ0" target="_blank">Google Workspace YouTube: Làm chủ Appointment Schedules</a></li>
+        <li><a href="https://canvasinfo.blogs.rice.edu/google-calendar-appointment-slots-replaced-by-appointment-schedules/" target="_blank">Rice University: Chuyển đổi từ Slots sang Schedules</a></li>
+        <li><a href="https://teamdynamix.umich.edu/TDClient/30/Portal/KB/ArticleDet?ID=14469" target="_blank">Uni. Michigan: Tài liệu vận hành kỹ thuật hệ thống lịch hẹn</a></li>
+      </ul>
+    </section>
+
+  </div>
+
+  <div class="footer">
+    &copy; 2026 AI_QUEST_LTP Editorial Team. All operational blueprints configured for excellence.
+  </div>
+
+</body>
+</html>

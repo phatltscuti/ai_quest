@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Làm Sạch, Cấu Trúc & Phân Tích Dữ Liệu Vận Hành Với Gemini Sheets</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="badge">Google Workspace Guide</div>
+    <h1>Dùng Gemini trong Google Sheets Để Làm Sạch, Cấu Trúc, Và Phân Tích Dữ Liệu Vận Hành Thực Tế</h1>
+    <p class="subtitle">Hướng dẫn dành cho PM/Back-office: Ứng dụng Side Panel bằng 6 câu lệnh (Prompts) thực chiến để dọn rác dữ liệu, xây dựng cấu trúc, và trích xuất báo cáo phân tích.</p>
+  </div>
+
+  <div class="container">
+
+    <!-- TABLE OF CONTENTS -->
+    <nav class="toc">
+      <h2>Mục lục</h2>
+      <ol>
+        <li><a href="#s1">Giới thiệu: Nỗi Ám Ảnh Dọn Dẹp Dữ Liệu Thô</a></li>
+        <li><a href="#s2">Kịch Bản: IT Support Ticket Log</a></li>
+        <li><a href="#s3">Phase 1: Dọn Rác & Cấu Trúc Hóa (Prompts 1, 2, 3)</a></li>
+        <li><a href="#s4">Phase 2: Phân Tích & Báo Cáo (Prompts 4, 5, 6)</a></li>
+        <li><a href="#s6">Quality Gate: Kiểm Chứng Độ Chính Xác AI</a></li>
+        <li><a href="#s7">Kết Luận & Best Practices</a></li>
+        <li><a href="#s8">Tài Liệu Tham Khảo</a></li>
+      </ol>
+    </nav>
+
+    <!-- SECTION 1 -->
+    <section id="s1">
+      <h2>1. Giới thiệu: Khai Thác Tiềm Năng Dữ Liệu Vận Hành Cùng Gemini</h2>
+      <p>Đối với Project Manager (PM) hay chuyên viên Back-office, Dữ liệu Vận hành (Operations Datasets) như danh sách khiếu nại, báo cáo chi phí, hay thẻ kho thường đổ về dưới dạng thô sơ nhất. Kết quả là, 80% thời gian làm việc trên bảng tính bị phung phí cho việc <strong>hì hục dọn rác dữ liệu</strong>: soát lỗi chính tả, chuẩn hóa tên nhà cung cấp, hay phân loại hàng ngàn đoạn văn xuôi lộn xộn.</p>
+      
+      <p>Bài viết với chủ đề <strong>"Dùng Gemini trong Google Sheets Để Làm Sạch, Cấu Trúc, Và Phân Tích Dữ Liệu"</strong> ra đời nhằm thay đổi hoàn toàn cục diện đó. Bằng việc tận dụng vũ khí khuất lấp <strong>Gemini Side Panel</strong>, bạn không cần phải là một Master về hàm tính hay Google Apps Script. AI sẽ bay vào bảng tính và gánh vác 3 trụ cột cốt lõi:</p>
+      
+      <ul>
+        <li><strong>Làm Sạch (Clean):</strong> Tự động chuẩn hóa văn bản, phát hiện lỗi sai, và gộp nhất danh xưng (Normalization) rác rưởi thành định dạng chỉn chu.</li>
+        <li><strong>Cấu Trúc Hóa (Structure):</strong> Khai thác nội dung dạng văn xuôi (Unstructured text) để bóc tách thành các trường dữ liệu (Columns/Categories) gọn gàng, sẵn sàng cho những lệnh Pivot hay VLOOKUP.</li>
+        <li><strong>Phân Tích (Analyze):</strong> Đọc hiểu số liệu sâu sắc để tự động viết Báo cáo tổng thể (Executive Summary) cho ban lãnh đạo, vẽ biểu diễn Dashboard, và dán quy tắc cảnh báo hiển thị (Conditional Formatting) trong nháy mắt.</li>
+      </ul>
+
+      <p>Chỉ cần tuân thủ đúng combo 6 khối lệnh (Prompts) liên hoàn dưới đây, bạn sẽ biến đống bùn lầy dữ liệu thành một mỏ vàng phân tích trong chưa đầy 5 phút làm việc.</p>
+    </section>
+
+    <!-- SECTION 2 -->
+    <section id="s2">
+      <h2>2. Kịch Bản: IT Support Ticket Log</h2>
+      <p>Bạn tiếp nhận hệ thống khiếu nại Helpdesk thông qua một file dữ liệu thô. Chẳng hạn, tải file <code>raw_ticket_data.csv</code> lên bằng thao tác <b>File > Import</b> vào một file Google Sheets trắng.</p>
+      <p>Các trường bao gồm: <i>Customer</i> (tên gõ bừa bãi), <i>Issue Description</i> (mô tả nguyên nhân lủng củng bằng văn xuôi), và <i>Resolution Time</i>.</p>
+
+      <div class="screenshot-wrap">
+        <div class="img-placeholder">
+          <div class="icon">📸</div>
+          [Chèn Ảnh 1: Ảnh màn hình thao tác Import thành công file raw_ticket_data.csv lên Google Sheets. Dữ liệu thô lộn xộn đổ ra bảng tính, hiển nhiên bộc lộ sự thiếu sót của các trường phân loại chuẩn.]
+        </div>
+        <div class="caption">Bước chuẩn bị: Nhập (Import) Dữ liệu thô (Raw Data) lên mặt bảng tính</div>
+      </div>
+
+      <p>Mục tiêu: Gọi Side Panel và thả lần lượt 6 viên đạn Prompt để thanh lọc toàn bộ dữ liệu hỗn độn này.</p>
+    </section>
+
+    <!-- SECTION 3 -->
+    <section id="s3">
+      <h2>3. Phase 1: Dọn Rác & Cấu Trúc Hóa Dữ Liệu</h2>
+      <p>Với bộ dữ liệu hỗn độn, thay vì loay hoay với hàng tá hàm Excel, chúng ta thả 3 Prompt liên tiếp để Gemini bóc tách dữ liệu thành các chuẩn hạch toán rõ ràng.</p>
+
+      <h3>Prompt 1: Phân Loại Bằng Ngữ Nghĩa (Categorization)</h3>
+      <div class="prompt-box"><span class="label">PROMPT 1 - CATEGORIZE</span>Analyze the "Issue Description" column. Identify the context and create a new column categorizing each issue into exactly one label: Hardware, Software, Network, or Access.</div>
+      <div class="screenshot-wrap">
+        <div class="img-placeholder">
+          <div class="icon">📸</div>
+          [Chèn Ảnh 2: Gemini phân tích xong và hiển thị cột Category mới ở Side Panel chuẩn bị Insert vào Sheet.]
+        </div>
+        <div class="caption">Khắc phục điểm mù: Dùng AI quét câu chữ văn xuôi để suy luận ra danh mục gốc (Category)</div>
+      </div>
+
+      <h3>Prompt 2: Đồng Nhất Danh Xưng (Normalization)</h3>
+      <div class="prompt-box"><span class="label">PROMPT 2 - NORMALIZE</span>Normalize the "Customer" column. Identify all sloppy variations like 'ggl', 'Google Inc', or 'GGL LLC' and standardize them to 'Google'. Apply the same logic for Amazon, Microsoft, Apple, and Salesforce.</div>
+      <div class="screenshot-wrap">
+        <div class="img-placeholder">
+          <div class="icon">📸</div>
+          [Chèn Ảnh 3: Thao tác Gemini đang quét lại Cột Customer và trả về các tên hãng công nghệ đã được viết hoa chuẩn chỉ.]
+        </div>
+        <div class="caption">Chống gãy Pivot: Nếu không đồng nhất tên gọi, hàm Pivot Table sau này sẽ đếm sai số lượng của Google thành 3 công ty khác nhau.</div>
+      </div>
+
+      <h3>Prompt 3: Rút Trích Dữ Liệu Ẩn (Data Extraction)</h3>
+      <div class="prompt-box"><span class="label">PROMPT 3 - EXTRACT</span>Read the "Issue Description" column again. Extract any physical location or floor number mentioned into a new column called 'Location'. If not mentioned, write 'N/A'.</div>
+      <div class="screenshot-wrap">
+        <div class="img-placeholder">
+          <div class="icon">📸</div>
+          [Chèn Ảnh 4: Cột Location mới xuất hiện trên Sheet, nhặt trúng phóc các chữ "3rd floor", "5th floor" từ đoạn văn mô tả.]
+        </div>
+        <div class="caption">Thay thế cho hàm REGEXEXTRACT ác mộng: AI tự hiểu số tầng tòa nhà bị giấu tinh vi giữa các câu chữ.</div>
+      </div>
+    </section>
+
+    <!-- SECTION 4 -->
+    <section id="s4">
+      <h2>4. Phase 2: Phân Tích & Báo Cáo (Data Analysis)</h2>
+      <p>Dữ liệu lúc này đã sạch 100%. Cột nào ra cột nấy. Đã đến lúc đưa ra các câu hỏi để AI vẽ insight.</p>
+
+      <h3>Prompt 4: Hành Văn Tóm Tắt (Executive Summary)</h3>
+      <div class="prompt-box"><span class="label">PROMPT 4 - INSIGHT GENERATION</span>Analyze the relationship between the clean "Category" column and "Resolution Time". Write a short 3-line executive summary identifying the primary driver of resolution delays.</div>
+      <div class="screenshot-wrap">
+        <div class="img-placeholder">
+          <div class="icon">📸</div>
+          [Chèn Ảnh 5: Bảng tóm tắt chữ cực gọn của AI ở thanh Panel bên phải, chỉ rõ Hardware tốn kém 60% thời gian xử lý.]
+        </div>
+        <div class="caption">Thôi việc Copy/Paste: Gemini đọc số và giúp bạn gõ luôn đoạn báo cáo chữ để ném vào Gmail/Docs cho quản lý.</div>
+      </div>
+
+      <h3>Prompt 5: Lập Bảng Thống Kê (Dashboarding)</h3>
+      <div class="prompt-box"><span class="label">PROMPT 5 - PIVOT CREATION</span>Create a Pivot Table on a new sheet showing the Average Resolution Time grouped by Category. Sort them from highest to lowest time.</div>
+      <div class="screenshot-wrap">
+        <div class="img-placeholder">
+          <div class="icon">📸</div>
+          [Chèn Ảnh 6: Một trang Sheet mới tinh vừa đẻ ra chứa chiếc Pivot Table do AI tự setup lệnh tính Average.]
+        </div>
+        <div class="caption">Thao tác tạo Pivot Table phức tạp giờ đây chỉ mất 1 dòng text.</div>
+      </div>
+
+      <h3>Prompt 6: Điều Khiển Giao Diện Báo Cáo Lỗi (Formatting)</h3>
+      <div class="prompt-box"><span class="label">PROMPT 6 - CONDITIONAL FORMATTING</span>Apply conditional formatting to the Resolution Time column: highlight cells containing values greater than 48 hours in light red.</div>
+      <div class="screenshot-wrap">
+        <div class="img-placeholder">
+          <div class="icon">📸</div>
+          [Chèn Ảnh 7: Giao diện Sheet nơi các con số thời gian xử lý chậm (>48h) tức lự chuyển sang màu đỏ rực cảnh báo.]
+        </div>
+        <div class="caption">Sức mạnh thao túng màu sắc: AI thiết lập hộ các rule giao diện mà không yêu cầu bạn phải lật mở Setting rườm rà.</div>
+      </div>
+    </section>
+
+    <!-- SECTION 6 -->
+    <section id="s6">
+      <h2>5. Quality Gate: Kiểm Chứng Độ Chính Xác Của AI</h2>
+      <p>Khi dùng Prompt 1 để phân loại nội dung, máy móc có thể bị lỗi Hallucination. Đoạn random sampling sau đây chứng minh Gemini trong Workspace đã đọc hiểu ngữ cảnh hẹp rất xuất sắc:</p>
+
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th width="10%">Ticket ID</th>
+            <th width="45%">Mô Tả Lỗi Thô (Raw Input)</th>
+            <th width="20%">AI Category</th>
+            <th width="25%">Lý Giải</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>TKT-101</td>
+            <td>"Forgot my VPN password and locked out of internal portal"</td>
+            <td>Access</td>
+            <td>Nhận diện đúng keyword truy cập tài khoản (VPN, password).</td>
+          </tr>
+          <tr>
+            <td>TKT-102</td>
+            <td>"Monitor keeps flickering when connecting via HDMI cable"</td>
+            <td>Hardware</td>
+            <td>Hiểu phần cứng vật lý ngoại vi (Monitor/HDMI).</td>
+          </tr>
+          <tr>
+            <td>TKT-103</td>
+            <td>"Cannot ping the local server 192.168.1.5 timing out continuously"</td>
+            <td>Network</td>
+            <td>Bắt đúng thuật ngữ định tuyến mạng (ping, server, IP).</td>
+          </tr>
+          <tr>
+            <td>TKT-104</td>
+            <td>"Excel freezes every time I try to run the monthly macro"</td>
+            <td>Software</td>
+            <td>Lỗi phần mềm ứng dụng cục bộ (Excel, macro).</td>
+          </tr>
+          <tr>
+            <td>TKT-105</td>
+            <td>"Laptop battery draining totally within 30 minutes"</td>
+            <td>Hardware</td>
+            <td>Biết phân loại linh kiện máy tính (Laptop battery).</td>
+          </tr>
+          <tr>
+            <td>TKT-106</td>
+            <td>"Need permission access to the new HR shared drive folder"</td>
+            <td>Access</td>
+            <td>Phân tách chuẩn nhóm xin quyền (permission, shared drive).</td>
+          </tr>
+          <tr>
+            <td>TKT-107</td>
+            <td>"Photoshop crashing with memory error code 0xc0000"</td>
+            <td>Software</td>
+            <td>Nhận dạng lỗi mã code của phần mềm lõi (Photoshop crashing).</td>
+          </tr>
+          <tr>
+            <td>TKT-108</td>
+            <td>"Office Wi-fi drops connection randomly on 3rd floor"</td>
+            <td>Network</td>
+            <td>Suy luận nhiễu sóng mạng nội bộ (Wi-fi drops).</td>
+          </tr>
+          <tr>
+            <td>TKT-115</td>
+            <td>"Need to revoke access for terminated employee"</td>
+            <td>Access</td>
+            <td>Hiểu quy trình nhân sự liên quan đến danh tính (revoke access).</td>
+          </tr>
+          <tr>
+            <td>TKT-129</td>
+            <td>"Laptop screen cracked after falling from desk"</td>
+            <td>Hardware</td>
+            <td>Nhận thức hỏng hóc cơ học (cracked, falling).</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- SECTION 7 -->
+    <section id="s7">
+      <h2>6. Kết Luận & Best Practices</h2>
+      <p>Trải qua 6 Prompt phía trên, ta phát hiện điều kỳ diệu: Bạn đã thực hiện xong nghiệp vụ của 1 Data Analyst thực thụ mà không tốn công gõ 1 dòng hàm nào.</p>
+
+      <div class="card card-success">
+        <h4>Bài học quan trọng:</h4>
+        <ul>
+          <li><strong>Giới hạn biên độ ngôn ngữ:</strong> Khi dùng Prompt 1, hãy ghim cứng <i>"exactly one of these labels"</i>. AI sẽ bị ép văng ra chuẩn cấu trúc thay vì chế cháo thêm các phân nhóm lạ lẫm.</li>
+          <li><strong>Chẻ lệnh tuần tự:</strong> AI hoạt động hiệu quả nhất theo tư duy Waterfall: Bắt nó tẩy gỉ sét (Prompt 2) rồi mới bắt nó xây móng (Prompt 3), cuối cùng mới yêu cầu xuất báo cáo tinh(Prompt 4, 5).</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- SECTION 8 -->
+    <section id="s8">
+      <h2>7. Tài Liệu Tham Khảo</h2>
+      <p>Để tìm tòi sâu hơn các thủ thuật thao tác dữ liệu qua Side Panel, xin mời tham khảo các bài học gốc này:</p>
+      <ul>
+        <li><a href="https://www.youtube.com/watch?v=QPmuAS1V7oI" target="_blank">YouTube: Làm sạch số liệu phi cấu trúc (Unstructured Data)</a></li>
+        <li><a href="https://www.youtube.com/watch?v=hPglmtJqv7k" target="_blank">YouTube: Xây dựng Insight bằng Gemini Sheets Side Panel</a></li>
+        <li><a href="https://www.computerworld.com/article/3845447/google-workspace-how-to-use-gemini-ai-side-panel.html" target="_blank">ComputerWorld: Thao túng Giao diện (Conditional Formatting & UI)</a></li>
+      </ul>
+    </section>
+
+  </div>
+
+  <div class="footer">
+    &copy; 2026 AI_QUEST_LTP Workspace. All standard procedures configured.
+  </div>
+
+</body>
+</html>

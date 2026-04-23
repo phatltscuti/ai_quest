@@ -1,0 +1,30 @@
+# ĐẶC TẢ KỸ THUẬT HỆ THỐNG AI QUEST (TECHNICAL SPEC V1.0)
+
+## CHƯƠNG 1: GIỚI THIỆU HỆ THỐNG
+Hệ thống AI Quest được xây dựng trên kiến trúc Microservices để đảm bảo tính sẵn sàng và khả năng mở rộng. Hệ thống sử dụng Python (FastAPI) cho Backend và React cho Frontend.
+
+## CHƯƠNG 2: KIẾN TRÚC DỮ LIỆU
+### 2.1. Vector Database
+Dữ liệu văn bản sẽ được chuyển đổi thành các Vector Embeddings (1536 chiều) và lưu trữ tại Pinecone.
+### 2.2. Relational Database
+Sử dụng PostgreSQL để lưu trữ thông tin người dùng, quyền truy cập và siêu dữ liệu (metadata) của tệp tin.
+
+## CHƯƠNG 3: QUY TRÌNH XỬ LÝ (PIPELINE)
+1. **Ingestion:** Tệp được tải lên từ Drive thông qua Service Account.
+2. **Standardization:** Chuyển đổi tệp (PDF, Docx, Video) sang định dạng văn bản chuẩn.
+3. **Chunking:** Cắt nhỏ văn bản thành các đoạn 500 tokens với overlap 50 tokens.
+4. **Embedding:** Gửi dữ liệu tới Vertex AI để lấy Vector.
+5. **Storage:** Lưu vào Vector DB.
+
+## CHƯƠNG 4: CÁC VẤN ĐỀ KỸ THUẬT CÒN TỒN ĐỌNG (OPEN QUESTIONS)
+1. **Xác thực (Auth):** Team bảo mật đang phân vân giữa OAuth2 (Google) và JWT truyền thống. Cần khảo sát thêm về khả năng tích hợp Single Sign-On (SSO).
+2. **Scaling Database:** Hiện chưa có phương án Sharding cho cơ sở dữ liệu Master khi số lượng tệp vượt quá 10 triệu.
+3. **API Third-party:** Quy trình phê duyệt Token cho các đối tác bên ngoài vẫn đang ở trạng thái bản thảo (Draft).
+4. **Retention Policy:** Thời gian lưu trữ log truy cập chưa được thống nhất giữa team Pháp chế và team Kỹ thuật (90 ngày hay 1 năm?).
+5. **Dự toán Cloud:** Chi phí vận hành hạ tầng GPU và Cloud hàng tháng vẫn đang thiếu số liệu thực tế từ giai đoạn Alpha Test.
+
+## CHƯƠNG 5: BẢO MẬT & TUÂN THỦ
+Tất cả các tệp phải được mã hóa tại chỗ (Encryption at Rest) và trong quá trình truyền tải (Encryption in Transit).
+
+---
+*Tệp: Technical_Spec_v1.0.pdf*

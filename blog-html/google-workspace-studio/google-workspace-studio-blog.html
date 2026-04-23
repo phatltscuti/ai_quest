@@ -1,0 +1,833 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Google Workspace Studio: Tự động hóa công việc với AI - Hướng dẫn chi tiết</title>
+    <style>
+      *{box-sizing:border-box}
+      body{ margin:0; font-family: 'Segoe UI', Arial, sans-serif; background: #fff; color: #1a1a1a; line-height: 1.7; }
+      a{ color: #1a73e8; text-decoration: none; }
+      a:hover{ text-decoration: underline; }
+      .wrap{ max-width: 980px; margin:0 auto; padding: 24px; }
+      h1{ margin:0 0 10px 0; font-size: 30px; color: #1a73e8; }
+      h2{ margin: 32px 0 14px; font-size: 24px; border-bottom: 3px solid #1a73e8; padding-bottom: 8px; color: #202124; }
+      h3{ margin: 22px 0 10px; font-size: 19px; color: #333; }
+      h4{ margin: 16px 0 8px; font-size: 16px; color: #444; }
+      ul,ol{ margin: 8px 0; padding-left: 22px; }
+      li{ margin-bottom: 4px; }
+      p{ margin: 12px 0; }
+      code{ background: #e8f0fe; border: 1px solid #d2e3fc; padding: 2px 6px; font-size: 13px; font-family: 'Consolas', monospace; border-radius: 3px; color: #1a73e8; }
+      pre{ white-space: pre-wrap; word-wrap: break-word; border: 1px solid #dadce0; background: #f8f9fa; padding: 14px; overflow:auto; font-size: 13px; font-family: 'Consolas', monospace; margin: 12px 0; border-radius: 8px; }
+      .hero{ border: 2px solid #1a73e8; padding: 24px 28px; margin-bottom: 24px; background: linear-gradient(135deg, #e8f0fe 0%, #f8f9fa 100%); border-radius: 12px; }
+      .hero .subtitle{ color: #5f6368; font-size: 15px; margin-top: 8px; }
+      .tip{ border-left: 4px solid #34a853; padding: 12px 16px; background: #e6f4ea; margin: 14px 0; border-radius: 0 8px 8px 0; }
+      .warning{ border-left: 4px solid #ea4335; padding: 12px 16px; background: #fce8e6; margin: 14px 0; border-radius: 0 8px 8px 0; }
+      .info{ border-left: 4px solid #4285f4; padding: 12px 16px; background: #e8f0fe; margin: 14px 0; border-radius: 0 8px 8px 0; }
+      .highlight{ border-left: 4px solid #fbbc04; padding: 12px 16px; background: #fef7e0; margin: 14px 0; border-radius: 0 8px 8px 0; }
+      table{ border-collapse: collapse; width: 100%; margin: 16px 0; border-radius: 8px; overflow: hidden; }
+      th,td{ border: 1px solid #dadce0; padding: 10px 14px; text-align: left; }
+      th{ background: #1a73e8; color: #fff; font-weight: 600; }
+      tr:nth-child(even){ background: #f8f9fa; }
+      .flow-diagram{ background: #f8f9fa; border: 2px solid #dadce0; border-radius: 12px; padding: 20px; margin: 16px 0; text-align: center; }
+      .flow-step{ display: inline-block; background: #fff; border: 2px solid #1a73e8; border-radius: 8px; padding: 10px 18px; margin: 6px; font-weight: 600; color: #1a73e8; }
+      .flow-step.starter{ background: #34a853; border-color: #34a853; color: #fff; }
+      .flow-step.ai{ background: #fbbc04; border-color: #fbbc04; color: #333; }
+      .flow-step.action{ background: #4285f4; border-color: #4285f4; color: #fff; }
+      .flow-step.condition{ background: #ea4335; border-color: #ea4335; color: #fff; }
+      .flow-arrow{ display: inline-block; font-size: 24px; color: #5f6368; margin: 0 4px; vertical-align: middle; }
+      .toc{ background: #f8f9fa; border: 1px solid #dadce0; border-radius: 8px; padding: 16px 24px; margin: 20px 0; }
+      .toc ul{ list-style: none; padding-left: 0; }
+      .toc li{ padding: 4px 0; }
+      .toc li::before{ content: "📌 "; }
+      .badge{ display: inline-block; background: #34a853; color: #fff; padding: 2px 10px; border-radius: 12px; font-size: 12px; font-weight: 600; margin-left: 8px; }
+      .badge.alpha{ background: #ea4335; }
+      .badge.new{ background: #1a73e8; }
+      .footer{ margin-top: 36px; font-size: 13px; color: #5f6368; border-top: 2px solid #dadce0; padding-top: 20px; }
+      .video-ref{ background: #f8f9fa; border: 1px solid #dadce0; border-radius: 8px; padding: 12px; margin: 8px 0; display: flex; align-items: center; gap: 12px; }
+      .video-ref .icon{ font-size: 28px; }
+      .section-num{ color: #1a73e8; font-weight: 700; }
+      .demo-fig{ margin: 18px 0; text-align: center; }
+      .demo-fig img{ max-width: 100%; height: auto; border: 2px solid #dadce0; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+      .demo-fig figcaption{ font-size: 13px; color: #5f6368; margin-top: 6px; font-style: italic; }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+
+      <!-- HERO -->
+      <div class="hero">
+        <h1>Google Workspace Studio: Tự động hóa công việc với Agentic AI</h1>
+        <p class="subtitle">Hướng dẫn chi tiết &mdash; Tổng quan, Workflow mẫu từ Template, và Workflow tự xây dựng từ đầu</p>
+        <p style="margin:4px 0 0;font-size:13px;color:#80868b;">
+          Ngày viết: 18/03/2026 &bull; Nguồn tham khảo:
+          <a href="https://www.youtube.com/watch?v=ZOAszesMBGc" target="_blank">Video 1</a> &bull;
+          <a href="https://www.youtube.com/watch?v=vHrQ-Yd7XwI" target="_blank">Video 2</a> &bull;
+          <a href="https://workspace.google.com/studio/" target="_blank">Official Page</a>
+        </p>
+      </div>
+
+      <!-- TABLE OF CONTENTS -->
+      <div class="toc">
+        <h3 style="margin-top:0;">Mục lục</h3>
+        <ul>
+          <li><a href="#overview">Tổng quan Google Workspace Studio</a></li>
+          <li><a href="#how-it-works">Cách hoạt động &mdash; Kiến trúc Flow</a></li>
+          <li><a href="#interface">Giao diện Workspace Studio</a></li>
+          <li><a href="#starters-steps">Danh sách Starters &amp; Steps</a></li>
+          <li><a href="#three-ways">3 cách tạo Flow</a></li>
+          <li><a href="#template-workflow">Workflow mẫu từ Template: Daily Email Summary</a></li>
+          <li><a href="#scratch-workflow">Workflow từ đầu: Auto-reply Invoice Email</a></li>
+          <li><a href="#custom-workflow">Workflow tự thiết kế: Smart Meeting Notes Pipeline</a></li>
+          <li><a href="#tips">Mẹo và Best Practices</a></li>
+          <li><a href="#availability">Phiên bản hỗ trợ &amp; Giá</a></li>
+          <li><a href="#conclusion">Kết luận</a></li>
+        </ul>
+      </div>
+
+      <!-- 1. OVERVIEW -->
+      <h2 id="overview"><span class="section-num">1.</span> Tổng quan Google Workspace Studio</h2>
+
+      <p>
+        <b>Google Workspace Studio</b> là công cụ tự động hóa workflow (quy trình công việc) mới nhất của Google,
+        được tích hợp sâu với hệ sinh thái Google Workspace (Gmail, Drive, Sheets, Docs, Chat, Calendar, Forms, Tasks)
+        và sử dụng <b>Gemini AI</b> làm engine xử lý thông minh.
+      </p>
+
+      <p>
+        Workspace Studio là phiên bản chính thức (GA) được phát triển từ sản phẩm alpha trước đó có tên
+        <b>Google Workspace Flows</b>. Nó cho phép người dùng tạo các <b>flow</b> (quy trình tự động) mà
+        <b>không cần viết code</b>, giúp tiết kiệm thời gian với các tác vụ lặp đi lặp lại hàng ngày.
+      </p>
+
+      <div class="info">
+        <b>Điểm nổi bật:</b>
+        <ul>
+          <li><b>No-code:</b> Không cần lập trình &mdash; kéo thả, chọn step, hoặc mô tả bằng ngôn ngữ tự nhiên.</li>
+          <li><b>AI-powered:</b> Gemini tạo flow tự động, tóm tắt email, trích xuất dữ liệu, ra quyết định.</li>
+          <li><b>Cross-app:</b> Kết nối Gmail, Sheets, Drive, Chat, Calendar, Forms, Tasks + ứng dụng bên thứ 3 (Salesforce, Asana, Jira, Slack, Mailchimp, Confluence).</li>
+          <li><b>Quản lý trực tiếp:</b> Truy cập từ <a href="https://studio.workspace.google.com" target="_blank">studio.workspace.google.com</a> hoặc từ trong các app Workspace.</li>
+        </ul>
+      </div>
+
+      <!-- 2. HOW IT WORKS -->
+      <h2 id="how-it-works"><span class="section-num">2.</span> Cách hoạt động &mdash; Kiến trúc Flow</h2>
+
+      <p>Mỗi flow trong Workspace Studio gồm <b>2 thành phần chính</b>:</p>
+
+      <div class="flow-diagram">
+        <span class="flow-step starter">STARTER (Trigger)</span>
+        <span class="flow-arrow">&rarr;</span>
+        <span class="flow-step action">STEP 1</span>
+        <span class="flow-arrow">&rarr;</span>
+        <span class="flow-step ai">STEP 2 (AI)</span>
+        <span class="flow-arrow">&rarr;</span>
+        <span class="flow-step action">STEP 3</span>
+        <span class="flow-arrow">&rarr;</span>
+        <span class="flow-step" style="background:#5f6368;color:#fff;">...</span>
+      </div>
+
+      <h3>2.1. Starter (Trigger &mdash; Sự kiện khởi động)</h3>
+      <p>
+        Starter là sự kiện kích hoạt flow. Khi sự kiện xảy ra, flow sẽ tự động chạy.
+        Ví dụ: nhận email mới, đến giờ lên lịch, file mới được thêm vào Drive, form mới được submit...
+      </p>
+
+      <h3>2.2. Steps (Các bước hành động)</h3>
+      <p>
+        Steps là các tác vụ mà flow thực hiện sau khi được kích hoạt. Mỗi flow có thể có nhiều step,
+        các step chạy tuần tự &mdash; step trước hoàn thành rồi mới đến step sau.
+      </p>
+
+      <h3>2.3. Variables (Biến dữ liệu)</h3>
+      <p>
+        Variables là placeholder cho dữ liệu từ starter hoặc các step trước đó.
+        Chúng cho phép truyền dữ liệu động giữa các step, tạo nên sức mạnh của flow.
+      </p>
+      <div class="tip">
+        <b>Ví dụ:</b> Khi nhận email, bạn có thể dùng variable <code>[Email subject]</code> từ starter
+        để chèn tiêu đề email vào nội dung Chat message ở step tiếp theo. Để chèn variable,
+        click vào trường text rồi nhấn <code>@</code> hoặc click nút <b>Variables +</b>.
+      </div>
+
+      <!-- 3. INTERFACE -->
+      <h2 id="interface"><span class="section-num">3.</span> Giao diện Workspace Studio</h2>
+
+      <p>Workspace Studio có 3 trang chính:</p>
+
+      <h3>3.1. Discover Page (Trang khám phá)</h3>
+      <p>Đây là trang chủ khi truy cập <a href="https://studio.workspace.google.com" target="_blank">studio.workspace.google.com</a>. Từ đây bạn có thể:</p>
+      <ul>
+        <li><b>My flows:</b> Xem danh sách tất cả flow đã tạo.</li>
+        <li><b>Create from scratch:</b> Tạo flow từ đầu.</li>
+        <li><b>Use flow templates:</b> Duyệt template theo app hoặc use case.</li>
+        <li><b>Create with AI:</b> Mô tả bằng ngôn ngữ tự nhiên để Gemini tạo flow.</li>
+      </ul>
+
+      <figure class="demo-fig">
+        <img src="images/step-01-discover-page.png" alt="Trang Discover (Home) của Workspace Studio">
+        <figcaption>Hình 1: Trang Discover &mdash; giao diện chính của Google Workspace Studio</figcaption>
+      </figure>
+
+      <figure class="demo-fig">
+        <img src="images/step-02-templates-list.png" alt="Danh sách Templates">
+        <figcaption>Hình 2: Danh sách Templates &mdash; các flow mẫu có sẵn phân loại theo app</figcaption>
+      </figure>
+
+      <h3>3.2. Flow Editor (Trình chỉnh sửa flow)</h3>
+      <p>Khi mở hoặc tạo flow, bạn vào trình editor để:</p>
+      <ul>
+        <li>Chọn/cấu hình Starter và các Steps.</li>
+        <li>Thêm, xóa, sắp xếp lại step.</li>
+        <li>Thêm variable từ step trước.</li>
+        <li>Đổi tên flow, copy, xóa, chia sẻ.</li>
+        <li><b>Test run:</b> Chạy thử flow ngay lập tức.</li>
+        <li><b>Turn on:</b> Bật flow để chạy tự động.</li>
+      </ul>
+
+      <h3>3.3. Activity Page (Trang lịch sử hoạt động)</h3>
+      <p>Sau khi flow chạy, bạn xem lịch sử tại đây:</p>
+      <ul>
+        <li>Xem chi tiết từng lần chạy (expand details).</li>
+        <li>Lọc theo trạng thái: Completed, In Progress, Error.</li>
+        <li>Xem thời gian bắt đầu của mỗi lần chạy.</li>
+        <li>Refresh để cập nhật dữ liệu mới nhất.</li>
+      </ul>
+
+      <figure class="demo-fig">
+        <img src="images/step-03-my-flows.png" alt="Trang My Flows">
+        <figcaption>Hình 3: Trang My Flows &mdash; danh sách tất cả flow đã tạo</figcaption>
+      </figure>
+
+      <!-- 4. STARTERS & STEPS -->
+      <h2 id="starters-steps"><span class="section-num">4.</span> Danh sách Starters &amp; Steps đầy đủ</h2>
+
+      <h3>4.1. Tất cả Starters</h3>
+      <table>
+        <thead>
+          <tr><th>Starter</th><th>Mô tả</th><th>Ví dụ</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><b>On a schedule</b></td>
+            <td>Flow chạy vào ngày/giờ cụ thể</td>
+            <td>Mỗi sáng thứ Hai, tạo Google Doc mới cho meeting notes tuần</td>
+          </tr>
+          <tr>
+            <td><b>When I get an email</b></td>
+            <td>Flow chạy khi nhận email mới (lọc theo label, sender, subject, attachment)</td>
+            <td>Khi nhận email có subject "Invoice" và có attachment, lưu attachment vào Drive</td>
+          </tr>
+          <tr>
+            <td><b>When someone joins a space</b></td>
+            <td>Flow chạy khi có người mới join Chat space</td>
+            <td>Gửi tin nhắn chào mừng kèm link tài liệu dự án</td>
+          </tr>
+          <tr>
+            <td><b>When I get a chat message</b></td>
+            <td>Flow chạy khi có tin nhắn mới trong Chat space</td>
+            <td>Nếu tin nhắn chứa "urgent", tạo task ưu tiên cao</td>
+          </tr>
+          <tr>
+            <td><b>When I'm mentioned</b></td>
+            <td>Flow chạy khi bạn được @mention trong Chat</td>
+            <td>Tự động tạo task trong to-do list khi được mention</td>
+          </tr>
+          <tr>
+            <td><b>When an emoji reaction is added</b></td>
+            <td>Flow chạy khi ai đó react emoji vào message</td>
+            <td>Khi react ✅, gửi email xác nhận "đã duyệt"</td>
+          </tr>
+          <tr>
+            <td><b>When a sheet changes</b></td>
+            <td>Flow chạy khi giá trị trong cột/hàng Sheet thay đổi</td>
+            <td>Khi status đổi sang "Complete", tự archive row</td>
+          </tr>
+          <tr>
+            <td><b>When an item is added to a folder</b></td>
+            <td>Flow chạy khi file/folder mới được thêm vào Drive folder</td>
+            <td>Khi hợp đồng PDF mới được thêm, gửi copy cho team legal</td>
+          </tr>
+          <tr>
+            <td><b>When a file is edited</b></td>
+            <td>Flow chạy khi nội dung file cụ thể bị sửa</td>
+            <td>Thông báo lên Chat space khi "Project Plan" bị sửa</td>
+          </tr>
+          <tr>
+            <td><b>When an item in a folder is edited</b></td>
+            <td>Flow chạy khi file trong folder bị sửa</td>
+            <td>Thông báo khi tài liệu marketing được edit</td>
+          </tr>
+          <tr>
+            <td><b>Based on a meeting</b></td>
+            <td>Flow chạy trước/sau sự kiện Calendar</td>
+            <td>15 phút trước meeting, gửi link agenda lên Chat</td>
+          </tr>
+          <tr>
+            <td><b>When a meeting transcript is ready</b></td>
+            <td>Flow chạy khi transcript cuộc họp sẵn sàng</td>
+            <td>Tóm tắt transcript và tạo task với action items</td>
+          </tr>
+          <tr>
+            <td><b>When a form response comes in</b></td>
+            <td>Flow chạy khi có form response mới</td>
+            <td>Thêm thông tin vào Sheet và gửi email xác nhận</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>4.2. Tất cả Steps</h3>
+
+      <h4>AI Steps (Bước AI)</h4>
+      <table>
+        <thead>
+          <tr><th>Step</th><th>Mô tả</th><th>Ví dụ</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><b>Ask Gemini</b></td>
+            <td>Dùng prompt tùy chỉnh để Gemini tạo text, trả lời câu hỏi, biến đổi thông tin</td>
+            <td>Khi nhận email từ client quan trọng, draft phản hồi lịch sự tự động</td>
+          </tr>
+          <tr>
+            <td><b>Ask a Gem</b> <span class="badge alpha">Preview</span></td>
+            <td>Dùng AI agent chuyên biệt (Gem) cho task cụ thể</td>
+            <td>Dùng Gem "Brainstormer" để tạo danh sách tagline marketing</td>
+          </tr>
+          <tr>
+            <td><b>Recap unread emails</b></td>
+            <td>Tóm tắt email chưa đọc bằng AI</td>
+            <td>Cuối ngày, recap email 24h qua và post lên Chat</td>
+          </tr>
+          <tr>
+            <td><b>Extract</b></td>
+            <td>Gemini tìm và trích xuất thông tin cụ thể từ nội dung</td>
+            <td>Trích "Order Number" và "Shipping Address" từ email xác nhận</td>
+          </tr>
+          <tr>
+            <td><b>Decide</b></td>
+            <td>Gemini phân tích nội dung và đưa ra quyết định true/false</td>
+            <td>Phân tích email có "urgent" không để quyết định gắn label</td>
+          </tr>
+          <tr>
+            <td><b>Summarize</b></td>
+            <td>Gemini tạo bản tóm tắt từ document, meeting, email</td>
+            <td>Tóm tắt project proposal và post key points lên Chat</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h4>Tools (Công cụ logic)</h4>
+      <table>
+        <thead>
+          <tr><th>Step</th><th>Mô tả</th><th>Ví dụ</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><b>Check if</b></td>
+            <td>Tiếp tục flow chỉ khi điều kiện thỏa mãn (conditional logic)</td>
+            <td>Nếu subject chứa "Invoice" thì lưu attachment vào Drive</td>
+          </tr>
+          <tr>
+            <td><b>Filter a list</b></td>
+            <td>Lọc chỉ một số item từ danh sách của step trước</td>
+            <td>Từ nhiều attachment, chỉ lưu file có đuôi ".pdf"</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h4>Gmail Steps</h4>
+      <table>
+        <thead>
+          <tr><th>Step</th><th>Mô tả</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><b>Draft an email / Draft a reply</b></td><td>Tạo bản nháp email hoặc reply</td></tr>
+          <tr><td><b>Add or remove labels</b></td><td>Thêm/xóa label để tổ chức inbox</td></tr>
+          <tr><td><b>Mark as read or unread</b></td><td>Đổi trạng thái đã đọc/chưa đọc</td></tr>
+          <tr><td><b>Star an email / Remove star</b></td><td>Gắn/bỏ sao cho email</td></tr>
+          <tr><td><b>Archive an email</b></td><td>Chuyển email vào archive</td></tr>
+          <tr><td><b>Notify me by email</b></td><td>Gửi email thông báo cho chính bạn</td></tr>
+        </tbody>
+      </table>
+
+      <h4>Chat, Sheets, Drive, Docs, Tasks Steps</h4>
+      <table>
+        <thead>
+          <tr><th>App</th><th>Steps</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><b>Chat</b></td><td>Notify me in Chat (gửi thông báo cho chính mình)</td></tr>
+          <tr><td><b>Sheets</b></td><td>Add a row, Update rows, Clear rows, Get sheet contents</td></tr>
+          <tr><td><b>Drive</b></td><td>Add email attachments to Drive, Create a folder</td></tr>
+          <tr><td><b>Docs</b></td><td>Create a Google doc, Add to a doc</td></tr>
+          <tr><td><b>Tasks</b></td><td>Create a task</td></tr>
+        </tbody>
+      </table>
+
+      <h4>Third-party Integrations <span class="badge alpha">Alpha</span></h4>
+      <table>
+        <thead>
+          <tr><th>App</th><th>Khả năng</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><b>Asana</b></td><td>Tạo project, section, task, subtask</td></tr>
+          <tr><td><b>Confluence</b></td><td>Tạo page</td></tr>
+          <tr><td><b>Jira</b></td><td>Tạo issue và comment</td></tr>
+          <tr><td><b>Mailchimp</b></td><td>Quản lý subscriber và campaign</td></tr>
+          <tr><td><b>Slack</b></td><td>Gửi message trong Slack workspace</td></tr>
+        </tbody>
+      </table>
+
+      <!-- 5. THREE WAYS -->
+      <h2 id="three-ways"><span class="section-num">5.</span> 3 cách tạo Flow</h2>
+
+      <table>
+        <thead>
+          <tr><th>Cách</th><th>Mô tả</th><th>Phù hợp khi</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><b>1. Dùng Template</b></td>
+            <td>Chọn flow mẫu đã có sẵn logic, chỉ cần cấu hình thông số</td>
+            <td>Muốn bắt đầu nhanh với tác vụ phổ biến</td>
+          </tr>
+          <tr>
+            <td><b>2. Tạo từ đầu (From Scratch)</b></td>
+            <td>Tự chọn starter, thêm step, cấu hình variable</td>
+            <td>Cần kiểm soát hoàn toàn, use case đặc biệt</td>
+          </tr>
+          <tr>
+            <td><b>3. Mô tả bằng AI (Describe with Gemini)</b></td>
+            <td>Viết mô tả bằng ngôn ngữ tự nhiên, Gemini tự tạo flow</td>
+            <td>Muốn tạo nhanh nhất, chấp nhận chỉnh sửa sau</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="tip">
+        <b>Mẹo dùng AI:</b> Hãy mô tả cụ thể gồm: flow nên làm gì, dùng app nào, và khi nào chạy.<br>
+        <b>Tốt:</b> <i>"Notify me in Google Chat whenever I get an email from person@example.com"</i><br>
+        <b>Không tốt:</b> <i>"Handle emails from person@example.com"</i>
+      </div>
+
+      <!-- 6. TEMPLATE WORKFLOW -->
+      <h2 id="template-workflow"><span class="section-num">6.</span> Workflow mẫu từ Template: Daily Email Summary</h2>
+
+      <p>Đây là workflow phổ biến nhất để bắt đầu &mdash; tự động tóm tắt email chưa đọc và gửi cho bạn mỗi ngày qua Google Chat.</p>
+
+      <div class="flow-diagram">
+        <span class="flow-step starter">On a schedule<br><small>Weekday morning</small></span>
+        <span class="flow-arrow">&rarr;</span>
+        <span class="flow-step ai">Recap unread emails<br><small>From "Yesterday"</small></span>
+        <span class="flow-arrow">&rarr;</span>
+        <span class="flow-step action">Notify me in Chat<br><small>Send summary</small></span>
+      </div>
+
+      <h3>Bước 1: Chọn Template</h3>
+      <ol>
+        <li>Truy cập <a href="https://studio.workspace.google.com" target="_blank">studio.workspace.google.com</a>.</li>
+        <li>Trên trang Discover, tìm template <b>"Get a daily summary of unread emails"</b>.</li>
+        <li>Click vào template &rarr; Flow Editor mở ra với logic đã được xây sẵn.</li>
+      </ol>
+
+      <figure class="demo-fig">
+        <img src="images/step-04-select-template.png" alt="Chọn template Daily Email Summary">
+        <figcaption>Hình 4: Chọn template "Get a daily summary of unread emails" &mdash; Flow Editor mở ra với 3 steps có sẵn</figcaption>
+      </figure>
+
+      <h3>Bước 2: Cấu hình Flow</h3>
+      <p>Template đã có sẵn 3 step. Hãy click qua từng step để hiểu cách hoạt động:</p>
+
+      <h4>Step 1: On a schedule (Starter)</h4>
+      <ul>
+        <li>Đây là starter &mdash; xác định <b>khi nào</b> flow chạy.</li>
+        <li>Mặc định: chạy mỗi sáng ngày thường (weekday morning).</li>
+        <li>Bạn có thể thay đổi tần suất (hàng ngày, hàng tuần) và giờ chạy theo nhu cầu.</li>
+      </ul>
+
+      <figure class="demo-fig">
+        <img src="images/step-05-configure-schedule.png" alt="Cấu hình On a schedule">
+        <figcaption>Hình 5: Cấu hình Starter "On a schedule" &mdash; chọn tần suất và giờ chạy</figcaption>
+      </figure>
+
+      <h4>Step 2: Recap unread emails (AI Step)</h4>
+      <ul>
+        <li>Đây là bước AI &mdash; Gemini sẽ quét email chưa đọc.</li>
+        <li>Được cấu hình để lấy email từ <b>"Yesterday"</b> (ngày hôm qua).</li>
+        <li>Gemini tạo bản tóm tắt ngắn gọn về nội dung các email.</li>
+        <li>Có thể giữ nguyên prompt và settings mặc định hoặc chỉnh sửa.</li>
+      </ul>
+
+      <figure class="demo-fig">
+        <img src="images/step-06-configure-ai-recap.png" alt="Cấu hình Recap unread emails">
+        <figcaption>Hình 6: Cấu hình AI Step "Recap unread emails" &mdash; Gemini tóm tắt email từ Yesterday</figcaption>
+      </figure>
+
+      <h4>Step 3: Notify me in Chat (Action Step)</h4>
+      <ul>
+        <li>Gửi tin nhắn trực tiếp cho bạn qua Google Chat.</li>
+        <li>Trong trường "Message", có <b>variable chip</b> màu xanh: <code>[Step 2: Summary of unread email]</code>.</li>
+        <li>Variable này lấy kết quả tóm tắt từ Step 2 và chèn vào nội dung tin nhắn.</li>
+      </ul>
+
+      <figure class="demo-fig">
+        <img src="images/step-07-configure-chat-notify.png" alt="Cấu hình Notify me in Chat với Variable">
+        <figcaption>Hình 7: Cấu hình "Notify me in Chat" &mdash; variable chip [Summary] truyền dữ liệu từ step trước</figcaption>
+      </figure>
+
+      <h3>Bước 3: Test &amp; Bật Flow</h3>
+      <div class="warning">
+        <b>Lưu ý quan trọng:</b> Test run thực hiện hành động thật &mdash; sẽ gửi tin nhắn, cập nhật file, tạo meeting thật.
+        Hãy kiểm tra kỹ cấu hình trước khi test.
+      </div>
+      <ol>
+        <li>Click <b>Test run</b> &rarr; <b>Start</b> ở cuối flow editor.</li>
+        <li>Flow chạy ngay lập tức. Nếu thành công:
+          <ul>
+            <li>Bạn nhận tin nhắn tóm tắt trong Google Chat.</li>
+            <li>Editor hiển thị <b>"Run Completed"</b>.</li>
+          </ul>
+        </li>
+        <li>Nếu mọi thứ OK, click <b>Turn on</b> để bật flow chạy tự động theo lịch.</li>
+      </ol>
+
+      <figure class="demo-fig">
+        <img src="images/step-08-test-run-template.png" alt="Test run template flow">
+        <figcaption>Hình 8: Test run &mdash; Flow chạy thành công, hiển thị "Run Completed"</figcaption>
+      </figure>
+
+      <figure class="demo-fig">
+        <img src="images/step-09-chat-result.png" alt="Kết quả tóm tắt email trong Google Chat">
+        <figcaption>Hình 9: Kết quả trong Google Chat &mdash; tin nhắn tóm tắt email AI-generated</figcaption>
+      </figure>
+
+      <div class="highlight">
+        <b>Kết quả:</b> Từ bây giờ, mỗi sáng ngày thường, bạn sẽ nhận được bản tóm tắt email chưa đọc
+        ngay trong Google Chat &mdash; không cần mở Gmail và đọc từng email một.
+      </div>
+
+      <!-- 7. SCRATCH WORKFLOW -->
+      <h2 id="scratch-workflow"><span class="section-num">7.</span> Workflow từ đầu: Auto-reply Invoice Email</h2>
+
+      <p>
+        Tiếp theo, hãy xây dựng flow từ đầu (from scratch) &mdash; tự động tạo draft reply
+        mỗi khi nhận email chứa từ "Invoice".
+      </p>
+
+      <div class="flow-diagram">
+        <span class="flow-step starter">When I get an email<br><small>Contains "Invoice"</small></span>
+        <span class="flow-arrow">&rarr;</span>
+        <span class="flow-step action">Draft a reply<br><small>With dynamic content</small></span>
+      </div>
+
+      <h3>Bước 1: Chọn Starter</h3>
+      <ol>
+        <li>Truy cập <a href="https://studio.workspace.google.com" target="_blank">studio.workspace.google.com</a>.</li>
+        <li>Click <b>"Create from scratch"</b>.</li>
+        <li>Trong danh sách Starters, chọn <b>"When I get an email"</b>.</li>
+        <li>Trong trường filter, nhập: <code>Invoice</code>.</li>
+        <li>Điều này nghĩa là flow chỉ chạy khi email có từ "Invoice" trong subject hoặc body.</li>
+      </ol>
+
+      <figure class="demo-fig">
+        <img src="images/step-10-create-from-scratch.png" alt="Tạo flow mới từ đầu">
+        <figcaption>Hình 10: Tạo flow từ đầu (Create from scratch) &mdash; giao diện chọn Starter</figcaption>
+      </figure>
+
+      <figure class="demo-fig">
+        <img src="images/step-11-select-email-starter.png" alt="Chọn starter When I get an email">
+        <figcaption>Hình 11: Chọn Starter "When I get an email" với filter "Invoice"</figcaption>
+      </figure>
+
+      <h3>Bước 2: Thêm Step</h3>
+      <ol>
+        <li>Bên dưới starter, click <b>"Choose a step"</b>.</li>
+        <li>Trong danh mục <b>"Gmail"</b>, chọn <b>"Draft a reply"</b>.</li>
+      </ol>
+
+      <figure class="demo-fig">
+        <img src="images/step-12-add-draft-reply-step.png" alt="Thêm step Draft a reply">
+        <figcaption>Hình 12: Thêm Step "Draft a reply" từ danh mục Gmail</figcaption>
+      </figure>
+
+      <h3>Bước 3: Dùng Variables tạo nội dung động</h3>
+      <p>Trong trường soạn nội dung draft reply:</p>
+      <ol>
+        <li>Gõ: <code>Hello,</code></li>
+        <li>Xuống dòng, gõ: <code>I received the invoice regarding:</code></li>
+        <li>Click <b>Variables +</b> hoặc gõ <code>@</code> &rarr; chọn <code>[Email subject]</code> từ starter.</li>
+        <li>Xuống dòng, gõ: <code>I will review it and get back to you.</code></li>
+      </ol>
+
+      <div class="info">
+        <b>Nội dung draft sẽ trông như thế này:</b>
+        <pre>Hello,
+
+I received the invoice regarding: [Email subject]
+
+I will review it and get back to you.</pre>
+        <p>Trong đó <code>[Email subject]</code> là variable chip sẽ được thay thế bằng tiêu đề email thực tế khi flow chạy.</p>
+      </div>
+
+      <figure class="demo-fig">
+        <img src="images/step-13-configure-variables.png" alt="Cấu hình draft reply với Variables">
+        <figcaption>Hình 13: Soạn nội dung draft reply với variable chip [Email subject]</figcaption>
+      </figure>
+
+      <h3>Bước 4: Đặt tên, Test &amp; Bật Flow</h3>
+      <ol>
+        <li>Click vào tên flow ở trên cùng để đổi tên, ví dụ: <b>"Auto-reply Invoice Emails"</b>.</li>
+        <li>Click <b>Test run</b>.</li>
+        <li>Cửa sổ mới hiện ra cho phép chọn email gần đây từ inbox phù hợp với điều kiện starter.</li>
+        <li>Trong trường "Email received", nhập: <code>Invoice</code> để tìm email matching.</li>
+        <li>Chọn một email &rarr; Click <b>Start</b>.</li>
+        <li>Nếu thành công: hiện <b>"Run Completed"</b> và có bản draft mới trong thư mục Drafts của Gmail.</li>
+        <li>Click <b>Turn on</b> để bật flow.</li>
+      </ol>
+
+      <figure class="demo-fig">
+        <img src="images/step-14-test-run-scratch.png" alt="Test run flow tự tạo">
+        <figcaption>Hình 14: Test run &mdash; chọn email matching "Invoice" và chạy thử</figcaption>
+      </figure>
+
+      <figure class="demo-fig">
+        <img src="images/step-15-gmail-draft-result.png" alt="Kết quả draft trong Gmail">
+        <figcaption>Hình 15: Kết quả trong Gmail Drafts &mdash; bản nháp reply được tạo tự động với subject thực tế</figcaption>
+      </figure>
+
+      <div class="highlight">
+        <b>Kết quả:</b> Từ bây giờ, mỗi khi nhận email có chứa từ "Invoice", Gmail sẽ tự động tạo
+        bản nháp reply lịch sự, bạn chỉ cần review và gửi &mdash; tiết kiệm thời gian phản hồi.
+      </div>
+
+      <!-- 8. CUSTOM WORKFLOW -->
+      <h2 id="custom-workflow"><span class="section-num">8.</span> Workflow tự thiết kế: Smart Meeting Notes Pipeline</h2>
+
+      <p>
+        Đây là workflow do tôi tự thiết kế, kết hợp nhiều tính năng mạnh mẽ của Workspace Studio
+        để tạo <b>quy trình xử lý cuộc họp thông minh hoàn toàn tự động</b>.
+      </p>
+
+      <div class="flow-diagram">
+        <span class="flow-step starter">Meeting transcript ready</span>
+        <span class="flow-arrow">&rarr;</span>
+        <span class="flow-step ai">Summarize transcript</span>
+        <span class="flow-arrow">&rarr;</span>
+        <span class="flow-step ai">Extract action items</span>
+        <span class="flow-arrow">&rarr;</span>
+        <span class="flow-step action">Add row to Sheet</span>
+        <span class="flow-arrow">&rarr;</span>
+        <span class="flow-step action">Create tasks</span>
+        <span class="flow-arrow">&rarr;</span>
+        <span class="flow-step action">Notify team in Chat</span>
+      </div>
+
+      <h3>Mục tiêu</h3>
+      <p>Khi cuộc họp kết thúc và có transcript sẵn sàng:</p>
+      <ol>
+        <li>Gemini tự động tóm tắt cuộc họp.</li>
+        <li>Gemini trích xuất các action item (công việc cần làm).</li>
+        <li>Ghi lại thông tin cuộc họp vào Google Sheet để theo dõi.</li>
+        <li>Tạo task trong Google Tasks cho từng action item.</li>
+        <li>Thông báo cho team qua Google Chat kèm tóm tắt và danh sách công việc.</li>
+      </ol>
+
+      <h3>Chi tiết các bước xây dựng</h3>
+
+      <h4>Starter: When a meeting transcript is ready</h4>
+      <ul>
+        <li>Chọn starter <b>"When a meeting transcript is ready"</b>.</li>
+        <li>Flow tự động kích hoạt khi Google Calendar event có transcript mới.</li>
+        <li>Không cần filter &mdash; áp dụng cho tất cả cuộc họp có ghi transcript.</li>
+      </ul>
+
+      <h4>Step 1: Summarize (AI Step)</h4>
+      <ul>
+        <li>Chọn step <b>"Summarize"</b> từ danh mục AI Steps.</li>
+        <li>Input: transcript từ starter (dùng variable <code>[Meeting transcript]</code>).</li>
+        <li>Gemini tạo bản tóm tắt ngắn gọn gồm: chủ đề chính, quyết định, điểm thảo luận quan trọng.</li>
+      </ul>
+
+      <h4>Step 2: Extract (AI Step)</h4>
+      <ul>
+        <li>Chọn step <b>"Extract"</b> từ danh mục AI Steps.</li>
+        <li>Input: transcript từ starter.</li>
+        <li>Cấu hình Gemini để trích xuất: <b>Action items</b>, <b>Người chịu trách nhiệm</b>, <b>Deadline</b>.</li>
+      </ul>
+
+      <h4>Step 3: Add a row to Sheet</h4>
+      <ul>
+        <li>Chọn step <b>"Add a row"</b> từ danh mục Sheets.</li>
+        <li>Chọn Google Sheet "Meeting Log" đã tạo trước.</li>
+        <li>Map các cột:
+          <ul>
+            <li><b>Date:</b> Variable <code>[Meeting date]</code> từ starter</li>
+            <li><b>Meeting Title:</b> Variable <code>[Meeting title]</code> từ starter</li>
+            <li><b>Summary:</b> Variable <code>[Step 1: Summary]</code></li>
+            <li><b>Action Items:</b> Variable <code>[Step 2: Extracted data]</code></li>
+          </ul>
+        </li>
+      </ul>
+
+      <h4>Step 4: Create a task</h4>
+      <ul>
+        <li>Chọn step <b>"Create a task"</b> từ danh mục Tasks.</li>
+        <li>Title: kết hợp variable <code>[Meeting title]</code> + "Follow-up".</li>
+        <li>Description: dùng variable <code>[Step 2: Extracted data]</code> chứa danh sách action items.</li>
+      </ul>
+
+      <h4>Step 5: Notify me in Chat</h4>
+      <ul>
+        <li>Chọn step <b>"Notify me in Chat"</b>.</li>
+        <li>Soạn message kết hợp variables:</li>
+      </ul>
+      <pre>📋 Meeting Notes: [Meeting title]
+
+📝 Summary:
+[Step 1: Summary]
+
+✅ Action Items:
+[Step 2: Extracted data]
+
+📊 Logged to Meeting Sheet. Task created.</pre>
+
+      <h3>Test &amp; Bật Flow</h3>
+      <ol>
+        <li>Đổi tên flow: <b>"Smart Meeting Notes Pipeline"</b>.</li>
+        <li>Click <b>Test run</b> &rarr; chọn một meeting gần đây có transcript.</li>
+        <li>Kiểm tra: Sheet có row mới? Task được tạo? Chat có notification?</li>
+        <li>Nếu OK, click <b>Turn on</b>.</li>
+      </ol>
+
+      <div class="highlight">
+        <b>Kết quả:</b> Sau mỗi cuộc họp, bạn không cần ghi chép thủ công. AI tự tóm tắt, trích xuất
+        công việc, lưu vào Sheet để tracking, tạo task nhắc nhở, và thông báo cho team. Toàn bộ quy trình
+        xảy ra trong vài giây sau khi transcript sẵn sàng.
+      </div>
+
+      <div class="info">
+        <b>Mở rộng:</b> Bạn có thể thêm step <b>"Check if"</b> để chỉ xử lý meeting có từ khóa cụ thể
+        (ví dụ: "Sprint Review"), hoặc thêm <b>"Decide"</b> để Gemini phân loại mức độ quan trọng
+        trước khi gửi thông báo.
+      </div>
+
+      <!-- 9. TIPS -->
+      <h2 id="tips"><span class="section-num">9.</span> Mẹo và Best Practices</h2>
+
+      <h3>9.1. Thiết kế Flow hiệu quả</h3>
+      <ul>
+        <li><b>Bắt đầu đơn giản:</b> Tạo flow với 2-3 step trước, test kỹ, rồi mới mở rộng.</li>
+        <li><b>Dùng template làm base:</b> Ngay cả khi cần flow tùy chỉnh, bắt đầu từ template gần nhất rồi chỉnh sửa sẽ nhanh hơn.</li>
+        <li><b>Đặt tên rõ ràng:</b> Đặt tên flow mô tả mục đích để dễ quản lý khi có nhiều flow.</li>
+        <li><b>Test trước khi bật:</b> Luôn Test run trước Turn on. Nhớ rằng test thực hiện hành động thật.</li>
+      </ul>
+
+      <h3>9.2. Dùng AI Steps thông minh</h3>
+      <ul>
+        <li><b>Viết prompt cụ thể:</b> Thay vì "summarize this", hãy viết "Summarize the key decisions and action items from this meeting in bullet points".</li>
+        <li><b>Kết hợp Decide + Check if:</b> Dùng Decide để AI đánh giá, rồi Check if để rẽ nhánh logic.</li>
+        <li><b>Extract thay vì Summarize:</b> Khi cần dữ liệu có cấu trúc (tên, số, ngày), dùng Extract thay vì Summarize.</li>
+      </ul>
+
+      <h3>9.3. Variables là chìa khóa</h3>
+      <ul>
+        <li>Luôn dùng variable chip (nhấn <code>@</code>) thay vì gõ tay dữ liệu.</li>
+        <li>Variable cho phép flow xử lý đúng dữ liệu thực tế từ trigger, không phải dữ liệu cứng.</li>
+        <li>Kết hợp text tĩnh + variable tạo nội dung chuyên nghiệp và cá nhân hóa.</li>
+      </ul>
+
+      <h3>9.4. Chia sẻ và cộng tác</h3>
+      <ul>
+        <li>Flow có thể chia sẻ bằng link &mdash; người nhận có thể copy về và tùy chỉnh.</li>
+        <li>Dùng Activity page để debug khi flow gặp lỗi.</li>
+        <li>Xem lọc theo trạng thái (Error) để nhanh chóng phát hiện vấn đề.</li>
+      </ul>
+
+      <!-- 10. AVAILABILITY -->
+      <h2 id="availability"><span class="section-num">10.</span> Phiên bản hỗ trợ &amp; Yêu cầu</h2>
+
+      <table>
+        <thead>
+          <tr><th>Yêu cầu</th><th>Chi tiết</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><b>Google Workspace Edition</b></td>
+            <td>
+              Business Starter, Standard, Plus<br>
+              Enterprise Standard, Plus<br>
+              Education Fundamentals, Standard, Plus, Teaching &amp; Learning add-on
+            </td>
+          </tr>
+          <tr>
+            <td><b>AI Features</b></td>
+            <td>
+              Yêu cầu Gemini được admin bật<br>
+              Google AI Ultra for Business hoặc Google AI Pro for Education
+            </td>
+          </tr>
+          <tr>
+            <td><b>Giới hạn tuổi</b></td>
+            <td>Tài khoản trường học dưới 18 tuổi không dùng được AI features</td>
+          </tr>
+          <tr>
+            <td><b>App Access</b></td>
+            <td>Template hiển thị theo app bạn có quyền (ví dụ: không có Gmail = không thấy Gmail templates)</td>
+          </tr>
+          <tr>
+            <td><b>Third-party</b></td>
+            <td>Asana, Confluence, Jira, Mailchimp, Slack (đang Alpha)</td>
+          </tr>
+          <tr>
+            <td><b>Truy cập</b></td>
+            <td><a href="https://studio.workspace.google.com" target="_blank">studio.workspace.google.com</a> hoặc từ trong app Workspace</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- 11. CONCLUSION -->
+      <h2 id="conclusion"><span class="section-num">11.</span> Kết luận</h2>
+
+      <p>
+        <b>Google Workspace Studio</b> là bước tiến lớn trong việc đưa AI automation đến với mọi người dùng Google Workspace.
+        Với giao diện no-code trực quan, sức mạnh Gemini AI tích hợp sẵn, và khả năng kết nối đa app,
+        Workspace Studio giúp bạn:
+      </p>
+      <ul>
+        <li><b>Tiết kiệm thời gian:</b> Tự động hóa các tác vụ lặp đi lặp lại (email, meeting notes, form processing).</li>
+        <li><b>Giảm sai sót:</b> AI xử lý nhất quán, không quên bước nào.</li>
+        <li><b>Tập trung công việc quan trọng:</b> Để máy xử lý admin tasks, bạn tập trung sáng tạo.</li>
+        <li><b>Dễ bắt đầu:</b> Templates có sẵn, hoặc mô tả bằng lời cho Gemini tạo flow.</li>
+      </ul>
+
+      <p>
+        Dù bạn là người mới bắt đầu hay đã quen với automation, Workspace Studio cung cấp đủ công cụ
+        từ template đơn giản đến flow phức tạp nhiều bước với conditional logic và AI.
+        Hãy bắt đầu với template "Daily Email Summary" và dần xây dựng các flow phù hợp với quy trình
+        làm việc của bạn.
+      </p>
+
+      <div class="tip">
+        <b>Bắt đầu ngay:</b> Truy cập <a href="https://studio.workspace.google.com" target="_blank">studio.workspace.google.com</a>
+        và thử tạo flow đầu tiên của bạn!
+      </div>
+
+      <!-- FOOTER -->
+      <div class="footer">
+        <p>
+          <b>Tham khảo:</b><br>
+          &bull; <a href="https://www.youtube.com/watch?v=ZOAszesMBGc" target="_blank">Video: Get started with Google Workspace Studio</a><br>
+          &bull; <a href="https://www.youtube.com/watch?v=vHrQ-Yd7XwI" target="_blank">Video: Google Workspace Studio - Everything You Need to Know</a><br>
+          &bull; <a href="https://workspace.google.com/studio/" target="_blank">Google Workspace Studio Official Page</a><br>
+          &bull; <a href="https://support.google.com/workspace-studio/answer/16444479" target="_blank">Get started with Google Workspace Studio (Help Center)</a><br>
+          &bull; <a href="https://support.google.com/workspace-studio/answer/16447954" target="_blank">Create a flow from scratch (Help Center)</a><br>
+          &bull; <a href="https://support.google.com/workspace-studio/answer/16765661" target="_blank">Guide to Starters &amp; Steps (Help Center)</a><br>
+          &bull; <a href="https://support.google.com/workspace-studio/answer/16447677" target="_blank">Navigate the Workspace Studio interface (Help Center)</a>
+        </p>
+        <p>Viết bởi AI &bull; 18/03/2026 &bull; AI Quest LTP</p>
+      </div>
+
+    </div>
+  </body>
+</html>

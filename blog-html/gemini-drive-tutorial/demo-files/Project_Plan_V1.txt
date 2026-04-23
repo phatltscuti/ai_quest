@@ -1,0 +1,10 @@
+# KẾ HOẠCH DỰ ÁN V1 (Lưu trữ)
+**Dự án:** AI Quest
+**Phiên bản:** 1.0 (Lưu trữ)
+
+## Ngân sách sơ bộ
+- Tổng kinh phí: 50,000 USD cho giai đoạn hạ tầng ban đầu.
+- Thời gian dự kiến hoàn thành Beta: 01/06/2026.
+
+---
+*Tham chiếu: Project_Plan_V1.docx*

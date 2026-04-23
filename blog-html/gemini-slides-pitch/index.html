@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tạo Pitch Deck Tốc Độ Với Gemini Trong Google Slides</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="badge">Google Workspace Guide</div>
+    <h1>Tạo Pitch Deck Tốc Độ Với Gemini Trong Google Slides</h1>
+    <p class="subtitle">Ứng dụng Side Panel để tự động sinh cấu trúc 5 slide trình bày và tạo hình ảnh độc quyền (Generative AI) tích hợp cơ chế đồng bộ phong cách.</p>
+  </div>
+
+  <div class="container">
+
+    <!-- TABLE OF CONTENTS -->
+    <nav class="toc">
+      <h2>Mục lục</h2>
+      <ol>
+        <li><a href="#s1">Tổng quan: Vượt Qua Nỗi Ám Ảnh Phác Thảo Trình Bày</a></li>
+        <li><a href="#s2">Kịch bản thực tế: Exhibition Booth Pitch</a></li>
+        <li><a href="#s3">Action 1: Sinh Cấu Trúc Slide Tự Động (Side Panel)</a></li>
+        <li><a href="#s4">Action 2: Sinh Hình Ảnh Độc Quyền & Iteration</a></li>
+        <li><a href="#s5">Action 3: Kiểm Soát Tính Nhất Quán (Consistency Controls)</a></li>
+        <li><a href="#s6">Kết luận & Best Practices</a></li>
+        <li><a href="#s7">Tài liệu tham khảo (References)</a></li>
+      </ol>
+    </nav>
+
+    <!-- SECTION 1 -->
+    <section id="s1">
+      <h2>1. Giới thiệu: Khai Phóng Sự Sáng Tạo Trong Google Slides Khỏi Màn Hình Trắng</h2>
+      <p>Bắt tay vào làm một bộ slide thuyết trình (Pitch Deck / KPI Report) thường là một quá trình dài và đầy áp lực đối với bất kỳ nhân sự nào. Chúng ta mất hàng giờ đồng hồ chỉ để tự hỏi: <i>Tôi nên bố cục bao nhiêu slide? Mạch truyện (storyline) thế nào để thuyết phục? Đào đâu ra ảnh minh họa trên Google vừa không dính vi phạm bản quyền (copyright-free) lại vừa đúng với màu sắc công ty?</i></p>
+
+      <p>Sự tích hợp hệ thống <strong>Gemini Advanced / Duet AI vào thẳng Google Slides (thông qua Side panel)</strong> đã định nghĩa lại toàn bộ quá trình trình bày ý tưởng. Bạn không đơn thuần là "có một chatbot để gõ chữ", mà bạn được trao tay một <b>kiến trúc sư cấu trúc</b> đồng thời là một <b>Designer chuyên nghiệp</b> ngay trong không gian làm việc. Trong bài Demo này, chúng ta sẽ tập trung trình diễn 3 sức mạnh cốt lõi của tính năng này:</p>
+
+      <div class="card card-info" style="margin-top: 16px;">
+        <ul>
+          <li><strong>Multi-slide Content Generation (Kiến tạo dàn ý đa trang):</strong> Chỉ với một dòng Prompt ban đầu (Zero-shot), AI sẽ tự động phân bổ khối lượng kiến thức thành một kịch bản n-trang hoàn hảo, đẩy trực tiếp khối văn bản (text boxes) vào các slides hợp lý thay vì bạn phải tự Copy/Paste lắt nhắt từ Chatbot ngoài.</li>
+          <li><strong>AI Interactive Image Generation (Sinh họa và Bám đuổi thiết kế):</strong> Cụm công cụ "Help me visualize" biến ý tưởng thành ảnh độc quyền. Điểm đáng sợ nhất của nó không nằm ở bức ảnh đầu tiên (mà thường rất lộn xộn màu sắc), mà nằm ở khả năng phân tích chuỗi lệnh kép (Iteration) để gò ép bức vẽ về đúng luồng định dạng đồ họa Geometric/Abstract và mã màu thương hiệu nghiêm ngặt.</li>
+          <li><strong>Consistency Controls (Tích hợp quy chuẩn hiển thị tự động):</strong> Sự gắn kết hoàn hảo giữa chữ do AI tuôn ra và sức mạnh của bộ Master Layout (Theme Builder) có sẵn trong Google Slides, khiến cho bất giác mọi đoạn văn do máy viết đều phải nhuộm đúng Font chữ / Cỡ chữ của công ty bạn thành lập (Brand Coherent).</li>
+        </ul>
+      </div>
+
+      <p>Hãy cùng đi qua một kịch bản <b>Exhibition Booth Pitch</b> thực tế để tận mắt chứng kiến tốc độ kinh ngạc này.</p>
+    </section>
+
+    <!-- SECTION 2 -->
+    <section id="s2">
+      <h2>2. Kịch bản thực tế: Exhibition Booth Pitch</h2>
+      <p>Bạn sắp tham gia một hội chợ công nghệ B2B. Sếp yêu cầu bạn tạo một <strong>Mini Pitch Deck dài đúng 5 Slide</strong> để trình chiếu liên tục trên màn hình và để đội Sales thuyết trình nhanh (Elevator Pitch) cho khách tham quan gian hàng về một sản phẩm mới: <b>"AI Workflow Automator"</b>.</p>
+
+      <div class="card card-info">
+        <h4>Yêu cầu cấu trúc chặt chẽ (Target Structure):</h4>
+        <ul>
+          <li><strong>Slide 1:</strong> Title (Tiêu đề dự án).</li>
+          <li><strong>Slide 2:</strong> Problem (Vấn đề: 80% thời gian bị lãng phí do nhập liệu thủ công).</li>
+          <li><strong>Slide 3:</strong> Approach (Giải pháp: AI đồng bộ dữ liệu theo thời gian thực).</li>
+          <li><strong>Slide 4:</strong> Proof/Numbers (Bằng chứng: Đem lại ROI x5 lần, tiết kiệm được 10,000 giờ cho tester).</li>
+          <li><strong>Slide 5:</strong> Next actions (Hành động: Quét mã QR để dùng thử).</li>
+        </ul>
+      </div>
+      <p>Kịch bản này đòi hỏi sự chính xác tuyệt đối về số lượng trang và mạch truyện (Storyline) để lôi cuốn khách hàng đi dạo ngang qua gian hàng trong vòng 30 giây.</p>
+    </section>
+
+    <!-- SECTION 3 -->
+    <section id="s3">
+      <h2>3. Action 1: Tạo Nội Dung Từng Slide (Slide-by-Slide Generation)</h2>
+      <p>Mở một file Google Slides trắng. Hiện tại, năng lực của Gemini Side Panel trong Slides hoạt động hiệu quả và an toàn nhất dựa trên nguyên tắc "One slide at a time" (Tạo từng trang một). Cấu trúc 5 trang yêu cầu bên trên sẽ được hoàn thành hoàn hảo bằng cách mở **Gemini Side Panel** (ngôi sao góc trên bên phải) và thả lần lượt 5 đoạn Prompt cực êm này:</p>
+
+      <div class="prompt-box"><span class="label">PROMPT 1.1 - THE TITLE</span>Create a title slide for a Pitch Deck. The product name is "AI Workflow Automator".</div>
+      <div class="prompt-box"><span class="label">PROMPT 1.2 - THE PROBLEM</span>Create a slide about the Problem: Teams lose up to 80% of their productive hours on redundant manual data entry, leading to high error rates and employee burnout.</div>
+      <div class="prompt-box"><span class="label">PROMPT 1.3 - THE APPROACH</span>Create a slide about our Approach: "Real-Time AI Syncing". Our AI Workflow Automator silently connects disparate tools, syncing data instantly without human intervention.</div>
+      <div class="prompt-box"><span class="label">PROMPT 1.4 - THE PROOF</span>Create a slide about our Proven ROI: Delivering a 5x Return on Investment within the first quarter and over 10,000 hours saved by beta testing organizations.</div>
+      <div class="prompt-box"><span class="label">PROMPT 1.5 - NEXT ACTIONS</span>Create a slide about Next Actions: Call to action is "Scan the QR code to sign up for a free 30-day trial". Include placeholder for QR code.</div>
+
+      <div class="card card-warning">
+        <strong>Lý do của chiến thuật này:</strong> Nếu bạn yêu cầu <i>"Generate a 5-slide deck"</i>, hệ thống sẽ trả về hộp thoại báo lỗi: <b>"Right now, I can only create one slide at a time. For best results, try starting with 'create a slide about...'"</b>. Việc chẻ nhỏ gạch đầu dòng là thao tác chuẩn nhất để Gemini tự động sinh hộp thoại (Text boxes) và đặt chúng vuông vắn lên bề mặt Slide đang đứng.
+      </div>
+
+      <div class="screenshot-wrap">
+        <div class="img-placeholder">
+          <div class="icon">📸</div>
+          [Chèn Ảnh 1: Ảnh toàn cảnh Google Slides. Gemini Panel đang trả kết quả cho Prompt 1.2. Ở mặt slide hiện tại là các Textbox được bố cục vuông vắn do AI tự phân luồng text đưa xuống.]
+        </div>
+        <div class="caption">Gemini Action 1: Chiến thuật Slide-by-slide Content Generation - Đẩy trực tiếp layout lên mặt thao tác</div>
+      </div>
+    </section>
+
+    <!-- SECTION 4 -->
+    <section id="s4">
+      <h2>4. Action 2: Sinh Hình Ảnh Độc Quyền & Iteration</h2>
+      <p>Một công cụ tạo ảnh ngay trong Google Slides (thường kích hoạt qua nút **Create image** hoặc trong Side Panel). Chúng ta sẽ tạo 2 hình ảnh cho Slide 2 và Slide 3, tiến hành <strong>tinh chỉnh (Iteration)</strong> thông qua prompt để hình ảnh ăn khớp với phong cách thiết kế.</p>
+
+      <h3>Hình Ảnh 1: Minh họa vấn đề (Slide 2 - Problem)</h3>
+      <p>Lần đầu tiên, chúng ta mô tả vấn đề bằng một lệnh chung chung.</p>
+
+      <div class="prompt-box"><span class="label">PROMPT 2.1 - PROBLEM IMG</span>Create an image of a frustrated office worker drowning in a sea of paperwork and chaotic post-it notes, flat illustration style, corporate.</div>
+
+      <div class="card card-warning">
+        <h4>Vấn đề lúc này (Before):</h4>
+        <p>Ảnh sinh ra có thể dính quá nhiều chi tiết rối rắm, nét mặt nhân vật không tự nhiên, và màu sắc tự do (xanh, đỏ, tím...) khiến slide bị "lệch tông" khỏi thương hiệu.</p>
+      </div>
+
+      <div class="prompt-box"><span class="label">PROMPT 2.2 - ITERATION</span>Make the illustration cleaner, strictly use a duotone corporate color palette (navy blue and orange) to match our brand, remove facial details to keep it abstract.</div>
+      
+      <div class="compare-grid" style="align-items: stretch;">
+        <div class="screenshot-wrap" style="margin:0;">
+          <div class="img-placeholder" style="padding: 20px 10px;">
+            <div class="icon">📸</div>
+            [Chèn Ảnh 2.1 (Before): Bức ảnh ban đầu nhiều màu sắc lộn xộn sinh ra từ Prompt 2.1]
+          </div>
+          <div class="caption">Before Iteration</div>
+        </div>
+        <div class="screenshot-wrap" style="margin:0;">
+          <div class="img-placeholder" style="padding: 20px 10px;">
+            <div class="icon">📸</div>
+            [Chèn Ảnh 2.2 (After): Bức ảnh sạch sẽ, chuẩn màu Navy/Orange sinh ra từ Prompt 2.2]
+          </div>
+          <div class="caption">After Iteration</div>
+        </div>
+      </div>
+
+      <h3>Hình Ảnh 2: Minh họa giải pháp (Slide 3 - Approach)</h3>
+      <p>Sang slide giải pháp công nghệ, chúng ta cần hình ảnh mang tính tương lai (Futuristic).</p>
+      
+      <div class="prompt-box"><span class="label">PROMPT 3.1 - APPROACH IMG</span>Create an image of glowing digital nodes connecting smoothly over a sleek dark background, representing AI data syncing, futuristic 3D render.</div>
+
+      <p><strong>Cải thiện nhất quán (Iteration 2):</strong> Tương tự như trên, ảnh sinh ra rất đẹp nhưng nền đen (Black background) lại không khớp với nhận diện thương hiệu. Ta tiến hành re-prompt (tinh chỉnh) lần 2:</p>
+
+      <div class="prompt-box"><span class="label">PROMPT 3.2 - ITERATION</span>Keep the glowing nodes, but make the background solid navy blue instead of black, and add a subtle orange accent light to match the corporate guidelines.</div>
+
+      <div class="compare-grid" style="align-items: stretch;">
+        <div class="screenshot-wrap" style="margin:0;">
+          <div class="img-placeholder" style="padding: 20px 10px;">
+            <div class="icon">📸</div>
+            [Chèn Ảnh 3.1 (Before): Bức ảnh node 3D trên nền đen xì (Black bg)]
+          </div>
+          <div class="caption">Before Iteration</div>
+        </div>
+        <div class="screenshot-wrap" style="margin:0;">
+          <div class="img-placeholder" style="padding: 20px 10px;">
+            <div class="icon">📸</div>
+            [Chèn Ảnh 3.2 (After): Bức ảnh node 3D trên nền Navy, điểm xuyết Cam rực rỡ]
+          </div>
+          <div class="caption">After Iteration</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 5 -->
+    <section id="s5">
+      <h2>5. Action 3: Kiểm Soát Tính Nhất Quán (Consistency Controls)</h2>
+      <p>Khi dùng AI Generative, nguy cơ lớn nhất là tạo ra một "nồi lẩu thập cẩm" về thiết kế: slide 1 dùng ảnh 3D, slide 2 dùng ảnh vẽ tay, slide 3 font chữ to đùng đoàng. Để có bài Pitch chuyên nghiệp, bạn phải kiểm soát được tính nhất quán.</p>
+
+      <div class="card card-success">
+        <h4>Cách Kiểm Soát Hiệu Quả Nhất Ngay Trong Slides (Layout & Style Coherent):</h4>
+        <ol>
+          <li><strong>Quy định bằng Prompt Constraints:</strong> Lồng cụm từ <i>"Strictly use a duotone corporate color palette (navy blue and orange)"</i> hoặc <i>"flat geometric illustration"</i> vào TẤT CẢ các prompt gen ảnh. Đây là lớp phòng thủ màu sắc số 1.</li>
+          <li><strong>Sử dụng Theme Builder (Trình tạo chủ đề):</strong> Sau khi Gemini Side panel đẻ ra cấu trúc văn bản (Text boxes), KHÔNG sửa font cho từng slide lẻ tẻ. Hãy vào menu <code>View > Theme builder</code> (hoặc Trang trình bày > Chỉnh sửa chủ đề). Tại đây:
+             <ul>
+               <li>Chọn Layout chính (Master Layout).</li>
+               <li>Đổi toàn bộ "Tiêu đề" thành font chữ thương hiệu (vd: Montserrat bôi đậm).</li>
+               <li>Đổi dải màu "Nền" và "Văn bản" ở bảng màu hệ thống.</li>
+             </ul>
+             Việc này giúp 100% nội dung chữ do Gemini vừa gen ra tự động bám theo luật hiển thị mới, đạt độ liền mạch tuyệt đối.
+          </li>
+        </ol>
+      </div>
+
+      <div class="screenshot-wrap">
+        <div class="img-placeholder">
+          <div class="icon">📸</div>
+          [Chèn Ảnh 4: Giao diện Slide cuối cùng rất hài hoà màu sắc giữa Font chữ, Nền và Ảnh minh hoạ AI gen ra (Tone Navy/Orange chủ đạo)]
+        </div>
+        <div class="caption">Gemini Action 3: Sự nhất quán tổng thể - Thành phẩm hoàn thiện của AI Workflow Automator Deck</div>
+      </div>
+    </section>
+
+    <!-- SECTION 6 -->
+    <section id="s6">
+      <h2>6. Kết luận & Best Practices</h2>
+      <p>Sử dụng Gemini Side Panel trực tiếp trong Google Slides không giống việc chat với AI tạo chữ thông thường. Nó là sự giải phóng tư duy về định dạng cấu trúc Slide và công cụ thao túng đồ hoạ tự thân (Self-contained Graphics Tool).</p>
+
+      <div class="card card-info">
+        <h4>Bài học qua kịch bản Exhibition Pitch:</h4>
+        <ul>
+          <li><strong>Luôn Giới hạn số lượng (Hard Limits):</strong> Viết rõ "Generate exactly 5 slides" trong Prompt đầu tiên giúp khống chế sự dài dòng.</li>
+          <li><strong>Sáng tạo là liên tục (Iteration is Key):</strong> Đừng nhắm mắt lấy đại (Accept) bức hình AI gen ra ở lượt đầu tiên (Zero-shot). Bức tường thành tạo ra một Pitch deck đắt tiền nằm ở khả năng viết prompt lặp lại (Iteration) để gò ép AI tuân thủ luật phối màu.</li>
+          <li><strong>Tận dụng sức mạnh thiết kế của con người:</strong> Gemini tạo bộ khung cực mạnh, nhưng ở khâu Design cuối cùng, hãy tận dụng tính năng Theme mặc định của Google Slides để khóa Layout (Căn chỉnh trái phải, Master Fonts).</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- SECTION 7 -->
+    <section id="s7">
+      <h2>7. Tài liệu tham khảo (References)</h2>
+      <p>Dưới đây là các nguồn tư liệu chuyên môn được tham khảo để xây dựng các Best Practices và kịch bản trong bài viết:</p>
+      <div class="card">
+        <ul>
+          <li><strong>Video Tutorial:</strong> <a href="https://www.youtube.com/watch?v=wxNq_TMK930" target="_blank">How to use Gemini in Google Slides</a></li>
+          <li><strong>Video Tutorial:</strong> <a href="https://www.youtube.com/watch?v=kuwE6NVSyWE" target="_blank">AI Presentation Design Tricks</a></li>
+          <li><strong>Computerworld Article:</strong> <a href="https://www.computerworld.com/article/4129528/gemini-help-make-google-slides-presentations.html" target="_blank">How Gemini helps make Google Slides presentations</a></li>
+        </ul>
+      </div>
+    </section>
+
+  </div>
+
+  <div class="footer">
+    &copy; 2026 AI_QUEST_LTP Workspace. All standard procedures configured.
+  </div>
+
+</body>
+</html>

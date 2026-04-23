@@ -1,0 +1,297 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Automate Video Creation with Antigravity + Remotion</title>
+    <style>
+      *{box-sizing:border-box}
+      body{ margin:0; font-family: Arial, sans-serif; background:#fff; color:#000; line-height:1.6; }
+      a{ color:#0066cc; text-decoration:none; }
+      a:hover{ text-decoration:underline; }
+      .wrap{ max-width:980px; margin:0 auto; padding:20px; }
+      h1{ margin:0 0 10px 0; font-size:28px; }
+      h2{ margin:24px 0 12px; font-size:22px; border-bottom:2px solid #ddd; padding-bottom:8px; }
+      h3{ margin:18px 0 10px; font-size:18px; }
+      ul,ol{ margin:8px 0; padding-left:20px; }
+      p{ margin:12px 0; }
+      code{ background:#f5f5f5; border:1px solid #ddd; padding:2px 6px; font-size:13px; font-family:monospace; }
+      pre{ white-space:pre-wrap; word-wrap:break-word; border:1px solid #ddd; background:#f5f5f5; padding:12px; overflow:auto; font-size:13px; font-family:monospace; margin:12px 0; }
+      .hero{ border:1px solid #ddd; padding:20px; margin-bottom:20px; background:#f9f9f9; }
+      .demo-img{ max-width:100%; height:auto; border:1px solid #ddd; border-radius:4px; }
+      .footer{ margin-top:30px; font-size:12px; color:#666; border-top:1px solid #ddd; padding-top:20px; }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="hero">
+        <h1>Automate Video Creation with Antigravity + Remotion</h1>
+        <p>
+          This article provides a <b>step-by-step guide</b> to:
+        </p>
+        <ul>
+          <li>Automatically create videos using Antigravity + Remotion (based on Surya's video:
+            <a href="https://www.youtube.com/watch?v=l5L3iZzk408" target="_blank">AntiGravity's New VIDEO Editing (Remotion) Skills Are Insane</a>).
+          </li>
+          <li>Display the video you created on an HTML blog article.</li>
+        </ul>
+      </div>
+
+      <h2>1. What is Antigravity? What is Remotion?</h2>
+
+      <h3>Google Antigravity</h3>
+      <p>
+        <b>Google Antigravity</b> is a free IDE (Integrated Development Environment) by Google,
+        designed for developers and AI users.
+        The standout feature of Antigravity is its built-in <b>AI agent</b> (Gemini, Claude...)
+        that can receive natural language prompts,
+        plan autonomously, and write code for you.
+        Antigravity supports <b>Agent Skills</b> &ndash; specialized rule sets that help the agent understand
+        a specific domain better (e.g., video creation, UI design, testing...).
+      </p>
+
+      <h3>Remotion</h3>
+      <p>
+        <b>Remotion</b> is an open-source framework that lets you create videos using code (React + TypeScript).
+        Instead of dragging and dropping on a timeline in traditional video editing software (Premiere, Final Cut...),
+        you write React components to define scenes, animations, and transitions &ndash;
+        and Remotion renders them into an MP4 file.
+        Remotion provides the <code>remotion-best-practices</code> skill so that AI agents
+        (in Antigravity or Claude Code) know how to write video code correctly.
+      </p>
+
+      <h3>Combining Antigravity + Remotion</h3>
+      <p>
+        When you combine these two tools, you only need to <b>describe your video in English</b> inside Antigravity,
+        the agent will automatically write Remotion code, and you get a finished video &ndash;
+        no manual video editing skills required.
+        This is exactly the workflow demonstrated in Surya's video
+        <a href="https://www.youtube.com/watch?v=l5L3iZzk408" target="_blank">"AntiGravity's New VIDEO Editing (Remotion) Skills Are Insane"</a>.
+      </p>
+
+      <h2>2. Workflow Overview</h2>
+      <p>The automated video creation process consists of 4 main steps:</p>
+      <ol>
+        <li>Use <b>Remotion</b> as the video engine (React + TypeScript).</li>
+        <li>Use <b>Antigravity</b> + the <code>remotion-best-practices</code> skill to generate video code from an English prompt.</li>
+        <li>Render the video into an MP4 file.</li>
+        <li>Upload to YouTube and embed it in a blog article.</li>
+      </ol>
+
+      <h2>3. Environment Setup</h2>
+
+      <h3>3.1. Install Required Tools</h3>
+      <ol>
+        <li>Install <b>Node.js LTS</b> from the official website.</li>
+        <li>Install <b>Google Antigravity IDE</b> (Windows/macOS) from <code>https://antigravity.google</code>.</li>
+      </ol>
+
+      <h3>3.2. Create a Remotion Project</h3>
+      <p>Open a terminal (you can use the built-in terminal in Antigravity) and run:</p>
+      <pre>npx create-video@latest</pre>
+      <p>In the Remotion wizard, select:</p>
+      <ul>
+        <li>Template: <b>Blank</b></li>
+        <li>TailwindCSS: <b>Yes</b></li>
+        <li>Install Skills: <b>Yes</b> (to get Remotion Skills / remotion-best-practices)</li>
+      </ul>
+
+      <h3>3.3. Install Dependencies and Run Dev Server</h3>
+      <pre>cd &lt;your-remotion-project&gt;
+npm install
+npm run dev</pre>
+      <p>Open your browser at <code>http://localhost:3000</code> and verify that Remotion displays the preview.</p>
+
+      <h2>4. Connect Antigravity with Remotion Skill</h2>
+
+      <h3>4.1. Open Remotion Project in Antigravity</h3>
+      <p>
+        After running <code>npx create-video@latest</code> in step 3, Remotion will create a project folder
+        (e.g., <code>my-video</code>). Now you need to open that folder in Antigravity:
+      </p>
+      <ol>
+        <li>Open <b>Google Antigravity</b>.</li>
+        <li>Go to <b>File &gt; Open Folder</b> (or press <code>Ctrl+K Ctrl+O</code> on Windows).</li>
+        <li>Browse to the Remotion project folder you just created (e.g., <code>C:\Users\ADMIN\my-video</code>) and click <b>Select Folder</b>.</li>
+        <li>Antigravity will open the workspace with the Remotion project structure (you should see files like <code>package.json</code>, <code>src/</code>, <code>remotion.config.ts</code>...).</li>
+      </ol>
+
+      <h3>4.2. Verify Remotion Skill is Installed</h3>
+      <p>
+        If you selected <b>Install Skills: Yes</b> in step 3.2, the <code>remotion-best-practices</code>
+        skill is already installed in the project. To verify:
+      </p>
+      <ol>
+        <li>In Antigravity, open the <b>Explorer</b> (left sidebar), look for the <code>.cursor/rules/</code> or <code>.antigravity/skills/</code> folder in the project.</li>
+        <li>If you see a file related to <code>remotion-best-practices</code> (or <code>remotion.mdc</code>), you're all set.</li>
+        <li>If not, you can install it manually:
+          <ul>
+            <li>Visit <a href="https://www.remotion.dev/docs/skills" target="_blank">remotion.dev/docs/skills</a> and follow the instructions.</li>
+            <li>Or watch the skill installation part of <a href="https://www.youtube.com/watch?v=l5L3iZzk408" target="_blank">Surya's video</a> (from the beginning).</li>
+          </ul>
+        </li>
+      </ol>
+
+      <h3>4.3. Open Agent and Test Skill</h3>
+      <ol>
+        <li>In Antigravity, open the <b>Agent panel</b> (agent icon on the left sidebar, or go to <b>View &gt; Agent</b>).</li>
+        <li>Send a simple test prompt: <code>Read the Remotion best-practices skill and summarize it.</code></li>
+        <li>If the agent returns content about Remotion rules (such as how to create compositions, how to use <code>useCurrentFrame()</code>...), then the skill is ready.</li>
+        <li>You can now proceed to step 5 to start creating a video with a prompt.</li>
+      </ol>
+
+      <h2>5. Step-by-Step: Create a Video with a Prompt in Antigravity</h2>
+
+      <h3>5.1. Prepare Assets (Logo / Images)</h3>
+      <p>
+        The Remotion project already comes with a <code>public/</code> folder (e.g., <code>my-video/public/</code>).
+        This is where static files (images, fonts, audio...) that the video can use are stored.
+      </p>
+      <ol>
+        <li>Open the <code>my-video/public</code> folder in Antigravity's Explorer.</li>
+        <li>Copy your logo or image into this folder (e.g., <code>logo.png</code>).
+          <br/>The final path will be: <code>my-video/public/logo.png</code>
+        </li>
+        <li>If you want to keep things organized, you can create a subfolder <code>assets</code> inside <code>public/</code>:
+          <pre>my-video/public/assets/logo.png</pre>
+          But this is not required &ndash; placing files directly in <code>public/</code> works fine.
+        </li>
+      </ol>
+      <p>
+        <b>Note:</b> In the prompt in step 5.3, the image path must match the file location.
+        For example, if the file is at <code>public/logo.png</code>, write <code>public/logo.png</code> in the prompt;
+        if it's at <code>public/assets/logo.png</code>, write <code>public/assets/logo.png</code>.
+      </p>
+
+      <h3>5.2. Open Agent and Prepare</h3>
+      <ol>
+        <li>In Antigravity, open an agent in the Remotion workspace.</li>
+        <li>Select the appropriate model (Gemini/Claude depending on configuration) and get ready to send a prompt.</li>
+      </ol>
+
+      <h3>5.3. Prompt to Create Video (Real Example)</h3>
+      <p>Below is a sample prompt to create a personal introduction / portfolio video:</p>
+      <pre>Read the Remotion best-practices skill and create a 15-second personal introduction video.
+
+Profile:
+- Name: Ly Tan Phat
+- Role: PHP Developer
+- Company: Scuti
+- Avatar/Logo: public/logo.png
+- Tagline: "Building scalable web solutions with PHP, Laravel &amp; modern tech"
+- Skills highlight: PHP, Laravel, MySQL, REST API, Docker, Git
+
+Requirements:
+- Scene 1 (0-5s): Cinematic dark blue background, avatar image fades in center with a subtle glow effect, name "Ly Tan Phat" appears below with a smooth typewriter animation
+- Scene 2 (5-12s): Transition to role &amp; company info - "PHP Developer @ Scuti" with company-style layout, then skills icons/badges animate in one by one (PHP, Laravel, MySQL, REST API, Docker, Git)
+- Scene 3 (12-18s): Tagline text reveals with elegant motion - "Building scalable web solutions with PHP, Laravel &amp; modern tech", subtle particle or code-rain background effect
+- Scene 4 (18-20s): Call-to-action - "Let's connect!" with GitHub/LinkedIn icons, smooth fade out
+
+Style:
+- Primary background: dark navy blue (#0a1628)
+- Accent color: electric blue (#3b82f6) and white text
+- Font: modern sans-serif (Inter or similar)
+- Smooth cinematic transitions between scenes
+- Use the avatar from public/logo.png
+
+Export: 1920x1080, 30fps composition named "PhatDevIntro"</pre>
+      <p>After sending the prompt:</p>
+      <ul>
+        <li>Antigravity reads the rules from the Remotion skill.</li>
+        <li>The agent proposes an <b>implementation plan</b> (which files to create, which components to build, what effects to use).</li>
+        <li>When you click <b>Proceed</b>, the agent will write the React/TypeScript Remotion code for the video.</li>
+      </ul>
+
+      <h3>5.4. Preview and Refine</h3>
+      <ol>
+        <li>Go back to the Remotion tab (dev server running from <code>npm run dev</code>).</li>
+        <li>Select the <code>PhatDevIntro</code> composition in the UI to view the preview.</li>
+        <li>If you want to refine:
+          <ul>
+            <li>Send additional prompts in Antigravity, e.g.: <code>Make the text appear with a typewriter effect.</code></li>
+            <li>Or: <code>Slow down the outro and add a subtle zoom on the logo.</code></li>
+          </ul>
+        </li>
+      </ol>
+
+      <h3>5.5. Render Video to MP4</h3>
+      <p>Remotion allows you to render videos via CLI. From the project directory, run:</p>
+      <pre>npx remotion render PhatDevIntro out/phat-dev-intro.mp4</pre>
+      <p>After the command completes, you will have the file <code>out/phat-dev-intro.mp4</code> &ndash; the video created from the Antigravity + Remotion workflow.</p>
+
+      <h2>6. Step-by-Step Demo Video</h2>
+      <p>The video below records the entire process of following the steps above (from setup to rendering the video):</p>
+      <!-- TODO: Replace YOUR_DEMO_VIDEO_ID with the YouTube ID of the demo tutorial video -->
+      <div style="margin:24px 0; text-align:center;">
+        <iframe width="560" height="315"
+          src="https://www.youtube.com/embed/YOUR_DEMO_VIDEO_ID"
+          title="Demo Tutorial - Antigravity + Remotion"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          referrerpolicy="strict-origin-when-cross-origin"
+          allowfullscreen></iframe>
+      </div>
+
+      <h2>7. Demo Result</h2>
+      <p>The video below is the final output created from the Antigravity + Remotion workflow:</p>
+      <!-- TODO: Replace YOUR_RESULT_VIDEO_ID with the YouTube ID of the result video -->
+      <div style="margin:24px 0; text-align:center;">
+        <iframe width="560" height="315"
+          src="https://www.youtube.com/embed/YOUR_RESULT_VIDEO_ID"
+          title="Result - Phat Dev Intro"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          referrerpolicy="strict-origin-when-cross-origin"
+          allowfullscreen></iframe>
+      </div>
+
+      <h2>8. Source Code (Git)</h2>
+      <p>
+        The full source code of the Remotion project in this article is available on GitHub:
+      </p>
+      <!-- TODO: Replace YOUR_GITHUB_REPO_URL with your actual repo link -->
+      <p style="margin:16px 0;">
+        <a href="https://github.com/YOUR_USERNAME/YOUR_REPO" target="_blank" style="display:inline-block; padding:10px 20px; background:#24292e; color:#fff; border-radius:6px; font-weight:bold; text-decoration:none;">
+          &#9733; View on GitHub
+        </a>
+      </p>
+      <p>Main folder structure:</p>
+      <pre>my-video/
+&#9500;&#9472;&#9472; public/
+&#9474;   &#9492;&#9472;&#9472; logo.png
+&#9500;&#9472;&#9472; src/
+&#9474;   &#9500;&#9472;&#9472; PhatDevIntro/
+&#9474;   &#9474;   &#9500;&#9472;&#9472; Scene1-AvatarReveal.tsx
+&#9474;   &#9474;   &#9500;&#9472;&#9472; Scene2-RoleSkills.tsx
+&#9474;   &#9474;   &#9500;&#9472;&#9472; Scene3-Tagline.tsx
+&#9474;   &#9474;   &#9492;&#9472;&#9472; Scene4-CallToAction.tsx
+&#9474;   &#9500;&#9472;&#9472; Root.tsx
+&#9474;   &#9492;&#9472;&#9472; index.ts
+&#9500;&#9472;&#9472; package.json
+&#9492;&#9472;&#9472; remotion.config.ts</pre>
+      <p>
+        You can clone the repo and run it immediately:
+      </p>
+      <pre>git clone https://github.com/YOUR_USERNAME/YOUR_REPO.git
+cd YOUR_REPO
+npm install
+npm run dev</pre>
+
+      <h2>9. Conclusion</h2>
+      <p>
+        By combining <b>Google Antigravity</b> and <b>Remotion</b>, you can create professional videos
+        simply by writing a prompt &ndash; no traditional video editing skills required.
+        This workflow is ideal for creating YouTube intros, product showcase videos, branded animations,
+        or any type of video that can be described in words.
+      </p>
+      <p>
+        Summary of the process: install Remotion &rarr; install skill in Antigravity &rarr; send prompt &rarr; preview &rarr; refine &rarr; render MP4 &rarr; upload and embed in blog.
+        Everything is handled by AI; you just need to describe your idea.
+      </p>
+
+      <div class="footer">
+        <p>File: <code>blog-html/antigravity-remotion-video/antigravity-remotion-video-blog-en.html</code></p>
+      </div>
+    </div>
+  </body>
+</html>

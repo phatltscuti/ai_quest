@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tối Ưu Lịch Phỏng Vấn Hội Đồng (Multi-Interviewer) Với Google Calendar</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Roboto+Mono&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <h1>Tối Ưu Lịch Phỏng Vấn Hội Đồng (Multi-Interviewer) Với Google Calendar</h1>
+        <div class="meta">
+            Tác giả: AI Quest Team | Ngày: 25/03/2026 | Chuyên mục: Productivity Tips
+        </div>
+
+        <p>Việc sắp xếp một buổi phỏng vấn có sự tham gia của 2-3 người cùng lúc thường là một "cơn ác mộng" về điều phối. Tuy nhiên, với tính năng <strong>Appointment Schedules</strong> mới của Google Calendar, bạn có thể tự động hóa toàn bộ quy trình này một cách chuyên nghiệp.</p>
+
+        <div class="callout">
+            <strong>Mục tiêu bài viết:</strong> Hướng dẫn bạn tạo một trang đặt lịch phỏng vấn chỉ hiển thị các khung giờ mà <strong>tất cả những người phỏng vấn</strong> (Co-hosts) đều đang rảnh.
+        </div>
+
+        <h2>1. Thiết lập Lịch Hẹn (Appointment Schedule)</h2>
+        <p>Khác với Appointment Slots cũ, Appointment Schedules cho phép người dùng bên ngoài (không có tài khoản Google) vẫn có thể đặt lịch một cách dễ dàng.</p>
+        
+        <h3>Bước 1: Khởi tạo và Thêm Co-hosts</h3>
+        <p>Khi tạo lịch hẹn, bạn có thể thêm tối đa 20 người đồng tổ chức (Co-hosts). Điều này cực kỳ hữu ích cho các buổi phỏng vấn kỹ thuật cần cả Lead và Senior tham gia.</p>
+        <img src="images/1_setup_cohosts.png" alt="Thêm co-hosts vào lịch hẹn" class="demo-img">
+        <p class="image-caption">Hình 1: Thêm địa chỉ email của các người phỏng vấn khác vào mục Co-hosts.</p>
+
+        <h2>3. Ràng buộc thời gian (Scheduling Constraints)</h2>
+        <p>Để bảo vệ quỹ thời gian của đội ngũ, bạn cần thiết lập các giới hạn thông minh:</p>
+        <ul>
+            <li><strong>Meeting Duration:</strong> Thời gian phỏng vấn chuẩn (ví dụ: 60 phút).</li>
+            <li><strong>Buffer time:</strong> Khoảng nghỉ tối thiểu giữa các buổi (ít nhất 15-30 phút) để tránh tình trạng "back-to-back" kiệt sức.</li>
+            <li><strong>Scheduling Window:</strong> 
+                <ul>
+                    <li><em>Minimum notice:</em> Đặt trước ít nhất 24h để hội đồng có thời gian chuẩn bị.</li>
+                    <li><em>Maximum advance notice:</em> Chỉ cho phép đặt trước tối đa 14 ngày để tránh thay đổi lịch đột xuất.</li>
+                </ul>
+            </li>
+            <li><strong>Múi giờ:</strong> Hệ thống tự động nhận diện múi giờ của ứng viên (không cần tính toán thủ công).</li>
+        </ul>
+        <img src="images/3_constraints.png" alt="Cấu hình ràng buộc thời gian" class="demo-img">
+        <p class="image-caption">Hình 3: Thiết lập Scheduling Window và Buffer Time chuyên nghiệp.</p>
+
+        <h2>4. Checklist Xác thực (Validation Checklist)</h2>
+        <p>Trước khi gửi link cho ứng viên, hãy đảm bảo bạn đã thực hiện 3 bước kiểm tra sau:</p>
+        <div class="callout">
+            <ul>
+                <li>✅ <strong>Thử nghiệm Xung đột:</strong> Tạo một sự kiện "Bận" trên lịch của một Co-host bất kỳ -> Slot đó phải biến mất ngay lập tức trên trang đặt lịch.</li>
+                <li>✅ <strong>Thử nghiệm Buffer:</strong> Sau một buổi đã được book, các slot liền kề trong phạm vi 15 phút phải được khóa lại.</li>
+                <li>✅ <strong>Kiểm tra Quyền hạn:</strong> Đảm bảo tất cả Co-hosts đã chia sẻ lịch với bạn ở chế độ "See all event details".</li>
+            </ul>
+        </div>
+
+        <h2>5. Mẫu Email gửi ứng viên chuyên nghiệp</h2>
+        <p>Sử dụng mẫu email dưới đây để tối ưu hóa trải nghiệm ứng viên:</p>
+        
+        <div class="email-template">
+            <button class="copy-btn">Copy</button>
+            <div class="email-header">Subject: [Công ty AI Quest] Lịch phỏng vấn vị trí Backend Engineer - [Họ tên ứng viên]</div>
+            <p>Chào bạn,</p>
+            <p>Cảm ơn bạn đã quan tâm đến vị trí Backend Engineer tại AI Quest.</p>
+            <p>Để bắt đầu vòng phỏng vấn kỹ thuật với hội đồng chuyên môn, mời bạn chọn khung giờ phù hợp nhất với lịch trình cá nhân của mình tại đây:</p>
+            <p>👉 <strong>Link đặt lịch:</strong> [Dán Link Appointment Schedule]</p>
+            <p><strong>Một vài lưu ý nhỏ:</strong></p>
+            <ul>
+                <li>Hệ thống chỉ hiển thị những khung giờ mà <strong>tất cả người phỏng vấn</strong> đều rảnh.</li>
+                <li>Link Google Meet sẽ được gửi tự động ngay sau khi bạn xác nhận.</li>
+                <li>Nếu không tìm thấy slot phù hợp trong 2 tuần tới, vui lòng phản hồi email này để chúng tôi sắp xếp thủ công.</li>
+            </ul>
+            <p>Trân trọng,</p>
+            <p>AI Quest Recruitment Team</p>
+        </div>
+
+        <h2>6. Các lỗi thường gặp (Failure Modes) & Cách xử lý</h2>
+        <p>Dựa trên kinh nghiệm thực tế, đây là 4 tình huống "oái oăm" bạn có thể gặp phải:</p>
+        
+        <table>
+            <thead>
+                <tr style="background: #f1f3f4;">
+                    <th style="border: 1px solid var(--border-color); padding: 10px;">Lỗi thường gặp</th>
+                    <th style="border: 1px solid var(--border-color); padding: 10px;">Nguyên nhân</th>
+                    <th style="border: 1px solid var(--border-color); padding: 10px;">Giải pháp nhanh</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="border: 1px solid var(--border-color); padding: 10px;">**Lỗi quyền truy cập lịch**</td>
+                    <td style="border: 1px solid var(--border-color); padding: 10px;">Bạn không có quyền xem chi tiết lịch của Co-host.</td>
+                    <td style="border: 1px solid var(--border-color); padding: 10px;">Yêu cầu Co-host share quyền "See all event details".</td>
+                </tr>
+                <tr>
+                    <td style="border: 1px solid var(--border-color); padding: 10px;">**Slot không hiển thị**</td>
+                    <td style="border: 1px solid var(--border-color); padding: 10px;">Một Co-host có lịch "Busy" (ví dụ: Lịch cá nhân hoặc việc riêng).</td>
+                    <td style="border: 1px solid var(--border-color); padding: 10px;">Kiểm tra xem các sự kiện All-day có đang để là "Busy" không và chuyển sang "Free".</td>
+                </tr>
+                <tr>
+                    <td style="border: 1px solid var(--border-color); padding: 10px;">**Không thêm được Co-host ngoài tổ chức**</td>
+                    <td style="border: 1px solid var(--border-color); padding: 10px;">Chính sách Google Workspace không hỗ trợ Co-host ngoại miền.</td>
+                    <td style="border: 1px solid var(--border-color); padding: 10px;">Chỉ dùng email nội bộ. Nếu cần khách mời ngoài, hãy thêm thủ công sau khi có booking.</td>
+                </tr>
+                <tr>
+                    <td style="border: 1px solid var(--border-color); padding: 10px;">**Buffer không áp dụng**</td>
+                    <td style="border: 1px solid var(--border-color); padding: 10px;">Chưa tích chọn đầy đủ lịch Co-host trong phần "Check availability".</td>
+                    <td style="border: 1px solid var(--border-color); padding: 10px;">Vào Edit -> Calendars -> Tích chọn lại toàn bộ danh sách lịch team.</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>7. Best Practices từ Chuyên gia</h2>
+        <ul>
+            <li><strong>Sử dụng Lịch dùng chung (Shared Calendar):</strong> Nếu thường xuyên phỏng vấn theo nhóm, hãy tạo một lịch phụ dành riêng cho tuyển dụng.</li>
+            <li><strong>Đặt Block thời gian ăn trưa:</strong> Tạo các khung giờ trống (ví dụ 12:00 - 14:00) trong Appointment Schedule để đảm bảo team có thời gian nghỉ.</li>
+            <li><strong>Verify Email:</strong> Bật tính năng xác thực email đối với ứng viên không dùng tài khoản Google để tránh spam.</li>
+        </ul>
+
+    </div>
+    <footer>
+        © 2026 AI Quest Tutorial Series. All rights reserved.
+    </footer>
+</body>
+</html>

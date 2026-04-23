@@ -1,0 +1,26 @@
+# HƯỚNG DẪN TUÂN THỦ BẢO MẬT (COMPLIANCE GUIDE)
+**Mã tài liệu:** AIQ-COMP-2026
+**Phiên bản:** 1.2
+**Ngày ban hành:** 10/01/2026
+
+## CHƯƠNG 1: QUY ĐỊNH CHUNG
+Mọi hệ thống xử lý dữ liệu định danh người dùng (PII) phải tuân thủ nghiêm ngặt các tiêu chuẩn quốc tế về bảo mật thông tin.
+
+## CHƯƠNG 2: TIÊU CHUẨN ISO 27001
+Căn cứ theo Phụ lục A của tiêu chuẩn ISO/IEC 27001:2022, dự án AI Quest phải đảm bảo:
+
+### Phần 7: Bảo mật dữ liệu & Mã hóa (Cryptography)
+- **7.1. Encryption at Rest:** Tất cả dữ liệu lưu trữ vật lý hoặc trên đám mây phải được mã hóa bằng thuật toán AES-256 hoặc cao hơn. Khóa mã hóa phải được lưu trữ trong HSM (Hardware Security Module).
+- **7.2. Encryption in Transit:** Dữ liệu khi truyền tải qua mạng công cộng phải sử dụng giao thức TLS 1.2 hoặc 1.3. Các chứng chỉ SSL phải được cấp bởi CA uy tín.
+- **7.3. Key Management:** Khóa mật mã phải được thay đổi (rotate) định kỳ mỗi 90 ngày. Mọi thao tác truy cập khóa phải được ghi log đầy đủ.
+- **7.4. Audit & Monitoring:** Phải thực hiện kiểm toán (audit) định kỳ hàng tháng để phát hiện các lỗ hổng truy cập trái phép.
+
+## CHƯƠNG 3: QUẢN LÝ QUYỀN TRUY CẬP (IAM)
+- 3.1. Áp dụng nguyên tắc Đặc quyền tối thiểu (Least Privilege).
+- 3.2. Sử dụng Multi-factor Authentication (MFA) cho mọi tài khoản Admin.
+
+## CHƯƠNG 4: BÁO CÁO VI PHẠM
+Mọi sự cố rò rỉ dữ liệu phải được báo cáo trong vòng 24 giờ kể từ khi phát hiện.
+
+---
+*Tài liệu tham chiếu bảo mật cấp độ 3*

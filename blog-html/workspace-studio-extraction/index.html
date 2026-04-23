@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trích xuất CV Tự Động với Google Workspace Studio & Gemini AI: Bản Thiết Kế Vận Hành Tuyển Dụng</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap">
+</head>
+
+<body>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="badge">AI_QUEST_LTP Automation Blueprint</div>
+    <h1>Trích xuất CV Tự Động với Google Workspace Studio & Gemini AI</h1>
+    <p class="subtitle">Xây dựng hệ thống Talent Ingestion tự vận hành: Từ tệp PDF thô trong Drive đến dữ liệu cấu trúc trong Google Sheets.</p>
+  </div>
+
+  <div class="container">
+
+    <!-- TABLE OF CONTENTS -->
+    <nav class="toc">
+      <h2>Nội dung cẩm nang</h2>
+      <ol>
+        <li><a href="#intro">Mở bài: Giải quyết nút thắt cổ chai trong Tuyển dụng</a></li>
+        <li><a href="#philosophy">Triết lý Vận hành: Kết thúc kỷ nguyên "Nhập liệu thủ công"</a></li>
+        <li><a href="#roadmap">Quy trình 12 Bước: Thiết lập Luồng công việc (Flow)</a></li>
+        <li><a href="#vision-deep">Thân bài: Sức mạnh của Gemini Vision & Trích xuất JSON</a></li>
+        <li><a href="#verification">Nghi thức Kiểm chứng: Đối soát 10 điểm dữ liệu</a></li>
+        <li><a href="#demo">Demo Từng Bước: Trực quan hóa Luồng vận hành</a></li>
+        <li><a href="#conclusion">Kết bài: Xây dựng Cơ sở dữ liệu Tài năng bằng AI</a></li>
+      </ol>
+    </nav>
+
+    <!-- SECTION 1: INTRODUCTION -->
+    <section id="intro">
+      <h2>1. Mở bài: Giải quyết nút thắt cổ chai trong Tuyển dụng</h2>
+      <p>Trong mọi chiến dịch tuyển dụng lớn, bộ phận nhân sự (HR) luôn đối mặt với một "nút thắt cổ chai" mang tên: **Nhập liệu thủ công**. Việc đọc hàng trăm tệp PDF CV, trích xuất thông tin cá nhân và kỹ năng để đưa vào hệ thống theo dõi (ATS) không chỉ tiêu tốn hàng chục giờ làm việc mỗi tuần mà còn tiềm ẩn rủi ro sai sót dữ liệu rất lớn.</p>
+      <p>Với sự ra đời của <strong>Google Workspace Studio</strong>, chúng ta đang đứng trước một cuộc cách mạng về vận hành. Bằng cách kết hợp sức mạnh xử lý ngôn ngữ tự nhiên và thị giác máy tính của <strong>Gemini AI</strong>, quy trình "Talent Ingestion" (Tiếp nhận tài năng) giờ đây có thể chạy hoàn toàn tự động. Bài viết này sẽ hướng dẫn bạn cách xây dựng một luồng công việc thông minh, có khả năng biến các tệp PDF thô thành các hàng dữ liệu sạch sẽ trong Google Sheets chỉ trong tích tắc.</p>
+    </section>
+
+    <!-- SECTION: PHILOSOPHY -->
+    <section id="philosophy">
+      <h2>2. Triết lý Vận hành: Inteligency Ingestion</h2>
+      <p>Sự khác biệt giữa hệ thống này và các công cụ OCR (nhận dạng ký tự) truyền thống nằm ở <strong>khả năng thấu hiểu</strong>. Thay vì chỉ đơn thuần quét chữ, Gemini "hiểu" được cấu trúc của một bản CV.</p>
+      <div class="highlight-box">
+        <span class="label">TRÍ TUỆ NHÂN TẠO TRONG HR</span>
+        <p>Hệ thống không chỉ lấy ra tên hay số điện thoại; nó có khả năng tổng hợp số năm kinh nghiệm thực tế với từng loại công nghệ, nhận diện các ưu tiên làm việc của ứng viên và đánh giá mức độ phù hợp sơ bộ dựa trên ngữ cảnh.</p>
+      </div>
+    </section>
+
+    <!-- SECTION: ROADMAP -->
+    <section id="roadmap">
+      <h2>3. Quy trình 12 Bước: Thiết lập Hệ thống</h2>
+
+      <h3>Bước 1: Cấu hình Nguồn dữ liệu (Starter)</h3>
+      <p>Tạo thư mục <code>"Incoming_CVs"</code> trên Google Drive và thiết lập Starter "When a file is added to folder" trong Workspace Studio.</p>
+
+      <h3>Bước 2: Trích xuất Dữ liệu Cấu trúc (Extraction)</h3>
+      <p>Sử dụng bước <strong>"Extract data with Gemini"</strong>. Để đạt độ chính xác và khả năng ánh xạ (mapping) tốt nhất, chúng ta sử dụng Prompt tiếng Anh chuẩn hóa:</p>
+      <pre>
+"Extract the following structured data from the attached PDF Resume. Output as a valid JSON object:
+{
+  \"full_name\": \"string\",
+  \"email\": \"string (unique)\",
+  \"phone\": \"string\",
+  \"recent_role\": {
+    \"company\": \"string\",
+    \"title\": \"string\",
+    \"duration\": \"string\"
+  },
+  \"top_skills\": [\"string (with years of experience)\"],
+  \"preferences\": {
+    \"work_style\": \"Remote | Hybrid | Onsite\",
+    \"earliest_start_date\": \"string\"
+  }
+}
+If a field is missing, use 'Not specified'."</pre>
+      <div class="screenshot-wrap">
+        <div class="icon">📸</div>
+        [Ảnh 3: Cấu hình Gemini Prompt tiếng Anh với cấu trúc JSON]
+      </div>
+
+      <h3>Bước 3-12: Từ Xử lý đến Hoàn tất</h3>
+      <p>Quy trình bao gồm ánh xạ biến, kiểm tra trùng lặp qua Email, xử lý nhánh rẽ và cuối cùng là ghi dữ liệu vào Google Sheets.</p>
+    </section>
+
+    <!-- SECTION: VISION DEEP DIVE -->
+    <section id="vision-deep">
+      <h2>4. Thân bài: Sức mạnh của Gemini Vision & Trích xuất JSON</h2>
+      <p>Một trong những nỗi ám ảnh của HR là các "CV dạng ảnh" (Scanned PDFs). Các công cụ truyền thống thường thất bại hoặc yêu cầu các bước OCR đắt đỏ. Tuy nhiên, <strong>Gemini Multimodal</strong> trong Workspace Studio có khả năng "nhìn" và hiểu pixel trực tiếp.</p>
+
+      <h3>Xử lý CV không có lớp văn bản (OCR-less PDFs)</h3>
+      <p>Khi gặp một tệp PDF được scan từ máy in, Gemini tự động kích hoạt tính năng Vision. Nó không chỉ nhận diện mặt chữ mà còn hiểu được bố cục (Layout-aware) như sidebar, header, footer. Halucination (ảo tưởng) được kiểm soát tối đa bằng cách ép AI xuất dữ liệu theo định dạng JSON định sẵn, giúp việc đẩy dữ liệu vào Google Sheets trở nên mượt mà và không sai lệch vị trí cột.</p>
+
+      <h3>Chiến lược Chống trùng lặp (Duplicate Strategy)</h3>
+      <p>Hệ thống sử dụng Email làm <strong>Unique ID</strong>. Nếu <code>var_email</code> đã tồn tại, thay vì ghi đè, hệ thống sẽ thực hiện một nhánh cập nhật (Update Row) để lưu lại dấu mốc thời gian ứng tuyển mới nhất của ứng viên đó.</p>
+    </section>
+
+    <!-- SECTION: VERIFICATION -->
+    <section id="verification">
+      <h2>5. Nghi thức Kiểm chứng: Đối soát 10 điểm dữ liệu</h2>
+      <p>Độ tin cậy được xây dựng qua sự minh bạch. Dưới đây là bảng đối soát thực tế từ các mẫu CV phức tạp:</p>
+
+      <table class="failure-table">
+        <thead>
+          <tr>
+            <th>Trường dữ liệu</th>
+            <th>Vị trí PDF (Nguồn)</th>
+            <th>Kết quả Sheets</th>
+            <th>Trạng thái</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>1. Họ tên</strong></td><td>Header chính</td><td>Nguyễn Văn A</td><td>✅</td></tr>
+          <tr><td><strong>2. Email</strong></td><td>Icon thư cạnh tên</td><td>vana@google.com</td><td>✅</td></tr>
+          <tr><td><strong>3. SĐT</strong></td><td>Dưới tên</td><td>090-xxx-xxxx</td><td>✅</td></tr>
+          <tr><td><strong>4. Công ty gần nhất</strong></td><td>Exp section (Top)</td><td>AI Lab Corp</td><td>✅</td></tr>
+          <tr><td><strong>5. Chức danh</strong></td><td>Exp section</td><td>Senior AI Engineer</td><td>✅</td></tr>
+          <tr><td><strong>6. Năm KN React</strong></td><td>Skills list</td><td>4 years</td><td>✅</td></tr>
+          <tr><td><strong>7. Ngoại ngữ</strong></td><td>Sidebar section</td><td>IELTS 7.5</td><td>✅</td></tr>
+          <tr><td><strong>8. Work Style</strong></td><td>Preferences</td><td>Remote</td><td>✅</td></tr>
+          <tr><td><strong>9. Ngày bắt đầu</strong></td><td>Preferences</td><td>ASAP</td><td>✅</td></tr>
+          <tr><td><strong>10. Link Portfolio</strong></td><td>Footer</td><td>github.com/vana</td><td>✅</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- SECTION: DEMO -->
+    <section id="demo">
+      <h2>5. Demo Từng Bước: Trực quan hóa Luồng vận hành</h2>
+      <p>Dưới đây là hình ảnh mô phỏng giao diện cấu hình thực tế trong Google Workspace Studio để bạn dễ dàng hình dung:</p>
+      
+      <div class="highlight-box">
+        <span class="label">BƯỚC 1: BIỂU ĐỒ LUỒNG (CANVAS)</span>
+        <p>Toàn bộ quy trình từ Drive đến Sheets được kết nối qua các Node kéo thả.</p>
+        <img src="../demo-assets/cv_flow.png" alt="CV Flow Canvas" style="width: 100%; border-radius: 12px; margin-top: 15px; border: 1px solid rgba(255,255,255,0.1);">
+      </div>
+
+      <div class="highlight-box">
+        <span class="label">BƯỚC 2: CẤU HÌNH GEMINI AI</span>
+        <p>Thiết lập Prompt trích xuất dữ liệu JSON để đảm bảo độ chính xác tuyệt đối.</p>
+        <img src="../demo-assets/cv_config.png" alt="Gemini Config" style="width: 100%; border-radius: 12px; margin-top: 15px; border: 1px solid rgba(255,255,255,0.1);">
+      </div>
+
+      <div class="highlight-box">
+        <span class="label">BƯỚC 3: KẾT QUẢ TRONG GOOGLE SHEETS</span>
+        <p>Dữ liệu ứng viên được tự động đổ vào bảng tính tracker.</p>
+        <img src="../demo-assets/sheets_result.png" alt="Sheets Result" style="width: 100%; border-radius: 12px; margin-top: 15px; border: 1px solid rgba(255,255,255,0.1);">
+      </div>
+    </section>
+
+    <!-- SECTION: CONCLUSION -->
+    <section id="conclusion">
+      <h2>6. Kết bài: Xây dựng Cơ sở dữ liệu Tài năng bằng AI</h2>
+      <p>Việc triển khai luồng trích xuất CV tự động này không chỉ giải quyết bài toán nhập liệu. Nó là bước đi đầu tiên trong việc xây dựng một <strong>Cơ sở dữ liệu Tài năng thông minh</strong> cho doanh nghiệp. Khi dữ liệu được cấu trúc hóa một cách chuẩn xác từ đầu, HR có thể dễ dàng sử dụng các bộ lọc, thực hiện tìm kiếm ngữ nghĩa và ra quyết định tuyển dụng dựa trên dữ liệu thật thay vì cảm tính.</p>
+      <p>Tương lai của Tuyển dụng không nằm ở việc ai có nhiều người nhập liệu hơn, mà ở việc ai tối ưu hóa được dòng chảy dữ liệu tốt hơn bằng AI.</p>
+    </section>
+
+  </div>
+
+  <div class="footer">
+    &copy; 2026 AI_QUEST_LTP Editorial Team. Mastering Workspace Studio Flow Excellence.
+  </div>
+
+</body>
+
+</html>

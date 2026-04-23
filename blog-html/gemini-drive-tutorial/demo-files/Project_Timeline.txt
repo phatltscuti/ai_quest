@@ -1,0 +1,12 @@
+# PROJECT TIMELINE: AI QUEST (BETA PHASE)
+**Slide 14: Lộ trình chi tiết**
+
+- Bắt đầu: 01/06/2026
+- Kiểm thử bảo mật: 02/06 - 08/06
+- Kiểm thử hiệu năng: 09/06 - 14/06
+- **Kết thúc giai đoạn Beta: 15/06/2026**
+
+*Lưu ý: Ngày 15/06 là mốc quan trọng để quyết định Go-live.*
+
+---
+*Tham chiếu: Project_Timeline.slides - Slide 14*

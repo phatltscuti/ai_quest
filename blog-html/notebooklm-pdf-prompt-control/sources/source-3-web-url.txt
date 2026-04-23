@@ -1,0 +1,17 @@
+SOURCE 3: Web URL — Blog post về EdTech / AI in Education
+
+Dùng MỘT trong các URL thật sau để upload vào NotebookLM dạng "Website URL":
+(Tất cả đã được verify hoạt động ngày 19/03/2026)
+
+Option A (Google Blog - Gemini tools for educators, ISTE 2025) ✅ KHUYẾN NGHỊ:
+https://blog.google/outreach-initiatives/education/gemini-iste-2025
+
+
+CÁCH UPLOAD:
+1. Trong NotebookLM, click "Add source"
+2. Chọn "Website"
+3. Paste URL đã chọn (khuyến nghị Option A hoặc B — nội dung phong phú nhất)
+4. NotebookLM sẽ crawl nội dung trang web tự động
+
+LƯU Ý: Nếu URL không crawl được (bị block), thử URL khác trong danh sách.
+Có thể upload 2 URL để đa dạng nguồn hơn (thay vì chỉ 1).
