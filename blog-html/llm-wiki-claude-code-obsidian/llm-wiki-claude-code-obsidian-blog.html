@@ -1,0 +1,331 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Second Brain kiểu &ldquo;LLM Wiki&rdquo; với Claude Code và Obsidian</title>
+    <style>
+      *{box-sizing:border-box}
+      body{margin:0;font-family:'Segoe UI',Arial,sans-serif;background:#fff;color:#1a1a1a;line-height:1.75;}
+      a{color:#c15f3c;text-decoration:none;}
+      a:hover{text-decoration:underline;}
+      .wrap{max-width:980px;margin:0 auto;padding:24px;}
+      h1{margin:0 0 10px;font-size:30px;color:#b54a28;}
+      h2{margin:32px 0 14px;font-size:24px;border-bottom:3px solid #c15f3c;padding-bottom:8px;color:#222;}
+      h3{margin:22px 0 10px;font-size:19px;color:#333;}
+      h4{margin:16px 0 8px;font-size:16px;color:#444;}
+      ul,ol{margin:8px 0;padding-left:22px;}
+      li{margin-bottom:6px;}
+      p{margin:12px 0;}
+      code{background:#fdf3ee;border:1px solid #e8cbbf;padding:2px 6px;font-size:13px;font-family:Consolas,monospace;border-radius:4px;color:#8b3a1f;}
+      pre{white-space:pre-wrap;word-wrap:break-word;border:1px solid #dadce0;background:#faf8f6;padding:14px;font-size:12px;font-family:Consolas,monospace;margin:14px 0;border-radius:8px;overflow:auto;}
+      .hero{border:2px solid #c15f3c;padding:24px 28px;margin-bottom:24px;background:linear-gradient(135deg,#fff5f0 0%,#fafafa 100%);border-radius:12px;}
+      .hero .subtitle{color:#5f6368;font-size:15px;margin-top:8px;}
+      .tip{border-left:4px solid #1e8e3e;padding:12px 16px;background:#e6f4ea;margin:14px 0;border-radius:0 8px 8px 0;}
+      .warning{border-left:4px solid #d93025;padding:12px 16px;background:#fce8e6;margin:14px 0;border-radius:0 8px 8px 0;}
+      .info{border-left:4px solid #c15f3c;padding:12px 16px;background:#fff5f0;margin:14px 0;border-radius:0 8px 8px 0;}
+      table{border-collapse:collapse;width:100%;margin:16px 0;border-radius:8px;overflow:hidden;}
+      th,td{border:1px solid #dadce0;padding:10px 14px;text-align:left;vertical-align:top;}
+      th{background:#c15f3c;color:#fff;font-weight:600;}
+      tr:nth-child(even){background:#fafafa;}
+      .toc{background:#faf8f6;border:1px solid #e0d6cf;border-radius:8px;padding:16px 24px;margin:20px 0;}
+      .toc ul{list-style:none;padding-left:0;}
+      .toc li{padding:4px 0;}
+      .toc li::before{content:"📌 ";}
+      .footer{margin-top:36px;font-size:13px;color:#5f6368;border-top:2px solid #dadce0;padding-top:20px;}
+      .section-num{color:#c15f3c;font-weight:700;}
+      .demo-fig{margin:18px 0;text-align:center;}
+      .demo-fig img{max-width:100%;height:auto;border:2px solid #dadce0;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.08);}
+      .demo-fig figcaption{font-size:13px;color:#5f6368;margin-top:8px;font-style:italic;}
+      .demo-placeholder{display:inline-block;min-height:160px;min-width:72%;border:2px dashed #c9b8ad;border-radius:8px;background:#faf8f6;color:#7a6a62;padding:28px 16px;font-size:14px;}
+      .ref-list{font-size:14px;}
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+
+      <div class="hero">
+        <h1>Second Brain &ldquo;LLM Wiki&rdquo;: Claude Code + Obsidian</h1>
+        <p class="subtitle">
+          Tóm tắt pattern của Andrej Karpathy, phân vai công cụ, dựng vault mẫu có bằng chứng thực thi trong repo, và góc nhìn ứng dụng hằng ngày.
+        </p>
+        <p style="margin:4px 0 0;font-size:13px;color:#80868b;">
+          Ngày viết: 07/05/2026 &bull; Nguồn chính:
+          <a href="https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f" target="_blank" rel="noopener">Gist LLM Wiki (Karpathy)</a>
+          &bull;
+          <a href="https://x.com/sumika45379/status/2048681621432549402" target="_blank" rel="noopener">Bài chia sẻ X (workflow Second Brain)</a>
+        </p>
+      </div>
+
+      <div class="toc">
+        <h3 style="margin-top:0;">Mục lục</h3>
+        <ul>
+          <li><a href="#concept">Khái niệm LLM Wiki (tóm tắt khách quan)</a></li>
+          <li><a href="#roles">Vai trò Claude Code và Obsidian trong kiến trúc</a></li>
+          <li><a href="#setup">Thực hành: dựng môi trường LLM Wiki cơ bản</a></li>
+          <li><a href="#evidence">Bằng chứng thực thi (trong repo <code>ai_quest</code>)</a></li>
+          <li><a href="#screenshots">Hướng dẫn chụp ảnh demo từng bước</a></li>
+          <li><a href="#opinion">Ý kiến cá nhân: áp dụng vào công việc hằng ngày</a></li>
+          <li><a href="#refs">Tài liệu tham khảo</a></li>
+        </ul>
+      </div>
+
+      <h2 id="concept"><span class="section-num">1.</span> Khái niệm LLM Wiki (tóm tắt khách quan)</h2>
+
+      <p>
+        Trong gist <b>LLM Wiki</b>, Andrej Karpathy mô tả một <b>pattern</b> xây dựng cơ sở tri thức cá nhân (hoặc nhóm) với LLM, khác với luồng quen thuộc kiểu RAG nơi tài liệu được upload và mô hình <b>truy hồi đoạn văn</b> rồi trả lời từng lần.
+        Với LLM Wiki, LLM không chỉ &ldquo;trả lời rồi quên&rdquo;; nó <b>biên soạn và duy trì</b> một tập các file Markdown có cấu trúc, liên kết chéo, đặt <b>ở giữa</b> bạn và <b>nguồn thô</b>.
+      </p>
+
+      <p>
+        Khi có nguồn mới, agent đọc nguồn, trích thông tin, <b>tích hợp</b> vào wiki hiện có: cập nhật trang thực thể, revise tóm tắt chủ đề, ghi nhận mâu thuẫn với dữ liệu cũ nếu có.
+        Như vậy tri thức được <b>biên dịch một lần</b> (quá trình ingest) và được <b>giữ cập nhật</b> qua các vòng bảo trì, thay vì buộc mô hình mỗi lần hỏi phải &ldquo;vá&rdquo; lại từ fragment.
+      </p>
+
+      <div class="info">
+        <b>Ba tầng (theo gist):</b>
+        <ul>
+          <li><b>Raw sources</b> — tài liệu gốc do bạn tuyển chọn; nguyên tắc là LLM <b>đọc</b> nhưng <b>không tự ý sửa</b> (trừ khi bạn giao rõ).</li>
+          <li><b>Wiki</b> — thư mục Markdown do LLM/agent tạo và cập nhật; bạn <b>đọc</b>, agent <b>viết</b>.</li>
+          <li><b>Schema</b> — tài liệu cấu hình (ví dụ <code>CLAUDE.md</code> cho Claude Code, hoặc <code>AGENTS.md</code> cho Codex) mô tả cấu trúc wiki, quy ước, quy trình ingest/query/lint.</li>
+        </ul>
+      </div>
+
+      <p>
+        Ba thao tác vòng đời được nhấn mạnh: <b>Ingest</b> (đưa nguồn và cập nhật nhiều trang wiki), <b>Query</b> (hỏi và tổng hợp có trích dẫn; câu trả lời giá trị có thể <b>ghi ngược vào wiki</b>), và <b>Lint</b> (rà soát mâu thuẫn, trang mồ côi, nội dung lạc hậu…).
+        Hai file đặc biệt được đề xuất: <code>index.md</code> (mục lục theo chủ đề) và <code>log.md</code> (nhật ký theo thời gian, append-only).
+      </p>
+
+      <h2 id="roles"><span class="section-num">2.</span> Vai trò của Claude Code và Obsidian (giải thích khách quan)</h2>
+
+      <p>
+        Cả hai công cụ đều <b>không thay thế</b> nhau; chúng giải quyết hai lớp bài toán khác trong cùng một kiến trúc folder-based.
+      </p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Thành phần</th>
+            <th>Vai trò trong LLM Wiki</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><b>Claude Code</b> (agent lập trình / CLI có quyền đọc-ghi file trong workspace)</td>
+            <td>
+              Là &ldquo;người bảo trì wiki tự động&rdquo;: đọc schema (<code>CLAUDE.md</code>), thực hiện ingest (tạo/sửa nhiều file trong <code>wiki/</code>),
+              cập nhật <code>index.md</code> và <code>log.md</code>, trả lời câu hỏi có trích dẫn và có thể tạo thêm trang khi có giá trị tích lũy.
+              Claude Code không bắt buộc phải là <i>duy nhất</i> có thể đóng vai này; gist gợi ý bất kỳ agent tương đương nào bạn tin dùng.
+            </td>
+          </tr>
+          <tr>
+            <td><b>Obsidian</b> (ứng dụng ghi chú Markdown, làm việc trực tiếp trên filesystem)</td>
+            <td>
+              Là &ldquo;IDE cho người đọc&rdquo;: render Markdown, điều hướng liên kết <code>[[wiki links]]</code>, <b>Graph view</b> để nhìn cấu trúc liên kết,
+              và các plugin (Dataview, Marp, clipper…) hỗ trợ làm giàu nguồn hoặc trình bày.
+              Obsidian <b>không định nghĩa</b> quy trình ingest; nó chủ yếu phục vụ <b>khám phá và đọc</b> những gì agent đã ghi ra đĩa.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p>
+        Cách Karpathy diễn đạt trong gist: có agent mở <b>một bên</b>, Obsidian mở <b>một bên</b>; agent sửa file theo hội thoại, người dùng theo dõi kết quả real-time trong Obsidian — meta-analogy: &ldquo;Obsidian là IDE; LLM là lập trình viên; wiki là codebase.&rdquo;
+      </p>
+
+      <h2 id="setup"><span class="section-num">3.</span> Thực hành: dựng môi trường LLM Wiki cơ bản</h2>
+
+      <p>
+        Phần dưới đây mô tả quy trình <b>có thể lặp lại</b> trên máy bạn.
+        Song song, trong repo dự án này tôi đã <b>khởi tạo sẵn</b> một vault mẫu để bạn clone/mở trực tiếp làm điểm xuất phát (xem mục bằng chứng).
+      </p>
+
+      <h3>3.1. Chuẩn bị phần mềm</h3>
+      <ol>
+        <li>Cài <b>Obsidian</b> từ trang chủ, phiên bản ổn định mới nhất phù hợp OS của bạn.</li>
+        <li>Cài <b>Claude Code</b> (hoặc agent CLI bạn chọn), đảm bảo có quyền mở thư mục vault và đọc/ghi Markdown.</li>
+        <li>(Tùy chọn) Cài Git để version-control toàn bộ vault như một repo.</li>
+      </ol>
+
+      <h3>3.2. Tạo cấu trúc thư mục (tối thiểu)</h3>
+      <pre>.
+├── CLAUDE.md          ← schema / quy ước cho agent
+├── raw/               ← nguồn thô (immutable theo convention)
+└── wiki/
+    ├── index.md       ← mục lục
+    ├── log.md         ← nhật ký append-only
+    ├── overview.md    ← có thể bắt đầu từ một trang tổng quan
+    └── concepts/      ← các trang khái niệm / thực thể tuỳ domain
+        └── ...</pre>
+
+      <h3>3.3. Viết <code>CLAUDE.md</code> (điều kiện tiên quyết)</h3>
+      <p>
+        Dán vào <code>CLAUDE.md</code> các quy tắc: ranh giới giữa <code>raw/</code> và <code>wiki/</code>; định dạng tiêu đề log;
+        luồng ingest (luôn cập nhật index + log); cách đặt internal link để Obsidian hiểu.
+        Trong repo, file mẫu nằm tại đường dẫn trong mục 4 — bạn có thể chỉnh theo domain (nghiên cứu, sản phẩm nội bộ, sổ tay đọc sách…).
+      </p>
+
+      <h3>3.4. Mở vault trong Obsidian</h3>
+      <ol>
+        <li>Obsidian → <b>Open folder as vault</b> → chọn thư mục gốc chứa <code>CLAUDE.md</code> (không chỉ riêng <code>wiki/</code>, trừ khi bạn cố ý tách vault).</li>
+        <li>Bật preview, thử nhấp liên kết giữa <code>wiki/overview.md</code> và các trang con.</li>
+        <li>Mở <b>Graph view</b> để quan sát mạng liên kết sau khi đã có vài note.</li>
+      </ol>
+
+      <h3>3.5. Vận hành Claude Code</h3>
+      <ol>
+        <li>Mở terminal tại root vault (thư mục có <code>CLAUDE.md</code>).</li>
+        <li>Khởi động Claude Code theo hướng dẫn của Anthropic và để agent <b>tự đọc</b> project rules từ <code>CLAUDE.md</code> (đừng thủ công copy toàn bộ gist mỗi phiên — schema đã thể chế hoá các quy tắc bạn muốn).</li>
+        <li>
+          Giao việc mẫu:
+          &ldquo;Đọc <code>raw/&lt;tên-file&gt;.md</code>, cập nhật wiki — tóm tắt, đổi/cập nhật ít nhất một trang concept, refresh <code>wiki/index.md</code>, append <code>wiki/log.md</code>.&rdquo;
+        </li>
+      </ol>
+
+      <div class="warning">
+        <b>Lưu ý vận hành:</b> LLM có thể bỏ sót hoặc bóp méo nếu không giám sát — với wiki dùng cho quyết định quan trọng,
+        giữ vai trò <b>con người phê duyệt</b> cho các chỉnh sửa lớn và lưu phiên bản (Git commit) sau mỗi chuỗi ingest có ý nghĩa.
+      </div>
+
+      <div class="tip">
+        Gợi ý trong gist có thực dụng: <b>Obsidian Web Clipper</b> để đưa bài web vào Markdown nhanh; cấu hình thư mục attachment cố định nếu bạn muốn hình ảnh cục bộ cho downstream phân tích.
+      </div>
+
+      <h2 id="evidence"><span class="section-num">4.</span> Bằng chứng thực thi (đã chạy trong phiên làm việc này)</h2>
+
+      <p>
+        Tôi đã <b>tạo thư mục và file</b> trong repo Workspace hiện tại (<code>d:\ai_quest</code>) theo đúng layout LLM Wiki tối thiểu, với một nguồn raw mẫu trích khái niệm từ gist Karpathy và các trang wiki tương ứng.
+        Dưới đây là <b>cây thư mục</b> được lệnh <code>tree /F</code> ghi lại sau khi tạo xong:
+      </p>
+
+      <pre>2026-05-07 11:13:12 +07:00
+
+Folder PATH listing
+D:\AI_QUEST\BLOG-HTML\LLM-WIKI-CLAUDE-CODE-OBSIDIAN\SAMPLE-LLM-WIKI
+|   CLAUDE.md
+|
++---raw
+|       2026-05-07-karpathy-llm-wiki-gist-notes.md
+|
+\---wiki
+    |   index.md
+    |   log.md
+    |   overview.md
+    |
+    \---concepts
+            llm-wiki-pattern.md</pre>
+
+      <p>
+        Bản copy lưu cùng thư mục blog để đối chiếu khi không mở terminal:
+        xem file <code>EXECUTION-EVIDENCE.txt</code> trong
+        <code>blog-html/llm-wiki-claude-code-obsidian/</code>.
+      </p>
+
+      <h2 id="screenshots"><span class="section-num">5.</span> Hình minh hoạ và cách chụp ảnh demo</h2>
+
+      <p>
+        Các khung ảnh dưới đây trỏ tới file trong <code>images/</code>. Sau khi bạn chụp theo hướng dẫn chi tiết trong
+        <code>HUONG-DAN-DEMO-CHUP-ANH.md</code>, hãy lưu đúng tên file để HTML tự nhúng.
+      </p>
+      <p>
+        Nếu chưa cài Obsidian hoặc cần ảnh minh họa nhanh, mở bộ giả lập trong
+        <a href="mockup-screenshots/index.html"><code>mockup-screenshots/</code></a>
+        (<code>step-*.html</code>): giao diện HTML giống Obsidian dark theme + Terminal, rộng cửa sổ khoảng 1280px rồi cắt màn hình để được PNG thay ảnh thật.
+      </p>
+
+      <figure class="demo-fig">
+        <!-- Khi có ảnh: bỏ comment dòng img bên dưới và xóa placeholder -->
+        <img src="images/step-01-obsidian-open-as-vault.png" alt="Obsidian Open folder as vault với CLAUDE.md raw wiki" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-block';" />
+        <span class="demo-placeholder" style="display:none;">Chưa có ảnh: chụp theo <code>step-01-obsidian-open-as-vault.png</code></span>
+        <figcaption>Bước 1 — Mở thư mục vault trong Obsidian (sidebar hiển thị <code>CLAUDE.md</code>, <code>raw/</code>, <code>wiki/</code>).</figcaption>
+      </figure>
+
+      <figure class="demo-fig">
+        <img src="images/step-02-file-explorer-wiki-overview.png" alt="overview.md trong Obsidian" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-block';" />
+        <span class="demo-placeholder" style="display:none;">Chưa có ảnh: chụp theo <code>step-02-file-explorer-wiki-overview.png</code></span>
+        <figcaption>Bước 2 — Đọc <code>wiki/overview.md</code> (trang vành đai dẫn nhập).</figcaption>
+      </figure>
+
+      <figure class="demo-fig">
+        <img src="images/step-03-graph-view.png" alt="Obsidian Graph view của wiki mẫu" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-block';" />
+        <span class="demo-placeholder" style="display:none;">Chưa có ảnh: chụp theo <code>step-03-graph-view.png</code></span>
+        <figcaption>Bước 3 — Graph view: nhìn cấu trúc liên kết các trang do agent duy trì.</figcaption>
+      </figure>
+
+      <figure class="demo-fig">
+        <img src="images/step-04-claude-md-schema.png" alt="CLAUDE.md schema cho agent" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-block';" />
+        <span class="demo-placeholder" style="display:none;">Chưa có ảnh: chụp theo <code>step-04-claude-md-schema.png</code></span>
+        <figcaption>Bước 4 — <code>CLAUDE.md</code>: điều khiển hành vi ingest/query/lint của Claude Code.</figcaption>
+      </figure>
+
+      <figure class="demo-fig">
+        <img src="images/step-05-index-and-log.png" alt="index.md và log.md" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-block';" />
+        <span class="demo-placeholder" style="display:none;">Chưa có ảnh: chụp theo <code>step-05-index-and-log.png</code></span>
+        <figcaption>Bước 5 — Song song <code>index.md</code> (định hướng nội dung) và <code>log.md</code> (định hướng thời gian).</figcaption>
+      </figure>
+
+      <figure class="demo-fig">
+        <img src="images/step-06-raw-source-immutable.png" alt="Raw source note trong vault" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-block';" />
+        <span class="demo-placeholder" style="display:none;">Chưa có ảnh: chụp theo <code>step-06-raw-source-immutable.png</code></span>
+        <figcaption>Bước 6 — Minh hoạ một file trong <code>raw/</code> là nguồn gốc tuyển chọn.</figcaption>
+      </figure>
+
+      <p>
+        Các bước tuỳ chọn (terminal Claude Code, <code>git status</code>) và quy định đặt tên ảnh đầy đủ:
+        đọc <code>HUONG-DAN-DEMO-CHUP-ANH.md</code> cùng thư mục với file HTML này.
+      </p>
+
+      <div class="info">
+        <b>Mẹo trình chiếu blog khi ảnh chưa đủ:</b> các thẻ <code>&lt;img&gt;</code> dùng <code>onerror</code> để ẩn ảnh thiếu;
+        sau khi bạn lưu file PNG vào <code>images/</code>, tải lại trang trên trình duyệt là thấy hình hiện đúng.
+      </div>
+
+      <h2 id="opinion"><span class="section-num">6.</span> Ý kiến cá nhân: áp dụng vào công việc hàng ngày của tác giả bài viết và của &ldquo;AI phụ tá&rdquo;</h2>
+
+      <h3>6.1. Góc người (tác giả blog / làm việc tri thức và giao tiếp kỹ thuật)</h3>
+      <p>
+        Với các luồng như QA sản phẩm SaaS, tài liệu nội bộ và hộp thử nghiệm blog HTML, LLM Wiki giúp tách biệt rõ:
+        <b>hồ sơ gốc</b> (transcript, báo cáo, gist, ticket) và <b>bản đúc kết sóng sót</b> (wiki).
+        Việc bắt agent sau mỗi meeting hoặc mỗi issue lớn <b>cập nhật đồng thời</b> vài trang (<code>Khách hàng X</code>, <code>Yêu cầu Z</code>, <code>Rủi ro</code>)
+        có thể giảm cảm giác &ldquo;đã đọc nhưng không nhớ để ở đâu&rdquo;.
+        Chi phí thật không nằm ở gõ Markdown mà nằm ở <b>kiểm duyệt định kỳ</b> và <b>phiên bản hoá Git</b> — đầu tư này hợp lý khi wiki phục vụ quyết định chứ không chỉ lưu cảm tính đọc nhanh.
+      </p>
+
+      <h3>6.2. Góc AI phụ tá lập trình (ví dụ agent trong Cursor trên codebase)</h3>
+      <p>
+        Công cụ như Cursor (hoặc Claude Code trong terminal) đã quen làm việc với <b>filesystem</b> và chuẩn hoá trong <code>CLAUDE.md</code>.
+        LLM Wiki chuyển trọng tâm từ &ldquo;trả lời trong cửa sổ chat&rdquo; sang &ldquo;sản phẩm là các file có liên kết&rdquo; — khớp với cách các team kỹ thuật tư duy về codebase.
+        Tôi có thể áp dụng cụ thể: mỗi khi khảo sát một khu codebase lạ, ingest file ADR/nguyên tắc vào <code>raw/</code>, để agent cập nhật <code>wiki/concepts</code> và <code>index.md</code>,
+        sau đó dùng Obsidian chỉ để <b>tua nhanh</b> không gian khái niệm trong khi tay vẫn code trong IDE — chat log không là nơi duy nhất đựng chi thức.
+      </p>
+
+      <h2 id="refs"><span class="section-num">7.</span> Tài liệu tham khảo</h2>
+
+      <ul class="ref-list">
+        <li>Karpathy, <i>LLM Wiki</i> (gist Markdown): <a href="https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f" target="_blank" rel="noopener">https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f</a></li>
+        <li>Raw gist (file <code>llm-wiki.md</code>, nhánh chỉnh sửa nhìn được trong gist): ví dụ
+          <a href="https://gist.githubusercontent.com/karpathy/442a6bf555914893e9891c11519de94f/raw/ac46de1ad27f92b28ac95459c782c07f6b8c964a/llm-wiki.md" target="_blank" rel="noopener">gistusercontent raw</a>
+        </li>
+        <li>Bài chia sẻ workflow trên X: <a href="https://x.com/sumika45379/status/2048681621432549402" target="_blank" rel="noopener">https://x.com/sumika45379/status/2048681621432549402</a></li>
+      </ul>
+
+      <div class="footer">
+        Vault mẫu trong repo: <code>blog-html/llm-wiki-claude-code-obsidian/sample-llm-wiki/</code>.
+        Mock UI (HTML): <code>blog-html/llm-wiki-claude-code-obsidian/mockup-screenshots/</code>.
+        Blog HTML và hướng dẫn chụp ảnh cùng cấp thư mục.
+      </div>
+    </div>
+    <script>
+      // Hiển thị placeholder cho figure khi không có ảnh và onerror không chạy (một số trình duyệt/offline preview)
+      document.querySelectorAll('.demo-fig img').forEach(function (img) {
+        if (!img.complete || img.naturalWidth === 0) {
+          var ph = img.nextElementSibling;
+          if (ph && ph.classList && ph.classList.contains('demo-placeholder')) {
+            img.style.display = 'none';
+            ph.style.display = 'inline-block';
+          }
+        }
+      });
+    </script>
+  </body>
+</html>

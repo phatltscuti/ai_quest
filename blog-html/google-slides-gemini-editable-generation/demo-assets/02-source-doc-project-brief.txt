@@ -1,0 +1,33 @@
+PROJECT BRIEF — Customer Portal MVP (Demo)
+Client: Northwind Logistics
+Date: May 2026
+
+Problem
+- Support team spends 12+ hours/week copying shipment status from legacy TMS into email replies.
+- No single customer-facing dashboard; NPS dropped 8 points in Q1.
+
+Proposed solution
+- MVP customer portal: login, shipment list, status timeline, PDF label download.
+- Integrate REST API from existing TMS (read-only phase 1).
+
+Scope (MVP — 10 weeks)
+1. Auth (Google / email magic link)
+2. Shipment list + filters
+3. Detail page + timeline events
+4. Admin export CSV for support
+
+Out of scope (phase 2)
+- Billing, returns, multi-tenant white-label.
+
+Success metrics
+- 40% reduction in "where is my order" tickets within 60 days of launch.
+- Portal weekly active users ≥ 25% of active B2B accounts.
+
+Risks
+- TMS API rate limits; need caching layer.
+- Legal review for data shown to sub-accounts.
+
+Next steps
+- Workshop with ops (week 1)
+- Technical spike on TMS API (week 2)
+- Sign-off on wireframes (week 3)

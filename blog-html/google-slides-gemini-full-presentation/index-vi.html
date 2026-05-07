@@ -1,0 +1,484 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Hướng dẫn đơn giản nhưng chi tiết về cách tạo presentation đầy đủ, native và chỉnh sửa được bằng Gemini trong Google Slides."
+    />
+    <title>Tạo presentation native đầy đủ bằng Gemini trong Google Slides</title>
+    <style>
+      * { box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
+      body {
+        margin: 0;
+        color: #202124;
+        background: #ffffff;
+        font: 16px/1.75 "Segoe UI", Arial, sans-serif;
+      }
+      main {
+        width: min(860px, calc(100% - 32px));
+        margin: 0 auto;
+        padding: 36px 0 64px;
+      }
+      header {
+        margin-bottom: 34px;
+        padding-bottom: 24px;
+        border-bottom: 3px solid #1a73e8;
+      }
+      h1 {
+        margin: 0 0 14px;
+        color: #1a73e8;
+        font-size: clamp(30px, 5vw, 44px);
+        line-height: 1.15;
+      }
+      h2 {
+        margin: 42px 0 14px;
+        color: #202124;
+        font-size: 26px;
+        line-height: 1.3;
+      }
+      h3 {
+        margin: 27px 0 10px;
+        color: #174ea6;
+        font-size: 19px;
+        line-height: 1.4;
+      }
+      p { margin: 12px 0; }
+      ul, ol { margin: 12px 0; padding-left: 26px; }
+      li { margin-bottom: 8px; }
+      a { color: #1a73e8; text-decoration: none; }
+      a:hover { text-decoration: underline; }
+      code {
+        padding: 2px 6px;
+        color: #174ea6;
+        background: #e8f0fe;
+        border-radius: 4px;
+        font: 0.88em Consolas, monospace;
+      }
+      pre {
+        overflow-x: auto;
+        margin: 16px 0;
+        padding: 17px;
+        white-space: pre-wrap;
+        word-break: break-word;
+        background: #f8f9fa;
+        border: 1px solid #dadce0;
+        border-radius: 8px;
+        font: 13px/1.65 Consolas, monospace;
+      }
+      .lead {
+        margin: 0;
+        color: #5f6368;
+        font-size: 18px;
+      }
+      .note {
+        margin: 18px 0;
+        padding: 13px 16px;
+        background: #e8f0fe;
+        border-left: 4px solid #1a73e8;
+      }
+      .warning {
+        margin: 18px 0;
+        padding: 13px 16px;
+        background: #fef7e0;
+        border-left: 4px solid #f9ab00;
+      }
+      nav {
+        margin: 24px 0 34px;
+        padding: 16px 20px;
+        background: #f8f9fa;
+        border: 1px solid #dadce0;
+        border-radius: 8px;
+      }
+      nav strong { display: block; margin-bottom: 8px; }
+      nav ol { margin: 0; }
+      .video-wrap {
+        position: relative;
+        width: 100%;
+        margin: 22px 0;
+        padding-top: 56.25%;
+        overflow: hidden;
+        background: #202124;
+        border-radius: 10px;
+      }
+      .video-wrap iframe {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        border: 0;
+      }
+      footer {
+        margin-top: 46px;
+        padding-top: 20px;
+        color: #5f6368;
+        border-top: 2px solid #dadce0;
+        font-size: 13px;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <header>
+        <h1>Tạo presentation native đầy đủ bằng Gemini trong Google Slides</h1>
+        <p class="lead">
+          Hướng dẫn đơn giản nhưng chi tiết về luồng tạo cả deck, bài thực hành 6 slide có thể làm lại,
+          và cách áp dụng tính năng này vào công việc hằng ngày.
+        </p>
+        <p class="lead" style="margin-top: 10px; font-size: 15px;">
+          Bản tiếng Anh: <a href="index.html">index.html</a>
+        </p>
+      </header>
+
+      <nav aria-label="Mục lục">
+        <strong>Mục lục</strong>
+        <ol>
+          <li><a href="#overview">Tổng quan tính năng</a></li>
+          <li><a href="#availability">Ai được dùng và rollout</a></li>
+          <li><a href="#steps">Cách tạo presentation</a></li>
+          <li><a href="#evidence">Prompt demo và video</a></li>
+          <li><a href="#review">Đánh giá kết quả thực hành</a></li>
+          <li><a href="#opinion">Ý kiến ứng dụng công việc</a></li>
+          <li><a href="#conclusion">Kết luận</a></li>
+          <li><a href="#references">Tài liệu tham khảo</a></li>
+        </ol>
+      </nav>
+
+      <div class="warning">
+        <strong>Trạng thái thực hành:</strong> toàn bộ workflow đã được thực hành và quay video.
+        Demo dùng một prompt tự chứa đầy đủ dữ liệu, không cần Google Doc hay deck style.
+        Video bên dưới ghi lại toàn bộ quá trình và kết quả.
+      </div>
+
+      <section id="overview">
+        <h2>1. Tổng quan tính năng</h2>
+
+        <p>
+          Ngày 30/06/2026, Google thông báo Gemini trong Google Slides có thể tạo một presentation
+          nhiều slide hoàn chỉnh từ một yêu cầu. Đây khác với luồng trước đây thường chỉ tạo từng slide.
+          Luồng mới có thể dựng cả deck, gồm cấu trúc, layout, chữ, ảnh, sơ đồ và các thành phần khác.
+        </p>
+
+        <p>
+          Người dùng bắt đầu bằng cách mô tả chủ đề, đối tượng đọc, mục tiêu, số slide và format mong muốn.
+          Gemini có thể dùng các file Google Drive đã chọn làm nguồn nội dung. Nó cũng có thể dùng một
+          presentation sẵn có làm mẫu style để deck mới bám màu sắc, khoảng trắng và diện mạo quen thuộc.
+        </p>
+
+        <p>
+          Trước khi tạo slide, Gemini có thể hỏi thêm vài câu tùy chọn về giọng văn, mức hiểu biết của
+          audience, mật độ chữ, mục tiêu chính hoặc style. Sau đó Gemini đưa ra một presentation plan gồm
+          overview, danh sách nguồn sẽ dùng và outline từng slide.
+        </p>
+
+        <p>
+          Plan có thể chỉnh trước khi generate. Người dùng có thể sửa title/mô tả slide, thêm bước,
+          xóa slide không cần, rồi yêu cầu Gemini cập nhật plan. Chỉ khi bấm <strong>Approve</strong>
+          thì Gemini mới dựng toàn bộ presentation.
+        </p>
+
+        <p>
+          Đầu ra được mô tả là native và editable. Nghĩa là người dùng tiếp tục làm việc trong Google Slides:
+          sửa text box, kéo shape, đổi ảnh, tinh chỉnh từng slide. Một ảnh deck đẹp chưa đủ để chứng minh
+          editable. Cách kiểm chứng thực tế là chọn và sửa một object riêng trên canvas.
+        </p>
+
+        <div class="note">
+          Điểm quan trọng nhất không chỉ là “nhiều slide từ một prompt”. Đó là sự kết hợp giữa gắn nguồn,
+          khớp style, duyệt plan, tạo cả deck và vẫn chỉnh tay tiếp trong Google Slides.
+        </div>
+      </section>
+
+      <section id="availability">
+        <h2>2. Ai được dùng và rollout</h2>
+
+        <p>
+          Khi ra mắt, tính năng tạo full presentation chạy trên desktop và hỗ trợ English. Cần gói
+          Google Workspace hoặc Google AI đủ điều kiện. Google liệt kê Business Standard/Plus,
+          Enterprise Standard/Plus, Google AI Pro/Ultra, Google AI Pro for Education và AI Expanded Access.
+        </p>
+
+        <p>
+          Extended rollout bắt đầu ngày 29/06/2026 cho cả Rapid Release và Scheduled Release.
+          Rollout dạng extended có thể lâu hơn 15 ngày, nên tính năng chưa chắc đã hiện trên mọi tài khoản
+          đủ gói. Google cũng nêu không có admin control riêng cho feature này.
+        </p>
+
+        <p>
+          Google công bố quyền dùng hạn mức multi-slide cao hơn mang tính khuyến mại đến ít nhất
+          01/08/2026. Sau đó sẽ áp dụng hạn mức theo từng user. Hạn mức cụ thể phụ thuộc thời điểm dùng
+          và gói gắn với tài khoản.
+        </p>
+
+        <p>
+          Admin Workspace có thể chọn Rapid Release hoặc Scheduled Release. Rapid Release nhận tính năng
+          mới sớm hơn. Scheduled Release thường chậm hơn ít nhất một tuần. Cài đặt nằm ở
+          <strong>Admin console → Account → Account settings → Preferences → New features</strong>.
+          Thay đổi có thể mất tới 24 giờ.
+        </p>
+
+        <p>
+          Nếu chưa thấy tùy chọn full presentation, hãy kiểm tra desktop, English, gói tài khoản và
+          release track của domain. Trong giai đoạn extended rollout, thiếu menu chưa đồng nghĩa tài khoản
+          bị cấu hình sai.
+        </p>
+      </section>
+
+      <section id="steps">
+        <h2>3. Cách tạo presentation</h2>
+
+        <ol>
+          <li>
+            Trên máy tính, mở
+            <a href="https://slides.google.com" target="_blank" rel="noopener">Google Slides</a>.
+          </li>
+          <li>
+            Ở màn hình bắt đầu, bấm <strong>Presentation</strong>. Cách khác: mở một presentation trống
+            hoàn toàn, chưa có slide, rồi bấm <strong>Ask Gemini</strong> góc phải.
+          </li>
+          <li>
+            Mô tả presentation trong panel Gemini. Prompt tốt nên gồm chủ đề, audience, mục tiêu,
+            số slide, thứ tự slide, giọng văn, giới hạn fact và format hình ảnh.
+          </li>
+          <li>
+            Để gắn nội dung từ tài liệu sẵn có, bấm
+            <strong>Add sources → Add from Drive</strong>, chọn file cần dùng rồi bấm <strong>Add</strong>.
+          </li>
+          <li>
+            Nếu phù hợp, cho Gemini tìm thêm nguồn như web, Drive, Chat hoặc Gmail. Chỉ bật nguồn thật sự
+            cần, đặc biệt khi làm việc với dữ liệu công ty.
+          </li>
+          <li>
+            Để khớp thiết kế sẵn có, bấm
+            <strong>Match presentation style → Add from Drive</strong>, chọn presentation mẫu rồi bấm
+            <strong>Add</strong>.
+          </li>
+          <li>
+            Gửi yêu cầu. Gemini có thể hỏi thêm về tone, audience, mục tiêu, mật độ chữ hoặc style.
+            Trả lời nếu giúp làm rõ kết quả; nếu không thì bỏ qua.
+          </li>
+          <li>
+            Bấm <strong>Next</strong>. Gemini tạo presentation plan gồm overview, danh sách nguồn và
+            các bước/slide.
+          </li>
+          <li>
+            Duyệt plan kỹ. Click title hoặc mô tả để sửa. Dùng <strong>Add step</strong> để thêm slide,
+            <strong>Delete</strong> để xóa. Sau khi sửa, bấm <strong>Update plan</strong>.
+          </li>
+          <li>
+            Khi cấu trúc và nguồn đã đúng, bấm <strong>Approve</strong>.
+          </li>
+          <li>
+            Giữ tab Google Slides và panel Gemini mở trong lúc tạo. Có thể chuyển cửa sổ khác, nhưng
+            không đóng tab/panel.
+          </li>
+          <li>
+            Sau khi tạo xong, duyệt cả presentation: fact, thứ tự, đồng nhất hình ảnh, khả năng truy cập
+            và khả năng chỉnh sửa. Tiếp tục sửa tay hoặc nhờ Gemini tinh chỉnh từng slide/ảnh.
+          </li>
+        </ol>
+
+        <div class="warning">
+          Gắn nguồn giúp giảm claim thiếu căn cứ, nhưng không đảm bảo chính xác tuyệt đối.
+          Mọi số liệu, ngày, tên, quote, cam kết và khuyến nghị vẫn cần người kiểm lại.
+        </div>
+      </section>
+
+      <section id="evidence">
+        <h2>4. Demo: prompt tổng, video và kết quả</h2>
+
+        <p>
+          Bắt đầu bằng một prompt tổng chứa chủ đề, dữ liệu, format 6 slide và yêu cầu hình ảnh.
+          Vì vậy không cần Google Doc hay deck style. Bản đầy đủ để copy nằm trong
+          <code>demo-assets/03-full-presentation-prompt.txt</code>.
+        </p>
+
+        <pre>Create a fully editable 6-slide presentation titled "Northwind Customer Portal MVP"
+for an internal executive review.
+
+Facts: support spends 12+ hours/week copying shipment status; customers have no
+self-service dashboard; NPS dropped 8 points. The MVP includes login, shipment
+list and filters, status timeline, PDF labels, CSV export, and read-only TMS API
+integration. Targets: 40% fewer "Where is my order?" tickets and weekly active
+users equal to at least 25% of active B2B accounts. Risks: TMS API rate limits
+and legal review for sub-account data.
+
+Create exactly 6 slides: title; executive summary; current-state problem;
+proposed solution with an editable Customer → Portal → TMS API flow; scope and
+10-week timeline; and success metrics, risks, and next steps.
+
+Use only these facts. Do not invent financial figures, quotes, savings, or
+commitments. Use a clean 16:9 white design with navy/cyan accents, native
+editable objects, no more than 45 words per slide, and the footer
+"Confidential — internal draft".</pre>
+
+        <h3>Video thực hành</h3>
+        <p>
+          Video ghi lại toàn bộ workflow: mở Gemini trong Slides, nhập prompt tổng, duyệt và cập nhật
+          plan, Approve để tạo deck, kiểm tra presentation 6 slide đã hoàn thành và xác nhận từng
+          object vẫn chỉnh sửa được.
+        </p>
+
+        <div class="video-wrap">
+          <iframe
+            src="https://www.youtube.com/embed/VIDEO_ID"
+            title="Tạo presentation native bằng Gemini trong Google Slides"
+            loading="lazy"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen
+          ></iframe>
+        </div>
+
+        <div class="note">
+          Sau khi đăng video lên YouTube, thay <code>VIDEO_ID</code> trong URL iframe bằng ID video.
+          Ví dụ, với <code>https://youtu.be/abc123</code>, dùng
+          <code>https://www.youtube.com/embed/abc123</code>.
+        </div>
+
+        <p>
+          Bài thực hành độc lập của
+          <a
+            href="https://scuti.asia/create-fully-native-editable-presentations-with-gemini-in-google-slides/"
+            target="_blank"
+            rel="noopener"
+          >Scuti</a>
+          cũng mô tả cùng chuỗi bước lớn trong demo smart manufacturing: prompt, gắn nguồn/style tùy chọn,
+          hỏi làm rõ, duyệt plan, Approve và output editable. Bài Northwind dùng kịch bản khác và tiêu chí
+          kiểm tra chặt hơn để đây là bài thử độc lập, không phải sao chép demo đó.
+        </p>
+      </section>
+
+      <section id="review">
+        <h2>5. Đánh giá kết quả thực hành</h2>
+
+        <p>
+          Qua quá trình thực hành, Gemini có thể tạo một presentation hoàn chỉnh từ một prompt tổng
+          theo quy trình khá rõ ràng. Bước xem và chỉnh plan trước khi generate giúp người dùng kiểm
+          soát cấu trúc tốt hơn thay vì nhận ngay một deck mà không biết nội dung sẽ được sắp xếp ra sao.
+        </p>
+
+        <p>
+          Kết quả tạo ra nhìn chung bám được chủ đề, format và phong cách đã mô tả trong prompt.
+          Các slide có thể dùng làm bản nháp ban đầu để tiếp tục chỉnh sửa, thay vì phải bắt đầu từ
+          presentation trống.
+        </p>
+
+        <p>
+          Điểm hữu ích nhất là các thành phần vẫn chỉnh sửa được trong Google Slides. Người dùng có
+          thể sửa nội dung, di chuyển object và tinh chỉnh từng slide sau khi Gemini tạo xong.
+          Điều này giúp workflow liền mạch hơn so với việc nhận một ảnh phẳng hoặc phải dựng lại deck.
+        </p>
+
+        <p>
+          Tuy nhiên, kết quả vẫn nên được xem là bản nháp. Nội dung, số liệu, mật độ chữ, bố cục và
+          tính nhất quán cần được kiểm tra lại trước khi sử dụng trong công việc thật. Nhìn chung,
+          tính năng phù hợp để tiết kiệm thời gian chuẩn bị ban đầu, nhưng chưa thay thế bước review
+          và hoàn thiện của người dùng.
+        </p>
+      </section>
+
+      <section id="opinion">
+        <h2>6. Ý kiến cá nhân: áp dụng vào công việc hằng ngày</h2>
+
+        <p>
+          Sau khi thực hành, tôi sẽ dùng tính năng tạo full presentation như một công cụ dựng bản
+          nháp có kiểm soát, không phải hệ thống tự xuất bản. Lợi thế lớn nhất là bước duyệt plan:
+          sửa câu chuyện trước khi generate nhanh hơn dựng lại một deck đã hoàn thành.
+        </p>
+
+        <p>
+          Với proposal và presales, tôi có thể đưa vấn đề khách hàng, giải pháp, scope, metric và
+          thứ tự slide vào một prompt. Gemini dựng bản nháp đầu tiên, còn tôi dành nhiều thời gian hơn
+          để kiểm bằng chứng, ngôn ngữ khách hàng, cam kết delivery và quyết định thương mại.
+        </p>
+
+        <p>
+          Với weekly project review, tôi có thể tái sử dụng một cấu trúc cố định cho tiến độ, metric,
+          risk, quyết định và next action. Báo cáo sẽ dễ so sánh giữa các tuần hơn, dù dữ liệu dự án
+          thay đổi vẫn phải được kiểm lại trước mỗi cuộc họp.
+        </p>
+
+        <p>
+          Với training và onboarding, tôi có thể chuyển quy trình thành cấu trúc bài học ban đầu,
+          sau đó chuyên gia nội dung sửa ví dụ, đổi thứ tự và điều chỉnh deck native cho từng nhóm.
+          Với executive briefing, tôi có thể nêu rõ quyết định cần xin và giới hạn số chữ mỗi slide
+          để tránh output quá nhiều text.
+        </p>
+
+        <p>
+          Quy trình thực tế tôi muốn giữ là: chuẩn bị fact đã kiểm, định nghĩa format cần có, duyệt plan
+          trước Approve, kiểm nội dung và editability sau generate, rồi hoàn thiện thủ công về hierarchy,
+          accessibility, brand và ngôn ngữ nhạy cảm với stakeholder.
+        </p>
+
+        <div class="note">
+          Tính năng tiết kiệm thời gian nhất khi fact đầu vào và cấu trúc mong muốn đã rõ.
+          Nó tăng tốc khâu chuẩn bị, không thay thế việc kiểm fact hay phán đoán chuyên môn.
+        </div>
+      </section>
+
+      <section id="conclusion">
+        <h2>7. Kết luận</h2>
+
+        <p>
+          Bài thực hành cho thấy Gemini trong Google Slides có thể biến một prompt chi tiết thành một
+          presentation hoàn chỉnh theo format 6 slide đã chỉ định. Bước duyệt plan giúp người dùng
+          kiểm soát cấu trúc trước khi generate, còn các thành phần native sau khi tạo vẫn có thể
+          chỉnh sửa như slide thông thường.
+        </p>
+
+        <p>
+          Tính năng phù hợp nhất để tạo bản nháp nhanh. Nó có thể giảm thời gian dựng cấu trúc và
+          layout, nhưng người dùng vẫn chịu trách nhiệm về độ chính xác, chất lượng hình ảnh,
+          accessibility và phê duyệt cuối. Khi kết hợp prompt rõ ràng với quy trình review nghiêm túc,
+          tính năng này có thể giúp chuẩn bị proposal, project update, training deck và executive
+          briefing nhanh hơn đáng kể.
+        </p>
+      </section>
+
+      <section id="references">
+        <h2>8. Tài liệu tham khảo</h2>
+
+        <ul>
+          <li>
+            <a
+              href="https://workspaceupdates.googleblog.com/2026/06/create-fully-native-and-editable-presentations-with-Gemini-in-Google-Slides.html"
+              target="_blank"
+              rel="noopener"
+            >Google Workspace Updates — Create fully native and editable presentations with Gemini in Google Slides</a>,
+            30/06/2026.
+          </li>
+          <li>
+            <a href="https://support.google.com/docs/answer/17111393" target="_blank" rel="noopener">
+              Google Docs Editors Help — Generate presentations with Gemini in Google Slides
+            </a>.
+          </li>
+          <li>
+            <a
+              href="https://knowledge.workspace.google.com/admin/releases/choose-when-users-get-new-features"
+              target="_blank"
+              rel="noopener"
+            >Google Workspace Admin Help — Choose when users get new features</a>.
+          </li>
+          <li>
+            <a
+              href="https://scuti.asia/create-fully-native-editable-presentations-with-gemini-in-google-slides/"
+              target="_blank"
+              rel="noopener"
+            >Scuti — Create Fully Native, Editable Presentations with Gemini in Google Slides</a>,
+            bài thực hành độc lập để đối chiếu.
+          </li>
+        </ul>
+      </section>
+
+      <footer>
+        <p>Soạn ngày 21/07/2026. Kịch bản demo là giả định, không chứa dữ liệu mật của khách hàng.</p>
+        <p>Prompt demo dùng lại: <code>demo-assets/03-full-presentation-prompt.txt</code></p>
+        <p>Bản tiếng Anh: <a href="index.html">index.html</a></p>
+      </footer>
+    </main>
+
+  </body>
+</html>

@@ -1,0 +1,95 @@
+/*
+  Sizes for svg.lucide after lucide.createIcons() — matches Obsidian’s Lucide set.
+*/
+
+.obsidian-match svg.lucide,
+.obsidian-shell svg.lucide {
+  stroke-width: 2;
+  flex-shrink: 0;
+}
+
+.obsidian-match .rb,
+.obsidian-match .fe-ic,
+.obsidian-match .nav-arr,
+.obsidian-match .obs-nav-actions button,
+.obsidian-match .obs-footer-actions button,
+.obsidian-match .obs-electron-controls button,
+.obsidian-match .obs-new-tab-btn,
+.obsidian-match .tab-close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.obsidian-match .obs-v-ribbon .rb svg.lucide {
+  width: 17px;
+  height: 17px;
+}
+
+.obsidian-match .fe-ic svg.lucide {
+  width: 15px;
+  height: 15px;
+}
+
+.obsidian-match .nav-arr svg.lucide {
+  width: 16px;
+  height: 16px;
+}
+
+.obsidian-match .obs-nav-actions button svg.lucide {
+  width: 16px;
+  height: 16px;
+}
+
+.obsidian-match .obs-footer-actions button svg.lucide {
+  width: 15px;
+  height: 15px;
+}
+
+.obsidian-match .vault-ic svg.lucide {
+  width: 14px;
+  height: 14px;
+}
+
+.obsidian-match .obs-electron-controls button svg.lucide {
+  width: 13px;
+  height: 13px;
+}
+
+.obsidian-match .obs-new-tab-btn svg.lucide {
+  width: 16px;
+  height: 16px;
+}
+
+.obsidian-match .tab-close svg.lucide {
+  width: 14px;
+  height: 14px;
+}
+
+.obsidian-match .as-right svg.lucide {
+  width: 13px;
+  height: 13px;
+}
+
+/* step-06 (shell without .obsidian-match) */
+.obsidian-shell:not(.obsidian-match) .rb svg.lucide,
+.obsidian-shell:not(.obsidian-match) .obs-fe-toolbar button svg.lucide {
+  width: 16px;
+  height: 16px;
+}
+
+.obsidian-shell:not(.obsidian-match) .obs-footer-actions button svg.lucide {
+  width: 15px;
+  height: 15px;
+}
+
+.obsidian-shell:not(.obsidian-match) .nav-arr svg.lucide,
+.obsidian-shell:not(.obsidian-match) .obs-nav-actions button svg.lucide {
+  width: 16px;
+  height: 16px;
+}
+
+.obsidian-shell:not(.obsidian-match) .as-right svg.lucide {
+  width: 13px;
+  height: 13px;
+}

@@ -1,0 +1,297 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Tạo cả presentation native, editable bằng Gemini trong Google Slides — hướng dẫn và demo</title>
+    <style>
+      *{box-sizing:border-box}
+      body{margin:0;font-family:"Segoe UI",Arial,sans-serif;background:#fff;color:#202124;line-height:1.75}
+      a{color:#1a73e8;text-decoration:none}a:hover{text-decoration:underline}
+      .wrap{max-width:1040px;margin:0 auto;padding:24px}
+      h1{margin:0 0 10px;font-size:30px;color:#1a73e8;line-height:1.3}
+      h2{margin:36px 0 14px;font-size:22px;border-bottom:3px solid #1a73e8;padding-bottom:8px}
+      h3{margin:24px 0 10px;font-size:18px}p{margin:12px 0}
+      ul,ol{padding-left:24px}li{margin-bottom:7px}
+      code{background:#e8f0fe;border:1px solid #d2e3fc;padding:2px 6px;border-radius:4px;color:#174ea6;font-family:Consolas,monospace;font-size:13px}
+      pre{white-space:pre-wrap;word-break:break-word;background:#f8f9fa;border:1px solid #dadce0;border-radius:8px;padding:15px;overflow:auto;font:12px/1.6 Consolas,monospace}
+      table{border-collapse:collapse;width:100%;margin:16px 0;font-size:14px}
+      th,td{border:1px solid #dadce0;padding:10px 12px;text-align:left;vertical-align:top}
+      th{background:#1a73e8;color:#fff}tr:nth-child(even){background:#f8f9fa}
+      .hero{border:2px solid #1a73e8;border-radius:14px;padding:24px 28px;background:linear-gradient(135deg,#e8f0fe,#fff)}
+      .hero .subtitle{color:#5f6368;margin-top:8px}
+      .toc,.card{background:#f8f9fa;border:1px solid #dadce0;border-radius:10px;padding:16px 20px;margin:18px 0}
+      .toc ul{list-style:none;padding-left:0}.toc li:before{content:"→ ";color:#1a73e8}
+      .info,.tip,.warning{padding:12px 16px;margin:16px 0;border-radius:0 8px 8px 0}
+      .info{border-left:4px solid #4285f4;background:#e8f0fe}
+      .tip{border-left:4px solid #34a853;background:#e6f4ea}
+      .warning{border-left:4px solid #ea4335;background:#fce8e6}
+      .flow{text-align:center;background:#f8f9fa;border:1px solid #dadce0;border-radius:10px;padding:18px;margin:18px 0}
+      .step{display:inline-block;border:2px solid #1a73e8;color:#174ea6;background:#fff;border-radius:8px;padding:7px 10px;margin:4px;font-weight:600;font-size:13px}
+      .arrow{color:#5f6368;font-size:18px}
+      figure{margin:22px 0;text-align:center}figure img{max-width:100%;height:auto;border:2px solid #dadce0;border-radius:8px;box-shadow:0 2px 10px rgba(0,0,0,.08)}
+      figcaption{font-size:13px;color:#5f6368;margin-top:7px;font-style:italic}
+      .placeholder{display:none;border:2px dashed #f9ab00;background:#fef7e0;padding:25px;border-radius:8px;color:#5f6368}
+      figure.missing img{display:none}figure.missing .placeholder{display:block}
+      .status{display:inline-block;border-radius:99px;padding:3px 9px;font-size:12px;font-weight:700}
+      .verified{background:#e6f4ea;color:#137333}.pending{background:#fef7e0;color:#8a4b00}
+      .footer{margin-top:42px;border-top:2px solid #dadce0;padding-top:18px;color:#5f6368;font-size:13px}
+      @media(max-width:700px){.wrap{padding:15px}h1{font-size:25px}table{display:block;overflow-x:auto}}
+    </style>
+  </head>
+  <body>
+    <main class="wrap">
+      <header class="hero">
+        <h1>Tạo cả presentation native và chỉnh sửa được bằng Gemini trong Google Slides</h1>
+        <p class="subtitle">Tổng quan tính năng tháng 6/2026, hướng dẫn full-deck, bài thực hành Northwind và góc nhìn ứng dụng vào công việc hằng ngày.</p>
+      </header>
+
+      <div class="warning">
+        <strong>Phân biệt hai bản cập nhật:</strong> tháng 4/2026, Gemini tạo hoặc cải thiện từng slide editable. Ngày 30/06/2026, Google công bố khả năng tạo <strong>cả presentation nhiều slide</strong> bằng một yêu cầu, có bước hỏi làm rõ, duyệt outline và khớp style deck. Bài này tập trung vào tính năng full-presentation mới.
+      </div>
+
+      <nav class="toc">
+        <strong>Nội dung</strong>
+        <ul>
+          <li><a href="#overview">Tổng quan và phạm vi</a></li>
+          <li><a href="#steps">Các bước tạo presentation</a></li>
+          <li><a href="#prompt">Format và prompt thực hành</a></li>
+          <li><a href="#practice">Quá trình và kết quả thực hành</a></li>
+          <li><a href="#demo">Kịch bản chụp ảnh full-deck</a></li>
+          <li><a href="#opinion">Ứng dụng vào công việc hằng ngày</a></li>
+          <li><a href="#limits">Giới hạn và lưu ý</a></li>
+        </ul>
+      </nav>
+
+      <section id="overview">
+        <h2>1. Tổng quan tính năng</h2>
+        <p>
+          Gemini trong Google Slides nay có thể nhận một prompt để tạo presentation nhiều slide với text và hình ảnh, dựa trên file Drive và các nguồn liên quan. Kết quả là các slide <strong>fully editable</strong>: người dùng tiếp tục sửa text box, shape, layout và hình ảnh trong Slides, thay vì nhận một file ảnh phẳng khó bảo trì.
+        </p>
+        <table>
+          <thead><tr><th>Năng lực</th><th>Ý nghĩa thực tế</th></tr></thead>
+          <tbody>
+            <tr><td>Tạo full presentation</td><td>Từ mô tả mục tiêu, Gemini hỏi thêm thông tin, lập plan rồi tạo toàn bộ deck.</td></tr>
+            <tr><td>Grounding bằng nguồn</td><td>Thêm nhiều file Drive; Gemini cũng có thể gợi ý file, email hoặc chat liên quan để người dùng chủ động chọn.</td></tr>
+            <tr><td>Match presentation style</td><td>Gắn một deck hiện có làm style reference để bám tone, bố cục và look-and-feel mong muốn.</td></tr>
+            <tr><td>Plan trước khi tạo</td><td>Người dùng xem Overview, Sources và từng bước/slide; có thể sửa, thêm hoặc xóa slide trước khi Approve.</td></tr>
+            <tr><td>Native và editable</td><td>Sau khi tạo, sửa thủ công hoặc nhờ Gemini tinh chỉnh từng slide, thêm slide, thêm/sửa ảnh.</td></tr>
+          </tbody>
+        </table>
+
+        <h3>Điều kiện sử dụng và rollout</h3>
+        <ul>
+          <li><strong>Nền tảng/ngôn ngữ:</strong> desktop, English only tại thời điểm tài liệu Help được kiểm tra.</li>
+          <li><strong>Rollout:</strong> extended rollout cho cả Rapid Release và Scheduled Release bắt đầu 29/06/2026; thời gian hiển thị có thể dài hơn 15 ngày.</li>
+          <li><strong>Gói:</strong> Business Standard/Plus, Enterprise Standard/Plus, Google AI Pro/Ultra, Google AI Pro for Education và AI Expanded Access.</li>
+          <li><strong>Admin:</strong> Google ghi rõ không có admin control riêng cho tính năng này.</li>
+          <li><strong>Hạn mức:</strong> promotional access với mức tạo multi-slide cao hơn được công bố kéo dài ít nhất đến 01/08/2026; sau đó có hạn mức theo người dùng.</li>
+        </ul>
+        <div class="info">
+          Rapid/Scheduled Release là lịch nhận tính năng, không phải nút bật riêng. Google mô tả Scheduled Release thường nhận tính năng ít nhất một tuần sau Rapid, nhưng rollout cụ thể vẫn có thể kéo dài hoặc thay đổi.
+        </div>
+      </section>
+
+      <section id="steps">
+        <h2>2. Các bước tạo presentation bằng Gemini</h2>
+        <div class="flow" aria-label="Luồng tạo presentation">
+          <span class="step">Prompt</span><span class="arrow">→</span>
+          <span class="step">Sources + Style</span><span class="arrow">→</span>
+          <span class="step">Follow-up</span><span class="arrow">→</span>
+          <span class="step">Plan</span><span class="arrow">→</span>
+          <span class="step">Edit outline</span><span class="arrow">→</span>
+          <span class="step">Approve</span><span class="arrow">→</span>
+          <span class="step">Edit</span>
+        </div>
+        <ol>
+          <li>Trên máy tính, mở Google Slides.</li>
+          <li>Ở start screen, bấm <strong>Presentation</strong>; hoặc trong một presentation trống, chưa có slide hiện hữu, bấm <strong>Ask Gemini</strong> ở góc phải.</li>
+          <li>Trong side panel, mô tả topic, mục tiêu, audience, số slide, cấu trúc và yêu cầu hình thức. Ví dụ chính thức: “Create a 5-slide presentation on quantum computing for a general audience with a modern design.”</li>
+          <li>Tùy chọn: <strong>Add sources → Add from Drive</strong>, chọn một hoặc nhiều file rồi bấm <strong>Add</strong>. Có thể cho Gemini tìm nội dung liên quan từ web, Drive, Chat hoặc Gmail tùy source settings.</li>
+          <li>Tùy chọn: <strong>Match presentation style → Add from Drive</strong>, chọn deck mẫu rồi bấm <strong>Add</strong>.</li>
+          <li>Trả lời các câu hỏi làm rõ về tone, style, content hoặc audience; có thể skip.</li>
+          <li>Bấm <strong>Next</strong>. Gemini tạo plan gồm <strong>Overview</strong>, <strong>Sources</strong> và <strong>Steps</strong> — outline nội dung từng slide.</li>
+          <li>Sửa plan nếu cần: click title/mô tả để edit; hover để <strong>Add step</strong> hoặc <strong>Delete</strong>; bấm <strong>Update plan</strong> để tạo lại outline sau khi thay đổi.</li>
+          <li>Khi plan đạt yêu cầu, bấm <strong>Approve</strong>.</li>
+          <li>Giữ tab Google Slides và side panel mở trong vài phút đến khi deck hoàn tất. Có thể chuyển sang tab/cửa sổ khác nhưng không đóng Slides hoặc Gemini panel.</li>
+          <li>Kiểm tra fact, source và khả năng editable. Sau đó sửa tay, yêu cầu Gemini tinh chỉnh từng slide, tạo thêm slide hoặc thêm/sửa ảnh.</li>
+        </ol>
+      </section>
+
+      <section id="prompt">
+        <h2>3. Bài thực hành: deck Northwind theo format cụ thể</h2>
+        <p>
+          Bài demo dùng một tình huống presales giả lập: Northwind Logistics cần phê duyệt MVP customer portal trong 10 tuần. Nguồn nội dung là Google Doc từ <code>02-source-doc-project-brief.txt</code>; style reference là <code>STYLE_Reference_Deck</code>.
+        </p>
+        <table>
+          <thead><tr><th>Slide</th><th>Format bắt buộc</th></tr></thead>
+          <tbody>
+            <tr><td>1. Title</td><td>Project name, “Executive approval brief”, July 2026.</td></tr>
+            <tr><td>2. Executive summary</td><td>Problem, proposed MVP, decision requested.</td></tr>
+            <tr><td>3. Current-state problem</td><td>3 pain points + 1 prominent metric.</td></tr>
+            <tr><td>4. Proposed solution</td><td>2 cột; bên phải là flow native Customer → Portal → TMS REST API.</td></tr>
+            <tr><td>5. Scope &amp; plan</td><td>In/Out of scope + horizontal 10-week timeline.</td></tr>
+            <tr><td>6. Close</td><td>3 KPI cards, 2 risks, 3 numbered next steps.</td></tr>
+          </tbody>
+        </table>
+        <p><strong>Prompt chính (rút gọn; bản đầy đủ nằm trong demo-assets):</strong></p>
+        <pre>Create a fully editable 6-slide presentation for an internal executive review titled
+"Northwind Customer Portal MVP".
+
+Audience: delivery director, presales lead, operations lead, and solution architect.
+Goal: approve a 10-week MVP discovery and delivery plan.
+
+Ground all facts in "Project brief — Northwind". Match "STYLE_Reference_Deck".
+16:9, white background, navy/cyan accents, concise executive language.
+Use native editable text boxes, shapes, diagrams, tables, and charts.
+Do not invent financial figures, customer quotes, or commitments.</pre>
+        <div class="tip">
+          Prompt tốt không chỉ nói “làm slide đẹp”. Nó khóa <strong>audience + decision + slide-by-slide format + source boundary + visual rules</strong>. Nhờ vậy plan dễ review hơn và giảm việc Gemini tự suy diễn.
+        </div>
+      </section>
+
+      <section id="practice">
+        <h2>4. Quá trình và kết quả thực hành</h2>
+        <p>
+          <span class="status verified">Đã kiểm chứng</span>
+          Bộ ảnh hiện có ghi lại một lần thực hành thật trên Google Slides với Gemini: gắn source, gắn deck style, tạo/Insert deck Northwind 5 slide, Enhance layout và kiểm tra đối tượng editable.
+        </p>
+        <p>
+          <span class="status pending">Chưa kiểm chứng trên tenant này</span>
+          Các ảnh đó dùng UI tạo từng slide trước rollout full-presentation; vì vậy chúng không chứng minh các màn hình mới như follow-up, plan, Update plan và Approve. Phiên trình duyệt dùng để rà soát bài hiện dừng ở màn hình đăng nhập Google, nên không thể chạy lại bằng tài khoản của người dùng.
+        </p>
+
+        <h3>Quy trình thực tế đã chạy</h3>
+        <ol>
+          <li>Mở Gemini panel trong Slides.</li>
+          <li>Gắn <code>STYLE_Reference_Deck</code> và <code>Project brief — Northwind</code> qua Sources.</li>
+          <li>Tạo từng slide bằng prompt tiếng Anh, xem preview rồi chọn Insert.</li>
+          <li>Hoàn thành deck 5 slide: title, problem, solution, timeline/scope và next steps.</li>
+          <li>Dùng Enhance để đổi layout; thử tạo chart/diagram; click text box và đối tượng để kiểm tra editability.</li>
+          <li>So sánh với <strong>Beautify as image</strong> để thấy vì sao luồng native phù hợp hơn cho deck cần cập nhật.</li>
+        </ol>
+
+        <figure>
+          <img src="images/step-03-add-sources-drive.png" alt="Gemini Sources có deck style và project brief" loading="lazy" onerror="this.closest('figure').classList.add('missing')" />
+          <div class="placeholder">Ảnh thực hành: <code>images/step-03-add-sources-drive.png</code></div>
+          <figcaption>Thực hành cũ — thêm deck style và project brief làm Sources.</figcaption>
+        </figure>
+        <figure>
+          <img src="images/step-06-slide-inserted-editable.png" alt="Slide do Gemini tạo đã được Insert và có thể chỉnh sửa" loading="lazy" onerror="this.closest('figure').classList.add('missing')" />
+          <div class="placeholder">Ảnh thực hành: <code>images/step-06-slide-inserted-editable.png</code></div>
+          <figcaption>Slide đã Insert trên canvas, không phải chỉ là câu trả lời text trong panel.</figcaption>
+        </figure>
+        <figure>
+          <img src="images/step-11-five-slide-thumbnail-strip.png" alt="Filmstrip deck Northwind 5 slide" loading="lazy" onerror="this.closest('figure').classList.add('missing')" />
+          <div class="placeholder">Ảnh thực hành: <code>images/step-11-five-slide-thumbnail-strip.png</code></div>
+          <figcaption>Kết quả thực hành — filmstrip đủ 5 slide Northwind và slide Next Steps đang mở.</figcaption>
+        </figure>
+
+        <h3>Nhận xét từ đầu ra đã quan sát</h3>
+        <ul>
+          <li><strong>Đúng format cơ bản:</strong> deck giữ hệ màu xanh/trắng, title hierarchy và footer tương đối nhất quán khi có style source.</li>
+          <li><strong>Grounding có ích:</strong> nội dung problem/solution lấy được các chi tiết TMS, support workflow và chỉ số trong brief.</li>
+          <li><strong>Editable là giá trị chính:</strong> text box, layout và các thành phần có thể chọn/sửa sau Insert; deck vẫn tiếp tục được bởi PM/designer.</li>
+          <li><strong>Vẫn cần review:</strong> density chữ, timeline/chart và wording executive cần chỉnh tay; mọi số liệu phải đối chiếu brief.</li>
+          <li><strong>Không nên đánh đồng với Beautify:</strong> Beautify as image hợp poster tĩnh hơn, nhưng bất tiện cho deck phải cập nhật số liệu thường xuyên.</li>
+        </ul>
+      </section>
+
+      <section id="demo">
+        <h2>5. Demo full-presentation cần chụp những gì?</h2>
+        <p>
+          File <code>HUONG-DAN-DEMO-CHUP-ANH.md</code> có thao tác từng click và tên ảnh. Bộ ảnh tối thiểu nên chứng minh đủ bốn lớp: input, planning, generation và editability.
+        </p>
+        <table>
+          <thead><tr><th>Ảnh</th><th>Bằng chứng cần thể hiện</th></tr></thead>
+          <tbody>
+            <tr><td><code>full-01-entry-point.png</code></td><td>Presentation trống + Ask Gemini.</td></tr>
+            <tr><td><code>full-03-add-content-source.png</code></td><td>Project brief đã được thêm từ Drive.</td></tr>
+            <tr><td><code>full-04-match-style.png</code></td><td>Deck style reference đã được chọn.</td></tr>
+            <tr><td><code>full-05-follow-up-questions.png</code></td><td>Gemini hỏi và người dùng làm rõ audience/tone/decision.</td></tr>
+            <tr><td><code>full-06-plan-overview-sources.png</code></td><td>Overview + Sources đúng.</td></tr>
+            <tr><td><code>full-07-edit-outline.png</code></td><td>Outline 6 slide sau khi sửa và Update plan.</td></tr>
+            <tr><td><code>full-08-approve-generating.png</code></td><td>Approve và trạng thái đang tạo deck.</td></tr>
+            <tr><td><code>full-09-complete-deck.png</code></td><td>Filmstrip đủ 6 slide.</td></tr>
+            <tr><td><code>full-10-native-editable-proof.png</code></td><td>Khung chọn/handles của text box, shape hoặc diagram.</td></tr>
+          </tbody>
+        </table>
+
+        <figure>
+          <img src="images/full-07-edit-outline.png" alt="Outline full presentation đã chỉnh" loading="lazy" onerror="this.closest('figure').classList.add('missing')" />
+          <div class="placeholder">Chưa có ảnh — làm Step 7 và lưu <code>images/full-07-edit-outline.png</code></div>
+          <figcaption>Ảnh cần bổ sung — sửa outline trước khi Approve là điểm khác biệt quan trọng của full-deck.</figcaption>
+        </figure>
+        <figure>
+          <img src="images/full-10-native-editable-proof.png" alt="Bằng chứng slide native và editable" loading="lazy" onerror="this.closest('figure').classList.add('missing')" />
+          <div class="placeholder">Chưa có ảnh — làm Step 10 và lưu <code>images/full-10-native-editable-proof.png</code></div>
+          <figcaption>Ảnh cần bổ sung — chọn đối tượng thật trên canvas để chứng minh editability.</figcaption>
+        </figure>
+      </section>
+
+      <section id="opinion">
+        <h2>6. Ý kiến cá nhân: áp dụng vào công việc hằng ngày</h2>
+        <p>
+          Tôi xem tính năng này là một <strong>“first-draft engine có kiểm soát”</strong>, không phải người thay thế designer hay người chịu trách nhiệm nội dung. Lợi ích lớn nhất xuất hiện khi công việc đã có brief trong Drive và deck brand chuẩn, nhưng cần biến chúng thành bản trình bày có cấu trúc trong thời gian ngắn.
+        </p>
+        <table>
+          <thead><tr><th>Công việc</th><th>Cách áp dụng</th><th>Lợi ích</th></tr></thead>
+          <tbody>
+            <tr><td>Presales / proposal nội bộ</td><td>Brief + style deck → plan 6–10 slide → review outline trước khi tạo.</td><td>Rút ngắn thời gian từ tài liệu thô đến bản họp phê duyệt.</td></tr>
+            <tr><td>Weekly project review</td><td>Ground bằng status Doc/Sheet, yêu cầu format cố định: progress, risks, decisions, next steps.</td><td>Giữ cấu trúc báo cáo nhất quán; PM tập trung kiểm tra fact.</td></tr>
+            <tr><td>Training / onboarding</td><td>Dùng handbook làm source, deck brand làm style; thêm quiz hoặc recap trong outline.</td><td>Tái sử dụng tri thức nội bộ thành tài liệu trình bày dễ cập nhật.</td></tr>
+            <tr><td>Biến báo cáo thành executive brief</td><td>Khóa audience, word budget và decision requested ngay trong prompt.</td><td>Giảm slide dài, tập trung vào thông tin cần ra quyết định.</td></tr>
+            <tr><td>Blog và tài liệu hướng dẫn</td><td>Tạo deck demo, chụp input → plan → output → editable proof.</td><td>Có bằng chứng tái lập thay vì chỉ tóm tắt announcement.</td></tr>
+          </tbody>
+        </table>
+
+        <h3>Quy trình cá nhân tôi sẽ dùng</h3>
+        <ol>
+          <li><strong>Chuẩn hóa đầu vào:</strong> một brief có nguồn, ngày cập nhật, owner và các số đã duyệt.</li>
+          <li><strong>Chọn deck style “sạch”:</strong> không dùng deck lịch sử chứa dữ liệu nhạy cảm chỉ để copy hình thức.</li>
+          <li><strong>Prompt bằng quyết định cần đạt:</strong> nói rõ audience, outcome, cấu trúc slide và giới hạn fact.</li>
+          <li><strong>Review plan kỹ hơn review hiệu ứng:</strong> sửa outline trước Approve rẻ hơn sửa 10 slide sau khi tạo.</li>
+          <li><strong>Kiểm chứng đầu ra:</strong> fact, source, legal wording, confidentiality, accessibility và khả năng chỉnh sửa.</li>
+          <li><strong>Giữ người chịu trách nhiệm cuối:</strong> AI tạo draft; PM, subject-matter expert hoặc designer duyệt bản phát hành.</li>
+        </ol>
+      </section>
+
+      <section id="limits">
+        <h2>7. Giới hạn và lưu ý thực tế</h2>
+        <ul>
+          <li><strong>Rollout không đồng đều:</strong> cùng một tổ chức có thể chưa thấy tính năng ngay; extended rollout có thể hơn 15 ngày.</li>
+          <li><strong>English only:</strong> nên prompt bằng tiếng Anh và kiểm tra lại nội dung nếu deck đầu ra cần tiếng Việt.</li>
+          <li><strong>Hạn mức:</strong> quyền truy cập không đồng nghĩa tạo deck không giới hạn; mức promotional có thể thay đổi sau 01/08/2026.</li>
+          <li><strong>Hallucination:</strong> source grounding giảm rủi ro nhưng không loại bỏ việc AI diễn giải sai hoặc thêm chi tiết.</li>
+          <li><strong>Dữ liệu nhạy cảm:</strong> không đưa bí mật khách hàng, thông tin cá nhân hoặc dữ liệu chưa được phép xử lý vào prompt/source.</li>
+          <li><strong>Native không có nghĩa hoàn hảo:</strong> slide vẫn có thể quá nhiều chữ, alignment chưa chuẩn hoặc chart chưa truyền đạt đúng.</li>
+          <li><strong>Giữ tab mở:</strong> đóng Slides hoặc side panel trong lúc tạo có thể làm gián đoạn quá trình.</li>
+        </ul>
+        <div class="warning">
+          Trước khi trình bày: đối chiếu mọi số, ngày, tên riêng và cam kết với nguồn gốc; kiểm tra contrast, font size, alt text và quyền chia sẻ file. Không dùng “Gemini tạo” như bằng chứng rằng nội dung đã đúng.
+        </div>
+      </section>
+
+      <section id="refs">
+        <h2>8. Tài liệu tham khảo</h2>
+        <ul>
+          <li><a href="https://workspaceupdates.googleblog.com/2026/06/create-fully-native-and-editable-presentations-with-Gemini-in-Google-Slides.html" target="_blank" rel="noopener">Google Workspace Updates — Create fully native and editable presentations with Gemini in Google Slides (30/06/2026)</a></li>
+          <li><a href="https://support.google.com/docs/answer/17111393" target="_blank" rel="noopener">Google Docs Editors Help — Generate presentations with Gemini in Google Slides</a></li>
+          <li><a href="https://knowledge.workspace.google.com/admin/releases/choose-when-users-get-new-features" target="_blank" rel="noopener">Google Workspace Admin Help — Choose when users get new features</a></li>
+        </ul>
+      </section>
+
+      <footer class="footer">
+        <p><strong>Ngày rà soát nguồn:</strong> 21/07/2026.</p>
+        <p><strong>Tính tái lập:</strong> prompt, brief, style notes, run log và hướng dẫn chụp ảnh nằm trong thư mục <code>demo-assets/</code> và file <code>HUONG-DAN-DEMO-CHUP-ANH.md</code>.</p>
+      </footer>
+    </main>
+    <script>
+      document.querySelectorAll("figure img").forEach(function(img){
+        function missing(){var f=img.closest("figure");if(f)f.classList.add("missing")}
+        img.addEventListener("error",missing);
+        if(img.complete&&!img.naturalWidth)missing();
+      });
+    </script>
+  </body>
+</html>

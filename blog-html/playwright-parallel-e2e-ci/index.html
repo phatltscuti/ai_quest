@@ -1,0 +1,405 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Practice report on Playwright parallelization and GitHub Actions tuning based on Berry's Zenn article."
+    />
+    <title>Practicing Playwright Parallel E2E and CI Tuning</title>
+    <style>
+      * { box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
+      body {
+        margin: 0;
+        color: #202124;
+        background: #ffffff;
+        font: 16px/1.75 "Segoe UI", Arial, sans-serif;
+      }
+      main {
+        width: min(860px, calc(100% - 32px));
+        margin: 0 auto;
+        padding: 36px 0 64px;
+      }
+      header {
+        margin-bottom: 34px;
+        padding-bottom: 24px;
+        border-bottom: 3px solid #1a73e8;
+      }
+      h1 {
+        margin: 0 0 14px;
+        color: #1a73e8;
+        font-size: clamp(30px, 5vw, 44px);
+        line-height: 1.15;
+      }
+      h2 {
+        margin: 42px 0 14px;
+        color: #202124;
+        font-size: 26px;
+        line-height: 1.3;
+      }
+      h3 {
+        margin: 27px 0 10px;
+        color: #174ea6;
+        font-size: 19px;
+        line-height: 1.4;
+      }
+      p { margin: 12px 0; }
+      ul, ol { margin: 12px 0; padding-left: 26px; }
+      li { margin-bottom: 8px; }
+      a { color: #1a73e8; text-decoration: none; }
+      a:hover { text-decoration: underline; }
+      code {
+        padding: 2px 6px;
+        color: #174ea6;
+        background: #e8f0fe;
+        border-radius: 4px;
+        font: 0.88em Consolas, monospace;
+      }
+      pre {
+        overflow-x: auto;
+        margin: 16px 0;
+        padding: 17px;
+        white-space: pre-wrap;
+        word-break: break-word;
+        background: #f8f9fa;
+        border: 1px solid #dadce0;
+        border-radius: 8px;
+        font: 13px/1.65 Consolas, monospace;
+      }
+      .lead {
+        margin: 0;
+        color: #5f6368;
+        font-size: 18px;
+      }
+      .note {
+        margin: 18px 0;
+        padding: 13px 16px;
+        background: #e8f0fe;
+        border-left: 4px solid #1a73e8;
+      }
+      .warning {
+        margin: 18px 0;
+        padding: 13px 16px;
+        background: #fef7e0;
+        border-left: 4px solid #f9ab00;
+      }
+      nav {
+        margin: 24px 0 34px;
+        padding: 16px 20px;
+        background: #f8f9fa;
+        border: 1px solid #dadce0;
+        border-radius: 8px;
+      }
+      nav strong { display: block; margin-bottom: 8px; }
+      nav ol { margin: 0; }
+      footer {
+        margin-top: 46px;
+        padding-top: 20px;
+        color: #5f6368;
+        border-top: 2px solid #dadce0;
+        font-size: 13px;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <header>
+        <h1>Practicing Playwright parallel E2E and GitHub Actions tuning</h1>
+        <p class="lead">
+          A practice report based on Berry’s Zenn article about making E2E suites fast enough to
+          run on every pull request.
+        </p>
+        <p class="lead" style="margin-top: 10px; font-size: 15px;">
+          Source:
+          <a href="https://zenn.dev/berry_blog/articles/39392e1da7ca71" target="_blank" rel="noopener">
+            E2E tests at unit-test speed — Playwright parallelization and GitHub Actions tuning
+          </a>
+          · Vietnamese version: <a href="index-vi.html">index-vi.html</a>
+        </p>
+      </header>
+
+      <nav aria-label="Table of contents">
+        <strong>Contents</strong>
+        <ol>
+          <li><a href="#overview">Method overview</a></li>
+          <li><a href="#steps">Implementation steps</a></li>
+          <li><a href="#practice">Hands-on practice and results</a></li>
+          <li><a href="#opinion">Opinion and daily-work application</a></li>
+          <li><a href="#conclusion">Conclusion</a></li>
+          <li><a href="#references">References</a></li>
+        </ol>
+      </nav>
+
+      <div class="note">
+        <strong>Practice status:</strong> a local mini demo was implemented and executed successfully
+        on this machine. Full suite: <strong>3 passed in about 10 seconds</strong>. The demo focuses
+        on the article’s transferable architecture, not Berry’s full Supabase/Kong production stack.
+      </div>
+
+      <section id="overview">
+        <h2>1. Method overview</h2>
+
+        <p>
+          The Zenn article from Berry describes how their team runs about 100 Playwright specs /
+          140 test cases for a QMS SaaS product on every pull request in roughly 6–8 minutes of
+          wall-clock time. That duration is close to their unit-test and lint jobs, which means E2E
+          can stay inside the normal PR feedback loop instead of being deferred to a nightly batch.
+        </p>
+
+        <p>
+          The core idea is that Playwright worker settings alone are not enough. Parallel E2E only
+          becomes reliable after the suite is redesigned around four layers:
+        </p>
+
+        <ol>
+          <li>
+            <strong>Test structure for isolation:</strong> each test creates its own data through
+            fixtures/factories, tears it down afterward, and avoids shared mutable state. Login cost
+            is reduced with <code>storageState</code>. Specs stay scenario-focused while locators and
+            waits live in Page Objects.
+          </li>
+          <li>
+            <strong>Two-level parallelization:</strong> GitHub Actions matrix jobs split work by
+            <code>{load}-{release}-{feature}</code> projects, and each job then runs Playwright
+            workers. Light tests use higher parallelism; heavy tests that call slow Edge Functions
+            use fewer workers and longer timeouts.
+          </li>
+          <li>
+            <strong>Infrastructure tuning under load:</strong> higher concurrency exposed PostgREST
+            pool exhaustion and a Kong keep-alive reuse race that produced intermittent 502s. They
+            fixed the race structurally rather than hiding it with retries, and kept host-level
+            instrumentation so worker counts could be chosen from measurements.
+          </li>
+          <li>
+            <strong>Operational discipline:</strong> an “Iron Law” forbids fixed sleeps and sync DOM
+            snapshot asserts, CI retries stay at zero, impact maps run only affected specs for app
+            PRs, and AI agent skills encode the same quality bar for humans and generated tests.
+          </li>
+        </ol>
+
+        <p>
+          Before the redesign, their old suite ran only on a weekday morning schedule, took 30–56
+          minutes, and was repaired only when someone happened to notice failures. After the redesign,
+          E2E became a normal merge gate.
+        </p>
+      </section>
+
+      <section id="steps">
+        <h2>2. Implementation steps</h2>
+
+        <p>
+          The article does not present a single copy-paste tutorial for every repository. Objectively,
+          the implementation path looks like this:
+        </p>
+
+        <h3>2.1. Redesign tests for data independence</h3>
+        <ol>
+          <li>Stop sharing documents, users, or workflow state across tests.</li>
+          <li>Create per-test fixtures that insert dedicated data and tear down derived records.</li>
+          <li>Prepare authentication with <code>storageState</code> instead of logging in through the UI in every test.</li>
+          <li>Provide multiple accounts per role so parallel workers do not fight over the same user.</li>
+          <li>Move locators, clicks, and waits into Page Objects; keep specs as S/E scenario steps.</li>
+        </ol>
+
+        <h3>2.2. Split Playwright projects by load profile</h3>
+        <ol>
+          <li>Tag slow or externally bound cases as heavy; keep ordinary UI/CRUD cases light.</li>
+          <li>Configure light projects with <code>fullyParallel: true</code> and higher workers.</li>
+          <li>Configure heavy projects with fewer workers, longer timeouts, and less aggressive parallel overlap.</li>
+          <li>Tune worker counts per domain after measuring CPU pressure and failure modes.</li>
+        </ol>
+
+        <h3>2.3. Build CI as matrix × fresh full stack</h3>
+        <ol>
+          <li>Split jobs by project on GitHub Actions, preferably on dedicated larger runners.</li>
+          <li>Start a real local backend stack per job when the product depends on auth, RLS, storage, or edge functions.</li>
+          <li>Pin tool versions, cache browsers, cancel outdated concurrent runs, and install required fonts for evidence screenshots.</li>
+          <li>Raise connection pools and fix gateway keep-alive mismatches that only appear under parallel load.</li>
+          <li>Keep host metrics in the job summary so “test bug” and “too many workers” can be distinguished.</li>
+        </ol>
+
+        <h3>2.4. Add impact-based execution and anti-flake rules</h3>
+        <ol>
+          <li>Map changed paths to affected specs with first-match rules and fail-open fallback.</li>
+          <li>Run full E2E when test code itself changes; run impact E2E for ordinary app changes.</li>
+          <li>Ban <code>waitForTimeout</code>; wait for UI or network state instead.</li>
+          <li>Use web-first assertions, positive landmarks before absence checks, and zero CI retries.</li>
+          <li>Keep videos, screenshots, and traces as investigation evidence.</li>
+        </ol>
+
+        <div class="warning">
+          Berry’s production numbers depend on Larger Runners, Supabase, Kong tuning, and a mature
+          suite. A practice project can validate the method’s shape, but it will not reproduce their
+          exact 6–8 minute timing for 140 cases.
+        </div>
+      </section>
+
+      <section id="practice">
+        <h2>3. Hands-on practice and results</h2>
+
+        <p>
+          Because the original QMSmart stack is private, I implemented a local practice demo that
+          captures the transferable parts of the method:
+        </p>
+
+        <ul>
+          <li>a mini document workflow app (draft → review requested → approved)</li>
+          <li>per-test fixtures with unique titles and teardown</li>
+          <li>Page Object Model with state-based waits only</li>
+          <li>light and heavy Playwright projects</li>
+          <li>an impact-map resolver with first-match and fail-open behavior</li>
+          <li>a sample GitHub Actions matrix workflow</li>
+        </ul>
+
+        <p>
+          The practice package lives in
+          <code>blog-html/playwright-parallel-e2e-ci/practice-demo/</code>.
+          Setup and commands are documented in <code>HUONG-DAN-DEMO.md</code>.
+        </p>
+
+        <h3>Master setup commands</h3>
+        <pre>cd blog-html/playwright-parallel-e2e-ci/practice-demo
+npm install
+npx playwright install chromium
+npx playwright test
+node scripts/resolve-impact.js app/index.html
+npx playwright test --project=light-r1-document
+npx playwright test --project=heavy-r1-document</pre>
+
+        <h3>Key config practiced</h3>
+        <pre>// light: higher parallelism for ordinary UI/CRUD
+fullyParallel: true
+workers: 3–4
+
+// heavy: slower path that simulates Edge Function work
+fullyParallel: false
+workers: 2
+timeout: 60_000</pre>
+
+        <h3>Execution results on this machine</h3>
+        <ul>
+          <li><strong>Full suite:</strong> 3 passed in about 10.0s using 3 workers.</li>
+          <li><strong>Light project only:</strong> 2 passed in about 4.6s.</li>
+          <li><strong>Heavy project only:</strong> 1 passed in about 7.3s.</li>
+          <li><strong>Impact resolve for <code>app/index.html</code>:</strong> matched <code>document-ui</code> and selected both specs.</li>
+          <li><strong>Impact resolve for the heavy spec file:</strong> matched <code>document-heavy-only</code> and selected one spec.</li>
+        </ul>
+
+        <p>
+          The light tests covered draft creation, review request, task-list visibility, and audit-log
+          evidence. The heavy test walked the same flow into an approval step with an intentional
+          delay to represent a slow edge-style operation. No <code>waitForTimeout</code> calls were
+          used in Page Objects or specs.
+        </p>
+
+        <p>
+          Detailed command logs are stored under <code>demo-assets/</code>, including
+          <code>01-full-suite-run.txt</code>, impact resolver outputs, and project-only runs.
+          The summarized evidence is in <code>demo-assets/06-demo-run-log.md</code>.
+        </p>
+
+        <div class="note">
+          What this practice proved: the architecture works locally and stays readable.
+          What it did not claim: reproduction of Berry’s Kong 502 root-cause fix, PSI monitoring, or
+          their production CI wall-clock.
+        </div>
+      </section>
+
+      <section id="opinion">
+        <h2>4. Opinion and daily-work application</h2>
+
+        <p>
+          My main takeaway is that “make Playwright faster” is the wrong starting question. The useful
+          question is whether the suite is safe to run in parallel. Once tests own their data, avoid
+          shared accounts, and hide waits inside Page Objects, worker count becomes a tuning dial
+          instead of a source of random failures.
+        </p>
+
+        <p>
+          For my own daily work, I would apply this in four practical ways:
+        </p>
+
+        <ol>
+          <li>
+            <strong>PR feedback for UI features:</strong> keep a small, always-on light suite for
+            critical flows, and isolate slow integrations as heavy so they do not block ordinary
+            reviews.
+          </li>
+          <li>
+            <strong>Impact gating before push:</strong> maintain a simple path-to-spec map so local
+            and CI run the same affected set. That reduces “I only changed copy, why did the whole
+            suite run?” cost without silently skipping risk.
+          </li>
+          <li>
+            <strong>Flake reduction as team policy:</strong> treat Iron Law rules as review criteria.
+            Ban fixed sleeps, require web-first assertions, and keep CI retries at zero so flaky tests
+            stay visible.
+          </li>
+          <li>
+            <strong>Measure before raising concurrency:</strong> if parallel jobs start failing with
+            timeouts or gateway errors, inspect infrastructure limits first. Raising workers without
+            telemetry recreates the article’s old failure mode in a new form.
+          </li>
+        </ol>
+
+        <p>
+          Even outside a regulated QMS product, the URS-style S/E step naming is worth borrowing.
+          Specs become easier to read in failure reports, and the same structure helps when AI tools
+          generate or revise tests because the quality bar is explicit.
+        </p>
+      </section>
+
+      <section id="conclusion">
+        <h2>5. Conclusion</h2>
+
+        <p>
+          Berry’s article shows a complete method for turning E2E from a slow overnight burden into a
+          PR-native quality gate: isolate data, split light and heavy work, tune CI under real load,
+          and enforce anti-flake rules mechanically.
+        </p>
+
+        <p>
+          The local practice demo confirms that the transferable core is implementable without their
+          full production stack. With fixtures, POM, project splits, and impact selection in place,
+          a small suite already runs cleanly in seconds and stays understandable. Scaling further is
+          then an operations problem—runners, pools, gateway timeouts, and measurement—not only a
+          Playwright config problem.
+        </p>
+      </section>
+
+      <section id="references">
+        <h2>6. References</h2>
+        <ul>
+          <li>
+            <a href="https://zenn.dev/berry_blog/articles/39392e1da7ca71" target="_blank" rel="noopener">
+              Berry Zenn — E2E tests at unit-test speed: Playwright parallelization and GitHub Actions tuning
+            </a>
+          </li>
+          <li>
+            <a href="https://playwright.dev/docs/test-parallel" target="_blank" rel="noopener">
+              Playwright docs — Parallelism and sharding
+            </a>
+          </li>
+          <li>
+            <a href="https://playwright.dev/docs/pom" target="_blank" rel="noopener">
+              Playwright docs — Page object models
+            </a>
+          </li>
+          <li>
+            <a href="https://martinfowler.com/articles/practical-test-pyramid.html" target="_blank" rel="noopener">
+              Martin Fowler — The Practical Test Pyramid
+            </a>
+          </li>
+        </ul>
+      </section>
+
+      <footer>
+        <p>Prepared July 24, 2026. Practice demo folder: <code>practice-demo/</code></p>
+        <p>Run log: <code>demo-assets/06-demo-run-log.md</code></p>
+        <p>Vietnamese version: <a href="index-vi.html">index-vi.html</a></p>
+      </footer>
+    </main>
+  </body>
+</html>

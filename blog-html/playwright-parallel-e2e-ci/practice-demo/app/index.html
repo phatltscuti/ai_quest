@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Mini QMS Document App</title>
+    <style>
+      body { font-family: Segoe UI, Arial, sans-serif; margin: 24px; color: #202124; }
+      h1 { margin-top: 0; }
+      .card { border: 1px solid #dadce0; border-radius: 8px; padding: 16px; margin-bottom: 16px; max-width: 720px; }
+      button { margin-right: 8px; margin-top: 8px; padding: 8px 12px; cursor: pointer; }
+      #busy { display: none; color: #174ea6; font-weight: 600; }
+      #toast { display: none; margin-top: 12px; padding: 8px 12px; background: #e6f4ea; border-left: 4px solid #188038; }
+      table { border-collapse: collapse; width: 100%; }
+      th, td { border: 1px solid #dadce0; padding: 8px; text-align: left; }
+      .muted { color: #5f6368; font-size: 14px; }
+    </style>
+  </head>
+  <body>
+    <h1>Mini QMS Document App</h1>
+    <p class="muted">Practice target for parallel Playwright E2E patterns.</p>
+
+    <div class="card">
+      <h2>Create document</h2>
+      <label>Title <input id="title-input" data-testid="title-input" value="SOP-001" /></label>
+      <button id="create-btn" data-testid="create-btn">Create draft</button>
+      <div id="busy" data-testid="busy">Working...</div>
+      <div id="toast" data-testid="toast">Done</div>
+    </div>
+
+    <div class="card">
+      <h2>Document detail</h2>
+      <p>ID: <span id="doc-id" data-testid="doc-id">-</span></p>
+      <p>Title: <span id="doc-title" data-testid="doc-title">-</span></p>
+      <p>Status: <span id="doc-status" data-testid="doc-status">-</span></p>
+      <button id="request-review-btn" data-testid="request-review-btn" disabled>Request review</button>
+      <button id="approve-btn" data-testid="approve-btn" disabled>Approve (heavy)</button>
+    </div>
+
+    <div class="card">
+      <h2>Reviewer tasks</h2>
+      <table>
+        <thead>
+          <tr><th>Document ID</th><th>Title</th></tr>
+        </thead>
+        <tbody id="task-list" data-testid="task-list"></tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <h2>Audit log</h2>
+      <ul id="audit-log" data-testid="audit-log"></ul>
+    </div>
+
+    <script src="./app.js"></script>
+  </body>
+</html>

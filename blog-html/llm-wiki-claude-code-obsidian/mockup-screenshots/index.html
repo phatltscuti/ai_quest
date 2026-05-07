@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>LLM Wiki — HTML mockups (Windows-style)</title>
+  <style>
+    body { font-family: "Segoe UI", system-ui, sans-serif; background: #1e1e1e; color: #e4e4e4; margin: 0; padding: 32px 40px; line-height: 1.6; }
+    h1 { font-size: 1.35rem; font-weight: 600; margin: 0 0 8px; }
+    .sub { color: #9d9d9d; font-size: 0.92rem; margin-bottom: 24px; max-width: 720px; }
+    ul { max-width: 760px; padding-left: 20px; }
+    li { margin: 10px 0; }
+    a { color: #6cb6ff; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    code { background: #2d2d2d; padding: 2px 7px; border-radius: 4px; font-size: 0.88em; font-family: Consolas, monospace; }
+    .path { color: #9cdcfe; font-family: Consolas, monospace; font-size: 0.85rem; word-break: break-all; }
+    .tip { border-left: 4px solid #0078d4; padding: 14px 18px; background: #252526; margin: 24px 0; max-width: 760px; font-size: 0.92rem; color: #ccc; }
+  </style>
+</head>
+<body>
+  <h1>HTML mockups — Windows 11–style chrome</h1>
+  <p class="sub">
+    Fake Obsidian + PowerShell windows for screenshots. Path used everywhere:
+  </p>
+  <p class="path">Older steps: <code>D:\Users\PhatLT\Projects\ai_quest\...\sample-llm-wiki</code></p>
+  <p class="path" style="margin-top:8px"><b>Step 6 (real Obsidian-like layout):</b> <code>D:\PhatLT\project\sample-llm-wiki</code> · uses <code>obsidian-faithful.css</code></p>
+  <p class="sub" style="margin-top:16px">
+    Open any <code>step-*.html</code> at ~1280px width, zoom 100%, then <kbd style="background:#333;padding:2px 6px;border-radius:3px">Win+Shift+S</kbd> and save PNGs into <code>../images/</code> with the names below.
+  </p>
+  <div class="tip">
+    Corner label <i>HTML mock</i> can be hidden for a cleaner shot: in <code>mockup-base.css</code> add <code>.mock-label { display: none !important; }</code> temporarily.
+  </div>
+  <ul>
+    <li><a href="step-01-obsidian-open-as-vault.html">Step 1 — Vault + file tree</a> → <code>step-01-obsidian-open-as-vault.png</code></li>
+    <li><a href="step-02-file-explorer-wiki-overview.html">Step 2 — <code>wiki/overview.md</code></a> → <code>step-02-file-explorer-wiki-overview.png</code></li>
+    <li><a href="step-03-graph-view.html">Step 3 — Graph view</a> → <code>step-03-graph-view.png</code></li>
+    <li><a href="step-04-claude-md-schema.html">Step 4 — <code>CLAUDE</code> reading view (Obsidian-faithful: left rail Graph…, two-row explorer toolbar, <code>#171717</code> sidebar)</a> → <code>step-04-claude-md-schema.png</code></li>
+    <li><a href="step-05-index-and-log.html">Step 5 — Split: index + log</a> → <code>step-05-index-and-log.png</code></li>
+    <li><a href="step-06-raw-source-immutable.html">Step 6 — <code>raw/</code> note (faithful Obsidian UI: tabs, left ribbon, breadcrumbs, status bar)</a> → <code>step-06-raw-source-immutable.png</code></li>
+    <li><a href="step-07-claude-code-terminal-optional.html">Step 7 — PowerShell / Claude Code (optional)</a> → <code>step-07-claude-code-terminal-optional.png</code></li>
+    <li><a href="step-08-git-status-optional.html">Step 8 — <code>git status</code> (optional)</a> → <code>step-08-git-status-optional.png</code></li>
+  </ul>
+</body>
+</html>

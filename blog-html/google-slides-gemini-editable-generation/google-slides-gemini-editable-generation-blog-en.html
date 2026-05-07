@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Create a fully native, editable presentation with Gemini in Google Slides</title>
+    <style>
+      *{box-sizing:border-box}body{margin:0;font-family:"Segoe UI",Arial,sans-serif;color:#202124;line-height:1.75}
+      .wrap{max-width:1040px;margin:auto;padding:24px}a{color:#1a73e8;text-decoration:none}a:hover{text-decoration:underline}
+      h1{margin:0;color:#1a73e8;font-size:30px}h2{margin:36px 0 14px;border-bottom:3px solid #1a73e8;padding-bottom:8px;font-size:22px}
+      h3{font-size:18px;margin-top:24px}ul,ol{padding-left:24px}li{margin-bottom:7px}
+      .hero{border:2px solid #1a73e8;border-radius:14px;padding:24px 28px;background:linear-gradient(135deg,#e8f0fe,#fff)}
+      .note,.warning{padding:12px 16px;margin:16px 0;border-radius:0 8px 8px 0}.note{border-left:4px solid #4285f4;background:#e8f0fe}.warning{border-left:4px solid #ea4335;background:#fce8e6}
+      table{border-collapse:collapse;width:100%;margin:16px 0;font-size:14px}th,td{border:1px solid #dadce0;padding:10px 12px;text-align:left;vertical-align:top}th{background:#1a73e8;color:#fff}
+      pre{white-space:pre-wrap;word-break:break-word;border:1px solid #dadce0;background:#f8f9fa;border-radius:8px;padding:15px;font:12px/1.6 Consolas,monospace}
+      code{background:#e8f0fe;border:1px solid #d2e3fc;border-radius:4px;padding:2px 6px;color:#174ea6}
+      figure{text-align:center;margin:22px 0}figure img{max-width:100%;border:2px solid #dadce0;border-radius:8px}figcaption{font-size:13px;color:#5f6368;font-style:italic}
+      .placeholder{display:none;border:2px dashed #f9ab00;background:#fef7e0;padding:24px;border-radius:8px}figure.missing img{display:none}figure.missing .placeholder{display:block}
+      .footer{margin-top:40px;border-top:2px solid #dadce0;padding-top:18px;color:#5f6368;font-size:13px}
+    </style>
+  </head>
+  <body>
+    <main class="wrap">
+      <header class="hero">
+        <h1>Create a fully native, editable presentation with Gemini in Google Slides</h1>
+        <p>Feature overview, exact full-deck workflow, a reproducible Northwind exercise, observed results, and practical work applications.</p>
+      </header>
+
+      <div class="warning">
+        This article covers the <strong>June 30, 2026 full-presentation launch</strong>, not only the April 2026 single-slide generation update.
+      </div>
+
+      <h2>1. Overview</h2>
+      <p>Gemini can now build a complete multi-slide presentation from one request. It can ground the deck in Drive content, use another presentation as a style reference, ask clarifying questions, and let the user edit the proposed outline before generation. The resulting slides remain editable in Google Slides.</p>
+      <table>
+        <thead><tr><th>Capability</th><th>Practical value</th></tr></thead>
+        <tbody>
+          <tr><td>Full-deck generation</td><td>Turns a goal and structure into a multi-slide draft rather than generating one slide at a time.</td></tr>
+          <tr><td>Drive grounding</td><td>Uses selected reference files; Gemini may also suggest relevant Drive files, email, or chat for the user to add.</td></tr>
+          <tr><td>Style matching</td><td>Uses an existing deck to guide the desired look and feel.</td></tr>
+          <tr><td>Editable plan</td><td>Shows Overview, Sources, and slide Steps before generation; users can add, delete, or edit steps.</td></tr>
+          <tr><td>Native output</td><td>Users can continue editing the generated deck and refine individual slides or images.</td></tr>
+        </tbody>
+      </table>
+      <ul>
+        <li><strong>Availability:</strong> desktop and English only at the time of review.</li>
+        <li><strong>Rollout:</strong> extended rollout for Rapid and Scheduled Release domains started June 29, 2026 and may take longer than 15 days.</li>
+        <li><strong>Plans:</strong> Business Standard/Plus, Enterprise Standard/Plus, Google AI Pro/Ultra, Google AI Pro for Education, and AI Expanded Access.</li>
+        <li><strong>Admin:</strong> no dedicated admin control for this feature.</li>
+        <li><strong>Limits:</strong> Google announced promotional higher multi-slide limits through at least August 1, 2026; per-user limits apply afterward.</li>
+      </ul>
+
+      <h2>2. Exact workflow</h2>
+      <ol>
+        <li>On a computer, open Google Slides.</li>
+        <li>From the start screen, click <strong>Presentation</strong>; alternatively, in a blank presentation with no existing slides, click <strong>Ask Gemini</strong>.</li>
+        <li>Describe the topic, audience, goal, slide count, structure, and visual requirements.</li>
+        <li>Optionally choose <strong>Add sources → Add from Drive</strong> and attach one or more content references.</li>
+        <li>Optionally choose <strong>Match presentation style → Add from Drive</strong> and attach a style deck.</li>
+        <li>Answer or skip Gemini's clarifying questions.</li>
+        <li>Click <strong>Next</strong>. Review the generated Overview, Sources, and slide-by-slide Steps.</li>
+        <li>Edit titles/descriptions; use <strong>Add step</strong> or <strong>Delete</strong>; click <strong>Update plan</strong> after changes.</li>
+        <li>Click <strong>Approve</strong>.</li>
+        <li>Keep the Slides tab and Gemini panel open while the deck is generated.</li>
+        <li>Verify facts and editability, then refine slides, add slides, or add/edit images.</li>
+      </ol>
+
+      <h2>3. Reproducible Northwind exercise</h2>
+      <p>The exercise asks Gemini to produce a six-slide executive approval deck from <code>Project brief — Northwind</code> while matching <code>STYLE_Reference_Deck</code>.</p>
+      <pre>Create a fully editable 6-slide presentation for an internal executive review titled
+"Northwind Customer Portal MVP".
+
+Audience: delivery director, presales lead, operations lead, and solution architect.
+Goal: approve a 10-week MVP discovery and delivery plan.
+
+Required format: title; executive summary; current-state problem; proposed solution;
+scope and 10-week plan; success metrics, risks, and next steps.
+
+Ground every fact in "Project brief — Northwind". Match "STYLE_Reference_Deck".
+Use native editable text boxes, shapes, diagrams, tables, and charts.
+Do not invent financial figures, customer quotes, or commitments.</pre>
+      <p>The complete prompt, follow-up answers, outline edits, fallback prompts, source brief, and run log are stored in <code>demo-assets/</code>.</p>
+
+      <h2>4. Practice process and observed result</h2>
+      <p><strong>Verified:</strong> the existing screenshots document a real Northwind practice run using Gemini's native single-slide UI: the operator attached a style deck and project brief, generated and inserted five slides, enhanced layouts, and tested editable objects.</p>
+      <p><strong>Not yet verified on that tenant:</strong> the screenshots predate the full-presentation rollout and therefore do not prove the newer follow-up, plan, Update plan, and Approve screens. The browser session used for this review reached Google sign-in and could not run the account-bound workflow.</p>
+      <figure>
+        <img src="images/step-11-five-slide-thumbnail-strip.png" alt="Five-slide Northwind practice deck" loading="lazy" onerror="this.closest('figure').classList.add('missing')" />
+        <div class="placeholder">Missing <code>images/step-11-five-slide-thumbnail-strip.png</code></div>
+        <figcaption>Verified practice result: five-slide Northwind deck in the Slides filmstrip.</figcaption>
+      </figure>
+      <p>Observed strengths were consistent styling, useful source grounding, and editable slide objects. Manual review was still necessary for content density, diagrams, timelines, and every figure.</p>
+
+      <h2>5. Full-deck screenshot plan</h2>
+      <p>The Vietnamese guide <code>HUONG-DAN-DEMO-CHUP-ANH.md</code> provides click-by-click instructions. Capture at least:</p>
+      <ol>
+        <li>Blank presentation and Ask Gemini entry point.</li>
+        <li>Content source and style-reference deck.</li>
+        <li>Clarifying question and answer.</li>
+        <li>Overview and Sources in the plan.</li>
+        <li>Edited six-slide outline after Update plan.</li>
+        <li>Approve/generating state.</li>
+        <li>Completed six-slide filmstrip.</li>
+        <li>Object selection handles proving native editability.</li>
+      </ol>
+      <figure>
+        <img src="images/full-10-native-editable-proof.png" alt="Native editable object proof" loading="lazy" onerror="this.closest('figure').classList.add('missing')" />
+        <div class="placeholder">To capture: <code>images/full-10-native-editable-proof.png</code></div>
+        <figcaption>Select and edit a real text box, shape, or diagram; a slideshow screenshot alone does not prove editability.</figcaption>
+      </figure>
+
+      <h2>6. How I would use it in daily work</h2>
+      <p>I would treat this as a controlled first-draft engine, not as a replacement for a designer or content owner. It is most valuable when a team already has a trusted brief and a clean brand deck but needs a structured presentation quickly.</p>
+      <ul>
+        <li><strong>Presales:</strong> turn an approved brief into a proposal-review deck.</li>
+        <li><strong>Weekly reviews:</strong> enforce a repeatable progress, risk, decision, and next-step format.</li>
+        <li><strong>Training:</strong> convert a handbook into editable onboarding material.</li>
+        <li><strong>Executive briefs:</strong> constrain word count and state the required decision in the prompt.</li>
+        <li><strong>Documentation:</strong> capture prompt, plan, output, and editability as reproducible evidence.</li>
+      </ul>
+      <div class="note">The highest-leverage action is reviewing the outline before approval. Fixing structure at the plan stage is cheaper than rebuilding ten generated slides.</div>
+
+      <h2>7. Limits and safeguards</h2>
+      <ul>
+        <li>Rollout timing and per-user limits vary.</li>
+        <li>English-only availability may require translation and a second review.</li>
+        <li>Grounding reduces but does not eliminate unsupported claims.</li>
+        <li>Do not attach confidential or personal data without authorization.</li>
+        <li>Native output can still have weak hierarchy, alignment, or chart choices.</li>
+        <li>Verify every number, date, name, promise, sharing permission, and accessibility requirement.</li>
+      </ul>
+
+      <h2>8. References</h2>
+      <ul>
+        <li><a href="https://workspaceupdates.googleblog.com/2026/06/create-fully-native-and-editable-presentations-with-Gemini-in-Google-Slides.html" target="_blank" rel="noopener">Google Workspace Updates — June 30, 2026 announcement</a></li>
+        <li><a href="https://support.google.com/docs/answer/17111393" target="_blank" rel="noopener">Google Docs Editors Help — Generate presentations with Gemini in Google Slides</a></li>
+        <li><a href="https://knowledge.workspace.google.com/admin/releases/choose-when-users-get-new-features" target="_blank" rel="noopener">Google Workspace Admin Help — Release tracks</a></li>
+      </ul>
+      <footer class="footer">Sources reviewed July 21, 2026. The Vietnamese article is the primary, more detailed version.</footer>
+    </main>
+    <script>
+      document.querySelectorAll("figure img").forEach(function(img){
+        function missing(){var f=img.closest("figure");if(f)f.classList.add("missing")}
+        img.addEventListener("error",missing);if(img.complete&&!img.naturalWidth)missing();
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,17 @@
+{
+  "name": "playwright-parallel-e2e-practice",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Practice demo for Berry Zenn article: Playwright parallelization + CI tuning patterns",
+  "scripts": {
+    "test": "playwright test",
+    "test:light": "playwright test --project=light-r1-document",
+    "test:heavy": "playwright test --project=heavy-r1-document",
+    "test:impact": "node scripts/run-impact.js",
+    "resolve-impact": "node scripts/resolve-impact.js",
+    "report": "playwright show-report"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.40.1"
+  }
+}

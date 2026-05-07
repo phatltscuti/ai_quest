@@ -1,0 +1,13 @@
+# Prompt mẫu — Enhance slide hiện có (Enhance this slide / chỉnh layout & nội dung)
+
+--- ENHANCE A — Giảm chữ ---
+Simplify this slide with less text and add an image placeholder on the right. Keep brand style.
+
+--- ENHANCE B — Hai cột ---
+Convert to two columns: left key bullets, right a simple comparison table (As-is vs To-be).
+
+--- ENHANCE C — Biểu đồ từ bảng ---
+Turn the table on this slide into an editable bar chart showing weeks 1–10 effort (discovery lower, build peak, UAT medium).
+
+--- ENHANCE D — Tone ---
+Make the tone more formal for executive audience. Shorten bullet lines to max 8 words each.

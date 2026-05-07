@@ -1,0 +1,734 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap");
+
+/*
+  Obsidian default-like dark UI (faithful to typical v1.7+ layout).
+  Vault path tooltip: D:\PhatLT\project\sample-llm-wiki
+*/
+
+.obsidian-shell.chrome-app {
+  width: 1280px;
+  max-width: 100%;
+  height: 760px;
+  margin: 16px auto;
+  border-radius: 0;
+  border: 1px solid #191919;
+  font-family: Inter, "Segoe UI Variable", "Segoe UI", system-ui, sans-serif;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.45);
+}
+
+.obsidian-shell.chrome-app > .obs-workspace {
+  flex: 1;
+  min-height: 0;
+}
+
+/* —— Tab strip + window controls (Electron / Win) —— */
+.obs-elec-top {
+  display: flex;
+  align-items: stretch;
+  height: 36px;
+  background: #272727;
+  border-bottom: 1px solid #191919;
+  flex-shrink: 0;
+}
+
+.obs-tabs-wrap {
+  flex: 1;
+  display: flex;
+  align-items: flex-end;
+  padding: 0 0 0 6px;
+  gap: 2px;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.obs-tab-pill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  max-width: min(280px, 38vw);
+  height: 34px;
+  padding: 0 10px 0 14px;
+  margin-bottom: -1px;
+  background: #1e1e1e;
+  border: 1px solid #373737;
+  border-bottom: none;
+  border-radius: 6px 6px 0 0;
+  font-size: 12.5px;
+  color: #e0e0e0;
+  cursor: default;
+}
+
+.obs-tab-pill .obs-tab-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+  min-width: 0;
+}
+
+.obs-tab-pill .tab-close {
+  width: 18px;
+  height: 18px;
+  border: none;
+  border-radius: 3px;
+  background: transparent;
+  color: #9a9a9a;
+  font-size: 14px;
+  line-height: 1;
+  padding: 0;
+  cursor: default;
+}
+
+.obs-tab-pill .tab-close:hover {
+  background: #3e3e3e;
+  color: #fff;
+}
+
+.obs-new-tab-btn {
+  width: 34px;
+  height: 30px;
+  margin: 0 4px 2px;
+  align-self: center;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: #b8b8b8;
+  font-size: 18px;
+  line-height: 1;
+}
+
+.obs-new-tab-btn:hover {
+  background: #3a3a3a;
+  color: #fff;
+}
+
+.obs-electron-controls {
+  display: flex;
+  flex-shrink: 0;
+}
+
+.obs-electron-controls button {
+  width: 46px;
+  border: none;
+  background: transparent;
+  color: #e8e8e8;
+  font-size: 11px;
+  cursor: default;
+}
+
+.obs-electron-controls button:hover {
+  background: #393939;
+}
+
+.obs-electron-controls .ec-close:hover {
+  background: #e81123;
+  color: #fff;
+}
+
+/* —— Workspace: ribbon + explorer + editor —— */
+.obs-workspace {
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+  min-height: 0;
+  background: #1e1e1e;
+}
+
+.obs-v-ribbon {
+  width: 44px;
+  flex-shrink: 0;
+  background: #252526;
+  border-right: 1px solid #2b2b2b;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 6px;
+  gap: 2px;
+}
+
+.obs-v-ribbon .rb {
+  width: 38px;
+  height: 38px;
+  border: none;
+  border-radius: 5px;
+  background: transparent;
+  color: #c0c0c0;
+  display: grid;
+  place-items: center;
+  cursor: default;
+}
+
+.obs-v-ribbon .rb svg {
+  width: 18px;
+  height: 18px;
+  opacity: 0.88;
+}
+
+.obs-v-ribbon .rb.on {
+  color: #c7a2ff;
+  background: rgba(167, 130, 255, 0.12);
+}
+
+.obs-v-ribbon-spacer {
+  flex: 1;
+  min-height: 24px;
+}
+
+.obs-v-ribbon .rb-bot {
+  margin-bottom: 4px;
+}
+
+/* File explorer column */
+.obs-explorer {
+  width: 246px;
+  flex-shrink: 0;
+  background: #252526;
+  border-right: 1px solid #2b2b2b;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.obs-fe-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 6px 8px;
+  border-bottom: 1px solid #323232;
+}
+
+.obs-fe-toolbar button {
+  width: 26px;
+  height: 24px;
+  border: none;
+  border-radius: 3px;
+  background: transparent;
+  color: #b0b0b0;
+  font-size: 13px;
+  padding: 0;
+  cursor: default;
+}
+
+.obs-fe-toolbar button:hover {
+  background: #3c3c3c;
+  color: #fff;
+}
+
+.obs-fe-tree {
+  flex: 1;
+  overflow: auto;
+  padding: 4px 0 8px;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.obs-t-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  cursor: default;
+  color: #d4d4d4;
+  user-select: none;
+}
+
+.obs-t-row:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.obs-t-row.sel {
+  background: rgba(167, 130, 255, 0.24);
+}
+
+.obs-t-chev {
+  width: 14px;
+  flex-shrink: 0;
+  font-size: 9px;
+  color: #888;
+}
+
+.obs-t-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.obs-t-row.folder > .obs-t-name {
+  color: #dcb67a;
+  font-weight: 500;
+}
+
+.obs-t-indent-1 {
+  padding-left: 18px;
+}
+
+.obs-t-indent-2 {
+  padding-left: 32px;
+}
+
+.obs-t-indent-3 {
+  padding-left: 46px;
+}
+
+.obs-explorer-footer {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  padding: 8px 8px;
+  border-top: 1px solid #323232;
+  background: #252526;
+  font-size: 12px;
+  color: #c4c4c4;
+}
+
+.obs-vault-chip {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+  cursor: default;
+}
+
+.obs-vault-chip .vn {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.obs-vault-arrows {
+  color: #8a8a8a;
+  font-size: 10px;
+  flex-shrink: 0;
+}
+
+.obs-footer-actions {
+  display: flex;
+  gap: 2px;
+  flex-shrink: 0;
+}
+
+.obs-footer-actions button {
+  width: 28px;
+  height: 26px;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: #a8a8a8;
+  font-size: 14px;
+  cursor: default;
+}
+
+.obs-footer-actions button:hover {
+  background: #3e3e3e;
+  color: #fff;
+}
+
+.obs-footer-actions .ic-gear {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.obs-footer-actions .ic-gear svg {
+  margin-top: 1px;
+}
+
+/* Main editor pane */
+.obs-editor-pane {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  background: #1e1e1e;
+}
+
+.obs-editor-nav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 36px;
+  padding: 0 12px;
+  border-bottom: 1px solid #282828;
+  background: #1e1e1e;
+  flex-shrink: 0;
+}
+
+.obs-editor-nav .nav-arr {
+  width: 26px;
+  height: 26px;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: #9f9f9f;
+  font-size: 15px;
+}
+
+.obs-editor-nav .nav-arr:hover {
+  background: #333;
+  color: #fff;
+}
+
+.obs-breadcrumb {
+  flex: 1;
+  text-align: center;
+  font-size: 12px;
+  color: #9d9d9d;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.obs-breadcrumb span.sep {
+  margin: 0 6px;
+  color: #6f6f6f;
+}
+
+.obs-breadcrumb span.cur {
+  color: #dcdcdc;
+}
+
+.obs-nav-actions {
+  display: flex;
+  gap: 2px;
+}
+
+.obs-nav-actions button {
+  width: 30px;
+  height: 28px;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: #b5b5b5;
+}
+
+.obs-nav-actions button:hover {
+  background: #363636;
+  color: #fff;
+}
+
+.obs-read-content {
+  flex: 1;
+  overflow: auto;
+  padding: 22px 48px 32px;
+  max-width: 820px;
+}
+
+.obs-read-content h1 {
+  font-size: 1.65rem;
+  font-weight: 600;
+  margin: 0 0 8px;
+  color: #eaeaea;
+  letter-spacing: -0.02em;
+}
+
+.obs-read-content h2 {
+  font-size: 1.15rem;
+  font-weight: 600;
+  margin: 20px 0 12px;
+  color: #e4e4e4;
+}
+
+.obs-callout-line {
+  display: flex;
+  align-items: stretch;
+  margin: 10px 0;
+  padding: 0;
+  border-radius: 0;
+}
+
+.obs-callout-line .bar {
+  width: 3px;
+  flex-shrink: 0;
+  border-radius: 2px;
+  background: linear-gradient(180deg, #a882ff 0%, #7c5cbf 100%);
+}
+
+.obs-callout-line .txt {
+  padding: 4px 0 4px 12px;
+  color: #c8c9cc;
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.obs-read-content .ext-link {
+  color: #7eb6ff;
+  text-decoration: none;
+}
+
+.obs-read-content .ext-link:hover {
+  text-decoration: underline;
+}
+
+.obs-read-content ul {
+  margin: 12px 0;
+  padding-left: 22px;
+  color: #c8c9cc;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.obs-read-content li {
+  margin: 6px 0;
+}
+
+.obs-read-content li strong {
+  color: #e8e8e8;
+  font-weight: 600;
+}
+
+.obs-read-content code {
+  font-family: "Cascadia Mono", Consolas, monospace;
+  font-size: 12px;
+  background: rgba(255, 255, 255, 0.08);
+  padding: 1px 5px;
+  border-radius: 3px;
+  color: #9cdcfe;
+}
+
+/* App-wide status bar (Obsidian footer) */
+.obs-app-status {
+  flex-shrink: 0;
+  height: 26px;
+  background: #2d2d2d;
+  border-top: 1px solid #1e1e1e;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 14px;
+  font-size: 11px;
+  color: #b3b3b3;
+}
+
+.obs-app-status .as-right {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-variant-numeric: tabular-nums;
+  color: #a8a8a8;
+}
+
+.obs-app-status .muted {
+  color: #8f8f8f;
+}
+
+.obs-app-status .tiny-ico {
+  font-size: 12px;
+  color: #9a9a9a;
+}
+
+.obs-app-status span:first-child {
+  color: #c4c4c4;
+}
+
+/* —— Match reference screenshot (CLAUDE note, full left rail) —— */
+.obsidian-match.chrome-app,
+.obsidian-match.obsidian-shell {
+  font-family: Inter, "Segoe UI", system-ui, sans-serif;
+}
+
+.obsidian-match .obs-elec-top {
+  background: #1f1f1f;
+}
+
+.obsidian-match .obs-v-ribbon {
+  width: 48px;
+  background: #171717;
+  border-right: 1px solid #252525;
+  padding-top: 4px;
+  gap: 0;
+}
+
+.obsidian-match .obs-v-ribbon .rb {
+  width: 40px;
+  height: 40px;
+  border-radius: 6px;
+  color: #b4b4b4;
+}
+
+.obsidian-match .obs-v-ribbon .rb.on {
+  color: #dcdcdc;
+  background: #2a2a2a;
+}
+
+.obsidian-match .obs-v-ribbon .rb svg {
+  width: 17px;
+  height: 17px;
+  stroke-width: 2;
+}
+
+.obsidian-match .obs-explorer {
+  width: 252px;
+  background: #171717;
+  border-right: 1px solid #252525;
+}
+
+.obsidian-match .obs-fe-toolbar-wrap {
+  border-bottom: 1px solid #252525;
+}
+
+.obsidian-match .obs-fe-row {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 4px 6px;
+}
+
+.obsidian-match .obs-fe-row + .obs-fe-row {
+  border-top: 1px solid #222;
+}
+
+.obsidian-match .obs-fe-row .fe-ic {
+  width: 28px;
+  height: 26px;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: #a6a6a6;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: default;
+  padding: 0;
+}
+
+.obsidian-match .obs-fe-row .fe-ic:hover {
+  background: #2e2e2e;
+  color: #eee;
+}
+
+.obsidian-match .obs-fe-row .fe-ic.active {
+  color: #e8e8e8;
+  background: #2a2a2a;
+}
+
+.obsidian-match .obs-fe-row .fe-ic svg {
+  width: 16px;
+  height: 16px;
+}
+
+.obsidian-match .obs-fe-tree {
+  background: #171717;
+}
+
+.obsidian-match .obs-t-row {
+  color: #dcddde;
+}
+
+.obsidian-match .obs-t-row.sel {
+  background: #363636;
+  border-radius: 3px;
+  margin: 0 4px;
+  padding-left: 6px;
+  padding-right: 6px;
+}
+
+.obsidian-match .obs-t-row.folder > .obs-t-name {
+  color: #d4b87a;
+}
+
+.obsidian-match .obs-explorer-footer {
+  background: #171717;
+  border-top-color: #252525;
+}
+
+.obsidian-match .obs-editor-pane {
+  background: #1e1e1e;
+}
+
+.obsidian-match .obs-read-content {
+  color: #dcddde;
+  max-width: 720px;
+}
+
+.obsidian-match .obs-read-content h1.obs-note-filename {
+  font-size: 1.75rem;
+  font-weight: 600;
+  margin: 0 0 16px;
+  color: #ececec;
+}
+
+.obsidian-match .obs-read-content h2 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin: 22px 0 10px;
+  color: #ececec;
+}
+
+.obsidian-match .obs-read-content p,
+.obsidian-match .obs-read-content li {
+  font-size: 15px;
+  line-height: 1.65;
+  color: #dcddde;
+}
+
+.obsidian-match .obs-read-content .obs-wikilink {
+  color: #ab7fe6;
+  text-decoration: none;
+}
+
+.obsidian-match .obs-read-content .obs-wikilink:hover {
+  text-decoration: underline;
+}
+
+.obsidian-match .obs-read-content ol {
+  margin: 8px 0 8px 20px;
+  padding: 0;
+}
+
+.obsidian-match .obs-read-content ol li {
+  margin: 8px 0;
+}
+
+.obsidian-match .obs-read-content ul {
+  margin: 8px 0;
+}
+
+.obsidian-match .obs-read-content code {
+  font-family: "JetBrains Mono", "Cascadia Mono", Consolas, monospace;
+  font-size: 13px;
+  background: rgba(255, 255, 255, 0.06);
+  color: #c9d1d9;
+}
+
+.obsidian-match .obs-fence {
+  font-family: "JetBrains Mono", "Cascadia Mono", Consolas, monospace;
+  font-size: 12.5px;
+  line-height: 1.5;
+  background: #141414;
+  border: 1px solid #2a2a2a;
+  border-radius: 6px;
+  padding: 14px 16px;
+  margin: 12px 0;
+  color: #c8c8c8;
+  overflow-x: auto;
+  white-space: pre;
+}
+
+.obsidian-match .obs-app-status .status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #e05858;
+  display: inline-block;
+  margin-left: 4px;
+}
+
+.obsidian-match .obs-app-status .status-sync svg {
+  width: 13px;
+  height: 13px;
+  stroke: #9a9a9a;
+  opacity: 0.9;
+}
+
+.obsidian-match .obs-vault-chip .vault-ic {
+  display: flex;
+  color: #9a9a9a;
+  flex-shrink: 0;
+}
+
+.obsidian-match .obs-vault-chip .vault-ic svg {
+  width: 14px;
+  height: 14px;
+}

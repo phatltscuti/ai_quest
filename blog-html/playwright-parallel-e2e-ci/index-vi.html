@@ -1,0 +1,395 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Báo cáo thực hành song song hóa Playwright và tối ưu GitHub Actions theo bài viết Zenn của Berry."
+    />
+    <title>Thực hành Playwright Parallel E2E và tối ưu CI</title>
+    <style>
+      * { box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
+      body {
+        margin: 0;
+        color: #202124;
+        background: #ffffff;
+        font: 16px/1.75 "Segoe UI", Arial, sans-serif;
+      }
+      main {
+        width: min(860px, calc(100% - 32px));
+        margin: 0 auto;
+        padding: 36px 0 64px;
+      }
+      header {
+        margin-bottom: 34px;
+        padding-bottom: 24px;
+        border-bottom: 3px solid #1a73e8;
+      }
+      h1 {
+        margin: 0 0 14px;
+        color: #1a73e8;
+        font-size: clamp(30px, 5vw, 44px);
+        line-height: 1.15;
+      }
+      h2 {
+        margin: 42px 0 14px;
+        color: #202124;
+        font-size: 26px;
+        line-height: 1.3;
+      }
+      h3 {
+        margin: 27px 0 10px;
+        color: #174ea6;
+        font-size: 19px;
+        line-height: 1.4;
+      }
+      p { margin: 12px 0; }
+      ul, ol { margin: 12px 0; padding-left: 26px; }
+      li { margin-bottom: 8px; }
+      a { color: #1a73e8; text-decoration: none; }
+      a:hover { text-decoration: underline; }
+      code {
+        padding: 2px 6px;
+        color: #174ea6;
+        background: #e8f0fe;
+        border-radius: 4px;
+        font: 0.88em Consolas, monospace;
+      }
+      pre {
+        overflow-x: auto;
+        margin: 16px 0;
+        padding: 17px;
+        white-space: pre-wrap;
+        word-break: break-word;
+        background: #f8f9fa;
+        border: 1px solid #dadce0;
+        border-radius: 8px;
+        font: 13px/1.65 Consolas, monospace;
+      }
+      .lead {
+        margin: 0;
+        color: #5f6368;
+        font-size: 18px;
+      }
+      .note {
+        margin: 18px 0;
+        padding: 13px 16px;
+        background: #e8f0fe;
+        border-left: 4px solid #1a73e8;
+      }
+      .warning {
+        margin: 18px 0;
+        padding: 13px 16px;
+        background: #fef7e0;
+        border-left: 4px solid #f9ab00;
+      }
+      nav {
+        margin: 24px 0 34px;
+        padding: 16px 20px;
+        background: #f8f9fa;
+        border: 1px solid #dadce0;
+        border-radius: 8px;
+      }
+      nav strong { display: block; margin-bottom: 8px; }
+      nav ol { margin: 0; }
+      footer {
+        margin-top: 46px;
+        padding-top: 20px;
+        color: #5f6368;
+        border-top: 2px solid #dadce0;
+        font-size: 13px;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <header>
+        <h1>Thực hành Playwright parallel E2E và tối ưu GitHub Actions</h1>
+        <p class="lead">
+          Báo cáo thực hành dựa trên bài Zenn của Berry về cách đưa E2E về tốc độ đủ nhanh để chạy
+          trên mọi pull request.
+        </p>
+        <p class="lead" style="margin-top: 10px; font-size: 15px;">
+          Nguồn:
+          <a href="https://zenn.dev/berry_blog/articles/39392e1da7ca71" target="_blank" rel="noopener">
+            E2Eテストをユニットテスト並みの実行時間に — Playwright並列化とGitHub Actionsチューニングの実践
+          </a>
+          · Bản tiếng Anh: <a href="index.html">index.html</a>
+        </p>
+      </header>
+
+      <nav aria-label="Mục lục">
+        <strong>Mục lục</strong>
+        <ol>
+          <li><a href="#overview">Tổng quan phương pháp</a></li>
+          <li><a href="#steps">Các bước triển khai</a></li>
+          <li><a href="#practice">Thực hành và kết quả</a></li>
+          <li><a href="#opinion">Ý kiến và ứng dụng công việc</a></li>
+          <li><a href="#conclusion">Kết luận</a></li>
+          <li><a href="#references">Tài liệu tham khảo</a></li>
+        </ol>
+      </nav>
+
+      <div class="note">
+        <strong>Trạng thái thực hành:</strong> đã dựng mini demo local và chạy thành công trên máy này.
+        Full suite: <strong>3 passed trong khoảng 10 giây</strong>. Demo tập trung vào kiến trúc có thể
+        chuyển giao từ bài viết, không tái tạo toàn bộ stack Supabase/Kong production của Berry.
+      </div>
+
+      <section id="overview">
+        <h2>1. Tổng quan phương pháp</h2>
+
+        <p>
+          Bài viết của Berry mô tả cách team họ chạy khoảng 100 Playwright spec / 140 test case cho
+          sản phẩm QMS SaaS trên mỗi pull request với wall-clock khoảng 6–8 phút. Thời gian này gần
+          với job unit test và lint, nên E2E có thể nằm trong vòng phản hồi PR thông thường thay vì
+          bị đẩy sang nightly batch.
+        </p>
+
+        <p>
+          Ý chính là chỉ tăng workers của Playwright thì chưa đủ. E2E song song chỉ ổn định sau khi
+          suite được thiết kế lại theo bốn lớp:
+        </p>
+
+        <ol>
+          <li>
+            <strong>Cấu trúc test độc lập dữ liệu:</strong> mỗi test tự tạo data qua fixture/factory,
+            teardown sau khi chạy, không chia sẻ state. Giảm chi phí login bằng
+            <code>storageState</code>. Spec chỉ mô tả kịch bản; locator và wait nằm trong Page Object.
+          </li>
+          <li>
+            <strong>Song song hai tầng:</strong> GitHub Actions matrix chia job theo project
+            <code>{load}-{release}-{feature}</code>, mỗi job lại chạy Playwright workers.
+            Test light dùng song song cao hơn; test heavy gọi Edge Function chậm thì giảm workers và
+            tăng timeout.
+          </li>
+          <li>
+            <strong>Tối ưu hạ tầng khi tải tăng:</strong> song song hóa làm lộ giới hạn pool PostgREST
+            và race keep-alive của Kong gây 502. Họ xử lý tận gốc thay vì giấu bằng retry, đồng thời
+            giữ instrumentation để chọn số workers dựa trên đo đạc.
+          </li>
+          <li>
+            <strong>Kỷ luật vận hành:</strong> “Iron Law” cấm sleep cố định và assert snapshot DOM đồng bộ,
+            CI giữ retries = 0, impact map chỉ chạy spec bị ảnh hưởng cho PR app, và AI skill mã hóa
+            cùng một tiêu chuẩn chất lượng cho người lẫn AI.
+          </li>
+        </ol>
+
+        <p>
+          Trước khi redesign, suite cũ chỉ chạy vào buổi sáng ngày thường, mất 30–56 phút, và chỉ được
+          sửa khi có người tình cờ để ý failure. Sau redesign, E2E trở thành điều kiện merge bình thường.
+        </p>
+      </section>
+
+      <section id="steps">
+        <h2>2. Các bước triển khai</h2>
+
+        <p>
+          Bài viết không phải tutorial copy-paste cho mọi repo. Nhìn khách quan, lộ trình triển khai
+          gồm các bước sau:
+        </p>
+
+        <h3>2.1. Thiết kế lại test để độc lập dữ liệu</h3>
+        <ol>
+          <li>Ngừng chia sẻ document, user, hoặc workflow state giữa các test.</li>
+          <li>Tạo fixture theo từng test để insert data riêng và teardown bản ghi phát sinh.</li>
+          <li>Chuẩn bị auth bằng <code>storageState</code> thay vì login UI mỗi lần.</li>
+          <li>Chuẩn bị nhiều account cho mỗi role để worker song song không tranh nhau.</li>
+          <li>Đưa locator, click và wait vào Page Object; giữ spec ở dạng bước S/E.</li>
+        </ol>
+
+        <h3>2.2. Tách Playwright project theo hồ sơ tải</h3>
+        <ol>
+          <li>Gắn tag heavy cho case chậm hoặc phụ thuộc I/O ngoài; case UI/CRUD thường để light.</li>
+          <li>Cấu hình light với <code>fullyParallel: true</code> và workers cao hơn.</li>
+          <li>Cấu hình heavy với ít workers hơn, timeout dài hơn, ít chồng chéo hơn.</li>
+          <li>Chỉnh số workers theo từng domain sau khi đo CPU pressure và kiểu lỗi.</li>
+        </ol>
+
+        <h3>2.3. Dựng CI dạng matrix × full stack sạch</h3>
+        <ol>
+          <li>Chia job theo project trên GitHub Actions, ưu tiên runner riêng/dedicated nếu có.</li>
+          <li>Mỗi job khởi động backend thật nếu sản phẩm phụ thuộc auth, RLS, storage, edge function.</li>
+          <li>Pin version tool, cache browser, hủy run cũ khi push liên tiếp, cài font nếu cần cho ảnh chứng cứ.</li>
+          <li>Tăng connection pool và sửa lệch keep-alive của gateway chỉ lộ khi chạy song song.</li>
+          <li>Giữ metric host trong Job Summary để tách “bug test” khỏi “workers quá cao”.</li>
+        </ol>
+
+        <h3>2.4. Thêm chạy theo impact và luật chống flaky</h3>
+        <ol>
+          <li>Ánh xạ đường dẫn file đổi sang spec bị ảnh hưởng bằng first-match và fail-open.</li>
+          <li>Đổi test code thì chạy full E2E; đổi app thì chạy impact E2E.</li>
+          <li>Cấm <code>waitForTimeout</code>; chỉ wait theo trạng thái UI hoặc network.</li>
+          <li>Dùng web-first assertion, landmark dương trước khi check vắng mặt, retries CI = 0.</li>
+          <li>Giữ video, screenshot và trace làm bằng chứng điều tra.</li>
+        </ol>
+
+        <div class="warning">
+          Số liệu production của Berry phụ thuộc Larger Runner, Supabase, chỉnh Kong và suite trưởng thành.
+          Project thực hành có thể kiểm chứng hình dạng phương pháp, nhưng không tái tạo đúng mốc 6–8 phút
+          cho 140 case.
+        </div>
+      </section>
+
+      <section id="practice">
+        <h2>3. Thực hành và kết quả</h2>
+
+        <p>
+          Vì stack QMSmart gốc là private, tôi dựng một demo local nắm các phần có thể chuyển giao:
+        </p>
+
+        <ul>
+          <li>mini app quy trình document (draft → review requested → approved)</li>
+          <li>fixture theo test với title duy nhất và teardown</li>
+          <li>Page Object Model chỉ dùng state-based wait</li>
+          <li>Playwright project light và heavy</li>
+          <li>impact-map resolver theo first-match và fail-open</li>
+          <li>mẫu workflow GitHub Actions matrix</li>
+        </ul>
+
+        <p>
+          Package thực hành nằm ở
+          <code>blog-html/playwright-parallel-e2e-ci/practice-demo/</code>.
+          Cách chạy nằm trong <code>HUONG-DAN-DEMO.md</code>.
+        </p>
+
+        <h3>Lệnh setup chính</h3>
+        <pre>cd blog-html/playwright-parallel-e2e-ci/practice-demo
+npm install
+npx playwright install chromium
+npx playwright test
+node scripts/resolve-impact.js app/index.html
+npx playwright test --project=light-r1-document
+npx playwright test --project=heavy-r1-document</pre>
+
+        <h3>Config đã thực hành</h3>
+        <pre>// light: song song cao hơn cho UI/CRUD thường
+fullyParallel: true
+workers: 3–4
+
+// heavy: nhánh chậm mô phỏng Edge Function
+fullyParallel: false
+workers: 2
+timeout: 60_000</pre>
+
+        <h3>Kết quả chạy trên máy này</h3>
+        <ul>
+          <li><strong>Full suite:</strong> 3 passed trong khoảng 10.0s với 3 workers.</li>
+          <li><strong>Chỉ light:</strong> 2 passed trong khoảng 4.6s.</li>
+          <li><strong>Chỉ heavy:</strong> 1 passed trong khoảng 7.3s.</li>
+          <li><strong>Impact resolve <code>app/index.html</code>:</strong> khớp rule <code>document-ui</code>, chọn cả hai spec.</li>
+          <li><strong>Impact resolve file heavy:</strong> khớp <code>document-heavy-only</code>, chọn một spec.</li>
+        </ul>
+
+        <p>
+          Test light phủ tạo draft, request review, hiện task list và audit log.
+          Test heavy đi tiếp sang bước approve với delay chủ đích để mô phỏng thao tác edge chậm.
+          Page Object và spec không dùng <code>waitForTimeout</code>.
+        </p>
+
+        <p>
+          Log lệnh chi tiết nằm trong <code>demo-assets/</code>, gồm
+          <code>01-full-suite-run.txt</code>, output impact resolver và các lần chạy theo project.
+          Bản tóm tắt nằm ở <code>demo-assets/06-demo-run-log.md</code>.
+        </p>
+
+        <div class="note">
+          Demo này chứng minh kiến trúc chạy được và dễ đọc ở local.
+          Demo không tuyên bố đã tái tạo fix Kong 502, PSI monitoring, hay wall-clock CI production của Berry.
+        </div>
+      </section>
+
+      <section id="opinion">
+        <h2>4. Ý kiến và ứng dụng công việc hằng ngày</h2>
+
+        <p>
+          Bài học lớn nhất với tôi là câu hỏi đúng không phải “làm sao để Playwright nhanh hơn”,
+          mà là “suite đã an toàn để chạy song song chưa”. Khi mỗi test tự sở hữu data, không tranh
+          account, và nhốt wait trong Page Object, số workers trở thành núm chỉnh thay vì nguồn flake.
+        </p>
+
+        <p>
+          Trong công việc hằng ngày, tôi sẽ áp dụng theo bốn hướng thực tế:
+        </p>
+
+        <ol>
+          <li>
+            <strong>Phản hồi PR cho tính năng UI:</strong> giữ một light suite nhỏ luôn chạy cho flow
+            quan trọng, tách tích hợp chậm thành heavy để không chặn review thông thường.
+          </li>
+          <li>
+            <strong>Impact gate trước khi push:</strong> duy trì map path → spec đơn giản để local và
+            CI chạy cùng một tập bị ảnh hưởng. Giảm chi phí “chỉ sửa copy mà chạy cả suite”, nhưng
+            không bỏ sót rủi ro một cách im lặng.
+          </li>
+          <li>
+            <strong>Giảm flake bằng quy ước nhóm:</strong> đưa Iron Law vào tiêu chí review.
+            Cấm sleep cố định, bắt buộc web-first assertion, giữ retries CI = 0 để flake vẫn lộ ra.
+          </li>
+          <li>
+            <strong>Đo trước khi tăng concurrency:</strong> nếu job song song bắt đầu timeout hoặc
+            lỗi gateway, hãy xem giới hạn hạ tầng trước. Tăng workers khi chưa có telemetry chỉ tạo
+            lại kiểu thất bại cũ dưới hình thức mới.
+          </li>
+        </ol>
+
+        <p>
+          Ngay cả ngoài sản phẩm QMS chịu kiểm soát, cách đặt tên bước S/E theo URS vẫn đáng học.
+          Spec dễ đọc hơn trong báo cáo lỗi, và cùng cấu trúc đó giúp AI tạo/sửa test vì tiêu chuẩn
+          chất lượng đã được viết rõ.
+        </p>
+      </section>
+
+      <section id="conclusion">
+        <h2>5. Kết luận</h2>
+
+        <p>
+          Bài của Berry cho thấy một phương pháp trọn vẹn để biến E2E từ gánh nặng overnight thành
+          cổng chất lượng gắn với PR: cô lập data, tách light/heavy, tối ưu CI dưới tải thật, và ép
+          luật chống flake một cách máy móc.
+        </p>
+
+        <p>
+          Demo thực hành local xác nhận phần lõi có thể chuyển giao mà không cần full stack production.
+          Với fixture, POM, project split và impact selection, một suite nhỏ đã chạy sạch trong vài giây
+          và vẫn dễ hiểu. Muốn scale tiếp lúc đó là bài toán vận hành—runner, pool, gateway timeout và
+          đo đạc—không chỉ còn là chỉnh config Playwright.
+        </p>
+      </section>
+
+      <section id="references">
+        <h2>6. Tài liệu tham khảo</h2>
+        <ul>
+          <li>
+            <a href="https://zenn.dev/berry_blog/articles/39392e1da7ca71" target="_blank" rel="noopener">
+              Berry Zenn — Đưa E2E về tốc độ unit test: song song hóa Playwright và tối ưu GitHub Actions
+            </a>
+          </li>
+          <li>
+            <a href="https://playwright.dev/docs/test-parallel" target="_blank" rel="noopener">
+              Playwright docs — Parallelism and sharding
+            </a>
+          </li>
+          <li>
+            <a href="https://playwright.dev/docs/pom" target="_blank" rel="noopener">
+              Playwright docs — Page object models
+            </a>
+          </li>
+          <li>
+            <a href="https://martinfowler.com/articles/practical-test-pyramid.html" target="_blank" rel="noopener">
+              Martin Fowler — The Practical Test Pyramid
+            </a>
+          </li>
+        </ul>
+      </section>
+
+      <footer>
+        <p>Soạn ngày 24/07/2026. Thư mục demo: <code>practice-demo/</code></p>
+        <p>Nhật ký chạy: <code>demo-assets/06-demo-run-log.md</code></p>
+        <p>Bản tiếng Anh: <a href="index.html">index.html</a></p>
+      </footer>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mock — Step 5 index + log</title>
+  <link rel="stylesheet" href="mockup-base.css" />
+</head>
+<body>
+  <div class="mock-label">HTML mock • not a real product window</div>
+
+  <div class="chrome-app">
+    <header class="win-shell">
+      <div class="win-caption">
+        <div class="win-app-ico" aria-hidden="true"></div>
+        <span class="win-caption-text">sample-llm-wiki — Obsidian</span>
+        <span class="win-caption-ver">v1.8.10</span>
+        <span class="win-caption-spacer"></span>
+        <button type="button" class="win-cap" aria-label="Minimize">&#x2212;</button>
+        <button type="button" class="win-cap" aria-label="Maximize">&#x25A1;</button>
+        <button type="button" class="win-cap win-cap-close" aria-label="Close">&#x2715;</button>
+      </div>
+      <div class="win-toolbar">
+        <div class="tb-nav">
+          <button type="button">&#x2039;</button>
+          <button type="button">&#x203A;</button>
+          <button type="button">&#x25B2;</button>
+        </div>
+        <div class="win-path-box" title="D:\Users\PhatLT\Projects\ai_quest\blog-html\llm-wiki-claude-code-obsidian\sample-llm-wiki"><span class="path-seg">D:</span><span class="path-sep">\</span><span class="path-seg">Users</span><span class="path-sep">\</span><span class="path-seg">PhatLT</span><span class="path-sep">\</span><span class="path-seg">Projects</span><span class="path-sep">\</span><span class="path-seg">ai_quest</span><span class="path-sep">\</span><span class="path-seg">blog-html</span><span class="path-sep">\</span><span class="path-seg">llm-wiki-claude-code-obsidian</span><span class="path-sep">\</span><span class="path-seg">sample-llm-wiki</span></div>
+      </div>
+    </header>
+
+    <div class="obs-body split-layout">
+      <nav class="obs-ribbon"><div class="rib-btn on">&#x1F4C1;</div></nav>
+      <aside class="obs-sidebar">
+        <div class="side-head">Files</div>
+        <div class="tree">
+          <div class="tree-row folder">&#x25BC; sample-llm-wiki</div>
+          <div class="tree-row folder tree-indent">&#x25BC; wiki</div>
+          <div class="tree-row file tree-indent2 tree-hot">index.md</div>
+          <div class="tree-row file tree-indent2 tree-hot">log.md</div>
+        </div>
+      </aside>
+      <section class="dual">
+        <div class="pane obs-main">
+          <div class="tab-row">
+            <div class="tab active">wiki / index.md</div>
+          </div>
+          <div class="content-scroll md">
+            <h1 style="font-size:18px;margin-top:0">Index — sample LLM Wiki</h1>
+            <p style="font-size:12px;color:#999">Catalogue of compiled pages (updated each ingest).</p>
+            <table>
+              <thead><tr><th>Page</th><th>One-line summary</th></tr></thead>
+              <tbody>
+                <tr><td><span class="wikilink">overview</span></td><td>Vault orientation and conventions</td></tr>
+                <tr><td><span class="wikilink">concepts/llm-wiki-pattern</span></td><td>Compiled layer vs naive RAG</td></tr>
+                <tr><td><span class="wikilink">log</span></td><td>Append-only ingest &amp; lint history</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="pane obs-main">
+          <div class="tab-row">
+            <div class="tab active">wiki / log.md</div>
+          </div>
+          <div class="content-scroll md">
+            <h1 style="font-size:18px;margin-top:0">Log</h1>
+            <h2 style="font-size:13px;color:#a8c7ff;margin:12px 0 6px">[2026-05-07] setup | scaffold sample vault</h2>
+            <p style="font-size:12px">Created <code>raw/</code>, <code>wiki/</code>, <code>wiki/concepts/</code>, root <code>CLAUDE.md</code>.</p>
+            <h2 style="font-size:13px;color:#a8c7ff;margin:14px 0 6px">[2026-05-07] ingest | Karpathy gist notes</h2>
+            <p style="font-size:12px">Source in <code>raw/</code> → updated concept page + <span class="wikilink">index</span>.</p>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</body>
+</html>

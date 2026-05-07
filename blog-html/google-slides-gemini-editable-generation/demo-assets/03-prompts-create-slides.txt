@@ -1,0 +1,64 @@
+# DEMO A — PROMPT FULL PRESENTATION (dùng khi tenant đã có tính năng 06/2026)
+
+Create a fully editable 6-slide presentation for an internal executive review titled
+"Northwind Customer Portal MVP".
+
+Audience: delivery director, presales lead, operations lead, and solution architect.
+Goal: approve a 10-week MVP discovery and delivery plan.
+
+Required presentation format:
+1. Title — project name, "Executive approval brief", July 2026.
+2. Executive summary — customer problem, proposed MVP, and the decision requested.
+3. Current-state problem — 3 concise pain points and one prominent metric.
+4. Proposed solution — two columns: MVP capabilities on the left and a simple system flow on the right.
+5. Scope and 10-week delivery plan — In scope / Out of scope plus a horizontal timeline.
+6. Success metrics, risks, and next steps — three KPI cards, two key risks, and three numbered actions.
+
+Content rules:
+- Ground all facts and metrics in "Project brief — Northwind".
+- Do not invent financial figures, customer quotes, or commitments.
+- Add source citations where the interface supports them.
+- Use concise executive language: no more than 45 words per slide, excluding labels.
+
+Visual rules:
+- Match "STYLE_Reference_Deck".
+- 16:9, clean executive layout, white background, navy and cyan accents.
+- Use native editable text boxes, shapes, diagrams, tables, and charts.
+- Keep a small footer: "Confidential — internal draft".
+- Avoid decorative stock imagery unless it improves understanding.
+
+# ANSWERS FOR GEMINI FOLLOW-UP QUESTIONS
+
+Tone: concise, executive, evidence-based.
+Audience familiarity: they know the customer but have not reviewed this proposal.
+Primary decision: approve the 10-week MVP plan and week-1 operations workshop.
+Priority: preserve factual accuracy and editability over visual decoration.
+
+# OUTLINE EDITS TO MAKE BEFORE APPROVE
+
+- Ensure there are exactly 6 slides.
+- Keep slide 2 focused on the decision, not project history.
+- Make slide 4 show: Customer → Portal → TMS REST API (read-only).
+- Make slide 5 separate In scope and Out of scope.
+- Slide 6 must include both risks: API rate limits and legal review.
+
+# DEMO B — FALLBACK WHEN FULL-DECK UI HAS NOT ROLLED OUT
+# Run one prompt at a time and choose Insert after each preview.
+
+SLIDE 1
+Create a title slide for "Northwind Customer Portal MVP". Subtitle: "Executive approval brief — July 2026". Match the attached presentation style. Add "Confidential — internal draft" in the footer.
+
+SLIDE 2
+Based only on @Project brief — Northwind, create an executive summary slide with three blocks: customer problem, proposed MVP, and decision requested. Keep it under 45 words.
+
+SLIDE 3
+Based only on @Project brief — Northwind, create a current-state problem slide with three concise pain points and one prominent metric. Do not invent data.
+
+SLIDE 4
+Based only on @Project brief — Northwind, create a two-column proposed solution slide. Left: MVP capabilities. Right: an editable native flow diagram: Customer → Portal → TMS REST API (read-only).
+
+SLIDE 5
+Based only on @Project brief — Northwind, create a scope and 10-week delivery plan slide. Separate In scope and Out of scope and add an editable horizontal timeline.
+
+SLIDE 6
+Based only on @Project brief — Northwind, create a closing slide with three KPI cards, the two stated risks, and three numbered next steps. Do not invent financial figures.

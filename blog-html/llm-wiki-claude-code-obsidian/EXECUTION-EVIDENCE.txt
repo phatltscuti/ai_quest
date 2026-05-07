@@ -1,0 +1,27 @@
+Bằng chứng thực thi scaffold LLM Wiki (máy dev, repo ai_quest)
+
+Thời điểm ghi: 2026-05-07 11:13:12 +07:00
+
+Lệnh: tree /F sample-llm-wiki
+
+Folder PATH listing
+D:\AI_QUEST\BLOG-HTML\LLM-WIKI-CLAUDE-CODE-OBSIDIAN\SAMPLE-LLM-WIKI
+|   CLAUDE.md
+|
++---raw
+|       2026-05-07-karpathy-llm-wiki-gist-notes.md
+|
+\---wiki
+    |   index.md
+    |   log.md
+    |   overview.md
+    |
+    \---concepts
+            llm-wiki-pattern.md
+
+Ghi chú: Cấu trúc và nội dung được tạo bằng agent trong Cursor (tương đương quy trình “mở thư mục vault trong Claude Code và nhờ agent khởi tạo”).
+
+Git (repo ai_quest, sau khi thêm thư mục blog và vault):
+
+  git status --short blog-html/llm-wiki-claude-code-obsidian
+  ?? blog-html/llm-wiki-claude-code-obsidian/

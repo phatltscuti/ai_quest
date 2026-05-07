@@ -1,0 +1,24 @@
+{
+  "rules": [
+    {
+      "name": "document-ui",
+      "match": ["app/**", "e2e/pages/**", "e2e/selectors/**"],
+      "specs": ["e2e/document/review-light.spec.ts", "e2e/document/approve-heavy.spec.ts"]
+    },
+    {
+      "name": "document-light-only",
+      "match": ["e2e/document/review-light.spec.ts"],
+      "specs": ["e2e/document/review-light.spec.ts"]
+    },
+    {
+      "name": "document-heavy-only",
+      "match": ["e2e/document/approve-heavy.spec.ts"],
+      "specs": ["e2e/document/approve-heavy.spec.ts"]
+    },
+    {
+      "name": "fallback-all",
+      "match": ["**/*"],
+      "specs": ["e2e/document/review-light.spec.ts", "e2e/document/approve-heavy.spec.ts"]
+    }
+  ]
+}

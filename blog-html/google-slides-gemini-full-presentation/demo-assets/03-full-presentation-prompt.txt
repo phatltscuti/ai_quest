@@ -1,0 +1,119 @@
+FULL PRESENTATION PROMPT — KHÔNG CẦN FILE NGUỒN
+================================================
+
+Create a fully editable 6-slide presentation for an internal executive review titled
+"Northwind Customer Portal MVP".
+
+Audience:
+- Delivery director
+- Presales lead
+- Operations lead
+- Solution architect
+
+Goal:
+Obtain approval for a 10-week MVP plan and the week-1 operations workshop.
+
+Use only the following project facts:
+- The support team spends more than 12 hours per week copying shipment status
+  from a legacy TMS into email replies.
+- Customers do not have a self-service shipment-status dashboard.
+- Customer NPS dropped 8 points in Q1.
+- The MVP includes secure login, shipment list and filters, shipment details
+  with a status timeline, PDF label download, admin CSV export, and read-only
+  integration with the existing TMS REST API.
+- The 10-week MVP includes authentication, shipment list and filters,
+  shipment details and timeline, PDF label download, admin CSV export,
+  and read-only TMS integration.
+- Billing, returns, and multi-tenant white labeling are out of scope.
+- Success targets are a 40% reduction in "Where is my order?" tickets within
+  60 days and weekly active users equal to at least 25% of active B2B accounts.
+- Risk 1: TMS API rate limits may require caching.
+- Risk 2: Legal review is required for data shown to customer sub-accounts.
+- Next steps: operations workshop in week 1, TMS API technical spike in week 2,
+  and wireframe sign-off in week 3.
+
+Required presentation format:
+1. Title
+   - Project name
+   - "Executive approval brief"
+   - July 2026
+
+2. Executive summary
+   - Customer problem
+   - Proposed MVP
+   - Decision requested
+   - Use three concise blocks
+
+3. Current-state problem
+   - Three concise pain points
+   - One prominent metric
+
+4. Proposed solution
+   - Two-column layout
+   - Left: MVP capabilities
+   - Right: native editable flow:
+     Customer → Portal → TMS REST API (read-only)
+
+5. Scope and 10-week delivery plan
+   - Clearly separate In scope and Out of scope
+   - Add a native editable horizontal timeline
+
+6. Success metrics, risks, and next steps
+   - Three KPI cards
+   - Both stated risks
+   - Three numbered next actions
+
+Content rules:
+- Use only the project facts provided in this prompt.
+- Do not invent financial figures, customer quotes, revenue, cost savings,
+  deadlines, or commitments.
+- Use concise executive language.
+- Use no more than 45 words per slide, excluding labels and the footer.
+
+Visual rules:
+- Use 16:9.
+- Use a clean professional design with a white background and navy/cyan accents.
+- Use native editable text boxes, shapes, diagrams, tables, and charts.
+- Keep strong visual hierarchy and generous whitespace.
+- Add the footer "Confidential — internal draft".
+- Avoid decorative stock imagery unless it improves understanding.
+
+
+FOLLOW-UP ANSWERS (NẾU GEMINI HỎI)
+==================================
+
+Tone:
+Concise, executive, and evidence-based.
+
+Audience familiarity:
+They know the customer but have not reviewed this proposal.
+
+Text density:
+Low to balanced. Preserve only decision-relevant information.
+
+Primary decision:
+Approve the 10-week MVP plan and the week-1 operations workshop.
+
+Priority:
+Preserve factual accuracy and native editability over visual decoration.
+
+
+PLAN CHECK BEFORE APPROVE
+=========================
+
+- Ensure there are exactly 6 slides.
+- Keep slide 2 focused on the decision, not project history.
+- Ensure slide 3 uses only metrics written in the prompt.
+- Make slide 4 show: Customer → Portal → TMS REST API (read-only).
+- Make slide 5 separate In scope and Out of scope.
+- Ensure slide 6 includes both stated risks.
+- Remove any invented budget, savings, quote, contract value, or launch commitment.
+- Click Update plan after making changes.
+
+
+OPTIONAL REFINEMENT PROMPT
+==========================
+
+Simplify this slide, keep every fact from my original prompt, and make the
+native diagram easier to scan.
+

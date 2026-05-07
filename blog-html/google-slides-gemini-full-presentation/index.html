@@ -1,0 +1,504 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="A simple, detailed guide to creating a complete native and editable presentation with Gemini in Google Slides."
+    />
+    <title>Create a Fully Native Presentation with Gemini in Google Slides</title>
+    <style>
+      * { box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
+      body {
+        margin: 0;
+        color: #202124;
+        background: #ffffff;
+        font: 16px/1.75 "Segoe UI", Arial, sans-serif;
+      }
+      main {
+        width: min(860px, calc(100% - 32px));
+        margin: 0 auto;
+        padding: 36px 0 64px;
+      }
+      header {
+        margin-bottom: 34px;
+        padding-bottom: 24px;
+        border-bottom: 3px solid #1a73e8;
+      }
+      h1 {
+        margin: 0 0 14px;
+        color: #1a73e8;
+        font-size: clamp(30px, 5vw, 44px);
+        line-height: 1.15;
+      }
+      h2 {
+        margin: 42px 0 14px;
+        color: #202124;
+        font-size: 26px;
+        line-height: 1.3;
+      }
+      h3 {
+        margin: 27px 0 10px;
+        color: #174ea6;
+        font-size: 19px;
+        line-height: 1.4;
+      }
+      p { margin: 12px 0; }
+      ul, ol { margin: 12px 0; padding-left: 26px; }
+      li { margin-bottom: 8px; }
+      a { color: #1a73e8; text-decoration: none; }
+      a:hover { text-decoration: underline; }
+      code {
+        padding: 2px 6px;
+        color: #174ea6;
+        background: #e8f0fe;
+        border-radius: 4px;
+        font: 0.88em Consolas, monospace;
+      }
+      pre {
+        overflow-x: auto;
+        margin: 16px 0;
+        padding: 17px;
+        white-space: pre-wrap;
+        word-break: break-word;
+        background: #f8f9fa;
+        border: 1px solid #dadce0;
+        border-radius: 8px;
+        font: 13px/1.65 Consolas, monospace;
+      }
+      .lead {
+        margin: 0;
+        color: #5f6368;
+        font-size: 18px;
+      }
+      .note {
+        margin: 18px 0;
+        padding: 13px 16px;
+        background: #e8f0fe;
+        border-left: 4px solid #1a73e8;
+      }
+      .warning {
+        margin: 18px 0;
+        padding: 13px 16px;
+        background: #fef7e0;
+        border-left: 4px solid #f9ab00;
+      }
+      nav {
+        margin: 24px 0 34px;
+        padding: 16px 20px;
+        background: #f8f9fa;
+        border: 1px solid #dadce0;
+        border-radius: 8px;
+      }
+      nav strong { display: block; margin-bottom: 8px; }
+      nav ol { margin: 0; }
+      .video-wrap {
+        position: relative;
+        width: 100%;
+        margin: 22px 0;
+        padding-top: 56.25%;
+        overflow: hidden;
+        background: #202124;
+        border-radius: 10px;
+      }
+      .video-wrap iframe {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        border: 0;
+      }
+      footer {
+        margin-top: 46px;
+        padding-top: 20px;
+        color: #5f6368;
+        border-top: 2px solid #dadce0;
+        font-size: 13px;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <header>
+        <h1>Create a fully native presentation with Gemini in Google Slides</h1>
+        <p class="lead">
+          A simple but detailed guide to the full-presentation workflow, a reproducible six-slide
+          practice exercise, and practical ways to use the feature in daily work.
+        </p>
+        <p class="lead" style="margin-top: 10px; font-size: 15px;">
+          Vietnamese version: <a href="index-vi.html">index-vi.html</a>
+        </p>
+      </header>
+
+      <nav aria-label="Table of contents">
+        <strong>Contents</strong>
+        <ol>
+          <li><a href="#overview">Feature overview</a></li>
+          <li><a href="#availability">Availability and rollout</a></li>
+          <li><a href="#steps">How to generate a presentation</a></li>
+          <li><a href="#evidence">Demo prompt and video</a></li>
+          <li><a href="#review">General practice assessment</a></li>
+          <li><a href="#opinion">My practical opinion</a></li>
+          <li><a href="#conclusion">Conclusion</a></li>
+          <li><a href="#references">References</a></li>
+        </ol>
+      </nav>
+
+      <div class="warning">
+        <strong>Practice status:</strong> the full workflow has been completed and recorded on video.
+        The demo used one self-contained prompt, with no Google Doc or style deck. The video below
+        documents the complete process and result.
+      </div>
+
+      <section id="overview">
+        <h2>1. Feature overview</h2>
+
+        <p>
+          Google announced on June 30, 2026 that Gemini in Google Slides can create a complete,
+          multi-slide presentation from a single request. This is different from the earlier workflow
+          that normally generated one slide at a time. The new workflow can build an entire deck,
+          including its structure, visual layout, text, images, diagrams, and other presentation
+          elements.
+        </p>
+
+        <p>
+          The user starts by describing the topic, audience, objective, number of slides, and desired
+          format. Gemini can then use selected Google Drive files as factual references. It can also
+          use an existing presentation as a visual style reference so that the new deck follows a
+          familiar color palette, spacing system, and overall look.
+        </p>
+
+        <p>
+          Before creating the slides, Gemini may ask a few optional questions. These questions can
+          clarify the preferred tone, audience knowledge, text density, main goals, or visual style.
+          Gemini then produces a presentation plan containing an overview, the sources it plans to
+          use, and a slide-by-slide outline.
+        </p>
+
+        <p>
+          The plan can be edited before generation. A user can change a slide title or description,
+          add another step, remove an unnecessary slide, and ask Gemini to update the plan. Only after
+          the user clicks <strong>Approve</strong> does Gemini build the full presentation.
+        </p>
+
+        <p>
+          The output is described as native and editable. This means the user should be able to
+          continue working in Google Slides by editing text boxes, moving shapes, changing images,
+          and refining individual slides. A polished final view alone is not enough to prove
+          native editability. The practical test is to select and change an individual object on the
+          canvas.
+        </p>
+
+        <div class="note">
+          The most important improvement is not only “more slides from one prompt.” It is the
+          combination of source grounding, style matching, plan review, full-deck generation, and
+          continued manual editing inside Google Slides.
+        </div>
+      </section>
+
+      <section id="availability">
+        <h2>2. Availability and rollout</h2>
+
+        <p>
+          At launch, full-presentation generation is available on desktop and supports English. It
+          requires an eligible Google Workspace or Google AI plan. Google lists Business Standard and
+          Plus, Enterprise Standard and Plus, Google AI Pro and Ultra, Google AI Pro for Education,
+          and AI Expanded Access among the supported plans.
+        </p>
+
+        <p>
+          The extended rollout started on June 29, 2026 for both Rapid Release and Scheduled Release
+          domains. An extended rollout can take longer than 15 days, so the feature may not appear on
+          every eligible account immediately. Google also states that there is no separate admin
+          control dedicated to this feature.
+        </p>
+
+        <p>
+          Google announced promotional access to higher multi-slide presentation limits through at
+          least August 1, 2026. Per-user usage limits apply after that period. The exact limits may
+          therefore depend on when the feature is used and which plan is attached to the account.
+        </p>
+
+        <p>
+          Workspace administrators can choose between Rapid Release and Scheduled Release. Rapid
+          Release users are among the first to receive new features. Scheduled Release users normally
+          receive them at least one week later. The setting is available under
+          <strong>Admin console → Account → Account settings → Preferences → New features</strong>.
+          A change can take up to 24 hours.
+        </p>
+
+        <p>
+          If the full-presentation option is missing, first check the desktop and English
+          requirements, the account plan, and the domain release track. A missing option during an
+          extended rollout does not automatically mean that the account is incorrectly configured.
+        </p>
+      </section>
+
+      <section id="steps">
+        <h2>3. How to generate a presentation</h2>
+
+        <ol>
+          <li>
+            On a computer, open
+            <a href="https://slides.google.com" target="_blank" rel="noopener">Google Slides</a>.
+          </li>
+          <li>
+            On the start screen, click <strong>Presentation</strong>. Another entry point is a
+            completely blank presentation with no existing slides, where the user can click
+            <strong>Ask Gemini</strong> at the top right.
+          </li>
+          <li>
+            Describe the presentation in the Gemini side panel. A useful request should include the
+            topic, audience, goal, slide count, required slide order, tone, factual restrictions, and
+            visual format.
+          </li>
+          <li>
+            To ground the deck in existing content, click
+            <strong>Add sources → Add from Drive</strong>, select the required files, and click
+            <strong>Add</strong>.
+          </li>
+          <li>
+            If appropriate, allow Gemini to search selected sources such as the web, Drive, Chat, or
+            Gmail. Only enable sources needed for the task, especially when working with company data.
+          </li>
+          <li>
+            To match an existing design, click
+            <strong>Match presentation style → Add from Drive</strong>, select a presentation, and
+            click <strong>Add</strong>.
+          </li>
+          <li>
+            Submit the request. Gemini may ask optional questions about tone, audience, objectives,
+            text density, or style. Answer them when they help clarify the result, or skip them.
+          </li>
+          <li>
+            Click <strong>Next</strong>. Gemini creates a presentation plan with an overview, a list
+            of sources, and a series of slide steps.
+          </li>
+          <li>
+            Review the plan carefully. Click a slide title or description to edit it. Use
+            <strong>Add step</strong> to add a slide and <strong>Delete</strong> to remove one. Click
+            <strong>Update plan</strong> after making changes.
+          </li>
+          <li>
+            When the structure and sources are correct, click <strong>Approve</strong>.
+          </li>
+          <li>
+            Keep the Google Slides tab and Gemini side panel open while the presentation is being
+            generated. It is safe to switch windows, but the Slides tab and panel should not be
+            closed.
+          </li>
+          <li>
+            After generation, review the entire presentation. Check its facts, order, visual
+            consistency, accessibility, and editability. Continue editing manually or ask Gemini to
+            refine one slide or image at a time.
+          </li>
+        </ol>
+
+        <div class="warning">
+          Adding sources reduces unsupported claims but does not guarantee accuracy. Every number,
+          date, name, quote, promise, and recommendation still needs human verification.
+        </div>
+      </section>
+
+      <section id="evidence">
+        <h2>4. Demo: master prompt, video, and result</h2>
+
+        <p>
+          Start with one master prompt. It contains the topic, facts, six-slide format, and visual
+          rules, so no Google Doc or style deck is required. The complete reusable version is in
+          <code>demo-assets/03-full-presentation-prompt.txt</code>.
+        </p>
+
+        <pre>Create a fully editable 6-slide presentation titled "Northwind Customer Portal MVP"
+for an internal executive review.
+
+Facts: support spends 12+ hours/week copying shipment status; customers have no
+self-service dashboard; NPS dropped 8 points. The MVP includes login, shipment
+list and filters, status timeline, PDF labels, CSV export, and read-only TMS API
+integration. Targets: 40% fewer "Where is my order?" tickets and weekly active
+users equal to at least 25% of active B2B accounts. Risks: TMS API rate limits
+and legal review for sub-account data.
+
+Create exactly 6 slides: title; executive summary; current-state problem;
+proposed solution with an editable Customer → Portal → TMS API flow; scope and
+10-week timeline; and success metrics, risks, and next steps.
+
+Use only these facts. Do not invent financial figures, quotes, savings, or
+commitments. Use a clean 16:9 white design with navy/cyan accents, native
+editable objects, no more than 45 words per slide, and the footer
+"Confidential — internal draft".</pre>
+
+        <h3>Hands-on video</h3>
+        <p>
+          The video shows the full workflow: opening Gemini in Slides, entering the master prompt,
+          reviewing and updating the plan, approving generation, checking the completed six-slide
+          deck, and confirming that individual objects remain editable.
+        </p>
+
+        <div class="video-wrap">
+          <iframe
+            src="https://www.youtube.com/embed/VIDEO_ID"
+            title="Create a fully native presentation with Gemini in Google Slides"
+            loading="lazy"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen
+          ></iframe>
+        </div>
+
+        <div class="note">
+          After uploading the video to YouTube, replace <code>VIDEO_ID</code> in the iframe URL with
+          the ID from your video link. For example, for
+          <code>https://youtu.be/abc123</code>, use <code>https://www.youtube.com/embed/abc123</code>.
+        </div>
+
+        <p>
+          The independent
+          <a
+            href="https://scuti.asia/create-fully-native-editable-presentations-with-gemini-in-google-slides/"
+            target="_blank"
+            rel="noopener"
+          >Scuti hands-on article</a>
+          reports the same broad sequence in a smart-manufacturing demo: prompt, optional sources and
+          style, clarification, plan review, approval, and editable output. This Northwind exercise
+          uses a different scenario and stricter checks so it remains an independent test rather than
+          a copy of that demonstration.
+        </p>
+      </section>
+
+      <section id="review">
+        <h2>5. General assessment of the practice result</h2>
+
+        <p>
+          In practice, Gemini was able to create a complete presentation from one master prompt
+          through a clear workflow. Reviewing and editing the plan before generation gave me more
+          control over the structure instead of immediately receiving a deck with an unknown flow.
+        </p>
+
+        <p>
+          The generated result generally followed the topic, format, and visual direction described
+          in the prompt. It provided a useful starting draft that could be refined instead of requiring
+          the presentation to be built from a blank canvas.
+        </p>
+
+        <p>
+          The most useful aspect was that the slide elements remained editable in Google Slides.
+          Text, objects, and individual slides could still be adjusted after generation, making the
+          workflow more practical than receiving a flattened image or rebuilding the deck manually.
+        </p>
+
+        <p>
+          However, the output should still be treated as a draft. Content, figures, text density,
+          layout, and consistency need to be reviewed before the presentation is used in real work.
+          Overall, the feature can reduce preparation time, but it does not replace human review and
+          final polishing.
+        </p>
+      </section>
+
+      <section id="opinion">
+        <h2>6. My opinion: practical use in daily work</h2>
+
+        <p>
+          After completing the demo, I would use full-presentation generation as a controlled
+          first-draft tool rather than an automatic publishing system. Its biggest advantage is the
+          plan-review stage: correcting the story before generation is faster than rebuilding a
+          finished deck.
+        </p>
+
+        <p>
+          For proposals and presales work, I can place the customer problem, proposed solution, scope,
+          metrics, and required slide order in one prompt. Gemini can produce the first deck while I
+          spend more time checking evidence, customer language, delivery commitments, and commercial
+          decisions.
+        </p>
+
+        <p>
+          For weekly project reviews, I can reuse a fixed structure for progress, metrics, risks,
+          decisions, and next actions. This can make reports easier to compare from week to week,
+          although changing project data still needs to be checked before each meeting.
+        </p>
+
+        <p>
+          For training and onboarding, I can turn a process into an initial lesson structure and then
+          let subject-matter experts edit examples, reorder slides, and adapt the native deck for
+          different teams. For executive briefings, I can specify the decision required and impose a
+          word limit per slide to avoid text-heavy output.
+        </p>
+
+        <p>
+          My practical workflow would be: prepare verified facts, define the required format, review
+          the plan before approval, verify the generated content and editability, then finish the deck
+          manually for hierarchy, accessibility, brand details, and sensitive stakeholder language.
+        </p>
+
+        <div class="note">
+          The feature saves the most time when the input facts and desired structure are already
+          clear. It accelerates preparation; it does not replace fact checking or professional
+          judgment.
+        </div>
+      </section>
+
+      <section id="conclusion">
+        <h2>7. Conclusion</h2>
+
+        <p>
+          The hands-on test shows that Gemini in Google Slides can turn one detailed prompt into a
+          complete presentation that follows a specified six-slide format. The plan-review step gives
+          the user control before generation, and the resulting native elements remain available for
+          normal editing afterward.
+        </p>
+
+        <p>
+          The feature is best viewed as a fast first-draft engine. It can reduce time spent building
+          structure and layouts, but the user remains responsible for factual accuracy, visual
+          quality, accessibility, and final approval. Used with a clear prompt and a disciplined
+          review process, it can make proposals, project updates, training decks, and executive
+          briefings significantly faster to prepare.
+        </p>
+      </section>
+
+      <section id="references">
+        <h2>8. References</h2>
+
+        <ul>
+          <li>
+            <a
+              href="https://workspaceupdates.googleblog.com/2026/06/create-fully-native-and-editable-presentations-with-Gemini-in-Google-Slides.html"
+              target="_blank"
+              rel="noopener"
+            >Google Workspace Updates — Create fully native and editable presentations with Gemini in Google Slides</a>,
+            June 30, 2026.
+          </li>
+          <li>
+            <a href="https://support.google.com/docs/answer/17111393" target="_blank" rel="noopener">
+              Google Docs Editors Help — Generate presentations with Gemini in Google Slides
+            </a>.
+          </li>
+          <li>
+            <a
+              href="https://knowledge.workspace.google.com/admin/releases/choose-when-users-get-new-features"
+              target="_blank"
+              rel="noopener"
+            >Google Workspace Admin Help — Choose when users get new features</a>.
+          </li>
+          <li>
+            <a
+              href="https://scuti.asia/create-fully-native-editable-presentations-with-gemini-in-google-slides/"
+              target="_blank"
+              rel="noopener"
+            >Scuti — Create Fully Native, Editable Presentations with Gemini in Google Slides</a>,
+            independent hands-on reference.
+          </li>
+        </ul>
+      </section>
+
+      <footer>
+        <p>Prepared July 21, 2026. The demo scenario is fictional and contains no customer-confidential data.</p>
+        <p>Reusable demo prompt: <code>demo-assets/03-full-presentation-prompt.txt</code></p>
+        <p>Vietnamese version: <a href="index-vi.html">index-vi.html</a></p>
+      </footer>
+    </main>
+
+  </body>
+</html>
