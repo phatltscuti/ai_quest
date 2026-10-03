@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Roll-up: Bài học từ bài viết của Greg Isenberg trên X</title>
+<style>
+  :root {
+    --primary: #0d47a1;
+    --primary-light: #1976d2;
+    --accent: #ff6d00;
+    --bg: #fafafa;
+    --card: #ffffff;
+    --text: #212121;
+    --text-secondary: #616161;
+    --border: #e0e0e0;
+    --code-bg: #263238;
+    --success: #2e7d32;
+    --success-bg: #e8f5e9;
+    --warning: #f57f17;
+    --warning-bg: #fff8e1;
+    --error: #c62828;
+    --error-bg: #ffebee;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background: var(--bg); color: var(--text); line-height: 1.75; font-size: 16px; }
+  .hero { background: linear-gradient(135deg, #0d47a1, #1565c0, #00838f); color: white; padding: 64px 20px; text-align: center; }
+  .hero h1 { font-size: 2.3em; margin-bottom: 14px; font-weight: 700; letter-spacing: -0.5px; }
+  .hero .subtitle { font-size: 1.12em; opacity: 0.93; max-width: 760px; margin: 0 auto; }
+  .hero .badge { display: inline-block; background: rgba(255,255,255,0.18); padding: 6px 20px; border-radius: 20px; font-size: 0.84em; margin-bottom: 18px; }
+  .container { max-width: 940px; margin: 0 auto; padding: 32px 20px; }
+  .toc { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 28px 32px; margin-bottom: 38px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+  .toc h2 { font-size: 1.3em; margin-bottom: 14px; color: var(--primary); border: none; padding: 0; }
+  .toc a { color: var(--primary-light); text-decoration: none; }
+  .toc a:hover { text-decoration: underline; }
+  section { margin-bottom: 44px; }
+  h2 { font-size: 1.55em; color: var(--primary); border-bottom: 3px solid var(--primary); padding-bottom: 8px; margin-bottom: 22px; }
+  h3 { font-size: 1.22em; color: var(--text); margin: 22px 0 10px; }
+  h4 { font-size: 1.05em; color: var(--text-secondary); margin: 16px 0 8px; }
+  p { margin-bottom: 14px; }
+  a { color: var(--primary-light); }
+  ul, ol { margin-bottom: 14px; padding-left: 24px; }
+  li { margin-bottom: 6px; }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin-bottom: 20px; box-shadow: 0 1px 2px rgba(0,0,0,0.04); }
+  .card-accent { border-left: 4px solid var(--accent); }
+  .card-info { border-left: 4px solid var(--primary-light); }
+  .card-warning { border-left: 4px solid var(--warning); background: var(--warning-bg); }
+  .card-success { border-left: 4px solid var(--success); background: var(--success-bg); }
+  .card-error { border-left: 4px solid var(--error); background: var(--error-bg); }
+  .highlight-box { background: linear-gradient(135deg, #e3f2fd, #e0f7fa); border-radius: 12px; padding: 20px 24px; margin: 18px 0; border: 1px solid #b3e5fc; }
+  .prompt-box { background: var(--code-bg); color: #cfd8dc; border-radius: 10px; padding: 22px 24px; margin: 14px 0 22px; font-family: 'Cascadia Code', 'Consolas', monospace; font-size: 0.88em; line-height: 1.65; white-space: pre-wrap; position: relative; overflow-x: auto; }
+  .prompt-box .label { position: absolute; top: 8px; right: 12px; background: var(--accent); color: white; font-size: 0.72em; padding: 2px 12px; border-radius: 8px; font-family: 'Segoe UI', sans-serif; font-weight: 600; }
+  table.data-table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+  table.data-table th, table.data-table td { border: 1px solid var(--border); padding: 10px 14px; text-align: left; font-size: 0.93em; vertical-align: top; }
+  table.data-table th { background: var(--primary); color: white; font-weight: 600; }
+  table.data-table tr:nth-child(even) { background: #f5f5f5; }
+  .table-wrap { overflow-x: auto; }
+  .step-num { display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px; background: var(--primary); color: white; border-radius: 50%; font-weight: 700; font-size: 0.9em; margin-right: 12px; flex-shrink: 0; }
+  .step-row { display: flex; align-items: flex-start; margin-bottom: 14px; }
+  .step-row p { margin: 0; }
+  .screenshot-wrap { margin: 16px 0 24px; text-align: center; }
+  .screenshot-wrap img, .screenshot-wrap video { max-width: 100%; border: 1px solid var(--border); border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+  .screenshot-wrap .caption { margin-top: 8px; font-size: 0.85em; color: var(--text-secondary); }
+  .stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 16px 0; }
+  .stat { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 14px; text-align: center; }
+  .stat b { display: block; font-size: 1.5em; color: var(--primary); }
+  .stat span { font-size: 0.85em; color: var(--text-secondary); }
+  @media (max-width: 700px) { .stat-grid { grid-template-columns: repeat(2, 1fr); } .hero h1 { font-size: 1.7em; } }
+  .tag { display: inline-block; background: #e3f2fd; color: var(--primary); border-radius: 10px; padding: 1px 10px; font-size: 0.8em; }
+  .footer { margin-top: 30px; font-size: 0.85em; color: var(--text-secondary); border-top: 1px solid var(--border); padding-top: 20px; }
+  code { background: #eceff1; border-radius: 4px; padding: 1px 6px; font-size: 0.9em; font-family: 'Consolas', monospace; }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="badge">AI Quest · Type 1 – Investigate What · 03/10/2026</div>
+  <h1>AI Roll-up: mua lại doanh nghiệp dịch vụ và để AI agent vận hành back-office</h1>
+  <p class="subtitle">Tóm tắt các insight chính từ bài viết dài “$5T opportunity: AI Roll Ups” của Greg Isenberg trên X, kèm bài học cá nhân và cách áp dụng vào dự án, vận hành hằng ngày tại Scuti AI.</p>
+</div>
+
+<div class="container">
+
+<div class="toc">
+  <h2>Mục lục</h2>
+  <ol>
+    <li><a href="#s1">Bài viết gốc &amp; cách tiếp cận nguồn</a></li>
+    <li><a href="#s2">Thông điệp cốt lõi</a></li>
+    <li><a href="#s3">Các insight cụ thể</a></li>
+    <li><a href="#s4">Infographic tổng hợp playbook</a></li>
+    <li><a href="#s5">Bài học cá nhân</a></li>
+    <li><a href="#s6">Áp dụng vào dự án &amp; vận hành tại Scuti AI</a></li>
+    <li><a href="#s7">Video demo</a></li>
+    <li><a href="#s8">Kết luận</a></li>
+  </ol>
+</div>
+
+<!-- ================================================================ -->
+<section id="s1">
+  <h2>1. Bài viết gốc &amp; cách tiếp cận nguồn</h2>
+  <p>Link được giao (<a href="https://x.com/gregisenberg/status/2103927365977928019" target="_blank">x.com/gregisenberg/status/2103927365977928019</a>) không phải một tweet ngắn mà là một <strong>X Article</strong> (bài viết dài, khoảng 10–15 phút đọc) có tiêu đề <strong>“$5T opportunity: AI Roll Ups”</strong>, đăng ngày <strong>26/09/2026</strong>. Tác giả Greg Isenberg là CEO của Late Checkout (LCA) và host podcast The Startup Ideas Podcast.</p>
+
+  <div class="stat-grid">
+    <div class="stat"><b>~1,83M</b><span>lượt xem</span></div>
+    <div class="stat"><b>4.884</b><span>lượt thích</span></div>
+    <div class="stat"><b>16.014</b><span>bookmark</span></div>
+    <div class="stat"><b>414</b><span>repost</span></div>
+  </div>
+  <p style="font-size:0.88em;color:var(--text-secondary)">Số liệu tương tác ghi nhận tại thời điểm đọc bài (03/10/2026). Số bookmark cao gấp ~3 lần số like cho thấy người đọc coi đây là tài liệu “lưu lại để làm theo”.</p>
+
+  <div class="card card-warning">
+    <h4>Cách lấy nội dung (minh bạch nguồn)</h4>
+    <ul>
+      <li>Mở trực tiếp trên x.com bằng Chrome (không đăng nhập): X chỉ hiện tiêu đề, ảnh bìa, số tương tác và vài đoạn mở đầu, phần còn lại bị mờ dần kèm nút “Continue to X” và khung “Log in or sign up for X”. <strong>Không nhập tài khoản, không tạo tài khoản.</strong></li>
+      <li>Đọc bản đầy đủ qua trang xem công khai fxtwitter.com (hiển thị toàn bộ Article: tiêu đề, các đoạn văn, 8 ảnh minh hoạ). Toàn bộ tóm tắt bên dưới dựa trên nội dung này.</li>
+      <li>Để dễ đọc, mình chép bài ra một trang đọc gọn (<code>sources/article-reader.html</code>), giữ nguyên văn bản gốc.</li>
+    </ul>
+  </div>
+
+</section>
+
+<!-- ================================================================ -->
+<section id="s2">
+  <h2>2. Thông điệp cốt lõi</h2>
+  <div class="highlight-box">
+    <p style="margin:0"><strong>Đừng xây sản phẩm AI rồi đi tìm khách hàng — hãy mua một doanh nghiệp dịch vụ “nhàm chán” vốn đã có khách hàng, giấy phép và niềm tin, rồi dùng AI agent làm lại cách công việc được thực hiện.</strong> Doanh thu và khách hàng giữ nguyên, chi phí cho mỗi đơn vị công việc giảm, nên lợi nhuận có thể tăng gấp 3–4 lần.</p>
+  </div>
+  <p>Greg mở bài bằng một con số vĩ mô: theo McKinsey, khoảng <strong>5 nghìn tỷ USD</strong> giá trị doanh nghiệp Mỹ sẽ đổi chủ đến năm 2035, phần lớn thuộc thế hệ baby boomer sắp nghỉ hưu và không có người kế nghiệp. Ví dụ đầu tiên là hãng kế toán Larson Gross (thành lập 1949, ~200 nhân viên, được Thrive Holdings mua cổ phần): mùa thuế vừa rồi AI đã xử lý 7.000 tờ khai, kế toán viên tiết kiệm trung bình 31% thời gian, có một đầu việc giảm từ 180 giờ/năm xuống 15 giờ.</p>
+  <p>Điều mình thấy đáng chú ý: bài không dừng ở mức “ý tưởng hay”, mà đi đến tận <strong>cấu trúc thư mục, danh sách agent và prompt cụ thể</strong> — tức là một playbook vận hành, không chỉ là một luận điểm đầu tư.</p>
+</section>
+
+<!-- ================================================================ -->
+<section id="s3">
+  <h2>3. Các insight cụ thể</h2>
+
+  <h3>3.1. AI roll-up là “private equity kiểu mới”</h3>
+  <p>Roll-up là chiến lược cũ: gom nhiều doanh nghiệp nhỏ cùng ngành lại để công ty lớn đáng giá hơn tổng các phần. Quỹ PE đã làm điều này 40 năm, chủ yếu bằng kỹ thuật tài chính (gộp back-office, đàm phán lại nhà cung cấp, thêm nợ, bán lại). Điểm khác của AI roll-up là <strong>thay đổi phần ở giữa</strong>: mua doanh nghiệp dịch vụ với giá của doanh nghiệp dịch vụ, rồi để agent đảm nhận phần lớn khối lượng công việc. Giả thuyết của Greg: biên EBITDA từ <strong>5–10%</strong> có thể lên <strong>30–40%</strong>.</p>
+
+  <h3>3.2. Vì sao là bây giờ: ba yếu tố cùng lúc</h3>
+  <ol>
+    <li><strong>Model đủ giỏi cho công việc thật</strong> — nhập liệu, bản nháp tờ khai thuế, rà soát hợp đồng, ticket hỗ trợ. Hai năm trước kết quả phải làm lại; bây giờ chỉ cần kiểm tra.</li>
+    <li><strong>Chủ doanh nghiệp đang nghỉ hưu</strong> — con cái không muốn tiếp quản, nhân viên không đủ tiền mua.</li>
+    <li><strong>Phép tính hợp lý</strong> — doanh nghiệp dịch vụ được định giá thấp vì thị trường nghĩ biên lợi nhuận bị “kẹt”. Chứng minh được điều ngược lại là bạn đã mua tài sản với giá chiết khấu.</li>
+  </ol>
+
+  <h3>3.3. Ai đang làm và họ đạt được gì</h3>
+  <div class="table-wrap">
+  <table class="data-table">
+    <tr><th>Công ty</th><th>Lĩnh vực</th><th>Kết quả được nêu trong bài</th></tr>
+    <tr><td>Long Lake</td><td>Quản lý bất động sản</td><td>18 thương vụ, $100M EBITDA trong chưa đầy 2 năm, biên gấp đôi</td></tr>
+    <tr><td>Crescendo</td><td>Contact center</td><td>90% ticket tuyến đầu do AI xử lý, biên gấp 4 đối thủ truyền thống</td></tr>
+    <tr><td>Titan MSP</td><td>Dịch vụ IT</td><td>30%+ workflow được tự động hoá, mục tiêu biên ròng gấp 3</td></tr>
+    <tr><td>Dwelly</td><td>Bất động sản (Anh)</td><td>Thời gian xử lý sự cố giảm từ 50 xuống 20 ngày, biên gấp đôi</td></tr>
+    <tr><td>Thrive Holdings</td><td>Kế toán</td><td>Mua gần 50 hãng kế toán địa phương trong 2 năm, cam kết thêm $1 tỷ</td></tr>
+    <tr><td>General Catalyst</td><td>Quỹ đầu tư</td><td>Dành $1,5 tỷ cho chiến lược này, đã rót hơn $750M vào ít nhất 10 công ty</td></tr>
+  </table>
+  </div>
+  <div class="card card-warning">
+    <p style="margin:0"><strong>Lưu ý chính Greg nêu ra:</strong> các con số này là <em>tự báo cáo</em> bởi những công ty còn trẻ, đang gọi vốn, và chưa trải qua suy thoái nào. Cấu trúc deal của GC đáng tham khảo: khoảng 60–70% trả tiền mặt khi đóng deal, ~30% chuyển thành cổ phần cho người sáng lập để họ có lý do ở lại hỗ trợ bàn giao.</p>
+  </div>
+  <div class="screenshot-wrap">
+    <img src="images/figure-01-who-is-doing-ai-rollups.jpg" alt="Who is doing AI roll-ups">
+    <div class="caption">Hình 1 – “Who’s doing AI roll-ups?”: các công ty tiêu biểu và cấu trúc deal (hình minh hoạ gốc của Greg Isenberg)</div>
+  </div>
+
+  <h3>3.4. Không chỉ dành cho quỹ tỷ đô</h3>
+  <p>Đây là phần mình thấy “ngược đời” nhưng thuyết phục. Greg cho rằng các quỹ lớn sẽ <strong>bỏ lại phần lớn thị trường</strong> cho cá nhân, vì:</p>
+  <ul>
+    <li>Quỹ cần deal lớn; một hãng kế toán doanh thu $2M/năm quá nhỏ với họ — trong khi đa số doanh nghiệp sắp đổi chủ lại ở cỡ đó.</li>
+    <li>Công cụ là như nhau: agent thuế của Larson Gross chạy trên OpenAI Codex; một founder đơn lẻ có thể dựng workflow bằng Claude Code hoặc Codex vào buổi tối.</li>
+    <li>Rủi ro lớn nhất của roll-up là <strong>tích hợp không kịp</strong>. Người mua một doanh nghiệp duy nhất tự mình là “lớp tích hợp”: ngồi ở văn phòng, biết tên từng khách, nhìn từng bản nháp agent.</li>
+    <li>Nhiều chủ cũ thích bán cho một con người hơn là cho một quỹ gặp qua Zoom.</li>
+    <li>Tài chính cho deal cỡ này đã có sẵn (khoản vay SBA, seller note).</li>
+  </ul>
+
+  <h3>3.5. Vì sao mua thay vì tự build</h3>
+  <p>Phần khó nhất của doanh nghiệp dịch vụ không nằm ở phần mềm: danh sách khách hàng mất 30 năm để có, niềm tin mang tính cá nhân, giấy phép cần thi cử và thời gian, còn hiểu biết về “thế nào là đúng” trong ngách thì nằm trong đầu người làm lâu năm. Lịch sử công việc — mọi edge case, mọi lỗi đã được bắt và sửa — chính là <strong>dữ liệu huấn luyện cho agent</strong> mà startup không có. Startup phải vừa giành khách vừa làm việc; thương vụ mua lại đã có khách, chỉ cần thay đổi cách làm.</p>
+
+  <h3>3.6. Cấu trúc thư mục chính là mô hình vận hành</h3>
+  <p>Trước khi mua bất cứ thứ gì, Greg khuyên dựng sẵn “hệ điều hành” dạng thư mục <code>/holdco</code> với các nhánh <code>/thesis</code>, <code>/deals</code>, <code>/platform</code> (agents, rules, tests), <code>/firms</code>, <code>/runbooks</code>. Mỗi doanh nghiệp mua về đều cắm vào cùng một khung. Nếu chỉ làm một việc, hãy làm <strong>3 file</strong>:</p>
+  <ul>
+    <li><code>target-criteria.md</code> — quyết định mua cái gì.</li>
+    <li><code>rules/</code> — quyết định agent có đáng tin hay không.</li>
+    <li><code>corrections-log.md</code> — cách rule tốt lên mỗi tuần.</li>
+  </ul>
+  <div class="screenshot-wrap">
+    <img src="images/figure-02-holdco-folder-structure.jpg" alt="Holdco folder structure">
+    <div class="caption">Hình 2 – “The holdco folder structure” (hình minh hoạ gốc trong bài)</div>
+  </div>
+  <p>Agent chia làm hai nhóm: <strong>trước deal</strong> (sourcing, diligence, modeling — con người chọn và quyết định) và <strong>sau deal</strong> (rulebook extractor, intake, preparer, reviewer, client comms, reporting — con người duyệt rule và tự gửi các trao đổi nhạy cảm). Quyết định thiết kế quan trọng nhất: <strong>reviewer được chặn nhưng không bao giờ được “ship”, còn preparer không tự gửi được gì</strong>. Tách hai vai trò này ngăn phần lớn output tồi đến tay khách.</p>
+  <div class="screenshot-wrap">
+    <img src="images/figure-03-agents-you-build.jpg" alt="The agents you build">
+    <div class="caption">Hình 3 – Hai nhóm agent và nguyên tắc “reviewer can block, never ship” (hình minh hoạ gốc trong bài)</div>
+  </div>
+
+  <h3>3.7. Quy trình 6 bước từ tìm kiếm đến vận hành</h3>
+  <div class="table-wrap">
+  <table class="data-table">
+    <tr><th>Bước</th><th>Làm gì</th><th>Điểm mấu chốt</th></tr>
+    <tr><td>1. Sourcing</td><td>Tìm doanh nghiệp chưa rao bán qua license board, đăng ký kinh doanh, hiệp hội ngành; tự viết thư cho chủ</td><td>Lên marketplace rồi thì phần lớn “alpha” đã mất</td></tr>
+    <tr><td>2. Scorecard</td><td>Chấm 7 tiêu chí có trọng số (việc lặp lại, output kiểm được, doanh thu định kỳ, người bán có động lực, khách trung thành với công ty, dữ liệu sạch, thị trường phân mảnh)</td><td>&lt; 60% là “một công việc”; &gt; 80% đáng gửi LOI</td></tr>
+    <tr><td>3. Diligence</td><td>Xin 20–50 mẫu công việc thật, cho AI lập <strong>automation map</strong>: trigger, input, thời gian, tần suất, có kiểm được không, sai thì hậu quả gì</td><td>Volume × giờ cho biết margin nằm ở đâu trước khi ký</td></tr>
+    <tr><td>4. Bài toán</td><td>Ví dụ: doanh thu $2M, biên 10% → 30%, EBITDA $200k → $600k; ở hệ số 4x, giá trị $800k → $2,4M</td><td>Toàn bộ cuộc chơi là <em>giữ được</em> biên lợi nhuận</td></tr>
+    <tr><td>5. Rulebook</td><td>60 ngày đầu: phỏng vấn nhân sự senior, biến kinh nghiệm ngầm thành rule có ví dụ; mỗi tuần biến corrections log thành rule mới + test case</td><td>Ai cũng dùng được cùng model; không ai có danh sách lỗi riêng của bạn</td></tr>
+    <tr><td>6. 100 ngày đầu</td><td>1–30: shadow mode, khách không thấy thay đổi; 31–60: chuyển back-office, preparer có review; 61–100: mở rộng thận trọng</td><td>Ngày 100 phải biết: agent làm được bao nhiêu, chi phí review thật, ai quan trọng đang không vui</td></tr>
+  </table>
+  </div>
+
+  <h3>3.8. Rulebook và corrections log là “hào” cạnh tranh</h3>
+  <p>Mỗi doanh nghiệp vận hành bằng những luật chưa ai viết ra: khách luôn gửi giấy tờ trễ, loại khấu trừ mà partner luôn kiểm lại, cách diễn đạt mà một khách thấy bất lịch sự. Khi người senior rời đi, các luật đó đi theo. Greg đưa hai prompt mẫu: một để <strong>phỏng vấn người senior</strong> và biến câu trả lời thành rule đánh số (chỉ có hiệu lực khi họ duyệt), một để <strong>so sánh bản nháp của agent với bản người đã duyệt</strong>, phân loại thay đổi (lỗi sự thật, sở thích khách, thiếu thông tin, văn phong) và đề xuất rule cho lỗi lặp lại.</p>
+
+  <h3>3.9. Dashboard 5 con số mỗi thứ Hai</h3>
+  <p>Biên EBITDA, số phút chú ý của con người cho mỗi job (chi phí thật của agent), tỉ lệ phải sửa (phải giảm mỗi tháng), tỉ lệ giữ chân khách hàng, tỉ lệ giữ chân người chủ chốt. Câu chốt mình thích: <em>nếu biên lợi nhuận tăng mà retention giảm, bạn đang bán chính tài sản để trả tiền sửa nhà.</em></p>
+  <div class="screenshot-wrap">
+    <img src="images/figure-04-dashboard-5-numbers.jpg" alt="The dashboard">
+    <div class="caption">Hình 4 – “The dashboard: 5 numbers every monday” (hình minh hoạ gốc trong bài)</div>
+  </div>
+
+  <h3>3.10. Nên mua gì và điều gì làm hỏng</h3>
+  <p><strong>Ngành phù hợp:</strong> kế toán/sổ sách, quản lý bất động sản, đại lý bảo hiểm, IT managed services, medical billing, payroll, quản lý HOA, title &amp; escrow, môi giới vận tải, staffing — đều có việc lặp lại, output kiểm được, khách định kỳ, sở hữu phân mảnh và nhiều chủ sắp nghỉ hưu.</p>
+  <div class="card card-error">
+    <h4>6 cách thất bại Greg cảnh báo</h4>
+    <ol>
+      <li>Mua nhanh hơn khả năng tích hợp.</li>
+      <li>Người chủ chốt nghỉ việc và mang theo quan hệ khách hàng.</li>
+      <li>Khách trung thành với chủ cũ rời đi cùng chủ cũ.</li>
+      <li>Tự động hoá làm mất niềm tin — margin đến từ back-office, nhưng giá trị đến từ quan hệ.</li>
+      <li>Agent có quá nhiều quyền (ví dụ tự gửi email cho khách không qua checkpoint).</li>
+      <li>Tin vào số liệu “headline” — hãy định giá deal bằng số của chính mình.</li>
+    </ol>
+  </div>
+</section>
+
+<!-- ================================================================ -->
+<section id="s4">
+  <h2>4. Infographic tổng hợp playbook</h2>
+  <p>Mình tóm toàn bộ bài viết thành một trang: 6 bước, nguyên tắc an toàn, dashboard và các rủi ro. Số liệu lấy từ bài gốc; bố cục và cách diễn đạt là của mình.</p>
+  <div class="screenshot-wrap">
+    <img src="images/infographic-01-ai-rollup-playbook-vi.png" alt="Infographic AI Roll-up Playbook">
+    <div class="caption">Infographic 1 – AI Roll-up Playbook (tự thiết kế bằng HTML, render sang PNG)</div>
+  </div>
+</section>
+
+<!-- ================================================================ -->
+<section id="s5">
+  <h2>5. Bài học cá nhân</h2>
+  <div class="card card-accent">
+    <ol>
+      <li><strong>Lợi thế không nằm ở model mà ở “luật của ngách”.</strong> Ai cũng thuê được cùng một model. Thứ khác biệt là bộ rule tích luỹ từ hàng trăm lần sửa. Với một công ty outsourcing, đó chính là tri thức về khách hàng và domain mà mỗi dự án đang để rơi rớt trong chat và đầu người.</li>
+      <li><strong>Niềm tin là tài sản đắt nhất, đừng tự động hoá nó đi.</strong> Greg tách bạch: margin đến từ back-office, giá trị đến từ quan hệ. AI nên làm “phía sau quầy”, còn người giữ vai trò đối diện khách.</li>
+      <li><strong>Đo bằng “phút chú ý của con người”, không phải “% tự động hoá”.</strong> Một agent tạo nhiều bản nháp nhưng bắt người review lâu thì không rẻ. Chỉ số này trung thực hơn nhiều so với cảm giác “AI làm được rồi”.</li>
+      <li><strong>Tách quyền tạo và quyền duyệt.</strong> “Reviewer có thể chặn, không bao giờ được ship” là nguyên tắc thiết kế agent mình sẽ mang theo cho mọi workflow.</li>
+      <li><strong>Hoài nghi số liệu đẹp.</strong> Ngay trong bài quảng bá cơ hội, tác giả vẫn nhắc số liệu là tự báo cáo và chưa qua suy thoái. Khi đề xuất AI cho khách, mình cũng nên đưa số đo của chính dự án thay vì trích benchmark của người khác.</li>
+    </ol>
+  </div>
+  <p>Mình không đi mua công ty, nhưng mô hình này áp dụng gần như nguyên vẹn cho cách một công ty dịch vụ phần mềm vận hành: <em>khách hàng và niềm tin đã có, việc cần làm là thay đổi cách công việc được giao.</em></p>
+</section>
+
+<!-- ================================================================ -->
+<section id="s6">
+  <h2>6. Áp dụng vào dự án &amp; vận hành tại Scuti AI</h2>
+  <p>Scuti AI là công ty outsourcing AI/phần mềm tại Việt Nam với khách hàng Nhật Bản. Về bản chất, đây cũng là một <strong>doanh nghiệp dịch vụ</strong>: có khách định kỳ, có quy trình lặp lại (spec, dịch tài liệu, code, test, báo cáo), và chất lượng được đánh giá rất khắt khe. Vì vậy các ý tưởng của Greg có thể “ánh xạ” khá trực tiếp. Bảng dưới là <strong>đề xuất cá nhân</strong> của mình, không phải số liệu đã kiểm chứng.</p>
+  <div class="screenshot-wrap">
+    <img src="images/infographic-02-scuti-application-vi.png" alt="Áp dụng cho Scuti AI">
+    <div class="caption">Infographic 2 – Ánh xạ ý tưởng của Greg sang dự án outsourcing tại Scuti AI</div>
+  </div>
+
+  <h3>6.1. Hướng dẫn nhanh: 5 bước bắt đầu trong một dự án</h3>
+  <div class="step-row"><span class="step-num">1</span><p><strong>Lập automation map cho dự án (tuần 1).</strong> Liệt kê task lặp lại: dịch tài liệu JP↔VI, viết test case từ spec, unit test, cập nhật basic/detail design, báo cáo tuần. Ghi số lần/tháng × giờ/lần, và phân loại: tự động ngay / tự động + review / chỉ hỗ trợ / giữ người.</p></div>
+  <div class="step-row"><span class="step-num">2</span><p><strong>Tạo rulebook cho agent.</strong> Phỏng vấn dev lead, BrSE về các lỗi junior hay mắc, yêu cầu riêng của khách (coding convention, định dạng tài liệu, cách viết 敬語). Ghi thành <code>rules/</code> hoặc <code>CLAUDE.md</code> trong repo, mỗi rule có ví dụ.</p></div>
+  <div class="step-row"><span class="step-num">3</span><p><strong>Chạy shadow mode trên 1 loại task trong ~30 ngày.</strong> Agent làm song song, người vẫn làm như cũ; so sánh chất lượng và thời gian. Chưa có gì do agent tạo ra được gửi cho khách.</p></div>
+  <div class="step-row"><span class="step-num">4</span><p><strong>Ghi corrections log mỗi lần người sửa output của agent</strong> — đặc biệt là các 指摘 (comment review) từ phía khách Nhật. Cuối tuần, lỗi lặp lại ≥ 2 lần thành rule mới + test case.</p></div>
+  <div class="step-row"><span class="step-num">5</span><p><strong>Xem 5 con số mỗi thứ Hai</strong> trong buổi họp nội bộ: margin dự án, phút người/ticket, tỉ lệ phải sửa, phản hồi khách, giữ chân thành viên chủ chốt.</p></div>
+
+  <h3>6.2. Mẫu file dùng ngay</h3>
+  <div class="prompt-box"><span class="label">corrections-log.md</span>| Ngày | Task | Agent output | Người sửa | Loại thay đổi | Lặp lại? | Rule đề xuất |
+|------|------|--------------|-----------|---------------|----------|--------------|
+| 2026-10-06 | Test case màn hình login | Thiếu case khóa tài khoản sau 5 lần sai | Dev lead | Thiếu thông tin | 2 lần | R-012: luôn sinh case khóa tài khoản theo spec bảo mật |
+| 2026-10-07 | Báo cáo tuần (JP) | Dùng thể thường thay vì 敬語 | BrSE | Văn phong / sở thích khách | 3 lần | R-013: báo cáo gửi khách luôn dùng です・ます調 |</div>
+  <p style="font-size:0.88em;color:var(--text-secondary)">Các dòng trên là ví dụ minh hoạ định dạng, không phải dữ liệu dự án thật.</p>
+
+  <div class="prompt-box"><span class="label">Prompt – tổng hợp rule hằng tuần</span>So sánh từng bản nháp của agent với bản đã được dev lead / BrSE duyệt trong tuần này.
+Phân loại mỗi thay đổi: lỗi sự thật, yêu cầu riêng của khách, thiếu thông tin, hoặc văn phong.
+Với lỗi xuất hiện từ 2 lần trở lên, đề xuất một rule đánh số kèm ví dụ input / output đã được duyệt.
+Đánh dấu rule nào mâu thuẫn với rule hiện có. Không rule nào có hiệu lực trước khi dev lead duyệt.</div>
+
+  <h3>6.3. Trong vận hành hằng ngày</h3>
+  <ul>
+    <li><strong>Phân quyền agent rõ ràng:</strong> agent được tạo PR, bản nháp tài liệu, bản dịch; agent review được chặn PR; chỉ con người merge và gửi email/tài liệu cho khách.</li>
+    <li><strong>BrSE/PM vẫn là “gương mặt” với khách Nhật.</strong> AI giúp chuẩn bị nhanh hơn, không thay người trong các cuộc họp hay trao đổi nhạy cảm.</li>
+    <li><strong>Giữ tri thức khi nhân sự thay đổi:</strong> rulebook và corrections log giúp người mới vào dự án không lặp lại lỗi cũ — đúng tinh thần “lấy luật ra khỏi đầu người, đưa vào file”.</li>
+    <li><strong>Báo cáo bằng số của chính mình:</strong> khi đề xuất AI cho khách, dùng số đo từ shadow mode thay vì benchmark trên mạng.</li>
+  </ul>
+</section>
+
+<!-- ================================================================ -->
+<section id="s7">
+  <h2>7. Video demo</h2>
+  <p>Video quay lại quá trình đọc bài và tổng hợp: mở bài trên x.com → gặp login wall → mở bản đầy đủ trên fxtwitter → đọc bài trong trang đọc gọn → xem 2 infographic → mở blog hoàn chỉnh và lướt từ đầu đến cuối.</p>
+  <div class="screenshot-wrap">
+    <video controls width="860" src="video/greg-isenberg-x-post-insights-demo.mp4"></video>
+    <div class="caption"><a href="video/greg-isenberg-x-post-insights-demo.mp4">video/greg-isenberg-x-post-insights-demo.mp4</a></div>
+  </div>
+</section>
+
+<!-- ================================================================ -->
+<section id="s8">
+  <h2>8. Kết luận</h2>
+  <p>Bài viết của Greg Isenberg là một playbook thực dụng: mua niềm tin đã có sẵn, dùng AI agent làm lại back-office, giữ con người ở những điểm kiểm soát, và đo bằng số liệu thật mỗi tuần. Với Scuti AI, giá trị lớn nhất không phải là chuyện mua bán doanh nghiệp, mà là ba thói quen có thể bắt đầu ngay:</p>
+  <ol>
+    <li>Lập automation map cho dự án để biết AI nên làm gì trước.</li>
+    <li>Duy trì rulebook + corrections log để mỗi lần sửa trở thành tài sản.</li>
+    <li>Tách quyền tạo / duyệt của agent và theo dõi 5 con số mỗi tuần.</li>
+  </ol>
+</section>
+
+<section>
+  <h2>Tài liệu tham khảo</h2>
+  <ul>
+    <li><a href="https://x.com/gregisenberg/status/2103927365977928019" target="_blank">Greg Isenberg – “$5T opportunity: AI Roll Ups” (X, 26/09/2026)</a></li>
+    <li><a href="https://fxtwitter.com/gregisenberg/status/2103927365977928019" target="_blank">fxtwitter – bản xem công khai của bài viết (nguồn nội dung thực tế được dùng)</a></li>
+    <li>Bản lưu cục bộ: <code>sources/article-text.md</code>, <code>sources/article-reader.html</code></li>
+  </ul>
+</section>
+
+<div class="footer">
+  <p>File: <code>blog-html/greg-isenberg-x-post-insights/greg-isenberg-x-post-insights-blog.html</code> · Phiên bản tiếng Anh: <a href="greg-isenberg-x-post-insights-blog-en.html">greg-isenberg-x-post-insights-blog-en.html</a></p>
+  <p>Các hình minh hoạ gốc (Hình 1–4) thuộc về Greg Isenberg (gregisenberg.com), được trích dẫn với mục đích tóm tắt, học tập.</p>
+</div>
+
+</div>
+</body>
+</html>

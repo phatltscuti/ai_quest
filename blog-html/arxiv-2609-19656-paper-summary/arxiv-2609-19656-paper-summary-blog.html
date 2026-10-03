@@ -1,0 +1,401 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Self-Evolving Search Index (arXiv:2609.19656) – Khi index tự học cách để được tìm thấy</title>
+    <style>
+      *{box-sizing:border-box}
+      body{margin:0;font-family:Arial,sans-serif;background:#fff;color:#222;line-height:1.7}
+      a{color:#0066cc;text-decoration:none}
+      a:hover{text-decoration:underline}
+      .wrap{max-width:980px;margin:0 auto;padding:20px}
+      h1{margin:0 0 10px;font-size:28px}
+      h2{margin:28px 0 14px;font-size:22px;border-bottom:2px solid #ddd;padding-bottom:8px}
+      h3{margin:20px 0 10px;font-size:18px}
+      ul,ol{margin:8px 0;padding-left:22px}
+      p{margin:12px 0}
+      code{background:#f5f5f5;border:1px solid #ddd;padding:2px 6px;font-size:13px;font-family:monospace}
+      pre{white-space:pre-wrap;word-wrap:break-word;border:1px solid #ddd;background:#f5f5f5;padding:12px;overflow:auto;font-size:13px;font-family:monospace;margin:12px 0}
+      .hero{border:1px solid #ddd;padding:20px;margin-bottom:20px;background:#f9f9f9}
+      .meta{font-size:13px;color:#555}
+      .highlight{background:#fffbe6;border-left:4px solid #f5c542;padding:12px 16px;margin:16px 0}
+      .note{background:#eef6ff;border-left:4px solid #0066cc;padding:12px 16px;margin:16px 0}
+      .warn{background:#fdecea;border-left:4px solid #c62828;padding:12px 16px;margin:16px 0}
+      .table-wrap{overflow-x:auto}
+      .comparison{width:100%;border-collapse:collapse;margin:16px 0}
+      .comparison th,.comparison td{border:1px solid #ddd;padding:10px 12px;text-align:left}
+      .comparison th{background:#f0f0f0;font-weight:bold}
+      .comparison td.num{text-align:right;white-space:nowrap}
+      figure{margin:20px 0;text-align:center}
+      figure img{max-width:100%;border:1px solid #ddd}
+      figcaption{font-size:13px;color:#666;margin-top:6px}
+      .video-embed{margin:24px 0;text-align:center}
+      .video-embed video{max-width:100%;border:1px solid #ddd}
+      .toc{border:1px solid #ddd;padding:12px 20px;background:#fafafa}
+      .footer{margin-top:30px;font-size:12px;color:#666;border-top:1px solid #ddd;padding-top:20px}
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+
+      <!-- ==================== MỞ BÀI ==================== -->
+      <div class="hero">
+        <h1>Self-Evolving Search Index – Khi index tự học cách để được tìm thấy</h1>
+        <p class="meta">
+          Tóm tắt paper <a href="https://arxiv.org/abs/2609.19656" target="_blank">arXiv:2609.19656</a>
+          – <i>Self-Evolving Search Index</i> (Sangam Lee, Wonjae Lee, Sunghwan Kim, Deogyong Kim, Jaehoon Kim, Daye Nam, SeongKu Kang, Dongha Lee;
+          Yonsei University, Samsung Research, UC Irvine, Korea University). Nộp ngày 17/09/2026, chuyên mục cs.IR / cs.AI, ghi chú “Work in progress”.
+        </p>
+        <p>
+          Hầu hết dự án RAG / AI agent mà chúng ta làm đều có chung một “điểm nghẽn thầm lặng”: tài liệu <b>có</b> câu trả lời,
+          nhưng retriever <b>không tìm ra</b> vì cách tài liệu được đánh index không khớp với cách người dùng hỏi.
+          Paper này đề xuất <b>Self-Index</b>: để chính một LLM tự chẩn đoán index đang yếu ở đâu, tự viết lại các “index key”,
+          tự kiểm định, rồi lặp lại – không cần người gán nhãn, không cần retrain retriever, không sửa nội dung tài liệu.
+        </p>
+        <ul>
+          <li><b>Kết quả chính:</b> trên benchmark BRIGHT, nDCG@10 trung bình tăng <b>+38.8% đến +57.0%</b> tùy retriever, trong khi phương pháp tốt nhất trước đó chỉ tăng ~9–13%.</li>
+          <li><b>Ứng dụng xuôi dòng:</b> search agent trả lời đúng hơn <b>và</b> gọi search ít hơn; hệ thống memory của agent truy xuất kinh nghiệm cũ tốt hơn (+9.2% đến +13.9%).</li>
+          <li><b>Bài học cho Scuti:</b> một vòng lặp “đo → chẩn đoán → sửa có chọn lọc → kiểm định” áp dụng được ngay cho các dự án RAG tài liệu tiếng Nhật của khách hàng.</li>
+        </ul>
+      </div>
+
+      <div class="toc">
+        <b>Mục lục</b>
+        <ol>
+          <li>Bối cảnh: index key là gì và vì sao quan trọng?</li>
+          <li>Đóng góp chính của paper</li>
+          <li>Phương pháp: Optimizer (3 bước) + Query Simulator</li>
+          <li>Kết quả thực nghiệm</li>
+          <li>Phân tích: thành phần nào thực sự quan trọng?</li>
+          <li>Giới hạn và điểm cần đọc kỹ</li>
+          <li>Bài học cá nhân &amp; cách áp dụng tại Scuti AI</li>
+          <li>Hướng dẫn nhanh: tự thử như thế nào?</li>
+          <li>Video demo</li>
+          <li>Kết luận &amp; tài liệu tham khảo</li>
+        </ol>
+      </div>
+
+      <!-- ==================== 1. BỐI CẢNH ==================== -->
+      <h2>1. Bối cảnh: index key là gì và vì sao quan trọng?</h2>
+      <p>
+        Khi một retriever (BM25 hay embedding) tìm tài liệu, nó không so câu hỏi với “ý nghĩa” của tài liệu,
+        mà so với <b>những gì được đưa vào index</b> để đại diện cho tài liệu đó. Paper gọi các đại diện này là <b>index key</b>.
+        Mặc định, key duy nhất chính là văn bản gốc (hoặc chunk). Mỗi tài liệu <i>d</i> có một tập key <i>K(d)</i>,
+        và điểm của tài liệu cho câu hỏi <i>q</i> là điểm của key khớp nhất:
+      </p>
+      <pre>score(q, d) = max over k in K(d) of rel(q, k)      // rel = cosine similarity hoặc BM25</pre>
+      <p>
+        Ý tưởng “làm giàu index” không mới: Doc2Query sinh câu hỏi giả cho mỗi tài liệu, Anthropic có Contextual Retrieval (thêm ngữ cảnh/tóm tắt),
+        EnrichIndex thêm mục đích + tóm tắt + QA, SPIKE thêm “kịch bản” người dùng… Vấn đề paper chỉ ra là:
+      </p>
+      <ul>
+        <li><b>Không có chiến lược cố định nào thắng ở mọi môi trường.</b> Kiểu corpus (văn bản, code, toán, bảng) và kiểu retriever (sparse/dense) “thích” những dạng key khác nhau. Ví dụ trong paper: Doc2Query giúp BM25 trên bảng tăng mạnh nhưng làm giảm hiệu quả trên code, và làm giảm điểm trung bình với retriever dense.</li>
+        <li><b>Việc tinh chỉnh vẫn do con người làm:</b> người phải xem truy vấn nào hỏng, đoán key nào có lỗi, sửa prompt/chiến lược (hoặc gán nhãn thêm để train lại), rồi <b>chạy lại toàn bộ corpus</b> – tốn công và tốn tiền, và phải lặp lại mỗi khi xuất hiện lỗi mới.</li>
+      </ul>
+      <div class="highlight">
+        <b>Câu hỏi của paper:</b> Có thể để index <b>tự tiến hóa</b> theo môi trường truy xuất của nó – tự tìm lỗi, tự sửa đúng chỗ cần sửa, tự kiểm định – mà không cần người can thiệp và không cần nhãn relevance hay không?
+      </div>
+
+      <!-- ==================== 2. ĐÓNG GÓP ==================== -->
+      <h2>2. Đóng góp chính của paper</h2>
+      <ol>
+        <li><b>Framework Self-Index</b> – đưa mô hình “self-evolving” (vốn đã được dùng để LLM/agent tự cải thiện) vào bài toán <b>tối ưu index</b>. Index tự chẩn đoán và tinh chỉnh các key của mình theo nhiều nhu cầu truy xuất khác nhau.</li>
+        <li><b>Hiệu quả nhất quán trên nhiều môi trường:</b> 3 retriever (BM25, BGE-Large, Qwen3-Embedding-8B) × 4 loại corpus (văn bản tự nhiên, code, toán, bảng) – Self-Index đạt điểm trung bình cao nhất ở mọi loại corpus với mọi retriever, vượt Doc2Query, SPIKE, RL-Index, EnrichIndex.</li>
+        <li><b>Lợi ích lan sang ứng dụng xuôi dòng:</b> search agent (BrowseComp-Plus) chính xác hơn, ít lần gọi search hơn, chi phí online thấp hơn; agent memory (LongMemEval-V2) truy xuất kinh nghiệm cũ tốt hơn.</li>
+      </ol>
+      <p>Code chính thức được công bố tại <a href="https://github.com/augustinLib/Self-Index" target="_blank">github.com/augustinLib/Self-Index</a>.</p>
+
+      <!-- ==================== 3. PHƯƠNG PHÁP ==================== -->
+      <h2>3. Phương pháp: Optimizer (3 bước) + Query Simulator</h2>
+
+      <figure>
+        <img src="images/step-04-figure1-overview-crop.png" alt="Figure 1 – Overview of Self-Index" />
+        <figcaption>Ảnh 1 – Figure 1 gốc của paper: Self-Exploration → Self-Diagnosis → Self-Revision → Self-Validation, index đi từ phiên bản t sang t+1.</figcaption>
+      </figure>
+
+      <figure>
+        <img src="images/diagram-01-self-index-loop.png" alt="Sơ đồ vòng lặp Self-Index (tự vẽ)" />
+        <figcaption>Ảnh 2 – Sơ đồ tự vẽ (HTML/SVG → PNG) giải thích vòng lặp bằng tiếng Việt, kèm tham số cấu hình thật trong paper.</figcaption>
+      </figure>
+
+      <h3>3.1. Nguyên tắc nền tảng</h3>
+      <ul>
+        <li><b>Không sửa tài liệu, chỉ sửa “cửa vào”:</b> văn bản gốc luôn được giữ làm một key cố định, không bao giờ bị sửa hay bị kiểm định. Các key sinh thêm được thêm/xóa/viết lại.</li>
+        <li><b>Max-score thay vì trộn trọng số:</b> các phương pháp trước (SPIKE, EnrichIndex) phải chọn/tune trọng số để trộn điểm nhiều biểu diễn. Self-Index lấy max, nên bớt một tham số con người phải chỉnh.</li>
+        <li><b>Giới hạn ngân sách:</b> mỗi tài liệu tối đa 10 key (kể cả key văn bản gốc).</li>
+      </ul>
+
+      <h3>3.2. Optimizer – vòng lặp 3 bước</h3>
+      <p>Optimizer là một LLM (trong thí nghiệm chính: Qwen3.6-35B-A3B) được quyền gọi retriever và sửa key. Mỗi vòng nhận một lô 128 câu hỏi, lấy top-30 key cho mỗi câu.</p>
+      <table class="comparison">
+        <tr><th style="width:20%">Bước</th><th>Làm gì</th><th style="width:30%">Điểm tinh tế</th></tr>
+        <tr><td><b>① Self-Diagnosis</b><br/>(tự chẩn đoán)</td>
+          <td>Chạy các câu hỏi qua index hiện tại. Với mỗi key được trả về, dựng một <b>co-retrieval profile</b>: những key của <i>tài liệu khác</i> hay xuất hiện cùng nó, và tần suất. LLM đọc tài liệu + key hiện tại + profile này rồi trả về JSON: key nào có vấn đề, nguyên nhân, và nên sửa theo hướng nào (chưa viết key mới).</td>
+          <td>Không cần nhãn đúng/sai – lấy cảm hứng từ <i>pseudo-relevance feedback</i> (Rocchio). Co-retrieval cho biết key “không phân biệt được” tài liệu này với tài liệu nào.</td></tr>
+        <tr><td><b>② Self-Revision</b><br/>(tự sửa có chọn lọc)</td>
+          <td>Chỉ các tài liệu bị chẩn đoán có lỗi mới được sửa. Sửa <b>cả tập key</b> của tài liệu một lần mỗi vòng (tránh key trùng ý nhau). LLM được xem “competing keys” – key của tài liệu đối thủ – để biết phải nhấn mạnh điểm khác biệt nào.</td>
+          <td>Không có chiến lược định sẵn: LLM tự quyết định dạng và độ dài key. Prompt yêu cầu viết “bằng lời của người tìm kiếm, không phải lời của tài liệu”.</td></tr>
+        <tr><td><b>③ Self-Validation</b><br/>(tự kiểm định)</td>
+          <td>Mọi key sinh ra (kể cả key được giữ lại) phải qua 3 bài kiểm tra. Key trượt bị loại; nếu không còn key mới nào qua, tập key cũ được giữ nguyên.</td>
+          <td>Hai trong ba bài kiểm tra dùng chính hàm relevance của retriever, không tốn thêm lời gọi LLM.</td></tr>
+      </table>
+
+      <p><b>Ba tiêu chí kiểm định</b> (dựa trên các nguyên tắc kinh điển của Salton về “key tốt”):</p>
+      <ul>
+        <li><b>Faithfulness (trung thực):</b> một LLM judge chấm 0–3 xem tài liệu có thực sự đáp ứng nhu cầu mà key mô tả không; cần ≥ 2. Chặn key “bịa”.</li>
+        <li><b>Specificity (đặc thù):</b> dùng chính key làm câu hỏi, tìm trên toàn corpus; tài liệu nguồn phải nằm trong top-K. Nếu key quá chung chung (nhiều tài liệu khác khớp hơn), key bị loại.</li>
+        <li><b>Separation (tách biệt):</b> độ giống lớn nhất giữa key mới và các key đối thủ phải <b>thấp hơn</b> của tập key hiện tại. Tức là key mới phải giúp tài liệu “tách khỏi đám đông”, không làm nó giống đối thủ hơn.</li>
+      </ul>
+
+      <h3>3.3. Query Simulator – từ “phản ứng” sang “chủ động”</h3>
+      <p>
+        Nếu chỉ có Optimizer, index chỉ sửa được những lỗi mà các câu hỏi hiện có làm lộ ra (reactive).
+        Query Simulator chủ động đi tìm <b>nhu cầu tìm kiếm chưa ai hỏi</b> (Self-Exploration):
+      </p>
+      <ol>
+        <li>Chọn ngẫu nhiên <i>n</i> tài liệu trong corpus.</li>
+        <li><b>Lần gọi LLM thứ nhất:</b> tóm tắt “vấn đề/thắc mắc mà người <i>chưa đọc</i> tài liệu này sẽ gặp”, cấm dùng thuật ngữ chuyên môn và tên riêng của tài liệu.</li>
+        <li><b>Lần gọi thứ hai:</b> đóng vai người đó, viết <i>m</i> câu hỏi kiểu đăng forum – <b>không được xem tài liệu gốc</b>, để tránh chép lại từ ngữ của tài liệu.</li>
+        <li>Lọc <b>Answerability</b> (LLM judge ≥ 2/3: tài liệu có trả lời được không) và <b>Dissimilarity</b> (Jaccard theo tập từ &lt; 0.8 so với mọi câu hỏi đã dùng).</li>
+      </ol>
+      <div class="note">
+        <b>Điểm đáng chú ý:</b> trong thí nghiệm chính, <b>toàn bộ</b> câu hỏi dùng để tiến hóa index đến từ Query Simulator (20 vòng × 128 = 2.560 câu hỏi). Câu hỏi đánh giá hoàn toàn không được nhìn thấy trong lúc tối ưu – nên kết quả không phải do “học tủ” bộ test.
+      </div>
+
+      <h3>3.4. Ví dụ: một key tiến hóa qua các vòng</h3>
+      <figure>
+        <img src="images/diagram-02-key-evolution.png" alt="Ví dụ key tiến hóa qua các vòng (tự vẽ)" />
+        <figcaption>Ảnh 3 – Hai case study (Appendix D.1) vẽ lại: tài liệu đúng đi từ hạng #63 → #2 và #140 → #3 chỉ nhờ thay đổi key, nội dung tài liệu giữ nguyên.</figcaption>
+      </figure>
+      <figure>
+        <img src="images/step-11-figure4-case-study-crop.png" alt="Figure 4 trên paper – case study" />
+        <figcaption>Ảnh 4 – Figure 4 trên paper (case study gốc).</figcaption>
+      </figure>
+
+      <!-- ==================== 4. KẾT QUẢ ==================== -->
+      <h2>4. Kết quả thực nghiệm</h2>
+      <p>Paper trả lời 3 câu hỏi nghiên cứu: (RQ1) có hiệu quả trên nhiều corpus/retriever không, (RQ2) có giúp search agent không, (RQ3) có giúp memory của agent không. Thước đo truy xuất là nDCG@10.</p>
+
+      <h3>4.1. RQ1 – Truy xuất trên BRIGHT (văn bản, code, toán) và bảng</h3>
+      <div class="table-wrap">
+      <table class="comparison">
+        <tr><th>Retriever</th><th>Index gốc (BRIGHT)</th><th>+ Self-Index</th><th>Mức tăng</th><th>Phương pháp tốt nhì</th></tr>
+        <tr><td>BM25</td><td class="num">14.5</td><td class="num"><b>20.4</b></td><td class="num"><b>+40.4%</b></td><td>RL-Index +9.2%</td></tr>
+        <tr><td>BGE-Large</td><td class="num">13.9</td><td class="num"><b>21.8</b></td><td class="num"><b>+57.0%</b></td><td>RL-Index +10.4%</td></tr>
+        <tr><td>Qwen3-Embedding-8B</td><td class="num">18.8</td><td class="num"><b>26.1</b></td><td class="num"><b>+38.8%</b></td><td>SPIKE +12.8%</td></tr>
+      </table>
+      </div>
+      <figure>
+        <img src="images/step-06-table1-full.png" alt="Table 1 BRIGHT retrieval results" />
+        <figcaption>Ảnh 5 – Table 1 trên paper (trung bình 3 lần chạy). Hàng “+Self-Index” đậm/xanh ở hầu hết cột.</figcaption>
+      </figure>
+      <p>Với 3 bộ dữ liệu truy xuất bảng (Spider 2.0, FIBEN, BEAVER – tìm đúng bảng trong schema DB), trung bình tăng <b>+49.1%</b> (BM25), <b>+17.9%</b> (BGE), <b>+16.2%</b> (Qwen3-Emb), cao hơn EnrichIndex (+42.4%, +13.3%, +11.2%). Đáng chú ý: Doc2Query làm <b>giảm</b> điểm bảng với retriever dense (−3.2%, −7.1%) – minh chứng cho luận điểm “không có chiến lược cố định nào thắng mọi nơi”.</p>
+
+      <h3>4.2. RQ2 – Search agent trên BrowseComp-Plus</h3>
+      <p>4 agent backbone (GPT-OSS-120B, GPT-5.4-nano, Gemini-3.7-Flash, Kimi-K2.5) × 2 retriever. Agent, prompt, retriever, judge giữ nguyên; chỉ thay index.</p>
+      <div class="table-wrap">
+      <table class="comparison">
+        <tr><th>Agent + Retriever</th><th>Accuracy gốc → Self-Index</th><th>Số lần gọi search</th></tr>
+        <tr><td>GPT-OSS-120B + BM25</td><td class="num">31.08 → <b>58.92</b> (+89.5%)</td><td class="num">21.16 → 16.62</td></tr>
+        <tr><td>GPT-5.4-nano + BM25</td><td class="num">36.51 → <b>64.94</b> (+77.9%)</td><td class="num">19.23 → 16.00</td></tr>
+        <tr><td>Gemini-3.7-Flash + BM25</td><td class="num">61.93 → <b>76.02</b> (+22.8%)</td><td class="num">11.20 → 8.84</td></tr>
+        <tr><td>Kimi-K2.5 + BM25</td><td class="num">50.96 → <b>71.93</b> (+41.1%)</td><td class="num">33.98 → 29.00</td></tr>
+        <tr><td>Kimi-K2.5 + Qwen3-Emb-8B</td><td class="num">60.00 → <b>64.10</b> (+6.8%)</td><td class="num">29.94 → 28.43</td></tr>
+      </table>
+      </div>
+      <ul>
+        <li>Self-Index đạt accuracy và evidence recall cao nhất ở <b>cả 8</b> cấu hình, và <b>giảm số lần gọi search ở cả 8</b> (SPIKE có lúc tăng).</li>
+        <li>Mức tăng lớn nhất khi retriever yếu (BM25); với retriever mạnh (Qwen3-Emb-8B) mức tăng nhỏ hơn (+3% đến +23%).</li>
+        <li>Ít lần gọi search → ít token → <b>chi phí online thấp hơn</b>. Agent GPT-5.4-nano + BM25 dùng Self-Index đạt accuracy tương đương cách tiếp cận DCI (agent đọc corpus trực tiếp, không index) nhưng rẻ hơn.</li>
+        <li>Khi mở rộng corpus từ 100K lên 400K tài liệu, Self-Index giữ accuracy ổn định và chi phí mỗi câu hỏi không tăng, trong khi SPIKE và đặc biệt DCI giảm accuracy và tăng chi phí rõ rệt (Figure 3).</li>
+      </ul>
+      <figure>
+        <img src="images/step-07-table3-full.png" alt="Table 3 BrowseComp-Plus agent results" />
+        <figcaption>Ảnh 6 – Table 3 trên paper: kết quả end-to-end của search agent trên BrowseComp-Plus.</figcaption>
+      </figure>
+      <figure>
+        <img src="images/step-08-figure2-online-cost-crop.png" alt="Figure 2 – accuracy vs online cost" />
+        <figcaption>Ảnh 7 – Figure 2 trên paper (accuracy vs chi phí online).</figcaption>
+      </figure>
+
+      <h3>4.3. RQ3 – Memory của agent (LongMemEval-V2)</h3>
+      <p>Self-Index chỉ đổi key truy xuất, giữ nguyên nội dung memory. Kết quả accuracy tổng:</p>
+      <table class="comparison">
+        <tr><th>Hệ thống memory</th><th>Gốc</th><th>+ Self-Index</th><th>Tăng</th></tr>
+        <tr><td>Query → Slice</td><td class="num">0.415</td><td class="num"><b>0.472</b></td><td class="num">+13.9%</td></tr>
+        <tr><td>Query → Slice+Notes</td><td class="num">0.448</td><td class="num"><b>0.503</b></td><td class="num">+12.4%</td></tr>
+        <tr><td>AgentRunbook-R</td><td class="num">0.532</td><td class="num"><b>0.581</b></td><td class="num">+9.2%</td></tr>
+      </table>
+      <p>
+        Tăng đều ở các năng lực static / dynamic / workflow, nhưng <b>không</b> cải thiện nhóm “gotchas” (thậm chí giảm từ 0.276 xuống 0.241 với Query → Slice) – vì gotchas phụ thuộc vào cách memory được <i>xây dựng</i> hơn là cách nó được <i>truy xuất</i>.
+        Một case study rất “đời”: agent cần quy trình offboarding nhân viên trên ServiceNow cho người A; memory chỉ có trải nghiệm offboarding người B. Key mới “automated employee offboarding hardware unassignment workflow” giúp tìm ra trải nghiệm cũ dù tên người khác nhau, và agent chọn đúng quy trình.
+      </p>
+      <figure>
+        <img src="images/step-09-table4-agent-memory-crop.png" alt="Table 4 LongMemEval-V2" />
+        <figcaption>Ảnh 8 – Table 4 trên paper: kết quả trên LongMemEval-V2.</figcaption>
+      </figure>
+
+      <h3>4.4. Chi phí offline</h3>
+      <p>Vì chỉ sửa tài liệu có vấn đề (thay vì sinh key cho toàn corpus như SPIKE), chi phí LLM thấp hơn rõ rệt (giá Qwen3.6-35B-A3B: $0.07 input / $0.70 output mỗi triệu token):</p>
+      <table class="comparison">
+        <tr><th>Dataset (BGE-Large)</th><th>SPIKE: nDCG@10 / chi phí</th><th>Self-Index sau 20 vòng</th><th>Tiết kiệm</th></tr>
+        <tr><td>Biology</td><td class="num">14.62 / $14.37</td><td class="num"><b>32.09</b> / $3.83</td><td class="num">73.3%</td></tr>
+        <tr><td>Robotics (code)</td><td class="num">14.40 / $11.74</td><td class="num"><b>22.58</b> / $3.26</td><td class="num">72.3%</td></tr>
+        <tr><td>TheoremQA-Theorem (toán)</td><td class="num">6.35 / $10.11</td><td class="num"><b>14.65</b> / $8.85</td><td class="num">12.5%</td></tr>
+      </table>
+
+      <!-- ==================== 5. PHÂN TÍCH ==================== -->
+      <h2>5. Phân tích: thành phần nào thực sự quan trọng?</h2>
+      <table class="comparison">
+        <tr><th>Bỏ thành phần</th><th>NL (26.6)</th><th>Code (22.1)</th><th>Math (17.2)</th><th>Ý nghĩa</th></tr>
+        <tr><td>Co-retrieval profile</td><td class="num">−6.9</td><td class="num">−5.4</td><td class="num">−1.3</td><td>Chẩn đoán cần nhìn “hàng xóm” của key, không chỉ tài liệu.</td></tr>
+        <tr><td><b>Toàn bộ Self-Validation</b></td><td class="num"><b>−10.5</b></td><td class="num"><b>−9.1</b></td><td class="num"><b>−5.3</b></td><td>Chấp nhận mọi đề xuất của LLM → <b>tệ hơn cả index gốc</b>.</td></tr>
+        <tr><td>Faithfulness</td><td class="num">−5.6</td><td class="num">−4.0</td><td class="num">−1.7</td><td rowspan="3">Mỗi tiêu chí đều đóng góp.</td></tr>
+        <tr><td>Specificity</td><td class="num">−6.0</td><td class="num">−6.1</td><td class="num">−4.3</td></tr>
+        <tr><td>Separation</td><td class="num">−2.7</td><td class="num">−5.3</td><td class="num">−5.1</td></tr>
+        <tr><td>Dissimilarity filter (Query Simulator)</td><td class="num">−4.4</td><td class="num">−3.6</td><td class="num">−2.4</td><td>Câu hỏi phải đa dạng thật sự.</td></tr>
+      </table>
+      <figure>
+        <img src="images/step-10-table5-ablation-crop.png" alt="Table 5 ablation" />
+        <figcaption>Ảnh 9 – Table 5 (ablation) trên paper.</figcaption>
+      </figure>
+      <ul>
+        <li><b>Nguồn câu hỏi:</b> thay Query Simulator bằng bộ câu hỏi tổng hợp có sẵn (ReasonIR HQ) vẫn cải thiện so với gốc (NL 18.1 → 24.3), nhưng Query Simulator tốt hơn ở mọi loại corpus (NL 26.6, Code 22.1, Math 17.2). Nghĩa là Optimizer cũng chạy được với log truy vấn thật của người dùng.</li>
+        <li><b>Tiến hóa dần dần:</b> chỉ sau vài vòng Self-Index đã vượt SPIKE, và tiếp tục tăng đến vòng 20 (Figure 6).</li>
+        <li><b>LLM backbone:</b> model 0.8B quá yếu (giảm điểm trên 3/5 dataset); từ 9B trở lên đều cải thiện; Qwen3.6-35B-A3B tốt nhất (22.4), model 304B không tốt hơn (19.9). Model to hơn không đồng nghĩa với index tốt hơn.</li>
+      </ul>
+      <figure>
+        <img src="images/step-12-figure6-evolution-crop.png" alt="Figure 6 – evolution over iterations" />
+        <figcaption>Ảnh 10 – Figure 6: nDCG@10 qua các vòng tiến hóa (đường nét đứt là SPIKE).</figcaption>
+      </figure>
+
+      <!-- ==================== 6. GIỚI HẠN ==================== -->
+      <h2>6. Giới hạn và điểm cần đọc kỹ</h2>
+      <div class="warn">
+        <ul>
+          <li>Paper là bản v1, tự ghi “<b>Work in progress</b>”, chưa qua peer review.</li>
+          <li>Không phải mọi ô đều thắng: ví dụ trên LeetCode, Self-Index thấp hơn index gốc với BM25 (22.4 vs 24.4) và BGE (24.7 vs 26.8); trên Spider 2.0 + BM25, EnrichIndex cao hơn (44.0 vs 42.3). Paper khẳng định thắng về <b>điểm trung bình theo loại corpus</b>, không phải từng dataset.</li>
+          <li>Mức tăng nhỏ đi khi retriever đã mạnh (Qwen3-Emb-8B trên BrowseComp-Plus: +3% đến +23% accuracy).</li>
+          <li>Chi phí offline chỉ tính tiền token theo bảng giá API, không gồm chi phí GPU/hosting; dataset toán tiết kiệm ít (12.5%).</li>
+          <li>Corpus trong thí nghiệm là tĩnh; paper không đánh giá tình huống tài liệu thay đổi liên tục.</li>
+        </ul>
+      </div>
+
+      <!-- ==================== 7. BÀI HỌC ==================== -->
+      <h2>7. Bài học cá nhân &amp; cách áp dụng tại Scuti AI</h2>
+      <p>
+        Ở Scuti, phần lớn dự án AI cho khách hàng Nhật là chatbot/RAG trên tài liệu nội bộ (仕様書, マニュアル, FAQ, ticket, schema DB) và gần đây là agent tự động hóa nghiệp vụ.
+        Đọc paper này, mình rút ra mấy điều thay đổi cách mình làm việc:
+      </p>
+
+      <h3>7.1. Bài học rút ra</h3>
+      <ol>
+        <li><b>Lỗi RAG thường nằm ở “cửa vào”, không phải ở LLM.</b> Trước đây khi chatbot trả lời sai, phản xạ là sửa prompt hoặc đổi model. Paper cho thấy chỉ đổi index key (không đổi retriever, không đổi tài liệu) đã tăng accuracy của agent tới +78–90%. Lần sau mình sẽ kiểm tra retrieval trước.</li>
+        <li><b>“Viết key bằng lời của người hỏi”</b> – điều này đặc biệt đúng với khách hàng Nhật: người dùng cuối hỏi bằng tiếng Nhật đời thường (「パスワードを忘れた時どうする？」) trong khi tài liệu viết thuật ngữ kỹ thuật hoặc tiếng Anh. Khoảng cách từ vựng này chính là thứ Self-Index thu hẹp.</li>
+        <li><b>LLM sinh nội dung mà không kiểm định thì tệ hơn không làm gì.</b> Ablation bỏ Self-Validation cho kết quả dưới cả index gốc. Bài học áp dụng cho mọi pipeline LLM ở công ty: tóm tắt tài liệu, sinh test case, dịch spec… đều cần một “cổng kiểm định” có tiêu chí rõ ràng.</li>
+        <li><b>Sửa có chọn lọc rẻ hơn sửa toàn bộ.</b> Chỉ đụng vào tài liệu có vấn đề giúp tiết kiệm 72–73% chi phí so với sinh lại cho toàn corpus. Tư duy này giống “fix theo bug report” thay vì “refactor toàn bộ”.</li>
+        <li><b>Tín hiệu co-retrieval là công cụ debug miễn phí.</b> Những tài liệu luôn “đi cùng nhau” trong kết quả tìm kiếm thường là tài liệu trùng lặp, tài liệu phiên bản cũ/mới, hoặc tài liệu có key quá chung chung – rất hữu ích khi dọn dẹp knowledge base của khách.</li>
+        <li><b>Tách bộ test khỏi dữ liệu tối ưu.</b> Paper không dùng câu hỏi đánh giá khi tối ưu. Khi báo cáo cho khách Nhật (vốn rất coi trọng số liệu và tính khách quan), mình cũng nên giữ một bộ câu hỏi test cố định để so trước/sau.</li>
+      </ol>
+
+      <figure>
+        <img src="images/diagram-03-scuti-apply.png" alt="Lộ trình áp dụng tại Scuti (tự vẽ)" />
+        <figcaption>Ảnh 11 – Lộ trình 4 tuần đề xuất cho một PoC nội bộ (đề xuất của người viết, không phải nội dung paper).</figcaption>
+      </figure>
+
+      <h3>7.2. Áp dụng vào dự án hiện tại</h3>
+      <table class="comparison">
+        <tr><th>Tình huống tại Scuti</th><th>Áp dụng ý tưởng nào</th></tr>
+        <tr><td>Chatbot RAG tài liệu nội bộ cho khách hàng Nhật</td><td>Giữ chunk gốc + thêm key dạng câu hỏi (tiếng Nhật, tiếng Anh) trỏ về cùng doc_id; lấy max-score; dùng log câu hỏi thật làm query cho Optimizer.</td></tr>
+        <tr><td>Text-to-SQL / tìm bảng trong schema lớn</td><td>Paper có kết quả tốt trên Spider 2.0/BEAVER: thêm key mô tả “bảng này dùng để phân tích gì” (ví dụ case retention analysis) thay vì chỉ tên cột.</td></tr>
+        <tr><td>Agent tự động hóa (Claude Code, agent nghiệp vụ) có memory</td><td>Đánh index kinh nghiệm cũ theo <b>quy trình</b> (“offboarding + thu hồi thiết bị”) thay vì theo thực thể cụ thể (tên người, mã ticket).</td></tr>
+        <tr><td>Agent tìm kiếm nhiều bước (deep research)</td><td>Index tốt → ít lần gọi search → giảm token và chi phí API, quan trọng khi báo giá cố định cho khách.</td></tr>
+      </table>
+
+      <h3>7.3. Áp dụng vào vận hành hằng ngày</h3>
+      <ul>
+        <li><b>Knowledge base nội bộ</b> (wiki dự án, Backlog, quy trình QA): mỗi tháng lấy các câu tìm kiếm “không ra kết quả” làm đầu vào, cho LLM đề xuất thêm key/tag, có người duyệt trước khi merge (phiên bản “human-in-the-loop” của Self-Validation).</li>
+        <li><b>Review đầu ra LLM</b> theo 3 câu hỏi rút từ paper: có đúng với nguồn không (Faithful)? có đặc thù cho trường hợp này không (Specific)? có phân biệt được với cái tương tự không (Separated)?</li>
+        <li><b>Bảo mật dữ liệu khách hàng:</b> vòng lặp cần LLM đọc toàn bộ tài liệu, nên với dự án có NDA chặt phải dùng model self-host (paper dùng Qwen3.6-35B-A3B mã nguồn mở – một lựa chọn khả thi) hoặc endpoint được khách cho phép.</li>
+      </ul>
+
+      <!-- ==================== 8. HƯỚNG DẪN ==================== -->
+      <h2>8. Hướng dẫn nhanh: tự thử như thế nào?</h2>
+      <h3>8.1. Đọc paper hiệu quả (15 phút)</h3>
+      <ol>
+        <li>Mở <a href="https://arxiv.org/abs/2609.19656" target="_blank">trang abstract</a> → bấm <b>HTML (experimental)</b> để đọc trên trình duyệt (có mục lục bên trái).</li>
+        <li>Xem Figure 1 + Section 3 để hiểu vòng lặp; Table 1, 3, 4 cho kết quả; Table 5 cho ablation.</li>
+        <li>Appendix A có <b>nguyên văn các prompt</b> (Self-Diagnosis, Self-Revision, Faithfulness judge, Query Simulator) – phần giá trị nhất nếu muốn tự cài đặt.</li>
+      </ol>
+
+      <h3>8.2. Chạy code chính thức</h3>
+      <p>Theo README của repo (mình <b>chưa chạy thử</b> vì cần GPU, Java 21 cho BM25, và tải model/dataset lớn):</p>
+      <pre>git clone --recurse-submodules https://github.com/augustinLib/Self-Index
+cd Self-Index
+bash setup.sh --cpu            # bỏ --cpu nếu máy có CUDA
+source venv/bin/activate
+python run.py list
+
+# Optimizer gọi LLM qua endpoint tương thích OpenAI, ví dụ vLLM:
+vllm serve Qwen/Qwen3.6-35B-A3B --served-model-name qwen3.6-35b-a3b --port 8000 --max-model-len 262144
+export LLM_BASE_URL=http://localhost:8000/v1</pre>
+
+      <h3>8.3. Phiên bản “mini” cho dự án RAG của mình</h3>
+      <p>Pseudo-code tự viết (rút gọn từ Algorithm 1–3), dùng được với bất kỳ vector DB nào cho phép nhiều vector cùng trỏ về một doc_id:</p>
+      <pre>for it in range(N_ITER):
+    queries = simulate_queries(sample(corpus, n))          # hoặc lấy từ log tìm kiếm thật
+    results = {q: retrieve_keys(q, top_k=30) for q in queries}
+    profiles = build_co_retrieval_profiles(results)        # key nào hay "đi cùng" key nào
+    for doc in docs_hit_by(results):
+        diag = llm_diagnose(doc, keys[doc], profiles)      # JSON: key lỗi + hướng sửa
+        if not diag.shortfalls: continue
+        proposal = llm_revise(doc, keys[doc], diag, competing_keys(doc))   # tối đa 10 key
+        passing = [k for k in proposal
+                   if faithful(doc, k) &gt;= 2                  # LLM judge 0-3
+                   and doc in search_docs(k, top_k=30)      # Specificity
+                   and max_sim(k, competing) &lt; max_sim(keys[doc], competing)]  # Separation
+        if any(k not in keys[doc] for k in passing):
+            keys[doc] = [doc.text] + passing                 # văn bản gốc luôn giữ lại
+evaluate(test_queries)   # bộ test riêng, không dùng ở trên</pre>
+      <div class="highlight">
+        <b>Mẹo khởi đầu:</b> chưa cần đủ vòng lặp. Chỉ riêng bước “giữ chunk gốc + thêm vài key dạng câu hỏi + lọc bằng Specificity (key phải tìm lại được đúng tài liệu)” đã là một cải tiến rẻ, dễ đo, dễ giải thích cho khách hàng.
+      </div>
+
+      <!-- ==================== 9. VIDEO & THAM KHẢO ==================== -->
+      <h2>9. Video demo</h2>
+      <p>Video ghi lại toàn bộ quá trình đọc paper: mở arXiv → bản HTML → lướt các Figure/Table chính → repo GitHub → các sơ đồ minh họa → blog hoàn chỉnh.</p>
+      <div class="video-embed">
+        <video controls preload="metadata" width="900" src="video/arxiv-2609-19656-paper-summary-demo.mp4"></video>
+        <p><a href="video/arxiv-2609-19656-paper-summary-demo.mp4" target="_blank">Mở video (MP4)</a></p>
+      </div>
+
+      <h2>10. Kết luận</h2>
+      <p>
+        Self-Index biến việc tối ưu index từ một công việc thủ công, lặp đi lặp lại thành một vòng lặp tự động có kiểm soát:
+        <b>chẩn đoán bằng tín hiệu truy xuất → sửa đúng chỗ → kiểm định nghiêm ngặt → chủ động tìm nhu cầu mới</b>.
+        Kết quả ấn tượng nhất không chỉ là nDCG tăng, mà là search agent vừa đúng hơn vừa rẻ hơn.
+      </p>
+      <p><b>3 việc nên làm ngay:</b></p>
+      <ol>
+        <li>Thêm bước đo retrieval (Recall@k / nDCG@10 với bộ test cố định) vào mọi dự án RAG trước khi chỉnh prompt.</li>
+        <li>Thử “chunk gốc + key dạng câu hỏi + max-score + lọc Specificity” trên một dự án RAG tiếng Nhật đang chạy.</li>
+        <li>Đưa 3 tiêu chí Faithful / Specific / Separated vào checklist review nội dung do LLM sinh ra.</li>
+      </ol>
+
+      <h2>Tài liệu tham khảo</h2>
+      <ul>
+        <li><a href="https://arxiv.org/abs/2609.19656" target="_blank">arXiv:2609.19656 – Self-Evolving Search Index (abstract)</a></li>
+        <li><a href="https://arxiv.org/html/2609.19656v1" target="_blank">Bản HTML (experimental) của paper</a></li>
+        <li><a href="https://arxiv.org/pdf/2609.19656" target="_blank">Bản PDF</a></li>
+        <li><a href="https://github.com/augustinLib/Self-Index" target="_blank">Code chính thức – github.com/augustinLib/Self-Index</a></li>
+        <li><a href="https://www.anthropic.com/engineering/contextual-retrieval" target="_blank">Anthropic – Introducing Contextual Retrieval</a> (được paper trích dẫn như một phương pháp index optimization)</li>
+      </ul>
+
+      <div class="footer">
+        <p>File: <code>blog-html/arxiv-2609-19656-paper-summary/arxiv-2609-19656-paper-summary-blog.html</code></p>
+        <p>Figure/Table lấy từ bản HTML của paper; sơ đồ minh họa do tác giả tự vẽ. Mọi số liệu lấy từ paper v1 (17/09/2026).</p>
+      </div>
+    </div>
+  </body>
+</html>

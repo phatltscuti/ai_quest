@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Diagram 01 - Six-step roadmap</title>
+<style>
+  body { margin:0; background:#eceff1; font-family:'Segoe UI', Roboto, Arial, sans-serif; }
+  #canvas { width:1400px; padding:36px 40px 30px; background:#fff; margin:20px auto; box-sizing:border-box; }
+  h1 { margin:0 0 4px; font-size:30px; color:#0d47a1; }
+  .sub { color:#616161; font-size:16px; margin-bottom:22px; }
+  .phase-row { display:flex; gap:14px; margin-bottom:10px; }
+  .phase { border-radius:10px; padding:6px 14px; font-weight:700; font-size:14px; color:#fff; text-align:center; }
+  .p-prep { background:#1565c0; flex:4; }
+  .p-exec { background:#00838f; flex:2; }
+  .steps { display:grid; grid-template-columns:repeat(6, 1fr); gap:14px; position:relative; }
+  .step { border:2px solid #1976d2; border-radius:14px; padding:14px 14px 12px; background:#f5f9ff; position:relative; min-height:410px; }
+  .step.exec { border-color:#00838f; background:#effaf9; }
+  .num { width:40px; height:40px; border-radius:50%; background:#0d47a1; color:#fff; font-weight:800; font-size:20px; display:flex; align-items:center; justify-content:center; margin-bottom:8px; }
+  .exec .num { background:#00838f; }
+  .title { font-weight:800; font-size:18px; color:#0d47a1; margin-bottom:2px; }
+  .exec .title { color:#006064; }
+  .q { font-size:13px; color:#ff6d00; font-weight:700; margin-bottom:8px; }
+  ul { margin:0; padding-left:18px; font-size:13.5px; color:#212121; line-height:1.45; }
+  li { margin-bottom:4px; }
+  .out { position:absolute; left:12px; right:12px; bottom:12px; background:#fff3e0; border:1px dashed #ff6d00; border-radius:8px; font-size:12.5px; padding:6px 8px; color:#bf360c; font-weight:600; }
+  .arrow { position:absolute; right:-14px; top:28px; width:14px; text-align:center; color:#90a4ae; font-size:22px; font-weight:800; }
+  .bar { margin-top:16px; display:flex; gap:14px; }
+  .note { flex:1; border-radius:10px; padding:12px 16px; font-size:14px; line-height:1.5; }
+  .n1 { background:#fff8e1; border-left:5px solid #f57f17; }
+  .n2 { background:#e8f5e9; border-left:5px solid #2e7d32; }
+  .foot { margin-top:12px; font-size:12px; color:#757575; text-align:right; }
+</style>
+</head>
+<body>
+<div id="canvas">
+  <h1>Six-step roadmap to prepare for AI-driven code modernization</h1>
+  <div class="sub">When agents write code faster, the bottleneck shifts to the organization: the target, the definition of "correct", the review process and the infrastructure must be ready first.</div>
+  <div class="phase-row">
+    <div class="phase p-prep">PREPARE: align people and the organization (start step 4 in parallel with steps 1 to 3)</div>
+    <div class="phase p-exec">EXECUTE: agents do the work, humans review</div>
+  </div>
+  <div class="steps">
+    <div class="step"><div class="num">1</div><div class="title">Define the Target</div><div class="q">Where are we going?</div>
+      <ul><li>Pick a type: <b>Uplift</b> / <b>Transform</b> / <b>Reimagine</b></li><li>Map the codebase, extract a behavioral spec</li><li>Project rationale: reducing risk often matters more than cutting cost</li></ul>
+      <div class="out">Output: target definition + spec</div><div class="arrow">&#9654;</div></div>
+    <div class="step"><div class="num">2</div><div class="title">Define the Certificate</div><div class="q">What counts as "correct"?</div>
+      <ul><li>Machine-checkable conditions</li><li>Legacy tests, new tests, coverage, benchmarks, scans, adversarial review, old/new output diffs</li><li>Would a reviewer merge on this evidence alone?</li></ul>
+      <div class="out">Output: written certificate</div><div class="arrow">&#9654;</div></div>
+    <div class="step"><div class="num">3</div><div class="title">Promotion Policy</div><div class="q">Who reviews, and how deeply?</div>
+      <ul><li>Tier by blast radius and agent confidence</li><li>Fix recurring errors at the source (workflow / certificate)</li><li>Save SME time for high-risk tiers</li></ul>
+      <div class="out">Output: tiered review policy</div><div class="arrow">&#9654;</div></div>
+    <div class="step"><div class="num">4</div><div class="title">Prerequisites</div><div class="q">Is the infrastructure ready?</div>
+      <ul><li>Environment: remote hosts, test capacity, telemetry / replay</li><li>Codebase + CI/CD: dependency map, code freeze</li><li>Team and reviewers</li><li>Security: least privilege, masked secrets/PII, audit trail</li></ul>
+      <div class="out">Output: environment + access + schedule</div><div class="arrow">&#9654;</div></div>
+    <div class="step exec"><div class="num">5</div><div class="title">Build &amp; Refine Workflow</div><div class="q">Do agents work reliably?</div>
+      <ul><li>Start from the code modernization plugin</li><li>Put target, certificate, policy on the file system / MCP</li><li>Trial on a small slice, SME review</li><li>Fix the <b>workflow</b>, not individual changes</li></ul>
+      <div class="out">Output: reusable workflow</div><div class="arrow">&#9654;</div></div>
+    <div class="step exec"><div class="num">6</div><div class="title">Run the Modernization</div><div class="q">Scale safely</div>
+      <ul><li>End-to-end pilot on one small partition</li><li>Separate build (Transform/Reimagine) or In-place (Uplift)</li><li>In-place: work from leaves inward, freeze each part, gate CI/CD</li></ul>
+      <div class="out">Output: new code + evidence trail</div></div>
+  </div>
+  <div class="bar">
+    <div class="note n1"><b>Token cost:</b> measure on the pilot, then extrapolate; run expensive checks after cheap ones; use a cheaper model (Sonnet) for mechanical work the certificate verifies and a stronger model for hard parts and adversarial review; track retry rates.</div>
+    <div class="note n2"><b>Assets that outlive the project:</b> the modernized codebase, a reusable workflow, a written certificate, an approved promotion policy, an evidence trail for every change, and a playbook for next time.</div>
+  </div>
+  <div class="foot">Summarized from "How to prepare for AI-driven code modernization projects" (claude.com/blog, Sep 23, 2026). Hand-drawn in HTML/CSS.</div>
+</div>
+</body>
+</html>

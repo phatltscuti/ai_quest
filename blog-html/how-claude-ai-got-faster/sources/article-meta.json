@@ -1,0 +1,72 @@
+{
+  "info": {
+    "requested": "https://claude.dev/blog/how-we-made-claude-ai-faster/",
+    "final_url": "https://claude.dev/blog/how-we-made-claude-ai-faster/",
+    "status": 200,
+    "title": "How we made claude.ai 3x faster in two weeks / claude.dev Blog",
+    "page_height": 17345
+  },
+  "headings": [
+    {
+      "tag": "H1",
+      "text": "How we made claude.ai 3x faster in two weeks",
+      "y": 299
+    },
+    {
+      "tag": "H2",
+      "text": "THE BRIEF",
+      "y": 2101
+    },
+    {
+      "tag": "H2",
+      "text": "ANYTHING CAN BE HILL CLIMBED",
+      "y": 3542
+    },
+    {
+      "tag": "H2",
+      "text": "THE LOOP, THREAD BY THREAD",
+      "y": 5869
+    },
+    {
+      "tag": "H2",
+      "text": "SCALING HORIZONTALLY",
+      "y": 8030
+    },
+    {
+      "tag": "H2",
+      "text": "GUARDRAILS",
+      "y": 9761
+    },
+    {
+      "tag": "H2",
+      "text": "STEERING",
+      "y": 12304
+    },
+    {
+      "tag": "H2",
+      "text": "AN 8-MILLISECOND BUDGET",
+      "y": 13633
+    },
+    {
+      "tag": "H2",
+      "text": "WHAT’S NEXT",
+      "y": 15247
+    },
+    {
+      "tag": "H2",
+      "text": "RESOURCES",
+      "y": 16392
+    },
+    {
+      "tag": "H2",
+      "text": "CONNECT",
+      "y": 16392
+    },
+    {
+      "tag": "H2",
+      "text": "GET THE NEWSLETTER",
+      "y": 16392
+    }
+  ],
+  "images": []
+}

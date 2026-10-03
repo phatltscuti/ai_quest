@@ -1,0 +1,32 @@
+<!doctype html><html><head><meta charset='utf-8'><title>infographic-02-scuti-application</title><style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#fff;font-family:'Segoe UI',Roboto,Arial,sans-serif;color:#212121}
+.canvas{width:1400px;padding:44px 52px;background:linear-gradient(180deg,#f7f9fc,#ffffff)}
+.top{background:linear-gradient(135deg,#0d47a1,#1565c0,#00838f);color:#fff;border-radius:18px;padding:26px 34px;margin-bottom:26px}
+.top .k{font-size:15px;letter-spacing:2px;text-transform:uppercase;opacity:.85}
+.top h1{font-size:33px;margin:6px 0 8px}
+.top p{font-size:19px;opacity:.95}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.card{background:#fff;border:1px solid #e0e0e0;border-radius:14px;padding:18px 20px;box-shadow:0 2px 6px rgba(0,0,0,.05);position:relative}
+.card .n{position:absolute;top:-14px;left:18px;background:#ff6d00;color:#fff;font-weight:700;border-radius:20px;padding:2px 14px;font-size:15px}
+.card h3{font-size:21px;color:#0d47a1;margin:8px 0 8px}
+.card li{font-size:15.5px;line-height:1.5;margin-left:18px;margin-bottom:3px}
+.card .big{font-size:26px;font-weight:800;color:#2e7d32}
+.row{display:flex;gap:18px;margin-top:22px}
+.box{flex:1;border-radius:14px;padding:16px 20px}
+.box h4{font-size:18px;margin-bottom:6px}
+.box li{font-size:15px;line-height:1.5;margin-left:18px}
+.green{background:#e8f5e9;border-left:5px solid #2e7d32}
+.amber{background:#fff8e1;border-left:5px solid #f57f17}
+.red{background:#ffebee;border-left:5px solid #c62828}
+.foot{margin-top:20px;font-size:13px;color:#757575;text-align:right}
+table{width:100%;border-collapse:separate;border-spacing:0 10px}
+th{font-size:17px;text-align:left;padding:8px 16px;color:#fff;background:#0d47a1}
+th:first-child{border-radius:10px 0 0 10px} th:last-child{border-radius:0 10px 10px 0}
+td{background:#fff;border-top:1px solid #e0e0e0;border-bottom:1px solid #e0e0e0;padding:14px 16px;font-size:16px;line-height:1.5;vertical-align:top}
+td:first-child{border-left:5px solid #ff6d00;border-radius:10px 0 0 10px;width:34%}
+td:nth-child(2){width:8%;text-align:center;font-size:26px;color:#ff6d00}
+td:last-child{border-right:1px solid #e0e0e0;border-radius:0 10px 10px 0}
+td b{color:#0d47a1}
+.tag{display:inline-block;background:#e3f2fd;color:#0d47a1;border-radius:10px;padding:1px 10px;font-size:13px;margin-top:4px}
+</style></head><body><div class='canvas'><div class='top'><div class='k'>Bài học cá nhân · áp dụng cho Scuti AI (đề xuất của tác giả)</div><h1>Từ AI Roll-up đến dự án outsourcing của Scuti AI</h1><p>Ý tưởng cốt lõi giống nhau: giữ niềm tin của khách hàng, để AI agent gánh phần việc lặp lại, con người giữ cửa chất lượng</p></div><table><tr><th>Ý tưởng trong bài của Greg</th><th></th><th>Cách áp dụng tại Scuti AI</th></tr><tr><td><b>Automation map</b> (volume × giờ)</td><td>&#10140;</td><td>Kiểm kê task của từng dự án: dịch JP↔VI, viết test case, unit test, tài liệu basic/detail design, báo cáo tuần → chọn task nhiều giờ, ít rủi ro làm trước<br><span class='tag'>Tuần 1</span></td></tr><tr><td><b>Rulebook + corrections-log.md</b></td><td>&#10140;</td><td>Gom các 指摘 (chỉ trích review) của khách Nhật thành rule file cho agent (CLAUDE.md / rules/) và test case; review log mỗi tuần<br><span class='tag'>Liên tục</span></td></tr><tr><td><b>Preparer ≠ Reviewer</b> (block, never ship)</td><td>&#10140;</td><td>Agent tạo PR / tài liệu nháp; reviewer agent chỉ được chặn; chỉ người (dev lead, BrSE) mới merge hoặc gửi cho khách<br><span class='tag'>Quy trình</span></td></tr><tr><td><b>Shadow mode 30 ngày</b></td><td>&#10140;</td><td>Chạy agent song song với cách làm hiện tại trên 1 loại task, so sánh chất lượng &amp; thời gian trước khi đưa vào sản xuất<br><span class='tag'>Pilot</span></td></tr><tr><td><b>5 số mỗi thứ Hai</b></td><td>&#10140;</td><td>Dashboard dự án: margin, phút người / ticket, tỉ lệ phải sửa, phản hồi khách, giữ chân thành viên chủ chốt<br><span class='tag'>Hằng tuần</span></td></tr><tr><td><b>Đừng tự động hoá mất niềm tin</b></td><td>&#10140;</td><td>BrSE / PM vẫn là người nói chuyện với khách; AI ở back-office, không tự gửi email cho khách<br><span class='tag'>Nguyên tắc</span></td></tr></table><div class='foot'>Infographic tự vẽ (HTML → PNG) · Cột phải là đề xuất cá nhân, không phải số liệu đã kiểm chứng của Scuti AI</div></div></body></html>

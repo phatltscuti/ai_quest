@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<title>Diagram 04 - Scuti performance loop</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Segoe UI',Roboto,Arial,sans-serif;background:#eef1f5}
+  #canvas{width:1400px;padding:34px 40px 26px;background:#fafafa;color:#1f2933}
+  h1{font-size:27px;color:#0d47a1}
+  .sub{font-size:15px;color:#52606d;margin:4px 0 22px}
+  .tag{float:right;font-size:13px;background:#fff3e0;color:#e65100;border:1px solid #ffcc80;padding:5px 12px;border-radius:14px}
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:52px 54px;position:relative}
+  .box{background:#fff;border:2px solid #90caf9;border-radius:12px;padding:14px 16px;font-size:14px;line-height:1.5;position:relative;min-height:160px;height:160px}
+  .box h3{font-size:17px;color:#0d47a1;margin-bottom:4px}
+  .box .num{position:absolute;top:-14px;left:14px;background:#0d47a1;color:#fff;border-radius:50%;width:28px;height:28px;text-align:center;line-height:28px;font-weight:700;font-size:14px}
+  .box .tool{display:inline-block;background:#e3f2fd;color:#0d47a1;border-radius:6px;padding:0 7px;font-size:12.5px;margin:3px 3px 0 0}
+  .box.g{border-color:#a5d6a7}.box.g h3{color:#2e7d32}.box.g .num{background:#2e7d32}
+  .box.o{border-color:#ffcc80}.box.o h3{color:#e65100}.box.o .num{background:#ef6c00}
+  .a{position:absolute;font-size:30px;color:#0d47a1;font-weight:700}
+  .human{margin-top:22px;display:grid;grid-template-columns:200px 1fr;gap:16px;align-items:center;background:#ede7f6;border:1px solid #b39ddb;border-radius:12px;padding:14px 18px}
+  .human b{font-size:17px;color:#4527a0}
+  .human span{font-size:14px;line-height:1.5}
+</style>
+</head>
+<body>
+<div id="canvas">
+  <span class="tag" data-vi="Sơ đồ tự thiết kế – đề xuất áp dụng" data-en="Own design – proposed adoption"></span>
+  <h1 data-vi="Vòng lặp hiệu năng đề xuất cho dự án web/app tại Scuti AI" data-en="Proposed performance loop for Scuti AI web/app projects"></h1>
+  <div class="sub" data-vi="Phiên bản “cỡ outsourcing” của vòng lặp trong bài: AI agent (Claude Code) làm phần lặp đi lặp lại, kỹ sư + PM giữ quyết định." data-en="An “outsourcing-sized” version of the post's loop: an AI agent (Claude Code) does the repetitive work, engineers + PM keep the decisions."></div>
+  <div class="grid">
+    <div class="box"><div class="num">1</div><h3 data-vi="Chọn hành trình &amp; baseline" data-en="Pick journeys &amp; baseline"></h3><span data-vi="3–5 màn chiếm phần lớn thao tác (login, danh sách, tìm kiếm, gửi form). Định nghĩa mốc bắt đầu/kết thúc, đo p75." data-en="3–5 screens covering most usage (login, list, search, submit). Define start/end marks, measure p75."></span><br><span class="tool">web-vitals</span><span class="tool">Sentry / Datadog RUM</span></div>
+    <div class="box"><div class="num">2</div><h3 data-vi="Benchmark tái hiện được" data-en="Reproducible benchmark"></h3><span data-vi="Playwright + CPU/mạng throttling, trace; đếm thứ tất định: số request, kích thước bundle, số render, số query SQL." data-en="Playwright + CPU/network throttling, traces; count deterministic things: requests, bundle size, renders, SQL queries."></span><br><span class="tool">Playwright</span><span class="tool">Lighthouse CI</span><span class="tool">React Profiler</span></div>
+    <div class="box"><div class="num">3</div><h3 data-vi="PR nhỏ + flag" data-en="Small PRs + flags"></h3><span data-vi="AI agent đề xuất PR nhỏ theo mức rủi ro, mỗi PR kèm số before/after; thay đổi người dùng thấy được → sau feature flag." data-en="The AI agent proposes small risk-sized PRs, each with before/after numbers; user-visible changes go behind a flag."></span><br><span class="tool">Claude Code</span><span class="tool">feature flag</span></div>
+    <div class="box g"><div class="num">6</div><h3 data-vi="Khoá thành quả (ratchet)" data-en="Lock the win (ratchet)"></h3><span data-vi="Ghi ngưỡng mới vào CI: bundle size, số query, Lighthouse budget chỉ được giảm. Gỡ flag khi đã an toàn." data-en="Record the new ceiling in CI: bundle size, query count, Lighthouse budget may only go down. Retire the flag once safe."></span><br><span class="tool">size-limit</span><span class="tool">LHCI budgets</span></div>
+    <div class="box g"><div class="num">5</div><h3 data-vi="Đọc dữ liệu thật" data-en="Read field data"></h3><span data-vi="So p75 theo build/thiết bị. Không cải thiện → tắt flag, quay lại bước 2." data-en="Compare p75 by build/device. No gain → flag off, back to step 2."></span><br><span class="tool">RUM dashboard</span></div>
+    <div class="box o"><div class="num">4</div><h3 data-vi="Rollout từng bước" data-en="Staged rollout"></h3><span data-vi="Dev → staging → UAT phía khách Nhật → % nhỏ người dùng → toàn bộ. Gửi video before/after trong báo cáo tuần." data-en="Dev → staging → Japanese client UAT → small % of users → everyone. Share before/after videos in the weekly report."></span><br><span class="tool">CI/CD</span><span class="tool">UAT</span></div>
+    <div class="a" style="left:31.6%;top:62px">→</div>
+    <div class="a" style="left:65.2%;top:62px">→</div>
+    <div class="a" style="right:16%;top:166px">↓</div>
+    <div class="a" style="left:65.2%;top:262px">←</div>
+    <div class="a" style="left:31.6%;top:262px">←</div>
+    <div class="a" style="left:16%;top:166px">↑</div>
+  </div>
+  <div class="human"><b data-vi="Con người giữ:" data-en="Humans own:"></b><span data-vi="<b style='font-size:14px'>Tham vọng</b> (đặt mục tiêu, không dừng ở ngưỡng hợp đồng) · <b style='font-size:14px'>Gu</b> (owner duyệt mọi thay đổi người dùng thấy được, khách Nhật rất nhạy UI) · <b style='font-size:14px'>Định hướng</b> (1 ticket = 1 hành trình/1 benchmark, từ chối tối ưu phức tạp mà lợi ít)." data-en="<b style='font-size:14px'>Ambition</b> (set targets, don't stop at the contract threshold) · <b style='font-size:14px'>Taste</b> (an owner approves every user-visible change; Japanese clients are very UI-sensitive) · <b style='font-size:14px'>Direction</b> (1 ticket = 1 journey/1 benchmark, reject complex low-gain optimizations)."></span></div>
+</div>
+<script src="_common.js"></script>
+</body>
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Diagram 02 - Preparation checklist</title>
+<style>
+  body { margin:0; background:#eceff1; font-family:'Segoe UI', Roboto, Arial, sans-serif; }
+  #canvas { width:1400px; padding:34px 40px 28px; background:#fff; margin:20px auto; box-sizing:border-box; }
+  h1 { margin:0 0 4px; font-size:30px; color:#0d47a1; }
+  .sub { color:#616161; font-size:16px; margin-bottom:20px; }
+  .types { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-bottom:18px; }
+  .type { border-radius:12px; padding:12px 16px; color:#fff; }
+  .t1 { background:#1976d2; } .t2 { background:#00838f; } .t3 { background:#6a1b9a; }
+  .type h3 { margin:0 0 4px; font-size:19px; }
+  .type p { margin:0; font-size:13.5px; line-height:1.45; opacity:.96; }
+  .type .ex { margin-top:6px; background:rgba(255,255,255,.18); border-radius:6px; padding:4px 8px; font-size:13px; }
+  .grid { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; }
+  .col { border:1px solid #e0e0e0; border-radius:12px; padding:12px 14px; background:#fafafa; }
+  .col h4 { margin:0 0 8px; font-size:16px; color:#0d47a1; border-bottom:2px solid #0d47a1; padding-bottom:4px; }
+  .item { display:flex; gap:8px; font-size:13.5px; line-height:1.4; margin-bottom:7px; color:#212121; }
+  .box { flex:0 0 16px; height:16px; border:2px solid #1976d2; border-radius:3px; margin-top:2px; }
+  .gate { margin-top:16px; display:flex; align-items:center; gap:14px; background:linear-gradient(135deg,#e3f2fd,#e8f5e9); border:1px solid #bbdefb; border-radius:12px; padding:12px 18px; font-size:15px; }
+  .gate b { color:#0d47a1; }
+  .pill { background:#ff6d00; color:#fff; border-radius:16px; padding:4px 14px; font-weight:700; white-space:nowrap; }
+  .foot { margin-top:10px; font-size:12px; color:#757575; text-align:right; }
+</style>
+</head>
+<body>
+<div id="canvas">
+  <h1>Preparation Checklist cho dự án legacy tại công ty outsourcing</h1>
+  <div class="sub">Gợi ý áp dụng 6 bước vào dự án hiện đại hoá hệ thống legacy (PHP / Java / VB) cho khách hàng Nhật. Đánh dấu đủ trước khi cho agent chạy quy mô lớn.</div>
+  <div class="types">
+    <div class="type t1"><h3>Uplift (cùng stack, lên version)</h3><p>Stack vẫn dùng được, chỉ runtime / thư viện đã hết hỗ trợ.</p><div class="ex">Ví dụ: PHP 5.x &rarr; PHP 8.x, Java 8 &rarr; 17/21, Spring Boot 2 &rarr; 3</div></div>
+    <div class="type t2"><h3>Transform (đổi stack, giữ hành vi)</h3><p>Hành vi đáng tin, nhưng ngôn ngữ / framework là vấn đề.</p><div class="ex">Ví dụ: VB6 / VB.NET WinForms &rarr; C# .NET, Struts &rarr; Spring</div></div>
+    <div class="type t3"><h3>Reimagine (xây lại, đổi hành vi)</h3><p>Cả code lẫn nghiệp vụ cần thay đổi; cần spec mới bằng văn bản.</p><div class="ex">Ví dụ: hệ thống nội bộ on-premise &rarr; web/SaaS với quy trình mới</div></div>
+  </div>
+  <div class="grid">
+    <div class="col"><h4>1. Đích &amp; Spec</h4>
+      <div class="item"><span class="box"></span>Đã chọn loại Uplift / Transform / Reimagine cùng khách hàng</div>
+      <div class="item"><span class="box"></span>Có dependency map từ build log / import / runtime trace</div>
+      <div class="item"><span class="box"></span>Business rule trích từ code, có trích dẫn file, được người phía khách review</div>
+      <div class="item"><span class="box"></span>Lý do dự án ghi rõ (EOL, lỗ hổng, thiếu người bảo trì)</div></div>
+    <div class="col"><h4>2. Certificate &amp; Policy</h4>
+      <div class="item"><span class="box"></span>Danh sách điều kiện tự động kiểm tra được (test, coverage, benchmark, scan)</div>
+      <div class="item"><span class="box"></span>So sánh output cũ/mới hoặc replay dữ liệu (đã che PII)</div>
+      <div class="item"><span class="box"></span>Phân tầng duyệt theo mức ảnh hưởng, đường critical vẫn review đầy đủ</div>
+      <div class="item"><span class="box"></span>Định dạng báo cáo review thống nhất với reviewer / khách</div></div>
+    <div class="col"><h4>3. Môi trường &amp; CI/CD</h4>
+      <div class="item"><span class="box"></span>Remote host riêng, Claude Code truy cập được code và tài liệu</div>
+      <div class="item"><span class="box"></span>Môi trường chạy được hệ thống cũ (Docker) để so sánh</div>
+      <div class="item"><span class="box"></span>Chính sách code freeze + kế hoạch thông báo cho dev đang làm</div>
+      <div class="item"><span class="box"></span>CI chặn commit làm hỏng phần đã hiện đại hoá</div></div>
+    <div class="col"><h4>4. Bảo mật &amp; Hợp đồng</h4>
+      <div class="item"><span class="box"></span>Khách hàng chấp thuận đưa source code vào model (theo NDA / hợp đồng)</div>
+      <div class="item"><span class="box"></span>Least-privilege: chỉ ghi vào nhánh modernization, không có credential production</div>
+      <div class="item"><span class="box"></span>Secret và dữ liệu cá nhân đã được che</div>
+      <div class="item"><span class="box"></span>Mỗi PR gắn transcript agent + bằng chứng certificate; kiểm tra license/CVE dependency mới</div></div>
+  </div>
+  <div class="gate"><span class="pill">GATE</span><div>Chỉ mở rộng ra toàn bộ codebase khi: <b>pilot trên 1 phân vùng nhỏ đã đi trọn quy trình</b> (agent sửa &rarr; certificate pass &rarr; duyệt theo policy &rarr; merge) và <b>đã đo token để ước tính chi phí</b>.</div></div>
+  <div class="foot">Checklist do tác giả tổng hợp từ bài viết của Anthropic + đề xuất áp dụng riêng. Diagram tự vẽ bằng HTML/CSS.</div>
+</div>
+</body>
+</html>

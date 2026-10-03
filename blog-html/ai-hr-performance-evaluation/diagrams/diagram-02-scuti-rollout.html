@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Diagram 02 – Applying AI evaluation at Scuti AI (proposal)</title>
+<style>
+  body { margin: 0; background: #eef2f7; font-family: 'Segoe UI', Roboto, Arial, sans-serif; }
+  #canvas { width: 1400px; margin: 20px auto; background: #fff; border-radius: 16px; box-shadow: 0 2px 10px rgba(0,0,0,.08); }
+  svg { display: block; }
+  .title { font-size: 26px; font-weight: 700; fill: #0d47a1; }
+  .sub { font-size: 15px; fill: #616161; }
+  .lane { font-size: 13px; font-weight: 700; letter-spacing: 1.5px; fill: #90a4ae; }
+  text { font-size: 14px; fill: #263238; }
+  .h { font-size: 16px; font-weight: 700; }
+  .w { fill: #fff; }
+  .ph { font-size: 13px; font-weight: 700; fill: #fff; letter-spacing: 1px; }
+  .arrow { stroke: #546e7a; stroke-width: 2.4; fill: none; marker-end: url(#ah); }
+  .small { font-size: 12.5px; fill: #546e7a; font-style: italic; }
+</style>
+</head>
+<body>
+<div id="canvas">
+<svg width="1400" height="860" viewBox="0 0 1400 860" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="ah" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#546e7a"/></marker>
+  </defs>
+  <text class="title t" x="40" y="50" data-vi="Đề xuất áp dụng tại Scuti AI: đi từng bước, con người vẫn quyết định" data-en="Proposal for Scuti AI: step by step, humans still decide"></text>
+  <text class="sub t" x="40" y="78" data-vi="Ý kiến cá nhân của tác giả, dựa trên bài học từ mô hình Ubie – không phải quy trình đang chạy tại Scuti." data-en="The author's personal proposal, based on lessons from Ubie – not a process currently running at Scuti."></text>
+
+  <!-- data: allowed vs not -->
+  <text class="lane t" x="40" y="122" data-vi="DỮ LIỆU: NÊN DÙNG / KHÔNG THU" data-en="DATA: USE / DO NOT COLLECT"></text>
+  <rect x="40" y="136" width="400" height="300" rx="12" fill="#e8f5e9" stroke="#66bb6a"/>
+  <text class="h t" x="60" y="166" style="fill:#2e7d32" data-vi="✔ Dữ liệu công việc (work artefacts)" data-en="✔ Work artefacts"></text>
+  <text class="t" x="60" y="194" data-vi="• Ticket: Jira / Backlog / Redmine" data-en="• Tickets: Jira / Backlog / Redmine"></text>
+  <text class="t" x="60" y="218" data-vi="• Git: commit, PR, review, CI kết quả" data-en="• Git: commits, PRs, reviews, CI results"></text>
+  <text class="t" x="60" y="242" data-vi="• Kênh dự án public (Slack/Chatwork/Teams)" data-en="• Public project channels (Slack/Chatwork/Teams)"></text>
+  <text class="t" x="60" y="266" data-vi="• Biên bản họp, Q&amp;A với khách hàng Nhật" data-en="• Meeting minutes, Q&amp;A with Japanese clients"></text>
+  <text class="t" x="60" y="290" data-vi="• Bug report, kết quả test, release note" data-en="• Bug reports, test results, release notes"></text>
+  <text class="t" x="60" y="314" data-vi="• Feedback/khen của khách hàng" data-en="• Client feedback / kudos"></text>
+  <text class="t" x="60" y="338" data-vi="• Tài liệu nội bộ, wiki, bài chia sẻ kỹ thuật" data-en="• Internal docs, wiki, tech-sharing posts"></text>
+  <text class="small t" x="60" y="372" data-vi="Ví dụ công cụ phổ biến ở công ty outsourcing;" data-en="Typical outsourcing-company tools;"></text>
+  <text class="small t" x="60" y="392" data-vi="danh sách thật cần chốt theo từng dự án" data-en="the real list must be agreed per project"></text>
+  <text class="small t" x="60" y="412" data-vi="và hợp đồng/NDA với khách hàng." data-en="and per client contract/NDA."></text>
+
+  <rect x="40" y="452" width="400" height="190" rx="12" fill="#ffebee" stroke="#e57373"/>
+  <text class="h t" x="60" y="482" style="fill:#c62828" data-vi="✘ Không thu / không dùng để chấm" data-en="✘ Do not collect / never score"></text>
+  <text class="t" x="60" y="510" data-vi="• Tin nhắn riêng (DM), email cá nhân" data-en="• Private DMs, personal email"></text>
+  <text class="t" x="60" y="534" data-vi="• Keylogger, chụp màn hình, webcam" data-en="• Keyloggers, screen capture, webcam"></text>
+  <text class="t" x="60" y="558" data-vi="• Số giờ online / số dòng code thô" data-en="• Raw online hours / lines of code"></text>
+  <text class="t" x="60" y="582" data-vi="• Sức khỏe, nghỉ phép, thai sản, công đoàn" data-en="• Health, leave, maternity, union data"></text>
+  <text class="t" x="60" y="606" data-vi="• Mã nguồn/dữ liệu mật của khách hàng" data-en="• Clients' confidential code or data"></text>
+  <text class="t" x="60" y="626" data-vi="  gửi ra AI bên ngoài khi chưa được phép" data-en="  sent to external AI without permission"></text>
+
+  <!-- roadmap -->
+  <text class="lane t" x="480" y="122" data-vi="LỘ TRÌNH 4 GIAI ĐOẠN (gợi ý)" data-en="4-PHASE ROADMAP (suggested)"></text>
+  <g>
+    <rect x="480" y="136" width="210" height="34" rx="8" fill="#1976d2"/><text class="ph t" x="585" y="158" text-anchor="middle" data-vi="GĐ 0 · CHUẨN BỊ" data-en="PHASE 0 · PREPARE"></text>
+    <rect x="480" y="176" width="210" height="270" rx="10" fill="#e3f2fd" stroke="#90caf9"/>
+    <text class="t" x="494" y="204" data-vi="• Viết rõ mục đích đánh giá" data-en="• Write down the purpose"></text>
+    <text class="t" x="494" y="228" data-vi="  (trả thưởng cho cái gì?)" data-en="  (what do we reward?)"></text>
+    <text class="t" x="494" y="252" data-vi="• Định nghĩa &quot;thành quả&quot;" data-en="• Define &quot;achievement&quot;"></text>
+    <text class="t" x="494" y="276" data-vi="  cho dev, QA, BrSE, PM" data-en="  for dev, QA, BrSE, PM"></text>
+    <text class="t" x="494" y="300" data-vi="• Đánh giá tác động dữ liệu" data-en="• Data-protection impact"></text>
+    <text class="t" x="494" y="324" data-vi="  cá nhân (luật VN)" data-en="  assessment (VN law)"></text>
+    <text class="t" x="494" y="348" data-vi="• Công bố chính sách," data-en="• Publish the policy,"></text>
+    <text class="t" x="494" y="372" data-vi="  xin đồng ý của nhân viên" data-en="  get employee consent"></text>
+    <text class="t" x="494" y="396" data-vi="• Chốt nguồn được phép" data-en="• Agree allowed sources"></text>
+    <text class="t" x="494" y="420" data-vi="  với khách hàng (NDA)" data-en="  with clients (NDA)"></text>
+  </g>
+  <path class="arrow" d="M692,300 L710,300"/>
+  <g>
+    <rect x="712" y="136" width="210" height="34" rx="8" fill="#00897b"/><text class="ph t" x="817" y="158" text-anchor="middle" data-vi="GĐ 1 · TỰ SOI" data-en="PHASE 1 · SELF-VIEW"></text>
+    <rect x="712" y="176" width="210" height="270" rx="10" fill="#e0f2f1" stroke="#80cbc4"/>
+    <text class="t" x="726" y="204" data-vi="• Activity report tự động" data-en="• Auto activity report"></text>
+    <text class="t" x="726" y="228" data-vi="  hằng ngày/tuần" data-en="  daily / weekly"></text>
+    <text class="t" x="726" y="252" data-vi="• CHỈ chủ nhân xem được" data-en="• ONLY the owner sees it"></text>
+    <text class="t" x="726" y="276" data-vi="• Dùng để viết daily," data-en="• Use it for daily stand-up,"></text>
+    <text class="t" x="726" y="300" data-vi="  weekly report cho khách" data-en="  weekly client reports"></text>
+    <text class="t" x="726" y="324" data-vi="• Nhân viên sửa/xóa" data-en="• Owner can fix / delete"></text>
+    <text class="t" x="726" y="348" data-vi="  dòng sai" data-en="  wrong lines"></text>
+    <text class="small t" x="726" y="384" data-vi="Lợi ích ngay: bớt" data-en="Immediate win: less"></text>
+    <text class="small t" x="726" y="404" data-vi="thời gian viết báo cáo" data-en="time writing reports"></text>
+  </g>
+  <path class="arrow" d="M924,300 L942,300"/>
+  <g>
+    <rect x="944" y="136" width="210" height="34" rx="8" fill="#ef6c00"/><text class="ph t" x="1049" y="158" text-anchor="middle" data-vi="GĐ 2 · CHẠY SONG SONG" data-en="PHASE 2 · SHADOW RUN"></text>
+    <rect x="944" y="176" width="210" height="270" rx="10" fill="#fff3e0" stroke="#ffb74d"/>
+    <text class="t" x="958" y="204" data-vi="• Team thử nghiệm tự" data-en="• Volunteer pilot"></text>
+    <text class="t" x="958" y="228" data-vi="  nguyện (1–2 dự án)" data-en="  teams (1–2 projects)"></text>
+    <text class="t" x="958" y="252" data-vi="• AI soạn fact sheet +" data-en="• AI drafts fact sheet +"></text>
+    <text class="t" x="958" y="276" data-vi="  bản nháp đánh giá" data-en="  evaluation draft"></text>
+    <text class="t" x="958" y="300" data-vi="• Manager vẫn đánh giá" data-en="• Managers still rate"></text>
+    <text class="t" x="958" y="324" data-vi="  như cũ → so sánh lệch" data-en="  as usual → compare gaps"></text>
+    <text class="t" x="958" y="348" data-vi="• Sửa rubric, không sửa" data-en="• Fix the rubric, not"></text>
+    <text class="t" x="958" y="372" data-vi="  tay từng kết quả" data-en="  individual results"></text>
+    <text class="small t" x="958" y="404" data-vi="Không gắn lương/thưởng" data-en="Not linked to pay"></text>
+  </g>
+  <path class="arrow" d="M1156,300 L1174,300"/>
+  <g>
+    <rect x="1176" y="136" width="194" height="34" rx="8" fill="#0d47a1"/><text class="ph t" x="1273" y="158" text-anchor="middle" data-vi="GĐ 3 · CHÍNH THỨC" data-en="PHASE 3 · GO LIVE"></text>
+    <rect x="1176" y="176" width="194" height="270" rx="10" fill="#e8eaf6" stroke="#9fa8da"/>
+    <text class="t" x="1190" y="204" data-vi="• AI = bản nháp có" data-en="• AI = draft with"></text>
+    <text class="t" x="1190" y="228" data-vi="  dẫn nguồn" data-en="  cited sources"></text>
+    <text class="t" x="1190" y="252" data-vi="• Hội đồng người duyệt," data-en="• Human committee"></text>
+    <text class="t" x="1190" y="276" data-vi="  tập trung ca bất thường" data-en="  reviews outliers"></text>
+    <text class="t" x="1190" y="300" data-vi="• Có kênh khiếu nại" data-en="• Appeal channel"></text>
+    <text class="t" x="1190" y="324" data-vi="• Companion bot coach" data-en="• Companion bot for"></text>
+    <text class="t" x="1190" y="348" data-vi="  phát triển hằng ngày" data-en="  daily coaching"></text>
+    <text class="t" x="1190" y="372" data-vi="• Audit thiên lệch" data-en="• Bias audit each"></text>
+    <text class="t" x="1190" y="396" data-vi="  mỗi kỳ" data-en="  cycle"></text>
+  </g>
+
+  <!-- what humans keep -->
+  <rect x="480" y="466" width="890" height="176" rx="12" fill="#fffde7" stroke="#fbc02d"/>
+  <text class="h t" x="500" y="496" style="fill:#f57f17" data-vi="Con người vẫn giữ (bài học từ Ubie, áp vào bối cảnh outsourcing)" data-en="What humans keep (Ubie's lesson, mapped to outsourcing)"></text>
+  <text class="t" x="500" y="526" data-vi="• Quan hệ &amp; niềm tin với khách hàng Nhật – thứ không nằm trong log: một cuộc gọi xử lý khủng hoảng, một lời xin lỗi đúng lúc." data-en="• Relationships &amp; trust with Japanese clients – things not in any log: a crisis call, a timely apology."></text>
+  <text class="t" x="500" y="552" data-vi="• Đặt hướng đi: chọn dự án, mảng công nghệ, ai được giao vai trò gì – và chịu trách nhiệm tới cùng." data-en="• Setting direction: which projects, which tech areas, who gets which role – and owning the result."></text>
+  <text class="t" x="500" y="578" data-vi="• Buổi 1-on-1 sau đánh giá: lắng nghe cảm xúc, cùng nhân viên chọn bước phát triển tiếp theo." data-en="• The 1-on-1 after evaluation: listen to feelings, choose the next growth step together."></text>
+  <text class="t" x="500" y="604" data-vi="• Quyết định cuối cùng về lương, thưởng, thăng tiến, cho nghỉ việc – không giao cho AI tự động." data-en="• Final decisions on pay, bonus, promotion, termination – never fully automated."></text>
+
+  <!-- guardrails -->
+  <text class="lane t" x="40" y="684" data-vi="RÀO CHẮN QUYỀN RIÊNG TƯ &amp; CÔNG BẰNG" data-en="PRIVACY &amp; FAIRNESS GUARDRAILS"></text>
+  <g>
+    <rect x="40" y="698" width="210" height="124" rx="10" fill="#f3e5f5" stroke="#ce93d8"/>
+    <text class="h t" x="56" y="726" data-vi="Minh bạch" data-en="Transparency"></text>
+    <text class="t" x="56" y="752" data-vi="Công bố rubric, nguồn" data-en="Publish rubric, sources"></text>
+    <text class="t" x="56" y="774" data-vi="dữ liệu, cách tính điểm" data-en="and scoring logic"></text>
+    <rect x="262" y="698" width="210" height="124" rx="10" fill="#f3e5f5" stroke="#ce93d8"/>
+    <text class="h t" x="278" y="726" data-vi="Tối thiểu hóa" data-en="Minimisation"></text>
+    <text class="t" x="278" y="752" data-vi="Chỉ dữ liệu công việc," data-en="Work data only, fixed"></text>
+    <text class="t" x="278" y="774" data-vi="có thời hạn lưu trữ" data-en="retention period"></text>
+    <rect x="484" y="698" width="210" height="124" rx="10" fill="#f3e5f5" stroke="#ce93d8"/>
+    <text class="h t" x="500" y="726" data-vi="Quyền của nhân viên" data-en="Employee rights"></text>
+    <text class="t" x="500" y="752" data-vi="Xem, sửa, bổ sung," data-en="View, correct, add,"></text>
+    <text class="t" x="500" y="774" data-vi="khiếu nại kết quả" data-en="appeal the result"></text>
+    <rect x="706" y="698" width="210" height="124" rx="10" fill="#f3e5f5" stroke="#ce93d8"/>
+    <text class="h t" x="722" y="726" data-vi="Công bằng" data-en="Fairness"></text>
+    <text class="t" x="722" y="752" data-vi="So kết quả theo vai trò," data-en="Compare results by role,"></text>
+    <text class="t" x="722" y="774" data-vi="giới, ngôn ngữ, dự án" data-en="gender, language, project"></text>
+    <rect x="928" y="698" width="210" height="124" rx="10" fill="#f3e5f5" stroke="#ce93d8"/>
+    <text class="h t" x="944" y="726" data-vi="Việc &quot;vô hình&quot;" data-en="&quot;Invisible&quot; work"></text>
+    <text class="t" x="944" y="752" data-vi="Mentoring, hỗ trợ đồng" data-en="Mentoring, helping peers,"></text>
+    <text class="t" x="944" y="774" data-vi="nghiệp phải có chỗ ghi" data-en="must have a place to log"></text>
+    <rect x="1150" y="698" width="220" height="124" rx="10" fill="#f3e5f5" stroke="#ce93d8"/>
+    <text class="h t" x="1166" y="726" data-vi="Bảo mật khách hàng" data-en="Client confidentiality"></text>
+    <text class="t" x="1166" y="752" data-vi="AI chạy trong môi trường" data-en="Run AI in an approved"></text>
+    <text class="t" x="1166" y="774" data-vi="được duyệt, không train" data-en="environment, no training"></text>
+    <text class="t" x="1166" y="796" data-vi="trên dữ liệu khách" data-en="on client data"></text>
+  </g>
+</svg>
+</div>
+<script>
+  const lang = new URLSearchParams(location.search).get('lang') === 'en' ? 'en' : 'vi';
+  document.documentElement.lang = lang;
+  document.querySelectorAll('.t').forEach(el => { const v = el.getAttribute('data-' + lang); if (v !== null) el.textContent = v; });
+</script>
+</body>
+</html>

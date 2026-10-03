@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Diagram 02 - Preparation checklist</title>
+<style>
+  body { margin:0; background:#eceff1; font-family:'Segoe UI', Roboto, Arial, sans-serif; }
+  #canvas { width:1400px; padding:34px 40px 28px; background:#fff; margin:20px auto; box-sizing:border-box; }
+  h1 { margin:0 0 4px; font-size:30px; color:#0d47a1; }
+  .sub { color:#616161; font-size:16px; margin-bottom:20px; }
+  .types { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-bottom:18px; }
+  .type { border-radius:12px; padding:12px 16px; color:#fff; }
+  .t1 { background:#1976d2; } .t2 { background:#00838f; } .t3 { background:#6a1b9a; }
+  .type h3 { margin:0 0 4px; font-size:19px; }
+  .type p { margin:0; font-size:13.5px; line-height:1.45; opacity:.96; }
+  .type .ex { margin-top:6px; background:rgba(255,255,255,.18); border-radius:6px; padding:4px 8px; font-size:13px; }
+  .grid { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; }
+  .col { border:1px solid #e0e0e0; border-radius:12px; padding:12px 14px; background:#fafafa; }
+  .col h4 { margin:0 0 8px; font-size:16px; color:#0d47a1; border-bottom:2px solid #0d47a1; padding-bottom:4px; }
+  .item { display:flex; gap:8px; font-size:13.5px; line-height:1.4; margin-bottom:7px; color:#212121; }
+  .box { flex:0 0 16px; height:16px; border:2px solid #1976d2; border-radius:3px; margin-top:2px; }
+  .gate { margin-top:16px; display:flex; align-items:center; gap:14px; background:linear-gradient(135deg,#e3f2fd,#e8f5e9); border:1px solid #bbdefb; border-radius:12px; padding:12px 18px; font-size:15px; }
+  .gate b { color:#0d47a1; }
+  .pill { background:#ff6d00; color:#fff; border-radius:16px; padding:4px 14px; font-weight:700; white-space:nowrap; }
+  .foot { margin-top:10px; font-size:12px; color:#757575; text-align:right; }
+</style>
+</head>
+<body>
+<div id="canvas">
+  <h1>Preparation checklist for legacy projects at an outsourcing company</h1>
+  <div class="sub">Applying the six steps to legacy modernization projects (PHP / Java / VB) for Japanese clients. Tick every box before letting agents run at scale.</div>
+  <div class="types">
+    <div class="type t1"><h3>Uplift (same stack, newer version)</h3><p>The stack still works; only the runtime / libraries are out of support.</p><div class="ex">e.g. PHP 5.x &rarr; PHP 8.x, Java 8 &rarr; 17/21, Spring Boot 2 &rarr; 3</div></div>
+    <div class="type t2"><h3>Transform (new stack, same behavior)</h3><p>Behavior is trusted; the language / framework is the problem.</p><div class="ex">e.g. VB6 / VB.NET WinForms &rarr; C# .NET, Struts &rarr; Spring</div></div>
+    <div class="type t3"><h3>Reimagine (rebuild, new behavior)</h3><p>Code and business logic both change; needs a new written spec.</p><div class="ex">e.g. on-premise internal system &rarr; web/SaaS with new workflows</div></div>
+  </div>
+  <div class="grid">
+    <div class="col"><h4>1. Target &amp; Spec</h4>
+      <div class="item"><span class="box"></span>Uplift / Transform / Reimagine chosen together with the client</div>
+      <div class="item"><span class="box"></span>Dependency map built from build logs / imports / runtime traces</div>
+      <div class="item"><span class="box"></span>Business rules extracted from code, with file citations, reviewed by the client</div>
+      <div class="item"><span class="box"></span>Project rationale written down (EOL, vulnerabilities, no maintainers)</div></div>
+    <div class="col"><h4>2. Certificate &amp; Policy</h4>
+      <div class="item"><span class="box"></span>List of automatically checkable conditions (tests, coverage, benchmarks, scans)</div>
+      <div class="item"><span class="box"></span>Old/new output comparison or data replay (PII masked)</div>
+      <div class="item"><span class="box"></span>Review tiered by impact; critical paths still get full review</div>
+      <div class="item"><span class="box"></span>Review report format agreed with reviewers / client</div></div>
+    <div class="col"><h4>3. Environment &amp; CI/CD</h4>
+      <div class="item"><span class="box"></span>Dedicated remote host; Claude Code can access code and docs</div>
+      <div class="item"><span class="box"></span>Environment that runs the legacy system (Docker) for comparison</div>
+      <div class="item"><span class="box"></span>Code freeze policy + plan to notify active developers</div>
+      <div class="item"><span class="box"></span>CI blocks commits that break modernized parts</div></div>
+    <div class="col"><h4>4. Security &amp; Contract</h4>
+      <div class="item"><span class="box"></span>Client approves sending source code to the model (per NDA / contract)</div>
+      <div class="item"><span class="box"></span>Least privilege: write only to the modernization branch, no production credentials</div>
+      <div class="item"><span class="box"></span>Secrets and personal data masked</div>
+      <div class="item"><span class="box"></span>Each PR links the agent transcript + certificate evidence; new dependencies checked for license/CVE</div></div>
+  </div>
+  <div class="gate"><span class="pill">GATE</span><div>Scale to the whole codebase only when: <b>a pilot on one small partition has completed the full loop</b> (agent change &rarr; certificate passes &rarr; policy-based review &rarr; merge) and <b>token usage has been measured to estimate cost</b>.</div></div>
+  <div class="foot">Checklist compiled by the author from Anthropic's article plus our own adoption suggestions. Hand-drawn in HTML/CSS.</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,22 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>tia_demo.py output</title>
+<style>body{margin:0;background:#fafafa;font-family:'Segoe UI',Arial,sans-serif}
+#canvas{width:1200px;padding:24px;box-sizing:border-box}
+.win{background:#263238;border-radius:12px;overflow:hidden;box-shadow:0 4px 18px rgba(0,0,0,.2)}
+.bar{background:#37474f;padding:10px 16px;color:#cfd8dc;font-size:14px}
+.bar span{display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:6px;vertical-align:middle}
+pre{margin:0;padding:22px 26px;color:#e0f2f1;font:15px/1.6 Consolas,'Cascadia Code',monospace;white-space:pre-wrap}
+.note{margin-top:12px;color:#c62828;font-size:14px;font-weight:600}</style></head><body><div id="canvas">
+<div class="win"><div class="bar"><span style="background:#ef5350"></span><span style="background:#ffca28"></span>
+<span style="background:#66bb6a"></span>&nbsp; PS&gt; python tia_demo.py</div><pre>[listener] jobs in = 12, jobs rolled up = 12, lag = 0
+
+PR changed files : [&#x27;billing/tax_jp.py&#x27;, &#x27;docs/README.md&#x27;]
+touched packages : [&#x27;billing&#x27;]
+impacted (+rdeps): [&#x27;api&#x27;, &#x27;billing&#x27;, &#x27;web&#x27;]
+candidate tests  : 4 / 8 total
+  run                   : [&#x27;e2e_checkout_flow (healthy)&#x27;, &#x27;test_invoice_total (healthy)&#x27;]
+  run_but_non_blocking  : [&#x27;test_tax_jp_rounding (flaky)&#x27;]
+  skip                  : [&#x27;test_api_contract (broken-on-main)&#x27;]
+
+=&gt; run 3 of 8 tests (62% fewer CI jobs for this PR)
+</pre></div>
+<div class="note">Author's own illustration (toy data) &mdash; NOT Anthropic's code.</div></div></body></html>

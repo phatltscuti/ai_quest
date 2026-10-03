@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Motion Studio – Scuti AI</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Roboto, Arial, sans-serif; background: #f5f3f4; color: #1e1a1d; }
+  header { background: linear-gradient(120deg, #0b0b10, #3a070c 55%, #b10d16); color: #fff; padding: 16px 34px; display: flex; align-items: center; gap: 14px; }
+  header .mark { width: 40px; height: 40px; border-radius: 11px; background: #e3121b; font-weight: 900; font-size: 22px; display: flex; align-items: center; justify-content: center; }
+  header h1 { font-size: 21px; }
+  header span { margin-left: auto; opacity: .8; font-size: 14px; }
+  main { max-width: 1320px; margin: 22px auto; display: grid; grid-template-columns: 1.15fr 1fr; gap: 20px; padding: 0 20px; }
+  .card { background: #fff; border-radius: 14px; padding: 20px 22px; box-shadow: 0 2px 10px rgba(40,0,0,.07); }
+  .card h2 { font-size: 16.5px; margin-bottom: 12px; display: flex; align-items: center; gap: 10px; }
+  .num { width: 26px; height: 26px; border-radius: 50%; background: #e3121b; color: #fff; font-size: 13px; display: inline-flex; align-items: center; justify-content: center; }
+  table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+  th, td { text-align: left; padding: 7px 9px; border-bottom: 1px solid #eee; vertical-align: top; }
+  th { background: #b10d16; color: #fff; font-weight: 600; }
+  td.t { white-space: nowrap; color: #b10d16; font-weight: 600; }
+  .side { display: flex; flex-direction: column; gap: 20px; }
+  .row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+  button, a.btn { padding: 10px 18px; border-radius: 9px; border: none; font-size: 14.5px; font-weight: 600; cursor: pointer; background: #e3121b; color: #fff; text-decoration: none; display: inline-block; }
+  button.dark, a.dark { background: #2a2228; }
+  button:disabled { opacity: .45; cursor: default; }
+  #sheet { width: 100%; border-radius: 10px; margin-top: 12px; display: none; }
+  .notes { margin-top: 12px; max-height: 0; overflow: hidden; transition: max-height .4s; font-size: 13.5px; line-height: 1.55; }
+  .notes.open { max-height: 520px; overflow: auto; }
+  .notes ol { padding-left: 20px; }
+  .notes li { margin-bottom: 5px; }
+  .notes .tag { display: inline-block; background: #fde9ea; color: #b10d16; border-radius: 10px; padding: 1px 9px; font-size: 12px; font-weight: 600; margin-bottom: 6px; }
+  .bar { height: 14px; background: #f0e4e5; border-radius: 7px; overflow: hidden; margin-top: 12px; }
+  .bar i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, #b10d16, #ff4d55); transition: width .4s; }
+  .status { margin-top: 8px; font-size: 13.5px; color: #555; min-height: 20px; }
+  .status.ok { color: #2e7d32; font-weight: 600; }
+  .hint { font-size: 13px; color: #6f6569; margin-top: 8px; }
+</style>
+</head>
+<body>
+<header>
+  <div class="mark">S</div>
+  <h1>Motion Studio</h1>
+  <span>Storyboard → xem trước → critic → render MP4</span>
+</header>
+
+<main>
+  <section class="card">
+    <h2><span class="num">1</span> Storyboard – Scuti AI intro (18 giây, 1920×1080)</h2>
+    <table>
+      <thead><tr><th>Shot</th><th>Thời gian</th><th>Trên màn hình</th><th>Chuyển cảnh</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td class="t">0 – 3.9s</td><td>Mạng 5 nút đỏ (từ logo) vẽ dần + “We make services <b>people love</b>”</td><td>Mạng bay thẳng vào camera</td></tr>
+        <tr><td>2</td><td class="t">3.9 – 6.05s</td><td>“by the power of <b>Gen AI.</b>”</td><td>Mạng về giữa khung</td></tr>
+        <tr><td>3</td><td class="t">6.05 – 9.75s</td><td>5 dịch vụ bay ra từ tâm mạng</td><td>Thẻ thu về tâm (rời nhanh)</td></tr>
+        <tr><td>4</td><td class="t">9.75 – 12.55s</td><td>Số liệu: 2015 · 400+ · 300+ · 6</td><td>Mạng thu nhỏ về vị trí logo</td></tr>
+        <tr><td>5</td><td class="t">12.35 – 18s</td><td>Rồng đỏ bay vào, logo + tagline + scuti.asia</td><td>Giữ logo, mờ dần</td></tr>
+      </tbody>
+    </table>
+    <p class="hint">Vật thể xuyên suốt: mạng 5 nút trong logo Scuti AI. Nhịp: giữ đủ đọc → rời nhanh → tới chậm. Mọi chữ và số lấy từ scuti.asia.</p>
+    <div class="row" style="margin-top:14px">
+      <a class="btn dark" id="previewBtn" href="/animation/scuti-intro.html">▶ Mở bản xem trước</a>
+    </div>
+  </section>
+
+  <div class="side">
+    <section class="card">
+      <h2><span class="num">2</span> Review bằng critic độc lập</h2>
+      <div class="row">
+        <button id="sheetBtn">🖼️ Tạo contact sheet</button>
+        <button class="dark" id="notesBtn">📝 Xem nhận xét critic</button>
+      </div>
+      <div class="status" id="sheetStatus"></div>
+      <img id="sheet" alt="contact sheet">
+      <div class="notes" id="notes">
+        <span class="tag">Vòng 1 – review bản v1 (10 lỗi, trích)</span>
+        <ol>
+          <li><b>14.25–15.75s</b> – khung trống, vật thể xuyên suốt biến mất.</li>
+          <li><b>4.5–6.25s</b> – “by the power of Gen AI.” đứng yên ~1.75s.</li>
+          <li><b>7.0–7.5s</b> – chữ trên thẻ hiện khi thẻ còn đang bay.</li>
+          <li><b>11.25s</b> – năm “đếm” 1991 → 2015 trông vô lý.</li>
+        </ol>
+        <span class="tag">Vòng 2 – review bản v2 (chấm 6/10, trích)</span>
+        <ol>
+          <li><b>12.5–13.1s</b> – số liệu rời không đều, ~0.5s gần trống.</li>
+          <li><b>4.25s</b> – chữ dính nhau khi phóng to (“bythe”).</li>
+          <li><b>4.25–5.9s</b> – mạng gần như mất ở shot 2.</li>
+        </ol>
+        <span class="tag">Vòng 3 – review bản v3 (2 major, 6 minor, trích)</span>
+        <ol>
+          <li><b>12.5–14.0s</b> – ~2s không có chữ, nửa khung hình trống.</li>
+          <li><b>6.5s</b> – khung thẻ trống hiện ra trước nội dung.</li>
+        </ol>
+        <p class="hint">Sau mỗi vòng, Claude Code sửa các lỗi lớn rồi render lại → bản v4 hiện tại.</p>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2><span class="num">3</span> Render MP4 (1920×1080, 30 fps)</h2>
+      <div class="row">
+        <button id="renderBtn">🎬 Render MP4</button>
+        <a class="btn dark" id="openBtn" href="/video/scuti-ai-motion-graphics.mp4" style="display:none">▶ Mở video</a>
+      </div>
+      <div class="bar"><i id="prog"></i></div>
+      <div class="status" id="renderStatus">Tua timeline tới từng frame, chụp lại rồi ghép thành MP4 kèm nhạc nền.</div>
+    </section>
+  </div>
+</main>
+
+<script>
+const $ = (id) => document.getElementById(id);
+$('sheetBtn').onclick = async () => {
+  $('sheetBtn').disabled = true;
+  $('sheetStatus').className = 'status'; $('sheetStatus').textContent = '⏳ Đang chụp 8 khung hình…';
+  const r = await fetch('/api/stills', { method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ times: [1.2, 3.2, 4.8, 7.6, 9.0, 11.0, 13.6, 16.5] }) }).then(r => r.json());
+  $('sheetBtn').disabled = false;
+  if (!r.ok) { $('sheetStatus').textContent = '❌ ' + r.error; return; }
+  $('sheet').src = '/' + r.file + '?v=' + Date.now(); $('sheet').style.display = 'block';
+  $('sheetStatus').className = 'status ok'; $('sheetStatus').textContent = '✅ Contact sheet 8 khung hình (có mốc thời gian) – gửi cho critic';
+};
+$('notesBtn').onclick = () => $('notes').classList.toggle('open');
+$('renderBtn').onclick = async () => {
+  $('renderBtn').disabled = true;
+  await fetch('/api/render', { method: 'POST' });
+  const iv = setInterval(async () => {
+    const s = await fetch('/api/render/status').then(r => r.json());
+    $('prog').style.width = (100 * s.frame / s.total) + '%';
+    $('renderStatus').className = 'status';
+    $('renderStatus').textContent = s.done ? '' : `⏳ Đang render frame ${s.frame} / ${s.total}…`;
+    if (s.done) {
+      clearInterval(iv); $('renderBtn').disabled = false;
+      const r = s.result;
+      $('renderStatus').className = 'status ok';
+      $('renderStatus').textContent = `✅ Đã lưu ${r.file} — ${r.duration.toFixed(1)} giây · ${r.size} · ${r.fps} fps · ${r.audio ? 'có nhạc nền' : 'không tiếng'} · ${r.size_mb} MB`;
+      $('openBtn').style.display = 'inline-block';
+      window.RENDER_DONE = r;
+    }
+  }, 1000);
+};
+</script>
+</body>
+</html>

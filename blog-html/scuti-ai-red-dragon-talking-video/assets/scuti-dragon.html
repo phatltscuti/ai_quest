@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Scuti AI - Red Dragon mascot (talking)</title>
+<!--
+  Scuti AI red dragon mascot - 1280x720 animated stage driven by window.TIMELINE (scripts/make_tts.py).
+  URL params:
+    ?mode=record          black slate until window.startShow() is called (used by record_dragon.py)
+    ?mode=preview&t=12.3  freeze at time t (seconds) - used for screenshots
+    ?mode=play            plays with the narration audio (click the Play button)
+    &debug=1              overlay: time, mouth envelope meter, current word
+-->
+<script src="timeline.js"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 100%; height: 100%; min-width: 1280px; min-height: 720px; overflow: hidden; background: #000; }
+  body { display: grid; place-items: start center; }   /* san khau sat mep tren: luon nam trong vung Chrome ghi duoc */
+  body { font-family: 'Segoe UI', Roboto, Arial, sans-serif; }
+  #stage { position: relative; width: 1280px; height: 720px; overflow: hidden;
+           background: linear-gradient(135deg, #fff3e0 0%, #ffe0e0 55%, #ffd6d6 100%); transition: background 0.8s; }
+  #slate { position: absolute; inset: 0; background: #000; z-index: 50; }
+  .scene-bg-0 { background: linear-gradient(135deg, #fff8ee 0%, #ffe4e1 60%, #ffd0cc 100%) !important; }
+  .scene-bg-1 { background: linear-gradient(135deg, #e8f0ff 0%, #fbe9ff 60%, #ffe2e2 100%) !important; }
+  .scene-bg-2 { background: linear-gradient(135deg, #fff6e5 0%, #ffe9d6 50%, #ffd9d9 100%) !important; }
+  .scene-bg-3 { background: linear-gradient(135deg, #12172e 0%, #1d2550 60%, #3a1630 100%) !important; }
+  .scene-bg-4 { background: radial-gradient(circle at 50% 45%, #ff6b5e 0%, #d32f2f 45%, #8e1414 100%) !important; }
+
+  /* brand */
+  #brand { position: absolute; top: 26px; left: 34px; display: flex; align-items: center; gap: 12px; z-index: 10; }
+  #brand .mark { width: 46px; height: 46px; border-radius: 13px; background: linear-gradient(135deg, #e53935, #b71c1c);
+                 color: #fff; font-weight: 800; font-size: 28px; display: flex; align-items: center; justify-content: center;
+                 box-shadow: 0 4px 12px rgba(183,28,28,.35); }
+  #brand .name { font-size: 26px; font-weight: 800; color: #1a1f3a; letter-spacing: .5px; }
+  #brand .name b { color: #d32f2f; }
+  .dark #brand .name, .scene-bg-4 #brand .name { color: #fff; }
+  .scene-bg-4 #brand .name b { color: #ffe082; }
+  .scene-bg-4 #brand .mark { background: #fff; color: #d32f2f; }
+  .scene-bg-4 #dragon { filter: drop-shadow(0 0 16px rgba(255,255,255,.65)); }
+  #chip { position: absolute; top: 34px; right: 36px; z-index: 10; font-size: 15px; padding: 6px 14px; border-radius: 20px;
+          background: rgba(255,255,255,.7); color: #b71c1c; font-weight: 600; }
+
+  /* dragon */
+  #dragonWrap { position: absolute; left: 90px; top: 120px; width: 420px; height: 470px; z-index: 5;
+                transform-origin: 50% 100%; }
+  #shadow { position: absolute; left: 175px; top: 560px; width: 250px; height: 30px; border-radius: 50%;
+            background: rgba(0,0,0,.18); filter: blur(4px); z-index: 4; }
+
+  /* scene text */
+  .panel { position: absolute; left: 560px; top: 140px; width: 660px; opacity: 0; z-index: 6; }
+  .panel h1 { font-size: 54px; line-height: 1.12; color: #1a1f3a; font-weight: 800; }
+  .panel h1 em { font-style: normal; color: #d32f2f; }
+  .panel p.lead { margin-top: 16px; font-size: 26px; color: #4a4f6a; }
+  .chips { margin-top: 26px; display: flex; gap: 14px; flex-wrap: wrap; }
+  .chip { padding: 12px 22px; border-radius: 30px; font-size: 24px; font-weight: 700; background: #fff; color: #d32f2f;
+          box-shadow: 0 6px 16px rgba(0,0,0,.08); opacity: 0; transform: translateY(18px); }
+  .grid { margin-top: 26px; display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .svc { background: #fff; border-radius: 18px; padding: 20px 22px; box-shadow: 0 8px 22px rgba(0,0,0,.08);
+         border-left: 7px solid #e53935; opacity: 0; transform: scale(.85); }
+  .svc .ic { font-size: 30px; font-weight: 800; color: #e53935; font-family: Consolas, monospace; }
+  .svc .t { font-size: 25px; font-weight: 700; color: #1a1f3a; margin-top: 4px; }
+  .pipe { margin-top: 28px; display: flex; flex-direction: column; gap: 12px; }
+  .pstep { display: flex; align-items: center; gap: 16px; padding: 12px 18px; border-radius: 14px;
+           background: rgba(255,255,255,.08); border: 2px solid rgba(255,255,255,.15); color: #cfd6ff;
+           font-size: 23px; opacity: .25; }
+  .pstep .n { width: 38px; height: 38px; border-radius: 50%; background: #e53935; color: #fff; font-weight: 800;
+              display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .pstep b { color: #fff; }
+  .pstep.on { opacity: 1; border-color: #ff8a80; background: rgba(229,57,53,.18); }
+  .dark .panel h1 { color: #fff; }
+  .dark .panel h1 em { color: #ff8a80; }
+  .cta h1 { color: #fff !important; font-size: 64px; }
+  .cta p.lead { color: #ffe0e0 !important; }
+  .cta .btn { display: inline-block; margin-top: 30px; padding: 16px 34px; border-radius: 40px; background: #fff;
+              color: #c62828; font-size: 28px; font-weight: 800; box-shadow: 0 10px 26px rgba(0,0,0,.25); }
+  .bigmark { font-size: 96px; font-weight: 900; color: #fff; letter-spacing: 1px; text-shadow: 0 6px 20px rgba(0,0,0,.25); }
+
+  /* subtitles */
+  #subs { position: absolute; left: 50%; bottom: 34px; transform: translateX(-50%); max-width: 1120px; z-index: 20;
+          background: rgba(20,22,40,.82); color: #fff; padding: 12px 26px; border-radius: 14px; font-size: 27px;
+          line-height: 1.35; text-align: center; font-weight: 600; opacity: 0; }
+  #subs span.w { opacity: .55; }
+  #subs span.w.said { opacity: 1; }
+  #subs span.w.now { color: #ffcc80; opacity: 1; }
+
+  /* transition wipe */
+  #wipe { position: absolute; top: -10%; left: -60%; width: 40%; height: 120%; z-index: 40;
+          background: linear-gradient(90deg, #b71c1c, #e53935 60%, #ff8a80); transform: skewX(-14deg); display: none; }
+
+  /* particles */
+  .spark { position: absolute; width: 14px; height: 14px; border-radius: 50%; background: #ffca28; opacity: .0; z-index: 3; }
+
+  /* debug */
+  #debug { position: absolute; left: 16px; top: 96px; z-index: 60; background: rgba(0,0,0,.78); color: #b9f6ca;
+           font: 15px Consolas, monospace; padding: 10px 14px; border-radius: 10px; display: none; width: 300px; }
+  #debug .bar { height: 14px; background: #333; border-radius: 7px; margin-top: 6px; overflow: hidden; }
+  #debug .bar i { display: block; height: 100%; background: #ff5252; width: 0; }
+  /* thanh dieu khien: nam ngoai khung 1280x720 nen khong lot vao video xuat ra */
+  #bar { position: fixed; left: 50%; bottom: 18px; transform: translateX(-50%); display: none; gap: 12px; align-items: center; z-index: 90; }
+  #bar button, #bar a { font: 600 17px 'Segoe UI', sans-serif; padding: 11px 22px; border-radius: 30px; border: none; cursor: pointer;
+                        text-decoration: none; background: #2a2f4a; color: #fff; }
+  #bar #playBtn { background: #1565c0; }
+  #bar #recBtn { background: #e53935; }
+  #bar .rec { color: #ff5252; font: 700 17px 'Segoe UI', sans-serif; display: none; }
+  #result { position: fixed; inset: 0; display: none; place-items: center; background: rgba(0,0,0,.55); z-index: 95; }
+  #result .box { background: #fff; border-radius: 18px; padding: 28px 36px; font: 17px/1.7 'Segoe UI', sans-serif; color: #1a1f3a; min-width: 460px; }
+  #result h3 { color: #2e7d32; font-size: 22px; margin-bottom: 8px; }
+  #result a { display: inline-block; margin-top: 14px; padding: 10px 20px; border-radius: 10px; background: #d32f2f; color: #fff; text-decoration: none; font-weight: 600; }
+</style>
+</head>
+<body>
+<div id="stage" class="scene-bg-0">
+  <div id="brand"><div class="mark">S</div><div class="name">Scuti <b>AI</b></div></div>
+  <div id="chip">Linh vật Rồng Đỏ</div>
+
+  <div id="shadow"></div>
+  <div id="dragonWrap">
+    <svg id="dragon" viewBox="0 0 420 470" width="420" height="470">
+      <defs>
+        <radialGradient id="gBody" cx="45%" cy="35%" r="70%">
+          <stop offset="0%" stop-color="#ff6f61"/><stop offset="60%" stop-color="#e53935"/><stop offset="100%" stop-color="#b71c1c"/>
+        </radialGradient>
+        <radialGradient id="gHead" cx="42%" cy="35%" r="70%">
+          <stop offset="0%" stop-color="#ff7a6b"/><stop offset="65%" stop-color="#e53935"/><stop offset="100%" stop-color="#c62828"/>
+        </radialGradient>
+        <linearGradient id="gWing" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#ff8a80"/><stop offset="100%" stop-color="#c62828"/>
+        </linearGradient>
+        <linearGradient id="gHorn" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#fff3c4"/><stop offset="100%" stop-color="#ffb74d"/>
+        </linearGradient>
+        <clipPath id="mouthClip"><path id="mouthClipPath" d=""/></clipPath>
+      </defs>
+
+      <!-- tail -->
+      <g id="tail" transform="rotate(0 250 380)">
+        <path d="M250 370 C 330 380, 370 340, 380 300 C 386 280, 372 262, 360 270" fill="none" stroke="#d32f2f" stroke-width="30" stroke-linecap="round"/>
+        <path d="M352 262 L 392 238 L 384 284 Z" fill="#ffb74d"/>
+      </g>
+      <!-- wings -->
+      <g id="wingL" transform="rotate(0 150 250)">
+        <path d="M150 250 C 90 190, 40 170, 20 200 C 45 205, 55 222, 50 240 C 70 235, 85 250, 82 268 C 105 262, 125 270, 150 285 Z" fill="url(#gWing)" stroke="#b71c1c" stroke-width="3"/>
+      </g>
+      <g id="wingR" transform="rotate(0 270 250)">
+        <path d="M270 250 C 330 190, 380 170, 400 200 C 375 205, 365 222, 370 240 C 350 235, 335 250, 338 268 C 315 262, 295 270, 270 285 Z" fill="url(#gWing)" stroke="#b71c1c" stroke-width="3"/>
+      </g>
+
+      <!-- body -->
+      <g id="body">
+        <ellipse cx="210" cy="330" rx="98" ry="105" fill="url(#gBody)"/>
+        <ellipse cx="210" cy="350" rx="62" ry="76" fill="#ffe0b2"/>
+        <path d="M160 320 Q210 332 260 320 M156 350 Q210 364 264 350 M162 382 Q210 394 258 382" stroke="#ffcc80" stroke-width="5" fill="none"/>
+        <!-- feet -->
+        <ellipse cx="160" cy="430" rx="40" ry="22" fill="#c62828"/>
+        <ellipse cx="260" cy="430" rx="40" ry="22" fill="#c62828"/>
+        <circle cx="140" cy="440" r="6" fill="#fff3e0"/><circle cx="160" cy="444" r="6" fill="#fff3e0"/><circle cx="180" cy="440" r="6" fill="#fff3e0"/>
+        <circle cx="240" cy="440" r="6" fill="#fff3e0"/><circle cx="260" cy="444" r="6" fill="#fff3e0"/><circle cx="280" cy="440" r="6" fill="#fff3e0"/>
+        <!-- arms -->
+        <g id="armL" transform="rotate(0 130 300)"><ellipse cx="112" cy="320" rx="20" ry="36" fill="#d32f2f" transform="rotate(25 112 320)"/></g>
+        <g id="armR" transform="rotate(0 290 300)"><ellipse cx="308" cy="320" rx="20" ry="36" fill="#d32f2f" transform="rotate(-25 308 320)"/></g>
+        <!-- scarf + Scuti badge -->
+        <path d="M128 262 Q210 300 292 262 L 296 284 Q210 324 124 284 Z" fill="#1a237e"/>
+        <path d="M262 290 L 286 340 L 262 332 L 252 350 L 244 296 Z" fill="#283593"/>
+        <circle cx="210" cy="300" r="22" fill="#fff" stroke="#ffca28" stroke-width="4"/>
+        <text x="210" y="310" text-anchor="middle" font-family="Segoe UI, Arial" font-weight="900" font-size="27" fill="#d32f2f">S</text>
+      </g>
+
+      <!-- head -->
+      <g id="head" transform="translate(0 0)">
+        <!-- horns -->
+        <path d="M140 92 C 120 50, 128 26, 146 14 C 150 44, 160 64, 172 82 Z" fill="url(#gHorn)"/>
+        <path d="M280 92 C 300 50, 292 26, 274 14 C 270 44, 260 64, 248 82 Z" fill="url(#gHorn)"/>
+        <!-- spikes -->
+        <path d="M186 64 L 198 34 L 210 62 L 222 30 L 234 64 Z" fill="#ffb74d"/>
+        <!-- ear fins -->
+        <path d="M100 150 L 52 120 L 70 168 Z" fill="#ff8a80" stroke="#c62828" stroke-width="3"/>
+        <path d="M320 150 L 368 120 L 350 168 Z" fill="#ff8a80" stroke="#c62828" stroke-width="3"/>
+        <ellipse cx="210" cy="160" rx="118" ry="104" fill="url(#gHead)"/>
+        <!-- snout -->
+        <ellipse cx="210" cy="205" rx="70" ry="44" fill="#ff8a7a"/>
+        <ellipse cx="190" cy="190" rx="6" ry="4" fill="#8e1a1a"/>
+        <ellipse cx="230" cy="190" rx="6" ry="4" fill="#8e1a1a"/>
+        <!-- cheeks -->
+        <ellipse cx="128" cy="196" rx="20" ry="12" fill="#ff80ab" opacity=".55"/>
+        <ellipse cx="292" cy="196" rx="20" ry="12" fill="#ff80ab" opacity=".55"/>
+        <!-- eyes -->
+        <g id="eyes">
+          <g id="eyeL" transform="translate(160 140)"><g class="lid">
+            <ellipse rx="25" ry="30" fill="#fff"/><ellipse id="pupL" cx="3" cy="4" rx="17" ry="21" fill="#1a1f3a"/>
+            <circle cx="10" cy="-6" r="7" fill="#fff"/><circle cx="-2" cy="12" r="3.5" fill="#fff"/></g></g>
+          <g id="eyeR" transform="translate(260 140)"><g class="lid">
+            <ellipse rx="25" ry="30" fill="#fff"/><ellipse id="pupR" cx="-3" cy="4" rx="17" ry="21" fill="#1a1f3a"/>
+            <circle cx="4" cy="-6" r="7" fill="#fff"/><circle cx="-8" cy="12" r="3.5" fill="#fff"/></g></g>
+        </g>
+        <path d="M134 100 Q160 88 184 100" stroke="#8e1a1a" stroke-width="6" fill="none" stroke-linecap="round" id="browL"/>
+        <path d="M236 100 Q260 88 286 100" stroke="#8e1a1a" stroke-width="6" fill="none" stroke-linecap="round" id="browR"/>
+        <!-- mouth (driven by audio envelope) -->
+        <g id="mouth" transform="translate(210 222)">
+          <path id="mouthIn" d="" fill="#5d0f12"/>
+          <g clip-path="url(#mouthClip)">
+            <ellipse id="tongue" cx="0" cy="30" rx="20" ry="12" fill="#ff5c7a"/>
+          </g>
+          <path d="M-24 -1 L -18 9 L -12 1 Z" fill="#fff"/>
+          <path d="M24 -1 L 18 9 L 12 1 Z" fill="#fff"/>
+          <path id="mouthLine" d="" stroke="#5d0f12" stroke-width="5" fill="none" stroke-linecap="round"/>
+        </g>
+      </g>
+    </svg>
+  </div>
+
+  <!-- SCENE PANELS -->
+  <div class="panel" id="p0">
+    <h1>Xin chào!<br>Mình là <em>Rồng Đỏ</em></h1>
+    <p class="lead">Linh vật của <b>Scuti AI</b></p>
+  </div>
+  <div class="panel" id="p1">
+    <h1>Kỹ sư Việt Nam <em>×</em> Trí tuệ nhân tạo</h1>
+    <p class="lead">Con người + AI = phần mềm tốt hơn, ra mắt sớm hơn</p>
+    <div class="chips"><div class="chip" id="c1">Nhanh hơn</div><div class="chip" id="c2">Thông minh hơn</div><div class="chip" id="c3">Phần mềm chất lượng</div></div>
+  </div>
+  <div class="panel" id="p2">
+    <h1 style="font-size:48px">Từ <em>ý tưởng</em> &rarr; <em>sản phẩm</em></h1>
+    <div class="grid">
+      <div class="svc" id="s1"><div class="ic">&lt;AI/&gt;</div><div class="t">AI Agent</div></div>
+      <div class="svc" id="s2"><div class="ic">⚙ ⚙</div><div class="t">Tự động hóa quy trình</div></div>
+      <div class="svc" id="s3"><div class="ic">{ web }</div><div class="t">Ứng dụng Web</div></div>
+      <div class="svc" id="s4"><div class="ic">[ app ]</div><div class="t">Ứng dụng di động</div></div>
+    </div>
+  </div>
+  <div class="panel" id="p3">
+    <h1>Video này cũng <em>do AI làm</em></h1>
+    <div class="pipe">
+      <div class="pstep" id="ps1"><div class="n">1</div><div><b>Kịch bản</b> &rarr; edge-tts (giọng nói tổng hợp)</div></div>
+      <div class="pstep" id="ps2"><div class="n">2</div><div><b>Hoạt hình</b> &rarr; HTML / SVG / JS, khẩu hình theo âm lượng</div></div>
+      <div class="pstep" id="ps3"><div class="n">3</div><div><b>Ghi hình</b> &rarr; Chrome ghi lại tab (MediaRecorder)</div></div>
+      <div class="pstep" id="ps4"><div class="n">4</div><div><b>Ghép tiếng</b> &rarr; ffmpeg (H.264 + AAC)</div></div>
+    </div>
+  </div>
+  <div class="panel cta" id="p4">
+    <div class="bigmark">Scuti AI</div>
+    <h1>Biến ý tưởng thành hiện thực</h1>
+    <div class="btn">Cùng bắt đầu nhé!</div>
+  </div>
+
+  <div id="subs"></div>
+  <div id="wipe"></div>
+  <div id="debug"><div id="dbgT">t=0</div><div id="dbgW">word: -</div><div>mouth</div><div class="bar"><i id="dbgBar"></i></div></div>
+  <div id="slate"></div>
+  <audio id="aud" src="narration-vi.mp3" preload="auto"></audio>
+</div>
+<div id="bar">
+  <a href="/studio/" id="backBtn">← Studio</a>
+  <button id="playBtn">▶ Xem trước</button>
+  <button id="recBtn">⏺ Ghi video</button>
+  <span class="rec" id="recInd">● Đang ghi <span id="recT">0.0</span> s</span>
+</div>
+<div id="result"><div class="box" id="resBox"></div></div>
+
+<script>
+(function () {
+  const TL = window.TIMELINE;
+  const q = new URLSearchParams(location.search);
+  const mode = q.get('mode') || 'play';
+  const debug = q.get('debug') === '1';
+  const TAIL = 1.4;                       // hold the last frame a bit after the voice ends
+  const END = TL.duration + TAIL;
+  const $ = (id) => document.getElementById(id);
+  const S = TL.sentences;
+
+  // ---- scene boundaries from sentence boundaries (sentence 0+1 = intro, 5+6 = CTA)
+  const sceneStart = [0, S[2].start, S[3].start, S[4].start, S[5].start];
+  // word lookup helpers (first word containing text, searched after a given time)
+  function wordAt(txt, after) {
+    const w = TL.words.find(w => w.start >= (after || 0) && w.text.toLowerCase().includes(txt.toLowerCase()));
+    return w ? w.start : 0;
+  }
+  const cue = {
+    c1: wordAt('nhanh', S[2].start), c2: wordAt('thông', S[2].start), c3: wordAt('phần', S[2].start),
+    s1: wordAt('agent', S[3].start), s2: wordAt('tự', S[3].start), s3: wordAt('web', S[3].start), s4: wordAt('di', S[3].start),
+    ps1: wordAt('giọng', S[4].start), ps2: wordAt('hoạt', S[4].start), ps3: wordAt('code', S[4].start), ps4: wordAt('ghép', S[4].start),
+  };
+
+  // ---- subtitles: one block per sentence, karaoke highlight by word boundary
+  // build subtitle chunks: tokens of each sentence map 1:1 to edge-tts word boundaries,
+  // break after "," / ":" (chunk >= 4 words) or at 9 words so a line never wraps to 3 rows
+  const chunks = [];
+  S.forEach(s => {
+    const ws = TL.words.filter(w => w.start >= s.start - 0.05 && w.start < s.end - 0.06);
+    const toks = s.text.split(/\s+/);
+    let cur = { toks: [], times: [] };
+    toks.forEach((tok, k) => {
+      cur.toks.push(tok); cur.times.push(ws[k] ? ws[k].start : (cur.times[cur.times.length - 1] || s.start));
+      const brk = (/[,:]$/.test(tok) && cur.toks.length >= 4) || cur.toks.length >= 9;
+      if (brk && k < toks.length - 1) { chunks.push(cur); cur = { toks: [], times: [] }; }
+    });
+    if (cur.toks.length) chunks.push(cur);
+  });
+  chunks.forEach((c, i) => { c.start = c.times[0] - 0.12; c.end = i < chunks.length - 1 ? chunks[i + 1].times[0] - 0.12 : TL.duration + 0.5; });
+  let subIdx = -1;
+  function renderSubs(t) {
+    const box = $('subs');
+    const idx = chunks.findIndex(c => t >= c.start && t < c.end);
+    if (idx < 0) { box.style.opacity = 0; return; }
+    if (idx !== subIdx) {
+      subIdx = idx;
+      box.innerHTML = chunks[idx].toks.map((tok, k) => `<span class="w">${tok}</span>`).join(' ');
+    }
+    box.style.opacity = 1;
+    let said = 0;
+    chunks[idx].times.forEach((ts, k) => { if (t >= ts) said = k + 1; });
+    box.querySelectorAll('span.w').forEach((sp, k) => { sp.className = 'w' + (k < said - 1 ? ' said' : '') + (k === said - 1 ? ' now' : ''); });
+  }
+
+  // ---- mouth from the audio envelope
+  function mouthOpen(t) {
+    const i = Math.floor(t * TL.fps);
+    if (i < 0 || i >= TL.env.length) return 0;
+    const e = TL.env[i];
+    return Math.max(0, Math.min(1, (e - 0.10) / 0.65));
+  }
+  function setMouth(o) {
+    const w = 26 + o * 4, drop = 6 + o * 40;
+    const inner = `M${-w} 0 Q 0 ${4 - o * 4} ${w} 0 Q ${w * 0.7} ${drop} 0 ${drop} Q ${-w * 0.7} ${drop} ${-w} 0 Z`;
+    $('mouthIn').setAttribute('d', o > 0.04 ? inner : '');
+    $('mouthClipPath').setAttribute('d', inner);
+    $('tongue').setAttribute('cy', drop - 8);
+    $('tongue').style.display = o > 0.15 ? '' : 'none';
+    $('mouthLine').setAttribute('d', o > 0.04 ? '' : `M-26 0 Q 0 16 26 0`);
+  }
+
+  const clamp = (x) => Math.max(0, Math.min(1, x));
+  const ease = (x) => 1 - Math.pow(1 - clamp(x), 3);
+
+  function sceneOf(t) { let s = 0; for (let i = 0; i < sceneStart.length; i++) if (t >= sceneStart[i]) s = i; return s; }
+
+  let curScene = -1;
+  function render(t) {
+    const sc = sceneOf(t);
+    const stage = $('stage');
+    if (sc !== curScene) {
+      curScene = sc;
+      stage.className = 'scene-bg-' + sc + (sc === 3 ? ' dark' : '');
+      $('chip').textContent = ['Linh vật Rồng Đỏ', 'Về Scuti AI', 'Dịch vụ', 'Made with AI', 'Liên hệ Scuti AI'][sc];
+    }
+    // panels fade/slide
+    for (let i = 0; i < 5; i++) {
+      const p = $('p' + i);
+      const local = t - sceneStart[i];
+      const nextStart = i < 4 ? sceneStart[i + 1] : 1e9;
+      const vis = (t >= sceneStart[i] && t < nextStart) ? ease(local / 0.6) * (1 - ease((t - (nextStart - 0.35)) / 0.35)) : 0;
+      p.style.opacity = vis;
+      p.style.transform = `translateX(${(1 - ease(local / 0.6)) * 60}px)`;
+    }
+    // CTA layout: centre the text
+    if (sc === 4) { $('p4').style.left = '560px'; $('p4').style.top = '150px'; }
+    // timed items
+    for (const id of ['c1', 'c2', 'c3']) { const k = ease((t - cue[id]) / 0.4); const el = $(id); el.style.opacity = k; el.style.transform = `translateY(${(1 - k) * 18}px)`; }
+    for (const id of ['s1', 's2', 's3', 's4']) { const k = ease((t - cue[id] + 0.1) / 0.45); const el = $(id); el.style.opacity = k; el.style.transform = `scale(${0.85 + 0.15 * k})`; }
+    for (const id of ['ps1', 'ps2', 'ps3', 'ps4']) $(id).classList.toggle('on', t >= cue[id] - 0.1);
+
+    // wipe transition around each scene change
+    let wipeOn = false;
+    for (let i = 1; i < sceneStart.length; i++) {
+      const d = t - (sceneStart[i] - 0.35);
+      if (d >= 0 && d < 0.7) { wipeOn = true; const x = -60 + (d / 0.7) * 180; $('wipe').style.left = x + '%'; }
+    }
+    $('wipe').style.display = wipeOn ? 'block' : 'none';
+
+    // dragon motion
+    const o = mouthOpen(t);
+    setMouth(o);
+    const breathe = Math.sin(t * 2.2) * 0.012;
+    const hop = sc === 4 ? Math.abs(Math.sin(t * 4)) * 14 : 0;
+    const dx = sc === 4 ? 0 : 0;
+    const enter = ease(t / 0.9);
+    $('dragonWrap').style.transform = `translate(${dx + (1 - enter) * -260}px, ${-hop}px) scale(${1 + breathe}, ${1 - breathe})`;
+    $('shadow').style.transform = `translateX(${(1 - enter) * -260}px) scale(${1 - hop / 60})`;
+    $('head').setAttribute('transform', `translate(0 ${-o * 5 + Math.sin(t * 1.7) * 2}) rotate(${Math.sin(t * 1.3) * 3 + o * 2} 210 200)`);
+    const flap = Math.sin(t * (sc === 4 ? 14 : 6)) * (sc === 4 ? 22 : 12);
+    $('wingL').setAttribute('transform', `rotate(${flap} 150 250)`);
+    $('wingR').setAttribute('transform', `rotate(${-flap} 270 250)`);
+    $('tail').setAttribute('transform', `rotate(${Math.sin(t * 2.6) * 6} 250 380)`);
+    // wave in the intro, gesture while presenting
+    const wave = t < 2.2 ? Math.sin(t * 12) * 35 - 60 : (sc === 2 || sc === 3 ? -25 + Math.sin(t * 3) * 10 : sc === 4 ? -70 + Math.sin(t * 10) * 25 : Math.sin(t * 2) * 5);
+    $('armR').setAttribute('transform', `rotate(${wave} 290 300)`);
+    $('armL').setAttribute('transform', `rotate(${Math.sin(t * 2.1) * 6} 130 300)`);
+    // blink every ~3.2 s, eyes look toward the panel
+    const bp = (t % 3.2);
+    const lid = bp > 3.05 ? Math.max(0.08, Math.abs(bp - 3.125) / 0.075) : 1;
+    document.querySelectorAll('.lid').forEach(l => l.setAttribute('transform', `scale(1 ${lid})`));
+    const look = sc === 0 && t < 1.5 ? 0 : 5;
+    $('pupL').setAttribute('cx', 3 + look); $('pupR').setAttribute('cx', -3 + look);
+    // happy brows when excited
+    const bro = sc === 4 ? -6 : -o * 4;
+    $('browL').setAttribute('transform', `translate(0 ${bro})`); $('browR').setAttribute('transform', `translate(0 ${bro})`);
+
+    renderSubs(t);
+
+    if (debug) {
+      $('debug').style.display = 'block';
+      $('dbgT').textContent = `t=${t.toFixed(2)}s  scene=${sc}`;
+      const cw = TL.words.filter(w => t >= w.start && t <= w.end)[0];
+      $('dbgW').textContent = 'word: ' + (cw ? cw.text : '-');
+      $('dbgBar').style.width = (o * 100).toFixed(0) + '%';
+    }
+  }
+
+  // ---- clocks
+  let t0 = null, raf = null;
+  function loop() {
+    const t = (performance.now() - t0) / 1000;
+    render(Math.min(t, END));
+    if (t < END) raf = requestAnimationFrame(loop); else window.SHOW_DONE = true;
+  }
+  window.SHOW_END = END;
+  window.startShow = function () { $('slate').style.display = 'none'; t0 = performance.now(); window.SHOW_DONE = false; loop(); };
+  window.renderAt = function (t) { $('slate').style.display = 'none'; render(t); };
+
+  if (mode === 'preview') {
+    window.renderAt(parseFloat(q.get('t') || '0'));
+  } else if (mode === 'record') {
+    render(0);                              // slate stays black until startShow()
+  } else {
+    render(0); $('slate').style.display = 'none';
+    $('bar').style.display = 'flex';
+    const a = $('aud');
+    let actx = null, tap = null;
+    function audioGraph() {            // loa + 1 nhanh audio de ghi vao video
+      if (actx) return;
+      actx = new AudioContext();
+      const src = actx.createMediaElementSource(a);
+      tap = actx.createMediaStreamDestination();
+      src.connect(actx.destination); src.connect(tap);
+    }
+    function playFromStart(onEnd) {
+      a.currentTime = 0; a.play();
+      (function audLoop() {
+        const t = Math.min(a.currentTime, END);
+        render(t);
+        if (!a.ended) requestAnimationFrame(audLoop);
+        else {                         // giu khung cuoi TAIL giay roi ket thuc
+          const tEnd = performance.now();
+          (function tail() { const t2 = TL.duration + (performance.now() - tEnd) / 1000; render(Math.min(t2, END));
+            if (t2 < END) requestAnimationFrame(tail); else onEnd && onEnd(); })();
+        }
+      })();
+    }
+    $('playBtn').onclick = () => { audioGraph(); actx.resume(); playFromStart(); };
+    $('recBtn').onclick = async () => {
+      audioGraph(); await actx.resume();
+      // Chrome hoi quyen ghi lai chinh tab nay
+      const screen = await navigator.mediaDevices.getDisplayMedia({ video: { frameRate: 30 }, audio: false,
+                                                                   preferCurrentTab: true, selfBrowserSurface: 'include' });
+      const vt = screen.getVideoTracks()[0];
+      const stream = new MediaStream([vt, ...tap.stream.getAudioTracks()]);
+      const rec = new MediaRecorder(stream, { mimeType: 'video/webm;codecs=vp9,opus', videoBitsPerSecond: 8e6 });
+      const chunks = []; rec.ondataavailable = (e) => e.data.size && chunks.push(e.data);
+      $('playBtn').style.display = $('recBtn').style.display = $('backBtn').style.display = 'none';
+      $('recInd').style.display = 'inline';
+      await new Promise(r => setTimeout(r, 400));
+      rec.start(500);
+      const t0r = performance.now();
+      const iv = setInterval(() => { $('recT').textContent = ((performance.now() - t0r) / 1000).toFixed(1); }, 100);
+      playFromStart(() => rec.stop());
+      rec.onstop = async () => {
+        clearInterval(iv); vt.stop();
+        $('recInd').textContent = '⏳ Đang lưu MP4…';
+        // vi tri san khau trong khung hinh ghi duoc (de cat dung 1280x720)
+        const r = $('stage').getBoundingClientRect(), k = window.devicePixelRatio || 1;
+        const qs = `x=${r.left * k}&y=${r.top * k}&w=${r.width * k}&h=${r.height * k}`;
+        const res = await fetch('/api/export?' + qs, { method: 'POST', body: new Blob(chunks, { type: 'video/webm' }) }).then(x => x.json());
+        $('recInd').style.display = 'none'; $('backBtn').style.display = '';
+        $('resBox').innerHTML = res.ok
+          ? `<h3>✅ Đã xuất video</h3><div>File: <b>${res.file}</b></div><div>Thời lượng: <b>${res.duration.toFixed(1)} giây</b> · ${res.size_mb} MB</div>
+             <div>Hình: ${res.video} 1280×720 · Âm thanh: ${res.audio ? 'có' : 'KHÔNG'}</div><a href="/${res.file}">▶ Mở video</a>`
+          : `<h3 style="color:#c62828">Lỗi</h3><pre>${res.error}</pre>`;
+        $('result').style.display = 'grid';
+        window.EXPORT_RESULT = res;
+      };
+    };
+  }
+})();
+</script>
+</body>
+</html>

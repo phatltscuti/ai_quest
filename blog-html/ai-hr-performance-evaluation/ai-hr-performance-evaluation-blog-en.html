@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI for HR Evaluation: Daily Work Data Instead of Evaluator Memory</title>
+<style>
+  :root {
+    --primary: #0d47a1;
+    --primary-light: #1976d2;
+    --accent: #ff6d00;
+    --bg: #fafafa;
+    --card: #ffffff;
+    --text: #212121;
+    --text-secondary: #616161;
+    --border: #e0e0e0;
+    --code-bg: #263238;
+    --success: #2e7d32;
+    --success-bg: #e8f5e9;
+    --warning: #f57f17;
+    --warning-bg: #fff8e1;
+    --error: #c62828;
+    --gradient-start: #0d47a1;
+    --gradient-mid: #1565c0;
+    --gradient-end: #00838f;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.75;
+    font-size: 16px;
+  }
+  .hero {
+    background: linear-gradient(135deg, var(--gradient-start), var(--gradient-mid), var(--gradient-end));
+    color: white;
+    padding: 64px 20px;
+    text-align: center;
+  }
+  .hero h1 { font-size: 2.2em; margin-bottom: 14px; font-weight: 700; letter-spacing: -0.5px; max-width: 900px; margin-left: auto; margin-right: auto; }
+  .hero .subtitle { font-size: 1.1em; opacity: 0.93; max-width: 760px; margin: 0 auto; }
+  .hero .badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.18);
+    padding: 6px 20px;
+    border-radius: 20px;
+    font-size: 0.84em;
+    margin-bottom: 18px;
+  }
+  .container { max-width: 940px; margin: 0 auto; padding: 32px 20px; }
+  .toc {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px 32px;
+    margin-bottom: 38px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  }
+  .toc h2 { font-size: 1.3em; margin-bottom: 14px; color: var(--primary); border: none; padding: 0; }
+  .toc ol { padding-left: 22px; }
+  .toc li { margin-bottom: 6px; }
+  .toc a { color: var(--primary-light); text-decoration: none; }
+  .toc a:hover { text-decoration: underline; }
+  section { margin-bottom: 44px; }
+  h2 {
+    font-size: 1.55em;
+    color: var(--primary);
+    border-bottom: 3px solid var(--primary);
+    padding-bottom: 8px;
+    margin-bottom: 22px;
+  }
+  h3 { font-size: 1.22em; color: var(--text); margin: 22px 0 10px; }
+  p { margin-bottom: 14px; }
+  a { color: var(--primary-light); }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+  }
+  .card-accent { border-left: 4px solid var(--accent); }
+  .card-info { border-left: 4px solid var(--primary-light); }
+  .card-warning { border-left: 4px solid var(--warning); background: var(--warning-bg); }
+  .card-success { border-left: 4px solid var(--success); background: var(--success-bg); }
+  .prompt-box {
+    background: var(--code-bg);
+    color: #cfd8dc;
+    border-radius: 10px;
+    padding: 22px 24px;
+    margin: 14px 0 22px;
+    font-family: 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+    font-size: 0.88em;
+    line-height: 1.65;
+    white-space: pre-wrap;
+    position: relative;
+    overflow-x: auto;
+  }
+  .prompt-box .label {
+    position: absolute; top: 8px; right: 12px;
+    background: var(--accent); color: white;
+    font-size: 0.7em; padding: 2px 12px; border-radius: 8px;
+    font-family: 'Segoe UI', sans-serif; font-weight: 600;
+  }
+  table.data-table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+  table.data-table th, table.data-table td {
+    border: 1px solid var(--border);
+    padding: 10px 14px;
+    text-align: left;
+    font-size: 0.93em;
+    vertical-align: top;
+  }
+  table.data-table th { background: var(--primary); color: white; font-weight: 600; }
+  table.data-table tr:nth-child(even) { background: #f5f5f5; }
+  .table-wrap { overflow-x: auto; }
+  .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 18px 0; }
+  @media (max-width: 700px) { .compare-grid { grid-template-columns: 1fr; } }
+  .step-num {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 34px; height: 34px; background: var(--primary); color: white;
+    border-radius: 50%; font-weight: 700; font-size: 0.9em; margin-right: 12px; flex-shrink: 0;
+  }
+  .step-row { display: flex; align-items: flex-start; margin-bottom: 14px; }
+  .step-row p { margin: 0; }
+  .screenshot-wrap { margin: 16px 0 22px; text-align: center; }
+  .screenshot-wrap img {
+    max-width: 100%;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+  .screenshot-wrap .caption { margin-top: 8px; font-size: 0.85em; color: var(--text-secondary); }
+  ul, ol { margin-bottom: 14px; padding-left: 24px; }
+  li { margin-bottom: 6px; }
+  .flow-diagram { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 8px; margin: 22px 0; font-size: 0.92em; }
+  .flow-step { background: var(--primary); color: white; padding: 10px 18px; border-radius: 10px; font-weight: 600; }
+  .flow-step.human { background: var(--accent); }
+  .flow-arrow { color: var(--text-secondary); font-size: 1.4em; }
+  .footer {
+    text-align: center; padding: 32px; color: var(--text-secondary);
+    font-size: 0.85em; border-top: 1px solid var(--border); margin-top: 40px;
+  }
+  code { background: #eceff1; padding: 2px 6px; border-radius: 4px; font-size: 0.9em; }
+  .tag {
+    display: inline-block; background: #e3f2fd; color: var(--primary);
+    padding: 2px 10px; border-radius: 12px; font-size: 0.8em; margin: 2px 4px 2px 0;
+  }
+  .highlight-box {
+    background: linear-gradient(135deg, #e3f2fd, #e8f5e9);
+    border-radius: 12px; padding: 20px 24px; margin: 18px 0; border: 1px solid #bbdefb;
+  }
+  .video-embed { margin: 20px 0; text-align: center; }
+  .video-embed iframe, .video-embed video { max-width: 100%; border: none; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
+  .src-note { font-size: 0.85em; color: var(--text-secondary); }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="badge">AI Quest &mdash; Investigate What</div>
+  <h1>AI for HR performance evaluation: when daily work data replaces the evaluator's memory</h1>
+  <p class="subtitle">How Ubie (Japan) handed almost the whole evaluation process to AI &mdash; how data is collected, how AI processes it, where humans stay &mdash; and how Scuti AI could apply it safely</p>
+</div>
+
+<div class="container">
+
+<nav class="toc">
+  <h2>Contents</h2>
+  <ol>
+    <li><a href="#s1">The two sources &amp; Ubie's context</a></li>
+    <li><a href="#s2">Why hand evaluation to AI? &mdash; 4 purposes</a></li>
+    <li><a href="#s3">3 design principles</a></li>
+    <li><a href="#s4">How daily activity data is collected and used</a></li>
+    <li><a href="#s5">Making AI evaluate correctly: 3-tier rubric &amp; human-on-the-loop</a></li>
+    <li><a href="#s6">What they learned &amp; what remains for humans</a></li>
+    <li><a href="#s7">My personal takeaways</a></li>
+    <li><a href="#s8">Applying it at Scuti AI: HR process, daily operations, privacy &amp; fairness</a></li>
+    <li><a href="#s9">Demo video &amp; how this blog was made</a></li>
+    <li><a href="#s10">Conclusion &amp; references</a></li>
+  </ol>
+</nav>
+
+<section id="s1">
+  <h2>1. The two sources &amp; Ubie's context</h2>
+  <p>This post summarises two Japanese sources by the same author:</p>
+  <ul>
+    <li><strong>The note article</strong> &ldquo;評価をAIに委ねたとき、人の役割はどこに残るのか&rdquo; (When evaluation is entrusted to AI, where does the human role remain?) by <strong>hashiyaman</strong> (Makito Hashiyama) &mdash; Engineering Manager, HRBP and generative-AI lead at <strong>Ubie</strong>, published 30 Sep 2026.</li>
+    <li><strong>The YouTube webinar</strong> &ldquo;Ubieが実践するAI時代の人事評価&rdquo; (about 1 h 4 min), hosted by Offers (overflow Inc.) with CEO Yuto Suzuki as moderator; streamed live on 17 Sep 2026 and uploaded to Ubie's official YouTube channel on 29 Sep 2026. The webinar includes a <strong>live screen demo</strong> of the system, which the article does not.</li>
+  </ul>
+  <h3>A few facts about Ubie first</h3>
+  <ul>
+    <li>Japanese health-tech company founded in 2017 by a doctor and an engineer, about 200 employees (per the webinar).</li>
+    <li>Organised as a <strong>holacracy</strong>: decision rights are tied to <em>roles</em>, not <em>people</em>; no middle managers, and one person often holds several roles.</li>
+    <li>Ubie used to run goal setting and feedback but did <strong>not link them to pay</strong>. When it decided to link evaluation to compensation, it redesigned the system around generative AI. Preparation started in 2025; it has been in use since <strong>April 2026</strong>.</li>
+  </ul>
+  <div class="card card-warning">
+    <strong>Reading note:</strong> this is one company with an unusually transparent culture (it even shares executive-meeting content internally). Not every detail transfers as-is. Section 8 discusses how to adapt it for Scuti AI.
+  </div>
+</section>
+
+<section id="s2">
+  <h2>2. Why hand evaluation to AI? &mdash; 4 purposes</h2>
+  <p>The article lists four purposes; the fourth underpins the other three:</p>
+  <table class="data-table">
+    <thead><tr><th style="width:28%">Purpose</th><th>Key idea (paraphrased)</th></tr></thead>
+    <tbody>
+      <tr><td><strong>1. Let people focus on the work</strong></td><td>Evaluation exists to grow the business, not as a goal in itself. Members digging through six months of memories to write self-reviews, and managers melting hours into calibration, is time Ubie wanted back.</td></tr>
+      <tr><td><strong>2. Remove bias from the process</strong></td><td>Human evaluation relies on the evaluator's memory and tacit judgement, usually in closed 1-on-1s and small calibration rooms. AI can apply <strong>one yardstick to everyone</strong>, review all the facts and leave a trace of its reasoning. AI is biased too, but its bias is <em>visible</em> and therefore fixable.</td></tr>
+      <tr><td><strong>3. Match the AI-era way of working</strong></td><td>Job boundaries are melting: PdMs code, engineers do market research, sales builds prototypes, one back-office person covers HR, admin and accounting with AI's help. A single evaluator cannot master every specialty; AI can read across many.</td></tr>
+      <tr><td><strong>4. Create a pull for recording everything</strong></td><td>AI cannot read what was never recorded. Instead of ordering &ldquo;write things down&rdquo;, Ubie made &ldquo;unrecorded work is not evaluated&rdquo; the rule, so recording benefits the employee. They also automated collection and let people add information so those whose work is hard to log are not penalised.</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section id="s3">
+  <h2>3. 3 design principles</h2>
+  <h3>3.1. Only the CEO makes the final decision</h3>
+  <p>The official process has 5 steps, with <strong>no managers or executives in between</strong>:</p>
+  <div class="flow-diagram">
+    <span class="flow-step">① Activity data accumulates</span><span class="flow-arrow">&rarr;</span>
+    <span class="flow-step">② AI drafts</span><span class="flow-arrow">&rarr;</span>
+    <span class="flow-step human">③ Employee adds / disputes</span><span class="flow-arrow">&rarr;</span>
+    <span class="flow-step">④ AI verifies</span><span class="flow-arrow">&rarr;</span>
+    <span class="flow-step human">⑤ CEO approves</span>
+  </div>
+  <p>Humans appear at only <strong>two points</strong>: the employee (adding facts, objecting) and the CEO (approving). The goal is to cut essay-writing and adjustment work and to remove politics such as impressing your manager or horse-trading between managers in calibration. Every step, including objections, is logged and used to improve the AI.</p>
+  <p>In the webinar Q&amp;A the speaker explained that the CEO does not read everyone, but focuses on cases where the <strong>grade changed</strong> versus the previous term &mdash; aiming for 10% or less needing close review. He admitted this becomes a challenge at thousands of employees, but said they currently have <strong>no plan to let AI finalise grades with no human looking</strong>.</p>
+
+  <h3>3.2. Measure achievement and ability separately, then combine</h3>
+  <p><strong>Achievement</strong> is quantified through a two-axis &ldquo;achievement type&rdquo; frame: vertically, the <em>revenue side</em> (created sales/profit, moved deals forward) vs the <em>loss side</em> (cut costs, prevented incidents/losses); horizontally, <em>realised</em> vs <em>expected value</em>. Those four plus <em>productive capacity</em> (building mechanisms that expand what the organisation can do) are organised into 7 types in total.</p>
+  <table class="data-table">
+    <thead><tr><th>Role</th><th>How achievement becomes a number (examples in the article)</th></tr></thead>
+    <tbody>
+      <tr><td>Sales</td><td>Created revenue and profit</td></tr>
+      <tr><td>Product</td><td>Raised productive capacity, increased the likelihood of revenue</td></tr>
+      <tr><td>Operations / back office</td><td>Lowered costs, raised productivity</td></tr>
+      <tr><td>Security / branding</td><td>Prevented incidents or losses that would otherwise have happened</td></tr>
+    </tbody>
+  </table>
+  <p>In the Q&amp;A the speaker added: quality improvements are converted into &ldquo;future losses prevented&rdquo;; platform work is converted into the difference in development speed and labour cost with vs without that platform.</p>
+  <p><strong>Ability</strong> checks whether the achievement is <em>repeatable</em>: measured against the behavioural guideline &ldquo;<strong>Ubieness</strong>&rdquo; and the role-based skill map &ldquo;<strong>U-map</strong>&rdquo;. The two are combined into the overall grade.</p>
+  <div class="screenshot-wrap">
+    <img src="images/step-04-note-achievement-ability-crop.png" alt="Achievement × ability diagram from the note article">
+    <div class="caption">Figure 1 &mdash; Diagram from the note article: how achievement is quantified (left) and how ability is assessed (right); achievement grade × ability grade = overall grade</div>
+  </div>
+
+  <h3>3.3. Real-time feedback cycles</h3>
+  <p>A human evaluator can at best give feedback weekly, usually quarterly or half-yearly. AI has no such limit: employees can get feedback <strong>whenever they want, even daily</strong>, adjust immediately, and the new behaviour gets recorded for the next round. The key: <strong>the evaluating AI and the companion AI share the same logic</strong>, so following daily feedback naturally aligns people with what the company rewards.</p>
+</section>
+
+<section id="s4">
+  <h2>4. How daily activity data is collected and used</h2>
+  <p>This is the core. The system has 3 components: the <strong>Activity Report</strong>, the <strong>Evaluation AI agent</strong> and the <strong>Companion AI agent</strong> (伴走AIエージェント &mdash; an AI that &ldquo;runs alongside&rdquo; you).</p>
+  <div class="screenshot-wrap">
+    <img src="images/diagram-01-data-flow-en.png" alt="Custom data-flow diagram">
+    <div class="caption">Diagram 1 (drawn in HTML/SVG) &mdash; Data flow: daily activity &rarr; AI analysis &rarr; evaluation</div>
+  </div>
+
+  <h3>4.1. Step 1 &mdash; Collect: tool logs, every day, for everyone</h3>
+  <ul>
+    <li><strong>Sources:</strong> Slack, meeting minutes, GitHub, Jira, Notion, sales-deal records (per the article). The demo also shows Google Meet and Salesforce.</li>
+    <li><strong>Where it lands:</strong> per the webinar, data from these tools is aggregated in <strong>BigQuery</strong> (Google's data warehouse).</li>
+    <li><strong>Output:</strong> every day an <strong>Activity Report</strong> is generated automatically for each employee &mdash; the speaker likens it to an automatic &ldquo;daily report&rdquo; (日報): a summarised timeline per day, grouped by source (Meet, Jira, Slack&hellip;). Underneath it is <strong>NDJSON</strong>, so it is easy to process further.</li>
+    <li><strong>In the demo</strong> (webinar 27:10, fictional data): the Activity Report is filtered by person and time range, e.g. &ldquo;last 1 month&rdquo;. The author also has a separate note article on how the Activity Report was built.</li>
+    <li>You can ask AI about these reports (&ldquo;What has this engineer been doing lately?&rdquo;) per person, team or project.</li>
+  </ul>
+
+  <h3>4.2. Step 2 &mdash; Pre-process: code for precision, GenAI for interpretation</h3>
+  <p>A principle worth copying: <strong>never pour raw data into an LLM</strong>. Raw data is noisy and large. Extraction, counting and aggregation are done with <strong>SQL/code</strong>; data is trimmed so each AI call reads only what it needs, in a shape that makes fabrication hard; only inference, interpretation and summarisation go to generative AI.</p>
+
+  <h3>4.3. Step 3 &mdash; Fact Sheet: a term's activity turned into facts</h3>
+  <p>Guided by the rubric, the Evaluation AI agent condenses the term's Activity Reports into a <strong>Fact Sheet</strong> &mdash; the list of facts used for evaluation, ordered by time and role, <strong>each with its source</strong>. Employees can add missing work or correct mistakes.</p>
+  <p>The webinar's demo of a PdM's Fact Sheet (活動シート, around 28:35) shows exactly how the data is used:</p>
+  <ul>
+    <li><strong>Where from:</strong> 293 activity records in the period &mdash; chat 108, minutes 40, summaries 30, calendar events without minutes 30, tickets 25, code 21, CRM 17, voice memos 10, roles 6, documents 6.</li>
+    <li><strong>How:</strong> the 293 records were merged into 3 &ldquo;facts&rdquo;; linking to roles uses the registered role and project lists; unregistered work is marked &ldquo;unidentified&rdquo;.</li>
+    <li><strong>Not included:</strong> private channels, the content of 1-on-1s, feedback from the employee to the person in charge, and past grades/evaluation results.</li>
+    <li><strong>What you can check:</strong> the AI lists gaps in the data (e.g. a project not registering you as owner, 30 meetings without minutes because forwarding isn't set up) so the employee can fix them and the next term is more accurate.</li>
+  </ul>
+
+  <h3>4.4. Step 4 &mdash; Evaluation Report: grade, formula and reasons</h3>
+  <p>From the Fact Sheet and the employee's additions, the AI applies the rubric and produces an <strong>Evaluation Report</strong>: not only the grade but a traceable <strong>formula and reasoning</strong>, plus why it is not one grade higher and not one grade lower. In the demo (webinar 29:30) the draft lands on overall grade 4 (achievement 4, ability 3), with the range and &ldquo;what would move the grade&rdquo;.</p>
+
+  <h3>4.5. Step 5 &mdash; Companion AI agent: feedback any time</h3>
+  <p>Employees can ask open questions: &ldquo;What did I do last month?&rdquo;, &ldquo;Where should I grow next?&rdquo;. The agent reads the Activity Reports and answers against the evaluation criteria, ability standards and role. According to the speaker these conversations are also logged, so HR can analyse growth potential per person and company-wide to tune the system.</p>
+  <div class="highlight-box">
+    <strong>In one sentence:</strong> daily data passes through 3 layers &mdash; <em>raw logs</em> (tools) &rarr; <em>Activity Report</em> (filtered, summarised, sourced) &rarr; <em>Fact Sheet</em> (the term's facts, editable by the employee) &mdash; before reaching the <em>Evaluation Report</em>. The same data feeds the Companion agent for daily feedback.
+  </div>
+</section>
+
+<section id="s5">
+  <h2>5. Making AI evaluate correctly: 3-tier rubric &amp; human-on-the-loop</h2>
+  <h3>5.1. A rubric in 3 ordered tiers</h3>
+  <div class="screenshot-wrap">
+    <img src="images/step-17-youtube-rubric-slide-crop.png" alt="3-tier rubric slide">
+    <div class="caption">Figure 2 &mdash; Webinar 34:35: primary records &rarr; rubric 1 &rarr; rubric 2 &rarr; rubric 3 &rarr; final evaluation</div>
+  </div>
+  <table class="data-table">
+    <thead><tr><th style="width:22%">Tier</th><th>Question</th><th>Example</th></tr></thead>
+    <tbody>
+      <tr><td><strong>1. Collection</strong></td><td>Have we collected enough activity?</td><td>Sales needs deal data; engineers need code history; operations needs tickets and communication logs.</td></tr>
+      <tr><td><strong>2. Interpretation</strong></td><td>Is the activity understood correctly?</td><td>In a multi-person meeting, whose remark <em>started</em> the decision? Talking the most is not contributing the most.</td></tr>
+      <tr><td><strong>3. Judgement</strong></td><td>Are achievement and ability assessed soundly?</td><td>Is the AI guessing, or estimating achievement by the defined logic?</td></tr>
+    </tbody>
+  </table>
+  <p>Order matters: a later tier is not processed until the earlier one passes. Ubie originally had no rubric and could not tell whether a wrong result came from collection, interpretation or logic &mdash; tiers make failures <strong>locatable</strong>.</p>
+
+  <h3>5.2. Human-on-the-loop: AI grades itself, people fix the rubric</h3>
+  <div class="screenshot-wrap">
+    <img src="images/step-18-youtube-human-on-the-loop-crop.png" alt="Human-on-the-loop slide">
+    <div class="caption">Figure 3 &mdash; Webinar 36:00: the &ldquo;write &rarr; AI self-grades &rarr; send back&rdquo; loop is run by AI; humans stand outside, look at results and improve the rubric</div>
+  </div>
+  <ul>
+    <li>AI drafts &rarr; grades itself against the rubric &rarr; sends it back if below standard. This loop runs <strong>8&ndash;12 hours per person</strong> on average.</li>
+    <li>Humans don't review each draft; when a result is off, they treat it as a <strong>rubric bug</strong> and fix the rubric. People stand <em>on</em> the loop, not <em>in</em> it &mdash; so they don't become the bottleneck.</li>
+    <li><strong>Don't make AI imitate human scores.</strong> Using past human grades as the answer key would import human bias. Ubie teaches the AI the <em>criteria</em>: what humans value and what they ignore.</li>
+    <li><strong>Run it like software:</strong> a 3-person team (all with engineering or data-analysis backgrounds) keeps all logic in GitHub &mdash; visible to every employee, editable in parallel, tested per step, versioned so they can tell whether accuracy moved because of a rubric change or a new model.</li>
+  </ul>
+
+  <h3>5.3. Rolling it out so it isn't &ldquo;imposed by the company&rdquo;</h3>
+  <p>The article mentions three measures, but the list itself did not appear in the text I could extract; the webinar (around 38:50&ndash;40:30) spells them out:</p>
+  <ol>
+    <li><strong>A trial period</strong> where humans still calibrated and corrected results (as answer data), with those corrections made public, giving everyone time to get used to it.</li>
+    <li><strong>No hidden logic:</strong> all rubrics are public internally; anyone unsure why they got a grade can have AI explain the logic and send feedback if they find a flaw.</li>
+    <li><strong>Involve the whole company:</strong> some trial teams agreed to publish their evaluation results so everyone could openly debate &ldquo;does this make sense?&rdquo; &mdash; evaluation as a product built together.</li>
+  </ol>
+</section>
+
+<section id="s6">
+  <h2>6. What they learned &amp; what remains for humans</h2>
+  <div class="compare-grid">
+    <div class="card card-info">
+      <h3 style="margin-top:0">Make the purpose explicit, down to philosophy</h3>
+      <p>Ubie wrote three ordered statements: (1) give more reward to people with big achievements; (2) measure achievement quantitatively, including expected value; (3) assess ability, because repeatable results need it. (3) covers what pure achievement metrics miss: indirect work, mid/long-term work, platform building, incident prevention. Stop at &ldquo;reward people who deliver&rdquo; and AI can't know what &ldquo;deliver&rdquo; means &mdash; humans end up deciding every case.</p>
+    </div>
+    <div class="card card-info">
+      <h3 style="margin-top:0">Define the human part first</h3>
+      <p>Ubie's answer to &ldquo;if AI evaluates, what do humans do?&rdquo; is two things: <strong>connecting with people</strong> (building trust, getting first-hand information AI can't) and <strong>putting intent into work</strong> (planting a flag and owning it until it is done). Only with that answer could they split work between AI and humans. They also redefined roles into 5 types instead of job titles.</p>
+    </div>
+  </div>
+  <div class="card card-success">
+    <h3 style="margin-top:0">Data built for evaluation pays off beyond evaluation</h3>
+    <p>Executives see the state of the business without asking around; managers understand their members (one comment: &ldquo;status-update time disappeared, so meetings focus on substance&rdquo;); new joiners and people switching projects find information on their own. The author calls this &ldquo;pull to record&rdquo; the biggest learning.</p>
+  </div>
+  <h3>What remains for managers?</h3>
+  <p>The author's hypothesis: what remains is <strong>facing people's emotions</strong> &mdash; sitting with someone who has just received an AI evaluation and deciding their next growth step together. Conversely, gathering information for evaluations and writing them from personal experience will fade, and managers confined to one narrow specialty will lose relative value.</p>
+  <h3>Candid points from the Q&amp;A</h3>
+  <ul>
+    <li><strong>Accuracy isn't perfect:</strong> by the speaker's gut feeling, about 30% of cases come out right with AI alone; roughly another 30% only need a human to add guidance; for the rest, even how to guide is unclear &mdash; often senior people whose work has no precedent.</li>
+    <li><strong>Hardest parts:</strong> splitting contribution when 3&ndash;4 people achieve something together (the person who framed the problem vs those who executed), and mid/long-term work (who built the platform vs who uses it to earn).</li>
+    <li><strong>Feeling watched:</strong> the answer leaned on an existing culture of transparency, and on shifting the feeling from &ldquo;being monitored&rdquo; to &ldquo;being seen&rdquo; &mdash; paired with early support when workload rises or performance drops; avoid a company-vs-individual stance.</li>
+    <li><strong>Multiple roles:</strong> at the start of a term, the employee and leadership agree on an &ldquo;expected role&rdquo; (not a hard target); results outside the expectation still count.</li>
+    <li><strong>Surprise finding:</strong> human evaluators themselves split clearly between those who weight achievement and those who weight ability/potential.</li>
+  </ul>
+</section>
+
+<section id="s7">
+  <h2>7. My personal takeaways</h2>
+  <ol>
+    <li><strong>AI evaluation is a data problem, not a prompt problem.</strong> Most of Ubie's effort sits in the Activity Report: collecting, filtering, sourcing, SQL before LLM. That's engineering work &mdash; and why a 3-person team could build it.</li>
+    <li><strong>A rubric is a unit test for the evaluation pipeline.</strong> Three tiers (collection &ndash; interpretation &ndash; judgement) mirror how we debug pipelines: input, transformation or logic. I can reuse this for other agents, not just HR.</li>
+    <li><strong>Transparency is a prerequisite, not a feature.</strong> Everything that convinces employees (sourced facts, editable data, logic in GitHub, &ldquo;why not one grade up/down&rdquo;) is transparency. Without it, AI evaluation is just a new black box replacing an old one.</li>
+    <li><strong>Say clearly what humans still do.</strong> Otherwise staff and managers resist out of fear, not because the system is bad.</li>
+    <li><strong>Don't copy bias.</strong> Using old human scores as ground truth is the fastest way to automate unfairness. Teach criteria, not imitation.</li>
+    <li><strong>It isn't perfect, and they say so.</strong> Numbers like &ldquo;about 30% right on its own&rdquo; remind me to start AI as an <em>assistant</em> (sourced drafts) before ever considering it a <em>decision-maker</em>.</li>
+  </ol>
+</section>
+
+<section id="s8">
+  <h2>8. Applying it at Scuti AI: HR process, daily operations, privacy &amp; fairness</h2>
+  <p>Scuti AI is a Vietnamese AI/software outsourcing company. Most of our work already leaves digital traces: tickets, commits, pull requests, reviews, test results, project chat, client meeting minutes. In other words, <strong>the raw material for an Activity Report mostly exists already</strong>. The big difference from Ubie: much of that data lives in <em>clients'</em> projects, so security and contracts come first. What follows is my personal proposal, not a process Scuti currently runs.</p>
+  <div class="screenshot-wrap">
+    <img src="images/diagram-02-scuti-rollout-en.png" alt="Scuti AI rollout proposal diagram">
+    <div class="caption">Diagram 2 (drawn in HTML/SVG) &mdash; Data to use / not collect, a 4-phase roadmap, what humans keep, and guardrails</div>
+  </div>
+  <h3>8.1. Mapping Ubie's techniques onto Scuti's HR process</h3>
+  <div class="table-wrap">
+  <table class="data-table">
+    <thead><tr><th style="width:24%">Ubie technique</th><th>Applied at Scuti</th></tr></thead>
+    <tbody>
+      <tr><td>Daily Activity Report</td><td>Auto-summarise Jira/Backlog/Redmine, Git and project channels into draft daily stand-ups and weekly client reports. <strong>Useful even before touching evaluation</strong>: less report-writing, PMs/BrSEs see status faster.</td></tr>
+      <tr><td>Sourced Fact Sheet the employee can edit</td><td>Replace &ldquo;write your own achievements&rdquo; in periodic reviews: AI drafts the list with ticket/PR links, employees add &ldquo;invisible&rdquo; work (mentoring, helping other projects, night incident handling, interviewing candidates, tech-sharing posts).</td></tr>
+      <tr><td>Achievement frame (revenue/loss, realised/expected, productive capacity)</td><td>Define achievement per outsourcing role: <em>Dev</em> &mdash; features delivered on time, fewer bugs reaching the client; <em>QA</em> &mdash; defects caught before release (losses prevented); <em>BrSE/PM</em> &mdash; client retention, contract expansion, fewer surprise change requests; <em>platform people</em> &mdash; templates, CI/CD, internal libraries that speed up other projects.</td></tr>
+      <tr><td>Ability via behaviour guideline + skill map</td><td>Tie to existing competency/career-path frameworks (if any); add outsourcing-specific skills: client communication, Japanese/English, effort estimation, using AI at work.</td></tr>
+      <tr><td>Companion agent</td><td>An internal bot where staff ask &ldquo;what did I contribute this quarter, what should I improve to level up?&rdquo; before a 1-on-1 &mdash; so the 1-on-1 is a real conversation, not &ldquo;so what have you been doing?&rdquo;.</td></tr>
+      <tr><td>3-tier rubric + human-on-the-loop</td><td>HR plus a small engineering group manage the rubric as code (Git, review, tests); when results drift, fix the rubric rather than hand-editing individuals.</td></tr>
+      <tr><td>Data value beyond evaluation</td><td>Onboarding people into projects, resource allocation (who is overloaded), early warning on risky projects.</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <h3>8.2. Privacy &amp; fairness: non-negotiable conditions</h3>
+  <div class="card card-warning">
+    <ul style="margin-bottom:0">
+      <li><strong>Legal:</strong> activity data tied to a name is personal data. Work with legal under Vietnam's Decree 13/2023/ND-CP on personal data protection and the 2025 Law on Personal Data Protection (effective 1 Jan 2026): state the purpose, obtain consent, limit retention, assess impact before processing.</li>
+      <li><strong>Client confidentiality:</strong> client code and documents are under NDA. Use metadata (ticket, status, link) or run models in an approved environment; never send client data to external AI services without permission; never let a vendor train on it.</li>
+      <li><strong>Minimisation:</strong> work data only. No reading DMs, no keyloggers, no screenshots, no webcams. Copy Ubie's own &ldquo;not included&rdquo; list from the demo (private channels, 1-on-1 content, past grades).</li>
+      <li><strong>No raw vanity metrics:</strong> lines of code, commit counts and online hours are easy to game and unfair to people doing hard, low-output work.</li>
+      <li><strong>Fairness:</strong> each cycle, compare result distributions by role, project, gender and working language; people on projects with few digital tools (e.g. clients requiring work inside their own systems) must not be penalised for &ldquo;missing logs&rdquo;.</li>
+      <li><strong>Employee rights:</strong> see all data about yourself, correct it, add to it, appeal; every decision on pay, bonus, promotion or termination has an accountable human.</li>
+    </ul>
+  </div>
+  <h3>8.3. Quick guide: pilot it in one project</h3>
+  <div class="step-row"><span class="step-num">1</span><p><strong>Write the purpose in 3 sentences</strong> (like Ubie): why evaluate, how to measure achievement, why ability matters. Share it with the pilot team.</p></div>
+  <div class="step-row"><span class="step-num">2</span><p><strong>Pick one volunteer project</strong> with members' consent and, where project data is involved, the client's. Fix the source list: tickets + Git + public project channels.</p></div>
+  <div class="step-row"><span class="step-num">3</span><p><strong>Export with scripts</strong> (Jira/Backlog, GitHub/GitLab APIs) to NDJSON per person per day; filter with code first, give only summaries to the LLM.</p></div>
+  <div class="step-row"><span class="step-num">4</span><p><strong>Generate a weekly Activity Report visible only to its owner</strong>, used to write the weekly report. Collect feedback: what's missing, what's wrong.</p></div>
+  <div class="step-row"><span class="step-num">5</span><p><strong>At quarter end, shadow-run</strong>: AI drafts a Fact Sheet + evaluation; managers evaluate as usual; compare gaps to fix the rubric. No link to pay yet.</p></div>
+  <p>Example prompt for the Activity Report step (after code has filtered the data):</p>
+  <div class="prompt-box"><span class="label">SAMPLE PROMPT</span>You summarise work activity. Input: NDJSON lines for ONE employee on ONE day,
+each with: source (jira|git|chat|meeting), time, title, url, summary.
+
+Requirements:
+1. Write a short timeline by time of day, grouped by source.
+2. Every item MUST include its source url. Do not infer work not present in the data.
+3. If several people were involved, record only what the data shows this person did
+   (initiated / executed / reviewed). If unsure, write "role unclear".
+4. End with "data that may be missing" (e.g. meetings without minutes).
+5. Do not evaluate, score or comment on the person.</div>
+</section>
+
+<section id="s9">
+  <h2>9. Demo video &amp; how this blog was made</h2>
+  <p>The whole source-reading process was recorded in <strong>one</strong> continuous video: open the note article &rarr; scroll key sections &rarr; open the YouTube video, description, transcript panel, jump to the demo parts &rarr; open both diagrams &rarr; end on the finished (Vietnamese) blog scrolled top to bottom.</p>
+  <div class="video-embed">
+    <video src="video/ai-hr-performance-evaluation-demo.mp4" controls width="860" preload="metadata"></video>
+    <div class="src-note">File: <code>video/ai-hr-performance-evaluation-demo.mp4</code></div>
+  </div>
+  <p>The original webinar:</p>
+  <div class="video-embed">
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/X52tm3MsSjA" title="Ubieが実践するAI時代の人事評価" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+  </div>
+  <div class="card card-info">
+    <strong>How it was made, honestly:</strong> I read the note article directly and saved its text for cross-checking; the webinar transcript comes from Japanese auto-generated captions (ASR), which contain recognition errors (e.g. company names misheard), so I cross-checked against the slides and demo screens in the video before using anything. Both diagrams were drawn by me in HTML/SVG and exported to PNG. No account was logged into.
+  </div>
+</section>
+
+<section id="s10">
+  <h2>10. Conclusion &amp; references</h2>
+  <p>The lesson from Ubie isn't &ldquo;AI scores employees&rdquo;; it's how they turn daily activity into <strong>sourced facts</strong>, so AI does the collecting, summarising and reasoning while humans focus on setting criteria, fixing the rubric and talking with people. For Scuti AI, a sensible first step is an <strong>Activity Report that serves the employee</strong> (less report-writing), then a Fact Sheet for review cycles &mdash; always keeping the final decision with humans, and treating privacy and client confidentiality as preconditions.</p>
+  <h3>References</h3>
+  <ul>
+    <li><a href="https://note.com/hashiyaman/n/na03108694c97" target="_blank">hashiyaman &mdash; 評価をAIに委ねたとき、人の役割はどこに残るのか (note.com, 30 Sep 2026)</a></li>
+    <li><a href="https://www.youtube.com/watch?v=X52tm3MsSjA" target="_blank">Ubieが実践するAI時代の人事評価〜評価をAIに委ねたとき、人はループのどこに残るのか〜 (YouTube, Ubie official channel)</a></li>
+  </ul>
+</section>
+
+<div class="footer">
+  <p>AI Quest &mdash; Investigate What &middot; Scuti AI &middot; File: <code>blog-html/ai-hr-performance-evaluation/ai-hr-performance-evaluation-blog-en.html</code></p>
+  <p>Vietnamese version: <a href="ai-hr-performance-evaluation-blog.html">ai-hr-performance-evaluation-blog.html</a></p>
+</div>
+
+</div>
+</body>
+</html>

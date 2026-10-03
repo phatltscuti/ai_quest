@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chuẩn bị cho dự án hiện đại hoá code bằng AI &ndash; 6 bước trước khi để agent chạy</title>
+<style>
+  :root {
+    --primary: #0d47a1;
+    --primary-light: #1976d2;
+    --accent: #ff6d00;
+    --bg: #fafafa;
+    --card: #ffffff;
+    --text: #212121;
+    --text-secondary: #616161;
+    --border: #e0e0e0;
+    --code-bg: #263238;
+    --success: #2e7d32;
+    --success-bg: #e8f5e9;
+    --warning: #f57f17;
+    --warning-bg: #fff8e1;
+    --error: #c62828;
+    --gradient-start: #0d47a1;
+    --gradient-mid: #1565c0;
+    --gradient-end: #00838f;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background: var(--bg); color: var(--text); line-height: 1.75; font-size: 16px; }
+  .hero { background: linear-gradient(135deg, var(--gradient-start), var(--gradient-mid), var(--gradient-end)); color: white; padding: 64px 20px; text-align: center; }
+  .hero h1 { font-size: 2.3em; margin-bottom: 14px; font-weight: 700; letter-spacing: -0.5px; }
+  .hero .subtitle { font-size: 1.12em; opacity: 0.93; max-width: 760px; margin: 0 auto; }
+  .hero .badge { display: inline-block; background: rgba(255,255,255,0.18); padding: 6px 20px; border-radius: 20px; font-size: 0.84em; margin-bottom: 18px; }
+  .container { max-width: 940px; margin: 0 auto; padding: 32px 20px; }
+  .toc { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 28px 32px; margin-bottom: 38px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+  .toc h2 { font-size: 1.3em; margin-bottom: 14px; color: var(--primary); border: none; padding: 0; }
+  .toc ol { padding-left: 22px; }
+  .toc a { color: var(--primary-light); text-decoration: none; }
+  .toc a:hover { text-decoration: underline; }
+  section { margin-bottom: 44px; }
+  h2 { font-size: 1.55em; color: var(--primary); border-bottom: 3px solid var(--primary); padding-bottom: 8px; margin-bottom: 22px; }
+  h3 { font-size: 1.22em; color: var(--text); margin: 22px 0 10px; }
+  h4 { font-size: 1.05em; color: var(--text-secondary); margin: 16px 0 8px; }
+  p { margin-bottom: 14px; }
+  a { color: var(--primary-light); }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin-bottom: 20px; box-shadow: 0 1px 2px rgba(0,0,0,0.04); }
+  .card-accent { border-left: 4px solid var(--accent); }
+  .card-info { border-left: 4px solid var(--primary-light); }
+  .card-warning { border-left: 4px solid var(--warning); background: var(--warning-bg); }
+  .card-success { border-left: 4px solid var(--success); background: var(--success-bg); }
+  .prompt-box { background: var(--code-bg); color: #cfd8dc; border-radius: 10px; padding: 22px 24px; margin: 14px 0 22px; font-family: 'Cascadia Code', 'Fira Code', Consolas, monospace; font-size: 0.9em; line-height: 1.65; white-space: pre-wrap; position: relative; overflow-x: auto; }
+  .prompt-box .label { position: absolute; top: 8px; right: 12px; background: var(--accent); color: white; font-size: 0.7em; padding: 2px 12px; border-radius: 8px; font-family: 'Segoe UI', sans-serif; font-weight: 600; }
+  .table-wrap { overflow-x: auto; }
+  table.data-table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+  table.data-table th, table.data-table td { border: 1px solid var(--border); padding: 10px 14px; text-align: left; font-size: 0.93em; vertical-align: top; }
+  table.data-table th { background: var(--primary); color: white; font-weight: 600; }
+  table.data-table tr:nth-child(even) { background: #f5f5f5; }
+  table.data-table tr:hover { background: #e3f2fd; }
+  .step-num { display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px; background: var(--primary); color: white; border-radius: 50%; font-weight: 700; font-size: 0.9em; margin-right: 12px; flex-shrink: 0; }
+  .step-row { display: flex; align-items: flex-start; margin-bottom: 14px; }
+  .step-row p { margin: 0; }
+  .screenshot-wrap { margin: 16px 0; text-align: center; }
+  .screenshot-wrap img, .screenshot-wrap video { max-width: 100%; border: 1px solid var(--border); border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+  .screenshot-wrap .caption { margin-top: 8px; font-size: 0.85em; color: var(--text-secondary); }
+  ul, ol { margin-bottom: 14px; padding-left: 24px; }
+  li { margin-bottom: 6px; }
+  .flow-diagram { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 8px; margin: 22px 0; font-size: 0.92em; }
+  .flow-step { background: var(--primary); color: white; padding: 10px 18px; border-radius: 10px; font-weight: 600; }
+  .flow-arrow { color: var(--text-secondary); font-size: 1.4em; }
+  .footer { text-align: center; padding: 32px; color: var(--text-secondary); font-size: 0.85em; border-top: 1px solid var(--border); margin-top: 40px; }
+  code { background: #eceff1; padding: 2px 6px; border-radius: 4px; font-size: 0.9em; }
+  .tag { display: inline-block; background: #e3f2fd; color: var(--primary); padding: 2px 10px; border-radius: 12px; font-size: 0.8em; margin: 2px 4px 2px 0; }
+  .highlight-box { background: linear-gradient(135deg, #e3f2fd, #e8f5e9); border-radius: 12px; padding: 20px 24px; margin: 18px 0; border: 1px solid #bbdefb; }
+  .checklist { list-style: none; padding-left: 0; }
+  .checklist li { padding-left: 30px; position: relative; }
+  .checklist li::before { content: ""; position: absolute; left: 4px; top: 6px; width: 15px; height: 15px; border: 2px solid var(--primary-light); border-radius: 3px; background: #fff; }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="badge">AI Quest &mdash; Investigate What</div>
+  <h1>Chuẩn bị cho dự án hiện đại hoá code bằng AI</h1>
+  <p class="subtitle">Tóm tắt 6 bước chuẩn bị từ bài viết của Anthropic &mdash; và cách mình định áp dụng vào các dự án migrate hệ thống legacy PHP / Java / VB cho khách hàng Nhật tại Scuti AI</p>
+</div>
+
+<div class="container">
+
+<nav class="toc">
+  <h2>Mục lục</h2>
+  <ol>
+    <li><a href="#s1">Bài viết nói gì? (Tổng quan)</a></li>
+    <li><a href="#s2">Bước 1 &mdash; Xác định đích đến (Target)</a></li>
+    <li><a href="#s3">Bước 2 &mdash; Định nghĩa &ldquo;Certificate&rdquo;</a></li>
+    <li><a href="#s4">Bước 3 &mdash; Promotion Policy (chính sách duyệt)</a></li>
+    <li><a href="#s5">Bước 4 &mdash; Chuẩn bị điều kiện tiên quyết</a></li>
+    <li><a href="#s6">Bước 5 &amp; 6 &mdash; Xây workflow và chạy thật</a></li>
+    <li><a href="#s7">Chi phí token &amp; tài sản để lại sau dự án</a></li>
+    <li><a href="#s8">Công cụ đi kèm: Code Modernization plugin</a></li>
+    <li><a href="#s9">Roadmap tổng hợp (diagram)</a></li>
+    <li><a href="#s10">Bài học cá nhân</a></li>
+    <li><a href="#s11">Áp dụng vào dự án và công việc hằng ngày tại Scuti AI</a></li>
+    <li><a href="#s12">Preparation Checklist thực tế</a></li>
+    <li><a href="#s13">Video demo &amp; tài liệu tham khảo</a></li>
+  </ol>
+</nav>
+
+<!-- S1 -->
+<section id="s1">
+  <h2>1. Bài viết nói gì? (Tổng quan)</h2>
+  <p>Bài <a href="https://claude.com/blog/how-to-prepare-for-ai-driven-code-modernization-projects" target="_blank"><strong>How to prepare for AI-driven code modernization projects</strong></a> (blog Claude, 23/09/2026, tác giả Jonah Ezekiel &amp; Lexie Tonelli) xuất phát từ một quan sát đơn giản: với agent như Claude Code, việc <em>viết</em> thay đổi code cho một dự án modernization không còn mất nhiều năm mà chỉ còn vài tuần hoặc vài tháng. Nhưng tổ chức xung quanh &mdash; ai review, test chạy ở đâu, ai chịu trách nhiệm khi lên production &mdash; thì không tự nhanh lên theo.</p>
+  <div class="highlight-box">
+    <strong>Thông điệp chính:</strong> khi agent đã tăng tốc phần viết code, <strong>nút thắt chuyển từ &ldquo;tạo ra thay đổi&rdquo; sang &ldquo;huy động tổ chức để tiếp nhận thay đổi&rdquo;</strong>. Vì vậy phần chuẩn bị chủ yếu là việc của con người và quy trình, không phải của model.
+  </div>
+  <p>Bài viết đưa ra một khung <strong>6 bước</strong>, cộng thêm phần lưu ý về chi phí token:</p>
+  <div class="flow-diagram">
+    <div class="flow-step">1. Target</div><div class="flow-arrow">&rarr;</div>
+    <div class="flow-step">2. Certificate</div><div class="flow-arrow">&rarr;</div>
+    <div class="flow-step">3. Promotion Policy</div><div class="flow-arrow">&rarr;</div>
+    <div class="flow-step">4. Prerequisites</div><div class="flow-arrow">&rarr;</div>
+    <div class="flow-step">5. Workflow</div><div class="flow-arrow">&rarr;</div>
+    <div class="flow-step">6. Run</div>
+  </div>
+</section>
+
+<!-- S2 -->
+<section id="s2">
+  <h2>2. Bước 1 &mdash; Xác định đích đến (Define the Target)</h2>
+  <p>Trước khi cho agent làm bất cứ gì, cần trả lời: <em>hệ thống sau khi hiện đại hoá trông như thế nào?</em> Câu trả lời quyết định loại modernization, và mỗi loại có &ldquo;đích&rdquo; được mô tả ở mức chi tiết khác nhau.</p>
+  <div class="table-wrap">
+  <table class="data-table">
+    <thead><tr><th>Loại</th><th>Ý nghĩa</th><th>Khi nào chọn</th><th>Đích cần định nghĩa</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Uplift</strong></td><td>Nâng version trong cùng stack (ví dụ trong bài: C++11 &rarr; C++20)</td><td>Stack vẫn ổn, nhưng runtime hết hỗ trợ, lỗ hổng không được vá, dependency không nâng được</td><td>Phiên bản runtime + bộ package</td></tr>
+      <tr><td><strong>Transform</strong></td><td>Viết lại sang stack khác, <strong>giữ nguyên hành vi</strong> (ví dụ: COBOL &rarr; Java)</td><td>Bản thân stack là vấn đề, nhưng hành vi hiện tại đáng tin</td><td>Như Uplift + ngôn ngữ, framework, quy ước kiến trúc</td></tr>
+      <tr><td><strong>Reimagine</strong></td><td>Xây mới, <strong>hành vi cũng thay đổi</strong></td><td>Cả code lẫn nghiệp vụ đều cần đổi</td><td>Như Transform + spec hành vi mới viết thành văn bản</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <h3>Map codebase và trích xuất &ldquo;behavioral spec&rdquo;</h3>
+  <p>Việc quan trọng nhất ở bước này là tìm ra code cũ <em>thực sự</em> đang làm gì &mdash; thường khác với tài liệu. Quá trình này hay lôi ra những business logic không ai nhớ và các edge case ẩn. Claude có thể map dependency, mô tả workflow; plugin code modernization có các lệnh <code>assess</code>, <code>map</code>, <code>extract-rules</code> để đào business rule kèm trích dẫn tới file nguồn cho người review.</p>
+  <h3>Lý do và mục tiêu của dự án</h3>
+  <p>Bài viết nhấn mạnh: lợi ích lớn nhất thường là <strong>giảm rủi ro</strong> chứ không phải giảm chi phí &mdash; rủi ro từ lỗ hổng chưa vá, runtime hết hỗ trợ, và số kỹ sư còn hiểu stack cũ ngày càng ít.</p>
+</section>
+
+<!-- S3 -->
+<section id="s3">
+  <h2>3. Bước 2 &mdash; Định nghĩa &ldquo;Certificate&rdquo;</h2>
+  <p><strong>Certificate</strong> là tập điều kiện / bài kiểm tra mà <em>mọi</em> thay đổi phải vượt qua, và quan trọng là <strong>máy tự kiểm tra được, không cần người</strong>. Nhờ có certificate, workflow của agent mới có thể tự lặp (sửa đến khi pass) hoặc tự gắn cờ để người xem.</p>
+  <div class="card card-info">
+    <h4>Các thành phần có thể đưa vào certificate (theo bài viết)</h4>
+    <ul>
+      <li>Test suite gốc pass; test do Claude viết thêm pass; coverage đạt ngưỡng đã thống nhất</li>
+      <li>Benchmark hiệu năng nằm trong giới hạn</li>
+      <li>Review độc lập kiểu &ldquo;đối kháng&rdquo; (adversarial) bởi một Claude khác không tìm thấy lỗi chặn</li>
+      <li>Phát hiện regression UI bằng computer use</li>
+      <li>Phiên bản cũ và mới cho output giống hệt nhau; dữ liệu lưu trữ và wire format round-trip đúng</li>
+      <li>Staging không tăng error rate, latency hay alert</li>
+      <li>Static analysis và security scan không có phát hiện mới; build sạch, pass type check</li>
+    </ul>
+  </div>
+  <p>Certificate nên được xây <strong>cùng với những người sẽ review và đưa thay đổi lên production</strong> (dev, nhóm người dùng, business lead). Phép thử hay: <em>&ldquo;Họ có thoải mái bấm merge chỉ dựa vào bằng chứng của certificate không?&rdquo;</em></p>
+  <div class="table-wrap">
+  <table class="data-table">
+    <thead><tr><th>Loại</th><th>Certificate dựa vào đâu</th></tr></thead>
+    <tbody>
+      <tr><td>Uplift</td><td>So khớp với codebase gốc; test suite gốc là lõi</td></tr>
+      <tr><td>Transform</td><td>Vẫn so với hệ thống gốc, nhưng test cũ hiếm khi chạy được trên stack mới &rarr; dùng replay traffic production, differential testing cũ/mới, chạy song song với production</td></tr>
+      <tr><td>Reimagine</td><td>Neo vào behavioral spec: test viết từ spec, review đối kháng so với spec, differential check ở chỗ hệ mới giữ hành vi cũ. Chấp nhận sửa certificate khi spec rõ dần</td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<!-- S4 -->
+<section id="s4">
+  <h2>4. Bước 3 &mdash; Promotion Policy (chính sách duyệt)</h2>
+  <p>Agent có thể sinh ra rất nhiều thay đổi; nếu con người review từng dòng với cùng độ sâu thì dự án sẽ không bao giờ xong. <strong>Promotion policy</strong> là đường duyệt phân tầng, được thống nhất <em>trước</em>, quy định mức review của con người theo đặc điểm của từng thay đổi.</p>
+  <div class="card card-accent">
+    <h4>Bốn nguyên tắc chính</h4>
+    <ol>
+      <li><strong>Phân tầng theo blast radius và độ tự tin của agent</strong> &mdash; tận dụng cách phân loại change/risk sẵn có của tổ chức; đường critical vẫn được review đầy đủ.</li>
+      <li><strong>Sửa cờ lặp lại tại gốc</strong> &mdash; gom các thay đổi bị gắn cờ theo thời gian; nếu một loại cờ cứ lặp lại, sửa workflow hoặc certificate thay vì review từng trường hợp.</li>
+      <li><strong>Thiết kế định dạng output cùng reviewer</strong> &mdash; thống nhất thông tin, format, tín hiệu giúp review nhanh; cho reviewer xem mẫu sớm ở Bước 5.</li>
+      <li><strong>Dùng thời gian SME đúng chỗ</strong> &mdash; chuyên gia nghiệp vụ không đọc mọi diff, chỉ cần tiếp cận tầng rủi ro cao nhất và các quyết định agent đã gắn cờ.</li>
+    </ol>
+  </div>
+  <div class="card card-warning">
+    <strong>Đánh đổi tốc độ và độ sâu review:</strong> dự án chạy theo deadline cứng (ví dụ runtime sắp hết hỗ trợ) cần policy nhanh hơn, review nhẹ hơn và <em>thoả thuận rõ</em> là chấp nhận nhiều rủi ro hơn cho mỗi change. Dự án dài hơi thì review sâu và cutover chậm hơn. Trong môi trường bị quản lý chặt (regulated), chỉ đạo về policy nên đến từ lãnh đạo, và trách nhiệm khi bug lọt production là <strong>chia sẻ</strong>, không đổ lên từng người duyệt.
+  </div>
+</section>
+
+<!-- S5 -->
+<section id="s5">
+  <h2>5. Bước 4 &mdash; Chuẩn bị điều kiện tiên quyết (Prerequisites)</h2>
+  <p>Bước này kéo theo các team ngoài dự án: platform/hạ tầng, QA/release, security/compliance. Bài viết khuyên <strong>mở các cuộc trao đổi này sớm, song song khi Bước 1&ndash;3 đang chạy</strong>, vì đây thường là chỗ chờ đợi lâu nhất.</p>
+  <div class="table-wrap">
+  <table class="data-table">
+    <thead><tr><th>Nhóm</th><th>Cần chuẩn bị</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Môi trường</strong></td><td>Remote host riêng cho workflow, có codebase và các nguồn liên quan mà Claude truy cập được; năng lực chạy test theo yêu cầu certificate; các hệ thống củng cố certificate (telemetry production, setup chạy song song production, dữ liệu production để replay)</td></tr>
+      <tr><td><strong>Codebase &amp; CI/CD</strong></td><td>Dependency map dựa trên build log, phân tích import hoặc runtime trace; kế hoạch xử lý dependency/package trong target; compatibility check sẵn sàng tích hợp CI/CD; chính sách code freeze nếu làm in-place; kế hoạch truyền thông cho dev đang hoạt động</td></tr>
+      <tr><td><strong>Team &amp; review</strong></td><td>Các team phụ thuộc đồng ý tham gia (ký duyệt certificate, review promotion policy); phân bổ thời gian reviewer</td></tr>
+      <tr><td><strong>Security &amp; compliance</strong></td><td>Đường truy cập model cho Claude Code được phê duyệt dùng với source code; least-privilege (chỉ ghi vào nhánh modernization, không có credential production); che secret và PII trong nhánh; mỗi change truy vết được qua PR gắn transcript agent + bằng chứng certificate; kiểm tra license và lỗ hổng cho dependency mới</td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<!-- S6 -->
+<section id="s6">
+  <h2>6. Bước 5 &amp; 6 &mdash; Xây workflow và chạy thật</h2>
+  <h3>Bước 5: Build and refine the agentic workflow</h3>
+  <div class="step-row"><span class="step-num">1</span><div><p>Dựng một workflow động bằng Claude Code, bắt đầu từ <strong>code modernization plugin</strong>.</p></div></div>
+  <div class="step-row"><span class="step-num">2</span><div><p>Đặt mọi thứ workflow cần lên file system hoặc qua MCP: target, certificate, promotion policy, codebase, tài liệu, nguồn dữ liệu và tool.</p></div></div>
+  <div class="step-row"><span class="step-num">3</span><div><p>Chạy trên phần nhỏ của codebase; SME review cả thay đổi, quá trình agent làm, và bằng chứng certificate.</p></div></div>
+  <div class="step-row"><span class="step-num">4</span><div><p>Khi có vấn đề: <strong>sửa workflow, không sửa tay từng thay đổi</strong>. Mục tiêu là tin rằng khi nhân rộng, thay đổi vẫn pass certificate đều đặn và reviewer duyệt thoải mái theo policy.</p></div></div>
+  <h3>Bước 6: Run the modernization</h3>
+  <p>Chạy trọn vẹn một vòng trên một phân vùng nhỏ &mdash; kể cả review và merge theo promotion policy. Sửa lỗi khi còn rẻ, lặp lại tới khi tự tin rồi mới mở rộng ra toàn bộ codebase.</p>
+  <div class="table-wrap">
+  <table class="data-table">
+    <thead><tr><th>Mô hình triển khai</th><th>Phù hợp</th><th>Cách làm</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Separate build</strong></td><td>Transform, Reimagine</td><td>Xây hệ thống đích song song với hệ cũ, cutover khi hoàn tất</td></tr>
+      <tr><td><strong>In-place</strong></td><td>Uplift (hệ thống không được dừng, hoặc thay đổi quá nhanh để duy trì bản sao riêng)</td><td>Chia codebase thành phân vùng logic <strong>từ lá vào trong</strong>; freeze và modernize từng phân vùng; gate CI/CD để commit mới không làm hỏng phần đã modernize</td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<!-- S7 -->
+<section id="s7">
+  <h2>7. Chi phí token &amp; tài sản để lại sau dự án</h2>
+  <p>Bài viết thẳng thắn: lượng token dao động rất lớn giữa các dự án. Các yếu tố chính:</p>
+  <ul>
+    <li>Tỷ lệ code phải <em>đọc</em> so với code phải <em>sửa</em></li>
+    <li>Độ phức tạp của certificate &mdash; trong môi trường regulated, chi phí <strong>kiểm chứng thường lớn hơn chi phí viết thay đổi</strong></li>
+    <li>Nhu cầu viết test mới và sửa test</li>
+    <li>Công reconcile khi team khác vẫn merge code trong lúc chạy</li>
+  </ul>
+  <div class="card card-info">
+    <h4>Cách ước tính và tối ưu</h4>
+    <ul>
+      <li>Đo token trên pilot nhỏ rồi ngoại suy; coi các phần chưa thấy (như reconcile với codebase đang sống) là ẩn số &rarr; ra được <strong>mức chi phí sàn</strong>.</li>
+      <li>Tìm phần workflow ngốn token nhất để tối ưu; đặt các tín hiệu kiểm chứng tốn compute <strong>sau</strong> các cổng kiểm tra rẻ hơn.</li>
+      <li>Dùng model rẻ (như Sonnet) cho việc cơ học, khối lượng lớn mà certificate kiểm được trọn; dành model mạnh hơn cho biến đổi khó và review đối kháng.</li>
+      <li>Leo thang lên model đắt khi model rẻ không pass certificate &mdash; nhưng theo dõi tỉ lệ retry, vì nhiều lần thử rẻ có thể đắt hơn một lần thử đắt.</li>
+    </ul>
+  </div>
+  <div class="card card-success">
+    <strong>Tài sản để lại (Beyond the modernization):</strong> codebase đã hiện đại hoá, workflow tái sử dụng, certificate bằng văn bản định nghĩa thế nào là đúng, promotion policy đã được chấp thuận, và evidence trail cho mọi change đã merge. Bài khuyên đóng gói thành <strong>playbook</strong> để dùng lại cho lần nâng cấp / viết lại sau.
+  </div>
+</section>
+
+<!-- S8 -->
+<section id="s8">
+  <h2>8. Công cụ đi kèm: Code Modernization plugin</h2>
+  <p>Bài viết dẫn tới plugin <a href="https://github.com/anthropics/claude-plugins-official/tree/main/plugins/code-modernization" target="_blank">code-modernization</a> trong repo <code>anthropics/claude-plugins-official</code>. Mình đọc thêm README của plugin (nguồn phụ, không nằm trong bài gốc) để hiểu cụ thể hơn:</p>
+  <div class="prompt-box"><span class="label">CÀI ĐẶT</span>/plugin install code-modernization@claude-plugins-official</div>
+  <ul>
+    <li>Quy trình theo các lệnh: <code>modernize</code> (ghi ý định vào <code>INTENT.md</code>) &rarr; <code>modernize-preflight</code> &rarr; <code>modernize-assess</code> &rarr; <code>modernize-map</code> &rarr; <code>modernize-extract-rules</code> / <code>modernize-review</code> &rarr; <code>modernize-brief</code> &rarr; uplift / transform / reimagine &rarr; <code>modernize-verify</code> &rarr; <code>modernize-harden</code>.</li>
+    <li>Business rule được trích dưới dạng Given/When/Then, phân mức P0/P1/P2, có trích dẫn file.</li>
+    <li><code>modernize-verify</code> trả về verdict PROVEN / PARTLY PROVEN / NOT PROVEN cho từng module &mdash; rất gần ý tưởng &ldquo;certificate&rdquo; của bài viết.</li>
+    <li>An toàn: source legacy không bị sửa (deny <code>Edit(/legacy/**)</code>), secret được tách vào file gitignore, nội dung trong code phân tích được coi là không tin cậy, không tự commit.</li>
+    <li>README liệt kê các lần chạy thử trên codebase công khai, trong đó có osCommerce (PHP &rarr; Python), Eclipse Jetty (Java 8 &rarr; 17), Spring PetClinic (Spring Boot 2 &rarr; 3) &mdash; khá sát loại dự án của chúng ta.</li>
+  </ul>
+</section>
+
+<!-- S9 -->
+<section id="s9">
+  <h2>9. Roadmap tổng hợp (diagram)</h2>
+  <p>Mình gom 6 bước, câu hỏi chính và đầu ra của từng bước vào một sơ đồ để dùng khi kick-off dự án:</p>
+  <div class="screenshot-wrap">
+    <img src="images/diagram-01-six-step-roadmap.png" alt="Diagram lộ trình 6 bước">
+    <div class="caption">Diagram 1 &ndash; Lộ trình 6 bước chuẩn bị cho dự án hiện đại hoá code bằng AI (tự vẽ bằng HTML/CSS)</div>
+  </div>
+</section>
+
+<!-- S10 -->
+<section id="s10">
+  <h2>10. Bài học cá nhân</h2>
+  <div class="card card-accent">
+    <ol>
+      <li><strong>&ldquo;AI viết code nhanh&rdquo; không đồng nghĩa &ldquo;dự án xong nhanh&rdquo;.</strong> Trước đây mình nghĩ cái khó của migration là viết lại code. Bài viết làm mình nhận ra phần chậm thật sự là review, môi trường test, quyền truy cập và sự đồng ý của các bên.</li>
+      <li><strong>Certificate là khái niệm đáng học nhất.</strong> Nó biến câu hỏi chủ quan &ldquo;code này ổn chưa?&rdquo; thành một danh sách điều kiện máy kiểm tra được. Có certificate thì agent mới tự lặp được, và reviewer mới có cơ sở để tin.</li>
+      <li><strong>Sửa quy trình, không sửa từng output.</strong> Khi agent làm sai, phản xạ của dev là sửa tay. Với khối lượng lớn, phải sửa prompt/workflow/certificate để lỗi đó không quay lại.</li>
+      <li><strong>Giảm rủi ro là lý do bán hàng tốt hơn giảm chi phí.</strong> Khi đề xuất migration cho khách, nói về EOL, lỗ hổng và người bảo trì sắp nghỉ thuyết phục hơn chỉ nói &ldquo;rẻ hơn&rdquo;.</li>
+      <li><strong>Pilot nhỏ đi trọn vòng</strong> trước khi scale, vừa để kiểm workflow, vừa để có số liệu token thật cho báo giá.</li>
+    </ol>
+  </div>
+</section>
+
+<!-- S11 -->
+<section id="s11">
+  <h2>11. Áp dụng vào dự án và công việc hằng ngày tại Scuti AI</h2>
+  <p>Scuti AI là công ty outsourcing tại Việt Nam; nhiều khách hàng Nhật đang vận hành hệ thống legacy (PHP cũ, Java/Struts, VB6/VB.NET). Dưới đây là cách mình đề xuất áp dụng 6 bước &mdash; đây là kế hoạch / đề xuất của mình, chưa phải quy trình chính thức của công ty.</p>
+  <div class="table-wrap">
+  <table class="data-table">
+    <thead><tr><th>Bước</th><th>Áp dụng cụ thể</th></tr></thead>
+    <tbody>
+      <tr><td>1. Target</td><td>Ở giai đoạn báo giá, phân loại rõ với khách: PHP 5 &rarr; PHP 8 hay Java 8 &rarr; 17 là <strong>Uplift</strong>; VB6 &rarr; C#/.NET là <strong>Transform</strong>; &ldquo;làm lại hệ thống theo quy trình mới&rdquo; là <strong>Reimagine</strong>. Tài liệu đặc tả (仕様書) của hệ legacy thường đã cũ &rarr; dùng Claude Code / plugin trích business rule từ code kèm trích dẫn file, rồi xuất bản tóm tắt để khách xác nhận.</td></tr>
+      <tr><td>2. Certificate</td><td>Biến certificate thành phần của <strong>tiêu chí nghiệm thu</strong> (受入基準) ghi trong hợp đồng / kế hoạch test: test cũ pass, so sánh output cũ/mới trên cùng bộ dữ liệu, scan bảo mật sạch, benchmark không tệ hơn. Khách Nhật thường rất kỹ về chất lượng, nên có bằng chứng tự động là lợi thế.</td></tr>
+      <tr><td>3. Promotion Policy</td><td>Thống nhất với PM/BrSE và khách: module tiền, tính thuế, phân quyền &rarr; review đầy đủ; thay đổi cơ học (đổi API deprecated, cú pháp) &rarr; review mẫu. Báo cáo review theo một format cố định (song ngữ Việt&ndash;Nhật nếu cần).</td></tr>
+      <tr><td>4. Prerequisites</td><td>Hỏi khách <strong>ngay tuần đầu</strong>: có được phép dùng AI với source code không (NDA/hợp đồng), có môi trường staging/dữ liệu test đã che 個人情報 không, ai bên khách ký duyệt. Dựng Docker cho hệ cũ để chạy so sánh.</td></tr>
+      <tr><td>5. Workflow</td><td>Dựng workflow trên repo nội bộ với plugin code-modernization; giữ <code>INTENT.md</code>, certificate, policy trong repo để mọi thành viên (và agent) đọc cùng nguồn.</td></tr>
+      <tr><td>6. Run</td><td>Chọn 1 module nhỏ, ít phụ thuộc làm pilot; đo token/thời gian để báo giá phần còn lại sát hơn. Với hệ thống khách vẫn đang phát triển song song, dùng in-place + code freeze theo phân vùng.</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <h3>Trong công việc hằng ngày (không cần dự án migration lớn)</h3>
+  <ul>
+    <li><strong>Trước khi giao task cho agent:</strong> viết 3 dòng &ldquo;đích&rdquo; + &ldquo;thế nào là xong&rdquo; (mini-certificate: lệnh test nào phải pass, lint nào phải sạch).</li>
+    <li><strong>Khi review PR do AI tạo:</strong> yêu cầu PR ghi rõ bằng chứng (kết quả test, diff output) thay vì chỉ đọc code.</li>
+    <li><strong>Khi agent mắc cùng một lỗi lần thứ hai:</strong> cập nhật CLAUDE.md / prompt / rule chứ không chỉ sửa tay.</li>
+    <li><strong>Phân quyền agent:</strong> chỉ làm trên nhánh riêng, không có credential production, không đọc file chứa secret.</li>
+  </ul>
+  <div class="prompt-box"><span class="label">VÍ DỤ PROMPT KICK-OFF (đề xuất)</span>Đọc toàn bộ thư mục legacy/ (PHP 5.6, không được sửa file trong đó).
+1. Liệt kê dependency (composer, extension PHP, hàm deprecated) có trích dẫn file:dòng.
+2. Trích business rule dạng Given/When/Then cho module billing, đánh mức P0/P1/P2.
+3. Đề xuất certificate cho việc nâng lên PHP 8.3: test nào cần có, so sánh output nào.
+Ghi kết quả vào analysis/ dưới dạng Markdown. Không commit.</div>
+</section>
+
+<!-- S12 -->
+<section id="s12">
+  <h2>12. Preparation Checklist thực tế</h2>
+  <p>Checklist mình dùng trước khi cho agent chạy quy mô lớn (tổng hợp từ bài viết + đề xuất riêng cho bối cảnh outsourcing):</p>
+  <div class="screenshot-wrap">
+    <img src="images/diagram-02-preparation-checklist.png" alt="Diagram preparation checklist">
+    <div class="caption">Diagram 2 &ndash; Preparation checklist theo 4 nhóm + cổng trước khi scale</div>
+  </div>
+  <div class="compare-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;">
+    <div class="card card-info">
+      <h4>A. Đích &amp; lý do</h4>
+      <ul class="checklist">
+        <li>Đã chọn Uplift / Transform / Reimagine và ghi lại</li>
+        <li>Có dependency map dựa trên build log / import / runtime</li>
+        <li>Business rule đã trích, có trích dẫn, đã được khách review</li>
+        <li>Lý do dự án nêu rõ rủi ro (EOL, CVE, thiếu người)</li>
+      </ul>
+    </div>
+    <div class="card card-info">
+      <h4>B. Certificate &amp; Policy</h4>
+      <ul class="checklist">
+        <li>Certificate viết thành văn bản, máy tự kiểm được</li>
+        <li>Reviewer xác nhận &ldquo;sẽ merge dựa trên bằng chứng này&rdquo;</li>
+        <li>Phân tầng review đã thống nhất; critical path review đầy đủ</li>
+        <li>Đã thống nhất mức rủi ro chấp nhận nếu deadline gấp</li>
+      </ul>
+    </div>
+    <div class="card card-info">
+      <h4>C. Môi trường &amp; CI/CD</h4>
+      <ul class="checklist">
+        <li>Remote host riêng, đủ năng lực chạy test</li>
+        <li>Hệ cũ chạy được để so sánh output (hoặc có dữ liệu replay)</li>
+        <li>Code freeze + kế hoạch thông báo cho dev</li>
+        <li>CI gate chặn làm hỏng phần đã modernize</li>
+      </ul>
+    </div>
+    <div class="card card-info">
+      <h4>D. Bảo mật &amp; hợp đồng</h4>
+      <ul class="checklist">
+        <li>Khách chấp thuận dùng model với source code</li>
+        <li>Least-privilege, không credential production</li>
+        <li>Secret / PII đã che trong nhánh làm việc</li>
+        <li>PR gắn transcript + evidence; check license/CVE dependency mới</li>
+      </ul>
+    </div>
+  </div>
+  <div class="card card-success">
+    <strong>Cổng trước khi scale:</strong> pilot 1 phân vùng nhỏ đã đi trọn vòng (agent sửa &rarr; certificate pass &rarr; duyệt theo policy &rarr; merge), đã đo token để ước tính chi phí sàn, và workflow đã được sửa theo phản hồi của SME.
+  </div>
+</section>
+
+<!-- S13 -->
+<section id="s13">
+  <h2>13. Video demo &amp; tài liệu tham khảo</h2>
+  <p>Video quay lại quá trình đọc bài và tổng hợp: mở bài gốc, cuộn qua các bước chính, mở trang plugin, hiển thị 2 diagram và cuối cùng là blog hoàn chỉnh này.</p>
+  <div class="screenshot-wrap">
+    <video controls width="100%" src="video/ai-driven-code-modernization-prep-demo.mp4"></video>
+    <div class="caption">Video demo &ndash; <a href="video/ai-driven-code-modernization-prep-demo.mp4">video/ai-driven-code-modernization-prep-demo.mp4</a></div>
+  </div>
+  <h3>Tài liệu tham khảo</h3>
+  <ul>
+    <li><a href="https://claude.com/blog/how-to-prepare-for-ai-driven-code-modernization-projects" target="_blank">Claude Blog: How to prepare for AI-driven code modernization projects</a> (nguồn chính)</li>
+    <li><a href="https://github.com/anthropics/claude-plugins-official/tree/main/plugins/code-modernization" target="_blank">GitHub: code-modernization plugin</a></li>
+    <li><a href="https://claude.com/blog/the-ai-native-sdlc-playbook" target="_blank">Claude Blog: The AI-native SDLC playbook</a></li>
+    <li><a href="https://resources.anthropic.com/code-modernization-playbook" target="_blank">Anthropic: Code modernization playbook</a></li>
+    <li><a href="https://claude.com/blog/how-ai-helps-break-cost-barrier-cobol-modernization" target="_blank">Claude Blog: How AI helps break the cost barrier to COBOL modernization</a></li>
+  </ul>
+</section>
+
+</div>
+
+<div class="footer">
+  AI Quest &mdash; Investigate What &bull; AI-driven Code Modernization Preparation &bull; 2026
+</div>
+
+</body>
+</html>

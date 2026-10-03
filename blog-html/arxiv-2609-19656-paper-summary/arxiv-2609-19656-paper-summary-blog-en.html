@@ -1,0 +1,383 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Self-Evolving Search Index (arXiv:2609.19656) – When an index learns how to be found</title>
+    <style>
+      *{box-sizing:border-box}
+      body{margin:0;font-family:Arial,sans-serif;background:#fff;color:#222;line-height:1.7}
+      a{color:#0066cc;text-decoration:none}
+      a:hover{text-decoration:underline}
+      .wrap{max-width:980px;margin:0 auto;padding:20px}
+      h1{margin:0 0 10px;font-size:28px}
+      h2{margin:28px 0 14px;font-size:22px;border-bottom:2px solid #ddd;padding-bottom:8px}
+      h3{margin:20px 0 10px;font-size:18px}
+      ul,ol{margin:8px 0;padding-left:22px}
+      p{margin:12px 0}
+      code{background:#f5f5f5;border:1px solid #ddd;padding:2px 6px;font-size:13px;font-family:monospace}
+      pre{white-space:pre-wrap;word-wrap:break-word;border:1px solid #ddd;background:#f5f5f5;padding:12px;overflow:auto;font-size:13px;font-family:monospace;margin:12px 0}
+      .hero{border:1px solid #ddd;padding:20px;margin-bottom:20px;background:#f9f9f9}
+      .meta{font-size:13px;color:#555}
+      .highlight{background:#fffbe6;border-left:4px solid #f5c542;padding:12px 16px;margin:16px 0}
+      .note{background:#eef6ff;border-left:4px solid #0066cc;padding:12px 16px;margin:16px 0}
+      .warn{background:#fdecea;border-left:4px solid #c62828;padding:12px 16px;margin:16px 0}
+      .table-wrap{overflow-x:auto}
+      .comparison{width:100%;border-collapse:collapse;margin:16px 0}
+      .comparison th,.comparison td{border:1px solid #ddd;padding:10px 12px;text-align:left}
+      .comparison th{background:#f0f0f0;font-weight:bold}
+      .comparison td.num{text-align:right;white-space:nowrap}
+      figure{margin:20px 0;text-align:center}
+      figure img{max-width:100%;border:1px solid #ddd}
+      figcaption{font-size:13px;color:#666;margin-top:6px}
+      .video-embed{margin:24px 0;text-align:center}
+      .video-embed video{max-width:100%;border:1px solid #ddd}
+      .toc{border:1px solid #ddd;padding:12px 20px;background:#fafafa}
+      .footer{margin-top:30px;font-size:12px;color:#666;border-top:1px solid #ddd;padding-top:20px}
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+
+      <div class="hero">
+        <h1>Self-Evolving Search Index – When an index learns how to be found</h1>
+        <p class="meta">
+          Summary of <a href="https://arxiv.org/abs/2609.19656" target="_blank">arXiv:2609.19656</a>
+          – <i>Self-Evolving Search Index</i> (Sangam Lee, Wonjae Lee, Sunghwan Kim, Deogyong Kim, Jaehoon Kim, Daye Nam, SeongKu Kang, Dongha Lee;
+          Yonsei University, Samsung Research, UC Irvine, Korea University). Submitted 17 Sep 2026, cs.IR / cs.AI, marked “Work in progress”.
+        </p>
+        <p>
+          Almost every RAG or AI-agent project we build shares a quiet bottleneck: the document <b>does</b> contain the answer,
+          but the retriever <b>does not find it</b>, because the way the document is indexed does not match the way users ask.
+          This paper proposes <b>Self-Index</b>: an LLM diagnoses where the index is weak, rewrites the “index keys”, validates them,
+          and repeats – with no relevance labels, no retriever retraining, and no change to the documents themselves.
+        </p>
+        <ul>
+          <li><b>Headline result:</b> on BRIGHT, average nDCG@10 rises by <b>+38.8% to +57.0%</b> depending on the retriever, while the best prior method gains about 9–13%.</li>
+          <li><b>Downstream:</b> search agents answer more accurately <b>and</b> call search less often; agent memory systems recall past experience better (+9.2% to +13.9%).</li>
+          <li><b>Takeaway for Scuti:</b> a “measure → diagnose → selectively fix → validate” loop that we can apply right away to RAG projects over Japanese clients’ documents.</li>
+        </ul>
+      </div>
+
+      <div class="toc">
+        <b>Contents</b>
+        <ol>
+          <li>Background: what is an index key and why does it matter?</li>
+          <li>Main contributions</li>
+          <li>Method: the Optimizer (3 stages) + the Query Simulator</li>
+          <li>Experimental results</li>
+          <li>Analysis: which parts really matter?</li>
+          <li>Limitations and things to read carefully</li>
+          <li>Personal learnings &amp; how to apply them at Scuti AI</li>
+          <li>Quick guide: how to try it</li>
+          <li>Demo video</li>
+          <li>Conclusion &amp; references</li>
+        </ol>
+      </div>
+
+      <h2>1. Background: what is an index key and why does it matter?</h2>
+      <p>
+        A retriever (BM25 or an embedding model) does not compare a question with the “meaning” of a document;
+        it compares it with <b>whatever was put into the index</b> to represent that document. The paper calls these representations <b>index keys</b>.
+        By default the only key is the raw text (or chunk). Each document <i>d</i> has a key set <i>K(d)</i>,
+        and the document’s score for query <i>q</i> is the score of its best-matching key:
+      </p>
+      <pre>score(q, d) = max over k in K(d) of rel(q, k)      // rel = cosine similarity or BM25</pre>
+      <p>
+        Enriching an index is not new: Doc2Query generates pseudo-questions per document, Anthropic’s Contextual Retrieval adds context/summaries,
+        EnrichIndex adds purpose + summary + QA pairs, SPIKE adds user “scenarios”… The paper points out two problems:
+      </p>
+      <ul>
+        <li><b>No fixed strategy wins everywhere.</b> Corpus type (prose, code, math, tables) and retriever type (sparse/dense) favour different key forms. In the paper, Doc2Query strongly helps BM25 on tables but hurts code, and lowers the average for dense retrievers.</li>
+        <li><b>Refinement is still done by humans:</b> someone has to inspect failing queries, guess which keys are at fault, edit the prompt/strategy (or label more data and retrain), and <b>reprocess the whole corpus</b> – slow, expensive, and repeated whenever new failures appear.</li>
+      </ul>
+      <div class="highlight">
+        <b>The paper’s question:</b> can an index <b>evolve by itself</b> to fit its retrieval environment – finding its own failures, fixing only what needs fixing, validating its own changes – without humans and without relevance labels?
+      </div>
+
+      <h2>2. Main contributions</h2>
+      <ol>
+        <li><b>The Self-Index framework</b> – brings the “self-evolving” paradigm (already used for LLMs/agents that improve themselves) to <b>index optimization</b>. The index diagnoses and refines its own keys across diverse retrieval demands.</li>
+        <li><b>Consistent gains across environments:</b> 3 retrievers (BM25, BGE-Large, Qwen3-Embedding-8B) × 4 corpus types (natural language, code, math, tables). Self-Index has the best average for every corpus type under every retriever, beating Doc2Query, SPIKE, RL-Index and EnrichIndex.</li>
+        <li><b>Downstream benefits:</b> search agents (BrowseComp-Plus) become more accurate with fewer search calls and lower online cost; agent memory (LongMemEval-V2) retrieves useful past interactions better.</li>
+      </ol>
+      <p>The official code is at <a href="https://github.com/augustinLib/Self-Index" target="_blank">github.com/augustinLib/Self-Index</a>.</p>
+
+      <h2>3. Method: the Optimizer (3 stages) + the Query Simulator</h2>
+      <figure>
+        <img src="images/step-04-figure1-overview-crop.png" alt="Figure 1 – Overview of Self-Index" />
+        <figcaption>Image 1 – The paper’s original Figure 1: Self-Exploration → Self-Diagnosis → Self-Revision → Self-Validation, moving the index from version t to t+1.</figcaption>
+      </figure>
+      <figure>
+        <img src="images/diagram-01-self-index-loop.png" alt="Self-Index loop diagram (own drawing)" />
+        <figcaption>Image 2 – My own diagram (HTML/SVG rendered to PNG, Vietnamese labels) of the loop, with the real configuration values from the paper.</figcaption>
+      </figure>
+
+      <h3>3.1. Ground rules</h3>
+      <ul>
+        <li><b>Never touch the document, only its “entrances”:</b> the original text is always kept as a fixed key, never revised or validated. Generated keys can be added, dropped or rewritten.</li>
+        <li><b>Max-score instead of weighted fusion:</b> earlier methods (SPIKE, EnrichIndex) need tuned weights to combine representations. Self-Index takes the max, removing one more knob a human would have to tune.</li>
+        <li><b>Budget:</b> at most 10 keys per document, including the original-text key.</li>
+      </ul>
+
+      <h3>3.2. The Optimizer – a three-stage loop</h3>
+      <p>The Optimizer is an LLM (Qwen3.6-35B-A3B in the main experiments) that can call the retriever and edit keys. Each iteration takes a batch of 128 queries and retrieves the top-30 keys per query.</p>
+      <table class="comparison">
+        <tr><th style="width:20%">Stage</th><th>What it does</th><th style="width:30%">Subtle point</th></tr>
+        <tr><td><b>① Self-Diagnosis</b></td>
+          <td>Runs the queries over the current index. For each retrieved key it builds a <b>co-retrieval profile</b>: which keys of <i>other</i> documents tend to appear alongside it, and how often. The LLM reads the document + its keys + these profiles and returns JSON: which key falls short, why, and how the key set should change (without writing new keys yet).</td>
+          <td>No relevance labels needed – inspired by <i>pseudo-relevance feedback</i> (Rocchio). Co-retrieval reveals which documents a key fails to distinguish from.</td></tr>
+        <tr><td><b>② Self-Revision</b></td>
+          <td>Only diagnosed documents are revised. The <b>whole key set</b> of a document is revised once per iteration (avoiding redundant keys). The LLM sees the “competing keys” of rival documents so it knows which distinctions to stress.</td>
+          <td>No predefined strategy: the LLM decides key form and length itself. The prompt asks for keys “in the words a searcher would use, not in the document’s words”.</td></tr>
+        <tr><td><b>③ Self-Validation</b></td>
+          <td>Every generated key (including kept ones) must pass three checks. Failing keys are dropped; if no newly proposed key survives, the old key set is kept.</td>
+          <td>Two of the three checks reuse the retriever’s own relevance function – no extra LLM calls.</td></tr>
+      </table>
+      <p><b>The three validation criteria</b> (grounded in Salton’s classic principles of good index terms):</p>
+      <ul>
+        <li><b>Faithfulness:</b> an LLM judge scores 0–3 whether the document really resolves the need the key describes; ≥ 2 is required. Blocks hallucinated keys.</li>
+        <li><b>Specificity:</b> the key is used as a query over the whole corpus; its source document must appear in the top-K. Keys that are too generic get dropped.</li>
+        <li><b>Separation:</b> the key’s maximum similarity to the competing keys must be <b>lower</b> than that of the current key set – the new key has to make the document stand out, not blend in.</li>
+      </ul>
+
+      <h3>3.3. Query Simulator – from reactive to proactive</h3>
+      <p>With the Optimizer alone, the index can only fix failures exposed by the queries it sees (reactive). The Query Simulator actively looks for <b>demands nobody has asked yet</b> (Self-Exploration):</p>
+      <ol>
+        <li>Sample <i>n</i> documents at random.</li>
+        <li><b>First LLM call:</b> describe the problem or confusion a person who has <i>not</i> read the document would have, without the document’s jargon or names.</li>
+        <li><b>Second call:</b> role-play that person and write <i>m</i> forum-style questions – <b>without seeing the original document</b>, to avoid copying its wording.</li>
+        <li>Filter by <b>Answerability</b> (LLM judge ≥ 2/3) and <b>Dissimilarity</b> (word-set Jaccard &lt; 0.8 against every query already used).</li>
+      </ol>
+      <div class="note">
+        <b>Worth noting:</b> in the main experiments <b>all</b> optimization queries come from the Query Simulator (20 iterations × 128 = 2,560 queries). Evaluation queries are never seen during optimization, so the gains are not from “studying the test”.
+      </div>
+
+      <h3>3.4. Example: one key evolving across iterations</h3>
+      <figure>
+        <img src="images/diagram-02-key-evolution.png" alt="Key evolution example (own drawing)" />
+        <figcaption>Image 3 – Two case studies (Appendix D.1) redrawn: the gold document moves from rank #63 → #2 and #140 → #3 purely through key changes; the document text is unchanged.</figcaption>
+      </figure>
+      <figure>
+        <img src="images/step-11-figure4-case-study-crop.png" alt="Figure 4 in the paper – case study" />
+        <figcaption>Image 4 – Figure 4 in the paper (original case study).</figcaption>
+      </figure>
+
+      <h2>4. Experimental results</h2>
+      <p>The paper answers three research questions: (RQ1) does it work across corpora and retrievers, (RQ2) does it help search agents, (RQ3) does it help agent memory. The retrieval metric is nDCG@10.</p>
+
+      <h3>4.1. RQ1 – Retrieval on BRIGHT (prose, code, math) and tables</h3>
+      <div class="table-wrap">
+      <table class="comparison">
+        <tr><th>Retriever</th><th>Base index (BRIGHT)</th><th>+ Self-Index</th><th>Gain</th><th>Runner-up</th></tr>
+        <tr><td>BM25</td><td class="num">14.5</td><td class="num"><b>20.4</b></td><td class="num"><b>+40.4%</b></td><td>RL-Index +9.2%</td></tr>
+        <tr><td>BGE-Large</td><td class="num">13.9</td><td class="num"><b>21.8</b></td><td class="num"><b>+57.0%</b></td><td>RL-Index +10.4%</td></tr>
+        <tr><td>Qwen3-Embedding-8B</td><td class="num">18.8</td><td class="num"><b>26.1</b></td><td class="num"><b>+38.8%</b></td><td>SPIKE +12.8%</td></tr>
+      </table>
+      </div>
+      <figure>
+        <img src="images/step-06-table1-full.png" alt="Table 1 BRIGHT retrieval results" />
+        <figcaption>Image 5 – Table 1 in the paper (mean of three runs).</figcaption>
+      </figure>
+      <p>On three table retrieval datasets (Spider 2.0, FIBEN, BEAVER – finding the right table in a DB schema) the average gain is <b>+49.1%</b> (BM25), <b>+17.9%</b> (BGE) and <b>+16.2%</b> (Qwen3-Emb), above EnrichIndex (+42.4%, +13.3%, +11.2%). Doc2Query actually <b>hurts</b> dense table retrieval (−3.2%, −7.1%) – evidence for “no fixed strategy wins everywhere”.</p>
+
+      <h3>4.2. RQ2 – Search agents on BrowseComp-Plus</h3>
+      <p>4 agent backbones (GPT-OSS-120B, GPT-5.4-nano, Gemini-3.7-Flash, Kimi-K2.5) × 2 retrievers. Agent, prompt, retriever and judge are fixed; only the index changes.</p>
+      <div class="table-wrap">
+      <table class="comparison">
+        <tr><th>Agent + Retriever</th><th>Accuracy base → Self-Index</th><th>Search calls</th></tr>
+        <tr><td>GPT-OSS-120B + BM25</td><td class="num">31.08 → <b>58.92</b> (+89.5%)</td><td class="num">21.16 → 16.62</td></tr>
+        <tr><td>GPT-5.4-nano + BM25</td><td class="num">36.51 → <b>64.94</b> (+77.9%)</td><td class="num">19.23 → 16.00</td></tr>
+        <tr><td>Gemini-3.7-Flash + BM25</td><td class="num">61.93 → <b>76.02</b> (+22.8%)</td><td class="num">11.20 → 8.84</td></tr>
+        <tr><td>Kimi-K2.5 + BM25</td><td class="num">50.96 → <b>71.93</b> (+41.1%)</td><td class="num">33.98 → 29.00</td></tr>
+        <tr><td>Kimi-K2.5 + Qwen3-Emb-8B</td><td class="num">60.00 → <b>64.10</b> (+6.8%)</td><td class="num">29.94 → 28.43</td></tr>
+      </table>
+      </div>
+      <ul>
+        <li>Self-Index gives the highest accuracy and evidence recall in <b>all 8</b> settings and <b>reduces search calls in all 8</b> (SPIKE sometimes increases them).</li>
+        <li>Gains are largest with a weak retriever (BM25); with a strong one (Qwen3-Emb-8B) accuracy gains are smaller (+3% to +23%).</li>
+        <li>Fewer search calls → fewer tokens → <b>lower online cost</b>. GPT-5.4-nano + BM25 with Self-Index matches the accuracy of DCI (an index-free agent that reads the corpus directly) with the same backbone, at lower cost.</li>
+        <li>When the corpus grows from 100K to 400K documents, Self-Index keeps accuracy stable without raising per-query cost, while SPIKE and especially DCI lose accuracy and get more expensive (Figure 3).</li>
+      </ul>
+      <figure>
+        <img src="images/step-07-table3-full.png" alt="Table 3 BrowseComp-Plus agent results" />
+        <figcaption>Image 6 – Table 3 in the paper: end-to-end search agent results on BrowseComp-Plus.</figcaption>
+      </figure>
+      <figure>
+        <img src="images/step-08-figure2-online-cost-crop.png" alt="Figure 2 – accuracy vs online cost" />
+        <figcaption>Image 7 – Figure 2 in the paper (accuracy vs online cost).</figcaption>
+      </figure>
+
+      <h3>4.3. RQ3 – Agent memory (LongMemEval-V2)</h3>
+      <p>Self-Index only changes retrieval keys; memory contents stay the same. Overall accuracy:</p>
+      <table class="comparison">
+        <tr><th>Memory system</th><th>Base</th><th>+ Self-Index</th><th>Gain</th></tr>
+        <tr><td>Query → Slice</td><td class="num">0.415</td><td class="num"><b>0.472</b></td><td class="num">+13.9%</td></tr>
+        <tr><td>Query → Slice+Notes</td><td class="num">0.448</td><td class="num"><b>0.503</b></td><td class="num">+12.4%</td></tr>
+        <tr><td>AgentRunbook-R</td><td class="num">0.532</td><td class="num"><b>0.581</b></td><td class="num">+9.2%</td></tr>
+      </table>
+      <p>
+        Gains appear in static, dynamic and workflow abilities, but <b>not</b> in “gotchas” (it even drops from 0.276 to 0.241 for Query → Slice), because gotchas depend more on how memory is <i>built</i> than how it is <i>retrieved</i>.
+        A very practical case: the agent needs the ServiceNow offboarding procedure for employee A, but memory only holds an offboarding run for employee B. The evolved key “automated employee offboarding hardware unassignment workflow” finds the old experience despite the different name, and the agent picks the right procedure.
+      </p>
+      <figure>
+        <img src="images/step-09-table4-agent-memory-crop.png" alt="Table 4 LongMemEval-V2" />
+        <figcaption>Image 8 – Table 4 in the paper: LongMemEval-V2 results.</figcaption>
+      </figure>
+
+      <h3>4.4. Offline cost</h3>
+      <p>Because only problematic documents are revised (instead of generating keys for the entire corpus as SPIKE does), LLM cost is much lower (Qwen3.6-35B-A3B priced at $0.07 input / $0.70 output per million tokens):</p>
+      <table class="comparison">
+        <tr><th>Dataset (BGE-Large)</th><th>SPIKE: nDCG@10 / cost</th><th>Self-Index after 20 iterations</th><th>Savings</th></tr>
+        <tr><td>Biology</td><td class="num">14.62 / $14.37</td><td class="num"><b>32.09</b> / $3.83</td><td class="num">73.3%</td></tr>
+        <tr><td>Robotics (code)</td><td class="num">14.40 / $11.74</td><td class="num"><b>22.58</b> / $3.26</td><td class="num">72.3%</td></tr>
+        <tr><td>TheoremQA-Theorem (math)</td><td class="num">6.35 / $10.11</td><td class="num"><b>14.65</b> / $8.85</td><td class="num">12.5%</td></tr>
+      </table>
+
+      <h2>5. Analysis: which parts really matter?</h2>
+      <table class="comparison">
+        <tr><th>Removed component</th><th>NL (26.6)</th><th>Code (22.1)</th><th>Math (17.2)</th><th>Meaning</th></tr>
+        <tr><td>Co-retrieval profile</td><td class="num">−6.9</td><td class="num">−5.4</td><td class="num">−1.3</td><td>Diagnosis must look at a key’s “neighbours”, not just the document.</td></tr>
+        <tr><td><b>All of Self-Validation</b></td><td class="num"><b>−10.5</b></td><td class="num"><b>−9.1</b></td><td class="num"><b>−5.3</b></td><td>Accepting every LLM proposal is <b>worse than the base index</b>.</td></tr>
+        <tr><td>Faithfulness</td><td class="num">−5.6</td><td class="num">−4.0</td><td class="num">−1.7</td><td rowspan="3">Every criterion contributes.</td></tr>
+        <tr><td>Specificity</td><td class="num">−6.0</td><td class="num">−6.1</td><td class="num">−4.3</td></tr>
+        <tr><td>Separation</td><td class="num">−2.7</td><td class="num">−5.3</td><td class="num">−5.1</td></tr>
+        <tr><td>Dissimilarity filter (Query Simulator)</td><td class="num">−4.4</td><td class="num">−3.6</td><td class="num">−2.4</td><td>Queries must be genuinely diverse.</td></tr>
+      </table>
+      <figure>
+        <img src="images/step-10-table5-ablation-crop.png" alt="Table 5 ablation" />
+        <figcaption>Image 9 – Table 5 (ablation) in the paper.</figcaption>
+      </figure>
+      <ul>
+        <li><b>Query source:</b> replacing the Query Simulator with existing synthetic queries (ReasonIR HQ) still beats the base index (NL 18.1 → 24.3), but the Query Simulator is better for every corpus type (NL 26.6, Code 22.1, Math 17.2). So the Optimizer also works with real user query logs.</li>
+        <li><b>Progressive evolution:</b> Self-Index passes SPIKE within a few iterations and keeps improving up to iteration 20 (Figure 6).</li>
+        <li><b>LLM backbone:</b> a 0.8B model is too weak (drops below base on 3 of 5 datasets); 9B and above all help; Qwen3.6-35B-A3B is best (22.4), a 304B model is not better (19.9). Bigger is not automatically better.</li>
+      </ul>
+      <figure>
+        <img src="images/step-12-figure6-evolution-crop.png" alt="Figure 6 – evolution over iterations" />
+        <figcaption>Image 10 – Figure 6: nDCG@10 over evolution iterations (dashed line = SPIKE).</figcaption>
+      </figure>
+
+      <h2>6. Limitations and things to read carefully</h2>
+      <div class="warn">
+        <ul>
+          <li>This is v1, self-described as “<b>Work in progress</b>”, not yet peer-reviewed.</li>
+          <li>Not every cell is a win: on LeetCode Self-Index is below the base index with BM25 (22.4 vs 24.4) and BGE (24.7 vs 26.8); on Spider 2.0 + BM25, EnrichIndex is higher (44.0 vs 42.3). The claim is about <b>per-corpus-type averages</b>, not every dataset.</li>
+          <li>Gains shrink when the retriever is already strong (Qwen3-Emb-8B on BrowseComp-Plus: +3% to +23% accuracy).</li>
+          <li>Offline cost counts token prices only, not GPU/hosting; the math dataset saves little (12.5%).</li>
+          <li>Corpora in the experiments are static; frequently changing documents are not evaluated.</li>
+        </ul>
+      </div>
+
+      <h2>7. Personal learnings &amp; how to apply them at Scuti AI</h2>
+      <p>
+        At Scuti most AI projects for Japanese clients are chatbots/RAG over internal documents (仕様書 specifications, マニュアル manuals, FAQs, tickets, DB schemas) and, increasingly, business-automation agents.
+        Reading this paper changed how I want to work in a few ways:
+      </p>
+      <h3>7.1. What I learned</h3>
+      <ol>
+        <li><b>RAG failures often sit at the “entrance”, not in the LLM.</b> When a chatbot answers wrongly, our reflex is to tweak the prompt or swap the model. Here, changing only the index keys (same retriever, same documents) raised agent accuracy by up to +78–90%. Next time I will check retrieval first.</li>
+        <li><b>“Write keys in the searcher’s words”</b> – especially true for Japanese clients: end users ask in everyday Japanese (「パスワードを忘れた時どうする？」) while documents use technical terms or English. That vocabulary gap is exactly what Self-Index narrows.</li>
+        <li><b>LLM-generated content without validation is worse than doing nothing.</b> Removing Self-Validation fell below the base index. The same applies to every LLM pipeline we run: summaries, generated test cases, spec translation… all need an explicit validation gate.</li>
+        <li><b>Selective fixes are cheaper than full rebuilds.</b> Touching only problematic documents saved 72–73% versus regenerating keys for the whole corpus – like fixing by bug report instead of refactoring everything.</li>
+        <li><b>Co-retrieval is a free debugging signal.</b> Documents that always come back together are often duplicates, old/new versions, or have keys that are too generic – very useful when cleaning a client’s knowledge base.</li>
+        <li><b>Keep the test set separate from optimization data.</b> The paper never uses evaluation queries during optimization. Japanese clients value objective numbers, so we should keep a fixed test set to report before/after.</li>
+      </ol>
+      <figure>
+        <img src="images/diagram-03-scuti-apply.png" alt="Rollout plan at Scuti (own drawing)" />
+        <figcaption>Image 11 – A proposed 4-week internal PoC plan (my proposal in Vietnamese, not from the paper).</figcaption>
+      </figure>
+
+      <h3>7.2. Applying it to current projects</h3>
+      <table class="comparison">
+        <tr><th>Situation at Scuti</th><th>Idea to apply</th></tr>
+        <tr><td>RAG chatbot over a Japanese client’s internal documents</td><td>Keep the original chunk + add question-style keys (Japanese, English) pointing to the same doc_id; use max-score; feed real query logs to the Optimizer.</td></tr>
+        <tr><td>Text-to-SQL / finding tables in a large schema</td><td>The paper does well on Spider 2.0/BEAVER: add keys that describe “what analysis this table supports” (e.g. the retention-analysis case) instead of only column names.</td></tr>
+        <tr><td>Automation agents (Claude Code, business agents) with memory</td><td>Index past experience by <b>procedure</b> (“offboarding + hardware return”) rather than by specific entities (people’s names, ticket IDs).</td></tr>
+        <tr><td>Multi-step search agents (deep research)</td><td>Better index → fewer search calls → fewer tokens and lower API cost, which matters on fixed-price client contracts.</td></tr>
+      </table>
+
+      <h3>7.3. Applying it to daily operations</h3>
+      <ul>
+        <li><b>Internal knowledge base</b> (project wiki, Backlog, QA procedures): each month take the “no result” searches as input, let an LLM propose extra keys/tags, and have a human approve before merging – a human-in-the-loop version of Self-Validation.</li>
+        <li><b>Reviewing LLM output</b> with three questions from the paper: is it faithful to the source? is it specific to this case? is it distinguishable from similar items?</li>
+        <li><b>Client data security:</b> the loop needs an LLM to read every document, so NDA-heavy projects must use a self-hosted model (the paper’s open Qwen3.6-35B-A3B is a viable option) or a client-approved endpoint.</li>
+      </ul>
+
+      <h2>8. Quick guide: how to try it</h2>
+      <h3>8.1. Read the paper efficiently (15 minutes)</h3>
+      <ol>
+        <li>Open the <a href="https://arxiv.org/abs/2609.19656" target="_blank">abstract page</a> → click <b>HTML (experimental)</b> to read in the browser (with a table of contents on the left).</li>
+        <li>Figure 1 + Section 3 for the loop; Tables 1, 3, 4 for results; Table 5 for ablations.</li>
+        <li>Appendix A has the <b>verbatim prompts</b> (Self-Diagnosis, Self-Revision, Faithfulness judge, Query Simulator) – the most valuable part if you want to implement it.</li>
+      </ol>
+
+      <h3>8.2. Run the official code</h3>
+      <p>From the repository README (I have <b>not run it</b>: it needs a GPU, Java 21 for BM25, and large model/dataset downloads):</p>
+      <pre>git clone --recurse-submodules https://github.com/augustinLib/Self-Index
+cd Self-Index
+bash setup.sh --cpu            # drop --cpu on a CUDA machine
+source venv/bin/activate
+python run.py list
+
+# The Optimizer talks to an OpenAI-compatible endpoint, e.g. vLLM:
+vllm serve Qwen/Qwen3.6-35B-A3B --served-model-name qwen3.6-35b-a3b --port 8000 --max-model-len 262144
+export LLM_BASE_URL=http://localhost:8000/v1</pre>
+
+      <h3>8.3. A “mini” version for your own RAG project</h3>
+      <p>My own simplified pseudo-code (condensed from Algorithms 1–3); works with any vector DB that lets several vectors point to one doc_id:</p>
+      <pre>for it in range(N_ITER):
+    queries = simulate_queries(sample(corpus, n))          # or real search logs
+    results = {q: retrieve_keys(q, top_k=30) for q in queries}
+    profiles = build_co_retrieval_profiles(results)        # which keys co-occur with which
+    for doc in docs_hit_by(results):
+        diag = llm_diagnose(doc, keys[doc], profiles)      # JSON: weak keys + revision guidance
+        if not diag.shortfalls: continue
+        proposal = llm_revise(doc, keys[doc], diag, competing_keys(doc))   # max 10 keys
+        passing = [k for k in proposal
+                   if faithful(doc, k) &gt;= 2                  # LLM judge 0-3
+                   and doc in search_docs(k, top_k=30)      # Specificity
+                   and max_sim(k, competing) &lt; max_sim(keys[doc], competing)]  # Separation
+        if any(k not in keys[doc] for k in passing):
+            keys[doc] = [doc.text] + passing                 # original text always kept
+evaluate(test_queries)   # separate test set, never used above</pre>
+      <div class="highlight">
+        <b>Starter tip:</b> you do not need the full loop on day one. “Original chunk + a few question-style keys + a Specificity filter (the key must retrieve its own document)” is already a cheap, measurable improvement that is easy to explain to a client.
+      </div>
+
+      <h2>9. Demo video</h2>
+      <p>The video walks through the whole reading session: arXiv → HTML version → key figures/tables → GitHub repo → illustration diagrams → the finished blog.</p>
+      <div class="video-embed">
+        <video controls preload="metadata" width="900" src="video/arxiv-2609-19656-paper-summary-demo.mp4"></video>
+        <p><a href="video/arxiv-2609-19656-paper-summary-demo.mp4" target="_blank">Open the video (MP4)</a></p>
+      </div>
+
+      <h2>10. Conclusion</h2>
+      <p>
+        Self-Index turns index optimization from repetitive manual work into a controlled automatic loop:
+        <b>diagnose from retrieval signals → fix only where needed → validate strictly → proactively explore new demands</b>.
+        The most striking result is not just higher nDCG but search agents that are both more accurate and cheaper.
+      </p>
+      <p><b>Three things to do now:</b></p>
+      <ol>
+        <li>Add a retrieval measurement step (Recall@k / nDCG@10 on a fixed test set) to every RAG project before touching prompts.</li>
+        <li>Try “original chunk + question-style keys + max-score + Specificity filter” on one live Japanese RAG project.</li>
+        <li>Put Faithful / Specific / Separated into the review checklist for LLM-generated content.</li>
+      </ol>
+
+      <h2>References</h2>
+      <ul>
+        <li><a href="https://arxiv.org/abs/2609.19656" target="_blank">arXiv:2609.19656 – Self-Evolving Search Index (abstract)</a></li>
+        <li><a href="https://arxiv.org/html/2609.19656v1" target="_blank">HTML (experimental) version</a></li>
+        <li><a href="https://arxiv.org/pdf/2609.19656" target="_blank">PDF</a></li>
+        <li><a href="https://github.com/augustinLib/Self-Index" target="_blank">Official code – github.com/augustinLib/Self-Index</a></li>
+        <li><a href="https://www.anthropic.com/engineering/contextual-retrieval" target="_blank">Anthropic – Introducing Contextual Retrieval</a> (cited by the paper as an index optimization method)</li>
+      </ul>
+
+      <div class="footer">
+        <p>File: <code>blog-html/arxiv-2609-19656-paper-summary/arxiv-2609-19656-paper-summary-blog-en.html</code></p>
+        <p>Figures/tables are taken from the paper's HTML version; diagrams are drawn by the author. All numbers are from paper v1 (17 Sep 2026).</p>
+      </div>
+    </div>
+  </body>
+</html>

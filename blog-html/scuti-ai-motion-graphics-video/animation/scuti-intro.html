@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Scuti AI – Motion Graphics Intro (HTML + GSAP)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,400;0,600;0,800;1,600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<style>
+  :root { --red:#e3121b; --red2:#ff3b44; --ink:#0b0b10; --white:#f6f6f8; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html, body { width:100%; height:100%; background:#000; overflow:hidden; font-family:'Be Vietnam Pro','Segoe UI',Arial,sans-serif; }
+  #stage { position:absolute; left:0; top:0; width:1920px; height:1080px; transform-origin:0 0; overflow:hidden;
+           background: radial-gradient(ellipse at 50% 45%, #2a070b 0%, #12060a 45%, #07070b 100%); color:var(--white); }
+  .abs { position:absolute; }
+  .center { left:50%; top:50%; transform:translate(-50%,-50%); }
+  #grid { left:-200px; top:-200px; width:2320px; height:1480px; opacity:.18;
+          background-image: linear-gradient(rgba(255,60,70,.25) 1px, transparent 1px), linear-gradient(90deg, rgba(255,60,70,.25) 1px, transparent 1px);
+          background-size: 80px 80px; }
+  #vignette { inset:0; background: radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,.65) 100%); pointer-events:none; }
+  .particle { width:6px; height:6px; border-radius:50%; background:var(--red2); box-shadow:0 0 12px var(--red2); opacity:.55; }
+  /* network carrier */
+  #net { left:780px; top:280px; width:360px; height:520px; }
+  #net line { stroke:var(--red); stroke-width:5; stroke-linecap:round; }
+  #net circle { fill:var(--red); filter: drop-shadow(0 0 14px rgba(255,40,50,.9)); }
+  /* shot 1 */
+  #kicker { left:0; width:100%; top:150px; text-align:center; font-weight:600; font-size:30px; letter-spacing:22px; color:#ff8a90; }
+  #h1 { left:1010px; top:330px; white-space:nowrap; font-size:104px; font-weight:800; line-height:1.12; }
+  #h1 .line { overflow:hidden; display:block; padding-bottom:8px; }
+  #h1 .w { display:inline-block; }
+  #h1 em { color:var(--red2); font-style:italic; font-weight:600; }
+  /* shot 2 */
+  #h2 { left:0; width:100%; top:430px; text-align:center; font-size:132px; font-weight:800; white-space:nowrap; }
+  #h2 .w { display:inline-block; margin:0 14px; }
+  #h2 .red { color:var(--red2); position:relative; }
+  #underline { left:1180px; top:610px; width:520px; height:14px; background:var(--red); border-radius:7px; transform-origin:0 50%; box-shadow:0 0 30px var(--red); }
+  /* shot 3 */
+  #s3title { left:0; width:100%; top:100px; text-align:center; font-size:64px; font-weight:800; }
+  #s3title span { color:var(--red2); }
+  #links line { stroke:rgba(255,70,80,.7); stroke-width:3; stroke-dasharray:10 10; }
+  .card { width:500px; padding:22px 30px; border-radius:22px; background:linear-gradient(145deg, rgba(40,10,14,.92), rgba(18,8,12,.92));
+          border:2px solid rgba(255,59,68,.55); box-shadow:0 0 40px rgba(227,18,27,.25), inset 0 0 30px rgba(255,59,68,.06); }
+  .card .ic { width:46px; height:46px; font-size:20px !important; border-radius:12px !important; border-radius:14px; background:var(--red); display:flex; align-items:center; justify-content:center; font-weight:800; font-size:24px; margin-bottom:12px; }
+  .card h3 { font-size:36px; white-space:nowrap; font-weight:800; line-height:1.15; }
+  .card p { font-size:28px; color:#ffb3b7; margin-top:6px; }
+  /* shot 4 */
+  #stats { left:110px; top:330px; width:1700px; display:flex; justify-content:space-between; }
+  .stat { width:400px; text-align:center; }
+  .stat .num { font-size:128px; font-weight:800; line-height:1; }
+  .stat .num small { font-size:80px; color:var(--red2); }
+  .stat .bar { height:10px; margin:30px auto 22px; width:220px; background:var(--red); border-radius:5px; transform-origin:0 50%; box-shadow:0 0 24px var(--red); }
+  .stat .lbl { font-size:32px; font-weight:600; color:#ffc2c5; }
+  #src { left:0; width:100%; top:880px; text-align:center; font-size:22px; color:rgba(255,255,255,.45); }
+  /* shot 5 */
+  #dragon { left:0; top:0; width:1920px; height:1080px; }
+  #lockup { left:0; top:0; width:1920px; height:1080px; }
+  #logoText { overflow:hidden; padding-top:6px; left:880px; top:395px; font-size:190px; font-weight:800; letter-spacing:-4px; line-height:1; white-space:nowrap; }
+  #logoText .ch { display:inline-block; position:relative; }
+  .idot { position:absolute; width:46px; height:46px; border-radius:50%; background:var(--red); box-shadow:0 0 22px var(--red); }
+  #tagline { left:880px; top:640px; font-size:32px; font-weight:600; color:#ffd5d7; white-space:nowrap; }
+  #tagline b { color:var(--red2); }
+  #url { left:880px; top:725px; font-size:34px; letter-spacing:6px; color:rgba(255,255,255,.7); }
+  #fade { inset:0; background:#000; opacity:0; }
+  /* preview controls (hidden when rendering) */
+  #ctrl { position:fixed; left:0; right:0; bottom:0; padding:10px 16px; background:rgba(0,0,0,.75); color:#fff; display:flex; gap:12px; align-items:center; font:14px 'Segoe UI',sans-serif; z-index:9; }
+  #ctrl button { background:#e3121b; border:0; color:#fff; padding:6px 14px; border-radius:6px; cursor:pointer; font-weight:600; }
+  #ctrl input { flex:1; accent-color:#e3121b; }
+  body.render #ctrl { display:none; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="grid" class="abs"></div>
+  <div id="particles"></div>
+
+  <!-- connector lines for services (shot 3) -->
+  <svg id="links" class="abs" width="1920" height="1080" style="left:0;top:0"></svg>
+
+  <!-- CARRIER OBJECT: 5-node network from the Scuti Ai logo -->
+  <svg id="net" class="abs" viewBox="-30 -30 420 580">
+    <g id="netLines">
+      <line x1="198" y1="0" x2="0" y2="303"/><line x1="198" y1="0" x2="28" y2="505"/>
+      <line x1="198" y1="0" x2="271" y2="376"/><line x1="198" y1="0" x2="343" y2="205"/>
+      <line x1="0" y1="303" x2="343" y2="205"/><line x1="0" y1="303" x2="271" y2="376"/>
+      <line x1="0" y1="303" x2="28" y2="505"/><line x1="343" y1="205" x2="271" y2="376"/>
+      <line x1="343" y1="205" x2="28" y2="505"/><line x1="271" y1="376" x2="28" y2="505"/>
+    </g>
+    <g id="netNodes">
+      <circle cx="198" cy="0" r="28"/><circle cx="343" cy="205" r="26"/><circle cx="0" cy="303" r="26"/>
+      <circle cx="271" cy="376" r="26"/><circle cx="28" cy="505" r="26"/>
+    </g>
+  </svg>
+
+  <!-- SHOT 1 -->
+  <div id="kicker" class="abs">VIETNAM · GENERATIVE AI</div>
+  <div id="h1" class="abs">
+    <span class="line"><span class="w">We</span> <span class="w">make</span></span><span class="line"><span class="w">services</span></span>
+    <span class="line"><em class="w">people</em> <em class="w">love</em></span>
+  </div>
+
+  <!-- SHOT 2 -->
+  <div id="h2" class="abs"><span class="w">by</span><span class="w">the</span><span class="w">power</span><span class="w">of</span><span class="w red">Gen AI.</span></div>
+  <div id="underline" class="abs"></div>
+
+  <!-- SHOT 3 -->
+  <div id="s3title" class="abs">What we <span>build</span></div>
+  <div id="cards"></div>
+
+  <!-- SHOT 4 -->
+  <div id="stats" class="abs">
+    <div class="stat"><div class="num">2015</div><div class="bar"></div><div class="lbl">Founded</div></div>
+    <div class="stat"><div class="num" data-to="400" data-suffix="+">400<small>+</small></div><div class="bar"></div><div class="lbl">Members (group)</div></div>
+    <div class="stat"><div class="num" data-to="300" data-suffix="+">300<small>+</small></div><div class="bar"></div><div class="lbl">Projects</div></div>
+    <div class="stat"><div class="num" data-to="6">6</div><div class="bar"></div><div class="lbl">Offices (group)</div></div>
+  </div>
+  <div id="src" class="abs">Source: scuti.asia</div>
+
+  <!-- SHOT 5: stylised dragon (illustrative, built from code) -->
+  <svg id="dragon" class="abs" viewBox="0 0 1920 1080">
+    <defs>
+      <linearGradient id="dg" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#ff4a52"/><stop offset="1" stop-color="#9c0610"/></linearGradient>
+    </defs>
+    <path id="dragonTrail" d="M -80 1150 C 220 950, 490 1000, 400 820 S 130 640, 220 560 S 290 520, 320 520"
+          fill="none" stroke="url(#dg)" stroke-width="44" stroke-linecap="round"/>
+    <path id="dragonScales" d="M -80 1150 C 220 950, 490 1000, 400 820 S 130 640, 220 560 S 290 520, 320 520"
+          fill="none" stroke="#ffd0d3" stroke-width="6" stroke-dasharray="4 26" stroke-linecap="round" opacity=".7"/>
+    <g id="dragonHead">
+      <!-- low-poly head, origin at neck joint (0,0), facing right -->
+      <polygon points="-40,-20 40,-70 20,10" fill="#c70d17"/>
+      <polygon points="40,-70 140,-40 20,10" fill="#e3121b"/>
+      <polygon points="140,-40 200,-18 120,8" fill="#ff3b44"/>
+      <polygon points="20,10 140,-40 120,8" fill="#b40a13"/>
+      <polygon points="20,10 120,8 180,22 60,46" fill="#8f0710"/>
+      <polygon points="-40,-20 20,10 60,46 -20,40" fill="#a3080f"/>
+      <polygon points="30,-62 -40,-150 0,-60" fill="#ffb3b7"/>
+      <polygon points="60,-64 30,-160 80,-62" fill="#ffd0d3"/>
+      <polygon points="-40,-20 -110,-60 -60,0" fill="#e3121b"/>
+      <polygon points="-30,30 -110,50 -40,-6" fill="#c70d17"/>
+      <circle cx="92" cy="-36" r="9" fill="#fff4c2"/>
+      <circle cx="94" cy="-36" r="4" fill="#1a0003"/>
+      <path d="M 196 -14 C 240 -40, 260 -10, 300 -30" fill="none" stroke="#ff8a90" stroke-width="4" stroke-linecap="round"/>
+      <path d="M 190 20 C 230 40, 260 20, 300 40" fill="none" stroke="#ff8a90" stroke-width="4" stroke-linecap="round"/>
+    </g>
+  </svg>
+
+  <div id="lockup" class="abs">
+    <div id="logoText" class="abs"><span class="ch">S</span><span class="ch">c</span><span class="ch">u</span><span class="ch">t</span><span class="ch" id="i1">i</span><span class="ch">&nbsp;</span><span class="ch">A</span><span class="ch" id="i2">i</span></div>
+    <div id="dot1" class="idot abs"></div><div id="dot2" class="idot abs"></div>
+    <div id="tagline" class="abs">We make services people love by the power of <b>Gen AI.</b></div>
+    <div id="url" class="abs">SCUTI.ASIA</div>
+  </div>
+
+  <div id="vignette" class="abs"></div>
+  <div id="fade" class="abs"></div>
+</div>
+
+<div id="ctrl"><a href="/studio/" style="color:#fff;text-decoration:none;font-weight:600;margin-right:4px">← Studio</a><button id="play">Pause</button><span id="tm">0.00s</span><input id="scrub" type="range" min="0" max="1000" value="0"><span>Scuti AI intro · HTML + GSAP</span></div>
+
+<script>
+const RENDER = new URLSearchParams(location.search).has('render');
+if (RENDER) document.body.classList.add('render');
+const stage = document.getElementById('stage');
+function fit(){ const s = Math.min(innerWidth/1920, innerHeight/1080); stage.style.transform = `scale(${s})`;
+  stage.style.left = ((innerWidth-1920*s)/2)+'px'; stage.style.top = ((innerHeight-1080*s)/2)+'px'; }
+addEventListener('resize', fit); fit();
+
+// ---------- build dynamic elements ----------
+const pWrap = document.getElementById('particles');
+let seed = 7; const rnd = () => (seed = (seed*16807) % 2147483647) / 2147483647; // deterministic random
+const parts = [];
+for (let i=0;i<46;i++){ const d=document.createElement('div'); d.className='particle abs';
+  d.style.left=(rnd()*1920)+'px'; d.style.top=(rnd()*1080)+'px'; const s=2+rnd()*6; d.style.width=d.style.height=s+'px';
+  pWrap.appendChild(d); parts.push(d); }
+
+const services = [
+  {ic:'AI', t:'Gen AI Consulting',    d:'Solve problems with Gen AI', x:150,  y:220},
+  {ic:'OCR',t:'Generative AI OCR',    d:'Read any document format',   x:1270, y:220},
+  {ic:'RAG',t:'Secure GAI (RAG)',     d:'Your knowledge, secured',    x:150,  y:540},
+  {ic:'D',  t:'Dify Support',         d:'Adopt AI fast',              x:1270, y:540},
+  {ic:'VN', t:'Software Outsourcing', d:'Vietnamese engineer teams',  x:710,  y:780},
+];
+const CW = 500, CH = 200;
+const cardsWrap = document.getElementById('cards'), links = document.getElementById('links');
+const cards = services.map(s => { const c=document.createElement('div'); c.className='card abs';
+  c.style.left=s.x+'px'; c.style.top=s.y+'px';
+  c.innerHTML=`<div class="ic">${s.ic}</div><h3>${s.t}</h3><p>${s.d}</p>`; cardsWrap.appendChild(c);
+  const l=document.createElementNS('http://www.w3.org/2000/svg','line');
+  l.setAttribute('x1',960); l.setAttribute('y1',540); l.setAttribute('x2',s.x+CW/2); l.setAttribute('y2',s.y+CH/2);
+  links.appendChild(l); return c; });
+const linkEls = [...links.querySelectorAll('line')];
+const toCenterX = (i)=>960-CW/2-services[i].x, toCenterY = (i)=>540-CH/2-services[i].y;
+
+// prepare line drawing
+const netLines = [...document.querySelectorAll('#netLines line')];
+netLines.forEach(l => { const L = Math.hypot(l.x2.baseVal.value-l.x1.baseVal.value, l.y2.baseVal.value-l.y1.baseVal.value);
+  l.style.strokeDasharray = L; l.style.strokeDashoffset = L; l.dataset.len = L; });
+const nodes = [...document.querySelectorAll('#netNodes circle')];
+const trail = document.getElementById('dragonTrail'), scales = document.getElementById('dragonScales');
+const TL = trail.getTotalLength(); trail.style.strokeDasharray = TL; trail.style.strokeDashoffset = TL;
+scales.style.opacity = 0;
+
+// ---------- master timeline ----------
+gsap.set(['#kicker','#h2','#underline','#s3title','#stats','#src','#lockup','#tagline','#url'], {opacity:0});
+gsap.set('#h1 .w', {yPercent:110});
+gsap.set(nodes, {scale:0, transformOrigin:'50% 50%'});
+gsap.set('#net', {scale:.8, rotation:-8, transformOrigin:'50% 50%'});
+gsap.set(cards, {opacity:0, scale:.3});
+gsap.set('.card > *', {opacity:0});
+gsap.set(linkEls, {opacity:0});
+gsap.set('#dragonHead', {opacity:0});
+gsap.set('#logoText .ch', {yPercent:115});
+gsap.set(['#dot1','#dot2'], {opacity:0});
+
+const tl = gsap.timeline({paused:true});
+const D = 18.0;
+const S2 = 4.15, S3 = 6.05, S4 = 9.75, S5 = 12.55;   // shot starts (v2 retime after critic round 1)
+
+// ambient drift for the whole duration (no frozen frames)
+tl.to('#grid', {x:80, y:80, duration:D, ease:'none'}, 0);
+parts.forEach((p,i)=> tl.to(p, {y:'-='+(60+ (i%7)*25), x:'+='+((i%5)-2)*30, opacity:.15+(i%4)*.15, duration:D, ease:'sine.inOut'}, 0));
+
+// SHOT 1 (0 - 3.9): network builds, headline
+tl.to(nodes[0], {scale:1, duration:.5, ease:'back.out(3)'}, 0.15)
+  .to(netLines, {strokeDashoffset:0, duration:.7, ease:'power2.out', stagger:.07}, 0.45)
+  .to(nodes.slice(1), {scale:1, duration:.45, ease:'back.out(3)', stagger:.12}, 0.6)
+  .to('#net', {scale:1, rotation:0, duration:1.6, ease:'power3.out'}, 0.2)
+  .fromTo('#kicker', {opacity:0, letterSpacing:'40px'}, {opacity:1, letterSpacing:'14px', duration:1.2, ease:'power3.out'}, 0.9)
+  .to('#net', {x:-480, duration:0.9, ease:'expo.inOut'}, 1.3)
+  .to('#h1 .w', {yPercent:0, duration:.7, ease:'power4.out', stagger:.09}, 1.95)
+// exit: headline leaves fast, network flies at the camera (foreground = transition)
+  .to(['#h1','#kicker'], {y:-80, opacity:0, duration:.35, ease:'power3.in'}, 3.4)
+  .to('#net', {x:0, scale:14, rotation:25, opacity:0, duration:.75, ease:'power4.in'}, 3.45);
+
+// SHOT 2 (S2 - S3): text arrives AFTER the fly-through lines have cleared
+tl.set('#h2', {opacity:1}, S2)
+  .from('#h2 .w', {yPercent:70, opacity:0, filter:'blur(14px)', duration:.55, ease:'expo.out', stagger:.11}, S2)
+  .fromTo('#h2', {scale:1}, {scale:1.06, duration:1.9, ease:'none', immediateRender:false}, S2)
+  .fromTo('#underline', {opacity:1, scaleX:0}, {scaleX:1, duration:.55, ease:'expo.out', immediateRender:false}, S2+.6)
+  .fromTo('#net', {x:0, scale:.15, rotation:-40, opacity:0}, {scale:.4, rotation:0, opacity:.85, y:-270, duration:1.4, ease:'power2.out', immediateRender:false}, S2)
+  .to('#h2 .w', {opacity:0, scaleY:.1, duration:.28, ease:'power3.in', stagger:.03}, S3-.3)
+  .to('#underline', {scaleX:0, transformOrigin:'100% 50%', duration:.28, ease:'power3.in'}, S3-.25)
+  .to('#net', {y:0, scale:.55, opacity:1, duration:.6, ease:'expo.inOut'}, S3-.35);
+
+// SHOT 3 (S3 - S4): services fly out from the network as solid chips, content appears on landing
+tl.fromTo('#s3title', {opacity:0, y:-40}, {opacity:1, y:0, duration:.5, ease:'power3.out', immediateRender:false}, S3+.2)
+  .to(linkEls, {opacity:1, duration:.35, stagger:.08}, S3+.05)
+  .fromTo(cards, {x:toCenterX, y:toCenterY}, {x:0, y:0, scale:1, duration:.75, ease:'back.out(1.5)', stagger:.1, immediateRender:false}, S3+.1)
+  .fromTo(cards, {opacity:0}, {opacity:1, duration:.15, ease:'power1.out', stagger:.1, immediateRender:false}, S3+.1);
+// v4 (critic round 3): content rides with the card from the start of the flight, so no empty outlines
+cards.forEach((c,i)=> tl.to(c.children, {opacity:1, duration:.2, stagger:.03}, S3+.1+i*.1+.05));
+tl.to('#net', {rotation:24, duration:3.6, ease:'sine.inOut'}, S3)
+  .to(linkEls, {strokeDashoffset:-160, duration:3.6, ease:'none'}, S3)
+  .to(cards, {boxShadow:'0 0 60px rgba(227,18,27,.55)', duration:.45, yoyo:true, repeat:1, stagger:.1}, S3+1.7)
+// exit: all cards collapse together, matched cut on the network scaling up
+  .to(cards, {x:toCenterX, y:toCenterY, scale:.2, opacity:0, duration:.4, ease:'power3.in'}, S4-.5)
+  .to(linkEls, {opacity:0, duration:.25}, S4-.5)
+  .to('#s3title', {opacity:0, y:-40, duration:.3, ease:'power3.in'}, S4-.5)
+  .to('#net', {scale:2.6, opacity:.12, rotation:60, duration:.75, ease:'expo.inOut'}, S4-.4);
+
+// SHOT 4 (S4 - S5): numbers from scuti.asia; the year is fixed (no counting)
+const nums = [...document.querySelectorAll('.stat .num[data-to]')];
+tl.set('#stats', {opacity:1}, S4)
+  .fromTo('.stat', {y:120, opacity:0}, {y:0, opacity:1, duration:.55, ease:'power3.out', stagger:.08, immediateRender:false}, S4)
+  .fromTo('.stat .bar', {scaleX:0}, {scaleX:1, duration:.7, ease:'expo.out', stagger:.08, immediateRender:false}, S4+.25)
+  .to('#src', {opacity:1, duration:.4}, S4+.5)
+  .to('#net', {rotation:110, duration:2.6, ease:'none'}, S4+.3);
+gsap.set(nums, {innerHTML:(i,n)=>'0'+(n.dataset.suffix?'<small>+</small>':'')});
+nums.forEach((n,i)=>{ const o={v:0}; const to=+n.dataset.to; const suf=n.dataset.suffix?'<small>+</small>':'';
+  tl.fromTo(o, {v:0}, {v:to, duration:1.2, ease:'power2.out', immediateRender:false, onUpdate:()=>{ n.innerHTML=Math.round(o.v)+suf; }}, S4+.1+(i+1)*.08); });
+tl.to('.stat', {y:80, opacity:0, duration:.35, ease:'power3.in'}, S5-.55)
+  .to('#src', {opacity:0, duration:.25}, S5-.55)
+// the carrier object stays on screen: it shrinks straight into its place in the logo lockup
+  .to('#net', {scale:.6, opacity:1, x:-270, y:0, rotation:360, duration:.6, ease:'expo.inOut'}, S5-.5);
+
+// SHOT 5 (S5 - D): dragon flight (overlaps the network move) then logo lockup
+const headPos = {p:0};
+const placeHead = () => { const pt = trail.getPointAtLength(TL*headPos.p), pt2 = trail.getPointAtLength(Math.max(0,TL*headPos.p-4));
+  const ang = Math.atan2(pt.y-pt2.y, pt.x-pt2.x)*180/Math.PI;
+  gsap.set('#dragonHead', {attr:{transform:`translate(${pt.x},${pt.y}) rotate(${ang}) scale(.8,${Math.abs(ang)>90?-.8:.8})`}}); };
+tl.set('#dragonHead', {opacity:1}, S5-.2)
+  .to(headPos, {p:1, duration:1.7, ease:'power2.inOut', onUpdate:placeHead}, S5-.2)
+  .to(trail, {strokeDashoffset:0, duration:1.7, ease:'power2.inOut'}, S5-.2)
+  .to(scales, {opacity:.7, duration:.5}, S5+1.5)
+  .to('#dragon', {y:-14, duration:1.3, yoyo:true, repeat:1, ease:'sine.inOut'}, S5+1.6)
+  .set('#lockup', {opacity:1}, S5+.25)
+  .to('#logoText .ch', {yPercent:0, duration:.55, ease:'power4.out', stagger:.05}, S5+.3)
+  .fromTo(['#dot1','#dot2'], {opacity:0, y:-120}, {opacity:1, y:0, duration:.6, ease:'bounce.out', stagger:.1, immediateRender:false}, S5+1.2)
+  .fromTo('#tagline', {opacity:0, x:-40}, {opacity:1, x:0, duration:.55, ease:'power3.out', immediateRender:false}, S5+1.35)
+  .fromTo('#url', {opacity:0, letterSpacing:'20px'}, {opacity:1, letterSpacing:'6px', duration:.65, ease:'power3.out', immediateRender:false}, S5+1.55)
+  .to('#lockup', {scale:1.035, transformOrigin:'50% 50%', duration:D-S5-1.0, ease:'sine.inOut'}, S5+1.0)
+  .to('#grid', {scale:1.06, duration:D-S5-1.8, ease:'sine.inOut'}, S5+1.8)
+  .to(nodes, {scale:1.3, duration:.35, yoyo:true, repeat:1, ease:'sine.inOut', stagger:.08}, S5+3.0)
+  .to('#fade', {opacity:1, duration:.4, ease:'power1.in'}, D-0.4);
+
+// place red dots on the two "i" glyphs once fonts are ready
+function placeDots(){ // layout offsets are not affected by transforms
+  const lt = document.getElementById('logoText');
+  [['#i1','#dot1'],['#i2','#dot2']].forEach(([ci,di])=>{ const e=document.querySelector(ci), d=document.querySelector(di);
+    d.style.left=(lt.offsetLeft + e.offsetLeft + e.offsetWidth/2 - 23)+'px'; d.style.top=(lt.offsetTop + 8)+'px'; });
+}
+
+window.__tl = tl; window.__duration = D;
+window.seekTo = (t) => { tl.seek(t, false); placeHead(); };
+window.renderReady = false;
+document.fonts.ready.then(()=>{
+  // hide the default i tittle by clipping the glyph top
+  ['#i1','#i2'].forEach(s=>{ const e=document.querySelector(s); e.style.clipPath='inset(30% 0 0 0)'; });
+  placeDots(); placeHead(); window.renderReady = true;
+  if (!RENDER) { tl.play(); }
+});
+
+// preview controls
+const btn=document.getElementById('play'), scrub=document.getElementById('scrub'), tm=document.getElementById('tm');
+btn.onclick=()=>{ if(tl.paused()||tl.progress()===1){ if(tl.progress()===1) tl.restart(); else tl.play(); btn.textContent='Pause'; } else { tl.pause(); btn.textContent='Play'; } };
+scrub.oninput=()=>{ tl.pause(); btn.textContent='Play'; window.seekTo(scrub.value/1000*D); };
+gsap.ticker.add(()=>{ tm.textContent=tl.time().toFixed(2)+'s / '+D.toFixed(1)+'s'; if(!tl.paused()) scrub.value=tl.progress()*1000; placeHead(); });
+</script>
+</body>
+</html>

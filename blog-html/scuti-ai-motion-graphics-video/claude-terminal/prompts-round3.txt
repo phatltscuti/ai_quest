@@ -1,0 +1,8 @@
+PROMPT A (critic - gauntlet round 3):
+
+Gauntlet round 3 for our Scuti AI intro video (animation/scuti-intro.html, 18s). Step 1: grab stills every 1.5s from 0.5s to 17.5s with python animation/render_frames.py --stills ... Step 2: tile them into ONE timestamped contact sheet at animation/contact-sheet-round3.png. Step 3: spawn a NEW subagent that has not seen the build, give it only the contact sheet, animation/storyboard.md and the motion rules in animation/prompts.md, with this brief: You are reviewing a video you did not build. Be honest. List every problem, biggest first, each with a time in the video and a severity (major or minor): empty frames, shots that hold too long, text that collides, text visible too early. Do not suggest changing what the video is about. Step 4: save its answer to animation/critic-notes-v3.md and show me the list. Do not edit the animation yet.
+
+
+PROMPT B (fix + render):
+
+Here are the critic notes. Fix the major problems only in animation/scuti-intro.html (keep it 18s, keep the story), re-grab stills at the listed times to verify, then do the full render with python -u animation/render_frames.py (about 1-2 minutes, use a long timeout) and check the mp4 with ffmpeg: duration, resolution, fps, audio. Finish with a short list of what changed.

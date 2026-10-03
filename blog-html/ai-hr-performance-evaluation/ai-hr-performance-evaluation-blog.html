@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI đánh giá nhân sự: dữ liệu hằng ngày thay cho trí nhớ của người đánh giá</title>
+<style>
+  :root {
+    --primary: #0d47a1;
+    --primary-light: #1976d2;
+    --accent: #ff6d00;
+    --bg: #fafafa;
+    --card: #ffffff;
+    --text: #212121;
+    --text-secondary: #616161;
+    --border: #e0e0e0;
+    --code-bg: #263238;
+    --success: #2e7d32;
+    --success-bg: #e8f5e9;
+    --warning: #f57f17;
+    --warning-bg: #fff8e1;
+    --error: #c62828;
+    --gradient-start: #0d47a1;
+    --gradient-mid: #1565c0;
+    --gradient-end: #00838f;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.75;
+    font-size: 16px;
+  }
+  .hero {
+    background: linear-gradient(135deg, var(--gradient-start), var(--gradient-mid), var(--gradient-end));
+    color: white;
+    padding: 64px 20px;
+    text-align: center;
+  }
+  .hero h1 { font-size: 2.2em; margin-bottom: 14px; font-weight: 700; letter-spacing: -0.5px; max-width: 900px; margin-left: auto; margin-right: auto; }
+  .hero .subtitle { font-size: 1.1em; opacity: 0.93; max-width: 760px; margin: 0 auto; }
+  .hero .badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.18);
+    padding: 6px 20px;
+    border-radius: 20px;
+    font-size: 0.84em;
+    margin-bottom: 18px;
+  }
+  .container { max-width: 940px; margin: 0 auto; padding: 32px 20px; }
+  .toc {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px 32px;
+    margin-bottom: 38px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  }
+  .toc h2 { font-size: 1.3em; margin-bottom: 14px; color: var(--primary); border: none; padding: 0; }
+  .toc ol { padding-left: 22px; }
+  .toc li { margin-bottom: 6px; }
+  .toc a { color: var(--primary-light); text-decoration: none; }
+  .toc a:hover { text-decoration: underline; }
+  section { margin-bottom: 44px; }
+  h2 {
+    font-size: 1.55em;
+    color: var(--primary);
+    border-bottom: 3px solid var(--primary);
+    padding-bottom: 8px;
+    margin-bottom: 22px;
+  }
+  h3 { font-size: 1.22em; color: var(--text); margin: 22px 0 10px; }
+  p { margin-bottom: 14px; }
+  a { color: var(--primary-light); }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+  }
+  .card-accent { border-left: 4px solid var(--accent); }
+  .card-info { border-left: 4px solid var(--primary-light); }
+  .card-warning { border-left: 4px solid var(--warning); background: var(--warning-bg); }
+  .card-success { border-left: 4px solid var(--success); background: var(--success-bg); }
+  .prompt-box {
+    background: var(--code-bg);
+    color: #cfd8dc;
+    border-radius: 10px;
+    padding: 22px 24px;
+    margin: 14px 0 22px;
+    font-family: 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+    font-size: 0.88em;
+    line-height: 1.65;
+    white-space: pre-wrap;
+    position: relative;
+    overflow-x: auto;
+  }
+  .prompt-box .label {
+    position: absolute; top: 8px; right: 12px;
+    background: var(--accent); color: white;
+    font-size: 0.7em; padding: 2px 12px; border-radius: 8px;
+    font-family: 'Segoe UI', sans-serif; font-weight: 600;
+  }
+  table.data-table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+  table.data-table th, table.data-table td {
+    border: 1px solid var(--border);
+    padding: 10px 14px;
+    text-align: left;
+    font-size: 0.93em;
+    vertical-align: top;
+  }
+  table.data-table th { background: var(--primary); color: white; font-weight: 600; }
+  table.data-table tr:nth-child(even) { background: #f5f5f5; }
+  .table-wrap { overflow-x: auto; }
+  .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 18px 0; }
+  @media (max-width: 700px) { .compare-grid { grid-template-columns: 1fr; } }
+  .step-num {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 34px; height: 34px; background: var(--primary); color: white;
+    border-radius: 50%; font-weight: 700; font-size: 0.9em; margin-right: 12px; flex-shrink: 0;
+  }
+  .step-row { display: flex; align-items: flex-start; margin-bottom: 14px; }
+  .step-row p { margin: 0; }
+  .screenshot-wrap { margin: 16px 0 22px; text-align: center; }
+  .screenshot-wrap img {
+    max-width: 100%;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+  .screenshot-wrap .caption { margin-top: 8px; font-size: 0.85em; color: var(--text-secondary); }
+  ul, ol { margin-bottom: 14px; padding-left: 24px; }
+  li { margin-bottom: 6px; }
+  .flow-diagram { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 8px; margin: 22px 0; font-size: 0.92em; }
+  .flow-step { background: var(--primary); color: white; padding: 10px 18px; border-radius: 10px; font-weight: 600; }
+  .flow-step.human { background: var(--accent); }
+  .flow-arrow { color: var(--text-secondary); font-size: 1.4em; }
+  .footer {
+    text-align: center; padding: 32px; color: var(--text-secondary);
+    font-size: 0.85em; border-top: 1px solid var(--border); margin-top: 40px;
+  }
+  code { background: #eceff1; padding: 2px 6px; border-radius: 4px; font-size: 0.9em; }
+  .tag {
+    display: inline-block; background: #e3f2fd; color: var(--primary);
+    padding: 2px 10px; border-radius: 12px; font-size: 0.8em; margin: 2px 4px 2px 0;
+  }
+  .highlight-box {
+    background: linear-gradient(135deg, #e3f2fd, #e8f5e9);
+    border-radius: 12px; padding: 20px 24px; margin: 18px 0; border: 1px solid #bbdefb;
+  }
+  .video-embed { margin: 20px 0; text-align: center; }
+  .video-embed iframe, .video-embed video { max-width: 100%; border: none; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
+  .src-note { font-size: 0.85em; color: var(--text-secondary); }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="badge">AI Quest &mdash; Investigate What</div>
+  <h1>AI đánh giá nhân sự: khi dữ liệu công việc hằng ngày thay cho trí nhớ của người đánh giá</h1>
+  <p class="subtitle">Tóm tắt cách Ubie (Nhật Bản) giao gần như toàn bộ quy trình đánh giá cho AI &mdash; dữ liệu được thu thế nào, AI xử lý ra sao, con người còn lại ở đâu &mdash; và cách Scuti AI có thể áp dụng một cách an toàn</p>
+</div>
+
+<div class="container">
+
+<nav class="toc">
+  <h2>Mục lục</h2>
+  <ol>
+    <li><a href="#s1">Hai nguồn tài liệu &amp; bối cảnh của Ubie</a></li>
+    <li><a href="#s2">Vì sao giao đánh giá cho AI? &mdash; 4 mục đích</a></li>
+    <li><a href="#s3">3 nguyên tắc thiết kế hệ thống</a></li>
+    <li><a href="#s4">Dữ liệu hoạt động hằng ngày được thu và sử dụng như thế nào</a></li>
+    <li><a href="#s5">Làm sao để AI đánh giá đúng: rubric 3 tầng &amp; Human-on-the-loop</a></li>
+    <li><a href="#s6">Những gì học được &amp; vai trò còn lại của con người</a></li>
+    <li><a href="#s7">Bài học cá nhân</a></li>
+    <li><a href="#s8">Áp dụng tại Scuti AI: quy trình HR, công việc hằng ngày, quyền riêng tư &amp; công bằng</a></li>
+    <li><a href="#s9">Video demo &amp; cách làm blog</a></li>
+    <li><a href="#s10">Kết luận &amp; tài liệu tham khảo</a></li>
+  </ol>
+</nav>
+
+<!-- ================================================================ -->
+<section id="s1">
+  <h2>1. Hai nguồn tài liệu &amp; bối cảnh của Ubie</h2>
+
+  <p>Bài viết này tổng hợp từ hai nguồn tiếng Nhật, cùng một tác giả:</p>
+  <ul>
+    <li><strong>Bài note</strong> &ldquo;評価をAIに委ねたとき、人の役割はどこに残るのか&rdquo; (Khi giao việc đánh giá cho AI, vai trò của con người còn lại ở đâu?) của <strong>hashiyaman</strong> (Hashiyama Makito) &mdash; Engineering Manager kiêm HRBP và phụ trách thúc đẩy Generative AI tại <strong>Ubie</strong>, đăng ngày 30/09/2026.</li>
+    <li><strong>Webinar trên YouTube</strong> &ldquo;Ubieが実践するAI時代の人事評価&rdquo; (khoảng 1 giờ 4 phút) do Offers (công ty overflow) tổ chức, host là CEO Suzuki Yuto; phát live ngày 17/09/2026, đăng trên kênh YouTube chính thức của Ubie ngày 29/09/2026. Webinar có phần <strong>demo màn hình thật</strong> của hệ thống &mdash; thứ mà bài viết không có.</li>
+  </ul>
+
+  <h3>Vài điều cần biết về Ubie trước khi đọc tiếp</h3>
+  <ul>
+    <li>Công ty health-tech Nhật, thành lập năm 2017 bởi một bác sĩ và một kỹ sư, khoảng 200 nhân viên (theo webinar).</li>
+    <li>Tổ chức theo mô hình <strong>Holacracy</strong>: quyền quyết định gắn với <em>vai trò</em> chứ không gắn với <em>người</em>; không có tầng quản lý trung gian, một người có thể giữ nhiều vai trò.</li>
+    <li>Trước đây Ubie có đặt mục tiêu và feedback nhưng <strong>không gắn với lương thưởng</strong>. Khi quyết định gắn đánh giá với đãi ngộ, họ thiết kế lại toàn bộ và dùng Generative AI làm trung tâm. Chuẩn bị từ 2025, áp dụng chính thức từ <strong>tháng 4/2026</strong>.</li>
+  </ul>
+
+  <div class="card card-warning">
+    <strong>Lưu ý khi đọc:</strong> Đây là thực tế của một công ty cụ thể có văn hóa minh bạch rất cao (họ công khai cả nội dung họp ban điều hành). Không phải mọi chi tiết đều có thể &ldquo;bê nguyên&rdquo; sang công ty khác. Phần 8 sẽ bàn cách điều chỉnh cho Scuti AI.
+  </div>
+</section>
+
+<!-- ================================================================ -->
+<section id="s2">
+  <h2>2. Vì sao giao đánh giá cho AI? &mdash; 4 mục đích</h2>
+  <p>Bài note nêu 4 mục đích, mục thứ tư là nền móng cho ba mục còn lại:</p>
+
+  <table class="data-table">
+    <thead><tr><th style="width:28%">Mục đích</th><th>Ý chính (diễn giải lại)</th></tr></thead>
+    <tbody>
+      <tr><td><strong>1. Để người làm tập trung vào việc</strong></td><td>Đánh giá là công cụ để doanh nghiệp tăng trưởng, không phải mục tiêu. Nhân viên ngồi lục lại trí nhớ nửa năm để &ldquo;viết văn&rdquo; tự đánh giá, quản lý mất hàng giờ để hiệu chỉnh (calibration) &mdash; Ubie muốn trả khoảng thời gian đó về cho công việc thật.</td></tr>
+      <tr><td><strong>2. Gỡ thiên kiến khỏi quá trình</strong></td><td>Đánh giá của con người dựa vào trí nhớ và cảm nhận ngầm của người đánh giá, thường diễn ra trong 1-on-1 hoặc phòng họp kín. AI có thể dùng <strong>cùng một thước đo cho tất cả</strong>, xem xét hết các dữ kiện và để lại dấu vết lập luận. AI cũng có thiên kiến, nhưng thiên kiến đó <em>dễ nhìn thấy</em> và dễ sửa hơn.</td></tr>
+      <tr><td><strong>3. Theo kịp cách làm việc mới</strong></td><td>Ranh giới nghề đang tan: PdM tự code, kỹ sư tự làm nghiên cứu thị trường, sales tự làm prototype, một người backoffice lo cả nhân sự, tổng vụ, kế toán nhờ AI. Một người quản lý khó hiểu hết mọi chuyên môn để đánh giá; AI thì đọc được nhiều lĩnh vực cùng lúc.</td></tr>
+      <tr><td><strong>4. Tạo &ldquo;lực kéo&rdquo; để mọi hoạt động được ghi lại</strong></td><td>AI không đọc được thứ không được ghi. Thay vì ra lệnh &ldquo;hãy ghi chép&rdquo;, Ubie tạo trạng thái &ldquo;việc không có bản ghi thì không được đánh giá&rdquo; &mdash; ghi chép trở thành lợi ích của chính nhân viên. Đồng thời họ đầu tư để thu thập tự động và cho phép nhân viên tự bổ sung, để người làm việc &ldquo;khó ghi lại&rdquo; không bị thiệt.</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ================================================================ -->
+<section id="s3">
+  <h2>3. Ba nguyên tắc thiết kế hệ thống</h2>
+
+  <h3>3.1. Chỉ CEO đưa ra quyết định cuối cùng</h3>
+  <p>Quy trình chính thức gồm 5 bước, và giữa các bước <strong>không có manager hay thành viên ban điều hành nào</strong>:</p>
+  <div class="flow-diagram">
+    <span class="flow-step">① Dữ liệu hoạt động tích lũy</span><span class="flow-arrow">&rarr;</span>
+    <span class="flow-step">② AI viết bản nháp</span><span class="flow-arrow">&rarr;</span>
+    <span class="flow-step human">③ Nhân viên bổ sung / phản biện</span><span class="flow-arrow">&rarr;</span>
+    <span class="flow-step">④ AI kiểm chứng</span><span class="flow-arrow">&rarr;</span>
+    <span class="flow-step human">⑤ CEO phê duyệt</span>
+  </div>
+  <p>Con người chỉ xuất hiện ở <strong>2 điểm</strong>: chính nhân viên (bổ sung dữ kiện, phản đối) và CEO (phê duyệt). Lý do: giảm công &ldquo;viết văn&rdquo; và điều chỉnh, đồng thời triệt tiêu &ldquo;chính trị&rdquo; như lấy lòng quản lý hay mặc cả giữa các manager khi calibration. Toàn bộ quá trình, kể cả các lần phản biện, được lưu lại và dùng để cải thiện AI.</p>
+  <p>Trong phần Q&amp;A của webinar, diễn giả nói CEO không đọc hết mọi người mà tập trung vào các ca <strong>có thay đổi bậc</strong> so với kỳ trước &mdash; mục tiêu là phần CEO phải xem kỹ chỉ còn khoảng 10% trở xuống. Họ cũng thừa nhận khi công ty lên hàng nghìn người, điểm này sẽ là bài toán, nhưng hiện tại <strong>không có ý định để AI tự chốt mà không có người nhìn</strong>.</p>
+
+  <h3>3.2. Đo Thành quả và Năng lực riêng, rồi nhân với nhau</h3>
+  <p><strong>Thành quả</strong> (成果) được định lượng bằng một khung &ldquo;dạng thành quả&rdquo; hai trục: trục dọc là <em>phía doanh thu</em> (tạo doanh thu/lợi nhuận, đẩy thương vụ tiến lên) hay <em>phía tổn thất</em> (cắt chi phí, ngăn sự cố/tổn thất); trục ngang là <em>đã hiện thực</em> hay <em>giá trị kỳ vọng</em>. Bốn ô đó cộng thêm <em>năng lực sản xuất</em> (xây cơ chế giúp tổ chức làm được nhiều hơn) &mdash; tổng cộng được tác giả sắp xếp thành 7 loại.</p>
+  <table class="data-table">
+    <thead><tr><th>Vai trò</th><th>Thành quả được quy ra số như thế nào (ví dụ trong bài)</th></tr></thead>
+    <tbody>
+      <tr><td>Sales</td><td>Tạo ra doanh thu, lợi nhuận</td></tr>
+      <tr><td>Product</td><td>Tăng năng lực sản xuất, tăng xác suất doanh thu tăng</td></tr>
+      <tr><td>Operation / Backoffice</td><td>Giảm chi phí, tăng năng suất</td></tr>
+      <tr><td>Security / Branding</td><td>Ngăn trước sự cố, tổn thất lẽ ra đã xảy ra</td></tr>
+    </tbody>
+  </table>
+  <p>Trong Q&amp;A, diễn giả giải thích thêm: việc nâng chất lượng được quy ra &ldquo;tổn thất tương lai đã ngăn được&rdquo;; việc xây nền tảng được quy ra chênh lệch tốc độ phát triển và chi phí nhân sự khi có/không có nền tảng đó.</p>
+  <p><strong>Năng lực</strong> (能力) dùng để kiểm tra thành quả có <em>lặp lại được</em> không: dựa trên bộ chuẩn hành vi &ldquo;<strong>Ubieness</strong>&rdquo; và bản đồ kỹ năng theo vai trò &ldquo;<strong>U-map</strong>&rdquo;. Hai trục được kết hợp để ra bậc tổng.</p>
+  <div class="screenshot-wrap">
+    <img src="images/step-04-note-achievement-ability-crop.png" alt="Sơ đồ Thành quả × Năng lực trong bài note">
+    <div class="caption">Ảnh 1 &mdash; Sơ đồ trong bài note: cách quy ra thành quả (trái) và cách nhìn năng lực (phải); bậc thành quả × bậc năng lực = bậc tổng</div>
+  </div>
+
+  <h3>3.3. Vòng phản hồi theo thời gian thực</h3>
+  <p>Người đánh giá giỏi lắm cũng chỉ feedback được mỗi tuần một lần, thông thường là theo quý hoặc nửa năm. AI không bị giới hạn đó: nhân viên có thể nhận phản hồi <strong>bất cứ lúc nào, kể cả mỗi ngày</strong>, sửa hành vi ngay, và hành vi mới lại được ghi nhận cho vòng sau. Điểm then chốt: <strong>AI đánh giá và AI đồng hành dùng chung một logic</strong>, nên làm theo phản hồi hằng ngày cũng chính là đi đúng hướng mà công ty muốn.</p>
+</section>
+
+<!-- ================================================================ -->
+<section id="s4">
+  <h2>4. Dữ liệu hoạt động hằng ngày được thu và sử dụng như thế nào</h2>
+
+  <p>Đây là phần cốt lõi. Hệ thống có 3 thành phần: <strong>Activity Report</strong>, <strong>Evaluation AI agent</strong> và <strong>Companion AI agent</strong> (伴走AIエージェント &mdash; &ldquo;AI chạy cùng&rdquo;).</p>
+
+  <div class="screenshot-wrap">
+    <img src="images/diagram-01-data-flow.png" alt="Sơ đồ luồng dữ liệu tự vẽ">
+    <div class="caption">Sơ đồ 1 (tự vẽ bằng HTML/SVG) &mdash; Luồng dữ liệu: hoạt động hằng ngày &rarr; AI phân tích &rarr; đánh giá</div>
+  </div>
+
+  <h3>4.1. Bước 1 &mdash; Thu thập: log từ công cụ làm việc, mỗi ngày, cho mọi người</h3>
+  <ul>
+    <li><strong>Nguồn:</strong> Slack, biên bản họp (minutes), GitHub, Jira, Notion, ghi chép thương vụ (theo bài). Trong demo còn thấy Google Meet và Salesforce.</li>
+    <li><strong>Nơi gom:</strong> theo webinar, dữ liệu từ các công cụ được gom vào <strong>BigQuery</strong> (cơ sở dữ liệu của Google).</li>
+    <li><strong>Đầu ra:</strong> mỗi ngày, hệ thống tự sinh một <strong>Activity Report</strong> cho từng nhân viên &mdash; diễn giả ví nó như một &ldquo;nhật báo công việc&rdquo; (日報) tự động: timeline tóm tắt theo ngày, chia theo nguồn (Meet, Jira, Slack&hellip;). Dữ liệu thực chất lưu dạng <strong>NDJSON</strong> để dễ xử lý tiếp.</li>
+    <li><strong>Trong demo</strong> (webinar 27:10, dữ liệu giả lập): Activity Report lọc theo người và theo khoảng thời gian, ví dụ &ldquo;1 tháng gần nhất&rdquo;. Tác giả còn có một bài note riêng về cách xây Activity Report.</li>
+    <li>Có thể hỏi AI về các report này (&ldquo;Gần đây kỹ sư này làm gì?&rdquo;) theo người, theo team hoặc theo dự án.</li>
+  </ul>
+
+  <h3>4.2. Bước 2 &mdash; Tiền xử lý: code cho phần cần chính xác, GenAI cho phần cần diễn giải</h3>
+  <p>Một nguyên tắc tôi thấy rất đáng học: <strong>không đổ dữ liệu thô vào LLM</strong>. Dữ liệu thô vừa nhiễu vừa to. Việc trích xuất, đếm, tổng hợp được làm bằng <strong>SQL/code</strong>; dữ liệu được cắt gọn để mỗi lần AI chỉ đọc lượng vừa đủ và ở dạng khó &ldquo;bịa&rdquo;; chỉ phần suy luận, diễn giải, tóm tắt mới giao cho Generative AI.</p>
+
+  <h3>4.3. Bước 3 &mdash; Fact Sheet: gom một kỳ thành danh sách dữ kiện</h3>
+  <p>Evaluation AI agent dựa trên rubric để tổng hợp các Activity Report trong kỳ thành <strong>Fact Sheet</strong> &mdash; danh sách sự kiện dùng để đánh giá, sắp theo thời gian và theo vai trò, <strong>mỗi dữ kiện đều kèm nguồn</strong>. Nhân viên có thể bổ sung việc bị thiếu hoặc sửa chỗ sai.</p>
+  <p>Phần demo Fact Sheet (活動シート) của một PdM trong webinar (khoảng 28:35) cho thấy rất rõ dữ liệu được dùng như thế nào:</p>
+  <ul>
+    <li><strong>Lấy từ đâu:</strong> 293 bản ghi hoạt động trong kỳ &mdash; chat 108, biên bản họp 40, tóm tắt 30, lịch hẹn không có biên bản 30, ticket 25, code 21, CRM 17, ghi âm 10, vai trò 6, tài liệu 6.</li>
+    <li><strong>Làm thế nào:</strong> 293 bản ghi được gộp thành 3 &ldquo;fact&rdquo;; việc gắn với vai trò dựa trên danh sách vai trò và danh sách dự án đã đăng ký; việc không đăng ký được để là &ldquo;chưa xác định&rdquo;.</li>
+    <li><strong>Không đưa vào:</strong> kênh không công khai, nội dung 1-on-1, feedback của nhân viên gửi người phụ trách, kết quả đánh giá/bậc cũ.</li>
+    <li><strong>Việc bạn nên kiểm tra:</strong> AI liệt kê những thiếu sót trong dữ liệu (ví dụ dự án chưa đăng ký mình là người phụ trách, 30 lịch họp không có biên bản do chưa cài đặt chuyển tiếp) để nhân viên tự sửa, kỳ sau chính xác hơn.</li>
+  </ul>
+
+  <h3>4.4. Bước 4 &mdash; Evaluation Report: bậc, công thức và lý do</h3>
+  <p>Từ Fact Sheet và phần bổ sung của nhân viên, AI áp rubric để ra <strong>Evaluation Report</strong>: không chỉ kết luận bậc mà cả <strong>công thức tính và lý do</strong> có thể truy ngược, kèm giải thích vì sao không phải bậc cao hơn một bậc, cũng không phải bậc thấp hơn một bậc. Trong demo (webinar 29:30), bản nháp ra tổng bậc 4 (thành quả bậc 4, năng lực bậc 3), kèm biên độ và phân tích &ldquo;yếu tố nào làm bậc thay đổi&rdquo;.</p>
+
+  <h3>4.5. Bước 5 &mdash; Companion AI agent: feedback bất cứ lúc nào</h3>
+  <p>Nhân viên có thể hỏi mở: &ldquo;Tháng vừa rồi tôi đã làm gì?&rdquo;, &ldquo;Muốn phát triển thì nên đi hướng nào?&rdquo;. Agent đọc Activity Report và trả lời theo chuẩn đánh giá, năng lực và vai trò. Theo diễn giả, các cuộc trò chuyện này cũng được lưu lại, nên phía HR có thể phân tích &ldquo;dư địa phát triển&rdquo; của từng người và của cả công ty để điều chỉnh chính sách.</p>
+
+  <div class="highlight-box">
+    <strong>Tóm tắt một câu:</strong> dữ liệu hằng ngày đi qua 3 lớp &mdash; <em>log thô</em> (công cụ) &rarr; <em>Activity Report</em> (đã lọc, đã tóm tắt, có nguồn) &rarr; <em>Fact Sheet</em> (dữ kiện của cả kỳ, nhân viên sửa được) &mdash; rồi mới tới <em>Evaluation Report</em>. Cùng dữ liệu đó nuôi Companion agent để phản hồi mỗi ngày.
+  </div>
+</section>
+
+<!-- ================================================================ -->
+<section id="s5">
+  <h2>5. Làm sao để AI đánh giá đúng: rubric 3 tầng &amp; Human-on-the-loop</h2>
+
+  <h3>5.1. Rubric (bảng chấm) chia 3 tầng, đi theo thứ tự</h3>
+  <div class="screenshot-wrap">
+    <img src="images/step-17-youtube-rubric-slide-crop.png" alt="Slide rubric 3 tầng trong webinar">
+    <div class="caption">Ảnh 2 &mdash; Webinar 34:35: bản ghi gốc &rarr; rubric 1 &rarr; rubric 2 &rarr; rubric 3 &rarr; đánh giá cuối</div>
+  </div>
+  <table class="data-table">
+    <thead><tr><th style="width:22%">Tầng</th><th>Câu hỏi</th><th>Ví dụ</th></tr></thead>
+    <tbody>
+      <tr><td><strong>1. Thu thập</strong></td><td>Đã thu đủ hoạt động chưa?</td><td>Sales phải có dữ liệu thương vụ; kỹ sư phải có lịch sử code; vận hành phải có ticket, log trao đổi.</td></tr>
+      <tr><td><strong>2. Diễn giải</strong></td><td>Đã hiểu đúng hoạt động chưa?</td><td>Trong cuộc họp nhiều người, ý kiến của ai là <em>khởi điểm</em> của quyết định? Không phải ai nói nhiều nhất là đóng góp nhiều nhất.</td></tr>
+      <tr><td><strong>3. Đánh giá</strong></td><td>Thành quả và năng lực được nhìn nhận hợp lý chưa?</td><td>AI có &ldquo;đoán mò&rdquo; không, có ước lượng thành quả theo đúng logic không.</td></tr>
+    </tbody>
+  </table>
+  <p>Thứ tự là quan trọng: chưa qua tầng trước thì không xử lý tầng sau. Ban đầu Ubie không có rubric và không biết khi kết quả sai thì lỗi nằm ở thu thập, ở diễn giải hay ở logic &mdash; việc chia tầng giúp <strong>khoanh vùng lỗi</strong>.</p>
+
+  <h3>5.2. Human-on-the-loop: AI tự chấm, người sửa rubric</h3>
+  <div class="screenshot-wrap">
+    <img src="images/step-18-youtube-human-on-the-loop-crop.png" alt="Slide Human-on-the-loop trong webinar">
+    <div class="caption">Ảnh 3 &mdash; Webinar 36:00: vòng &ldquo;viết đánh giá &rarr; AI tự chấm &rarr; trả lại sửa&rdquo; do AI chạy; con người đứng ngoài, xem kết quả và sửa bảng chấm</div>
+  </div>
+  <ul>
+    <li>AI viết nháp &rarr; tự chấm theo rubric &rarr; chưa đạt thì trả lại và viết lại. Vòng này chạy trung bình <strong>8&ndash;12 giờ cho mỗi người</strong>.</li>
+    <li>Con người không duyệt từng bản nháp; khi kết quả có vấn đề, họ coi đó là <strong>lỗi của rubric</strong> và sửa rubric. Người đứng <em>trên</em> vòng lặp (on-the-loop) chứ không <em>trong</em> vòng lặp (in-the-loop) &mdash; tránh để con người thành nút cổ chai.</li>
+    <li><strong>Không bắt AI bắt chước điểm số của người.</strong> Nếu chỉ lấy kết quả đánh giá cũ của con người làm &ldquo;đáp án&rdquo;, AI sẽ học luôn thiên kiến. Ubie dạy AI <em>tiêu chí</em>: con người đang coi trọng điều gì và bỏ qua điều gì.</li>
+    <li><strong>Vận hành như phần mềm:</strong> đội 3 người (đều có nền tảng kỹ sư hoặc phân tích dữ liệu) đưa toàn bộ logic lên GitHub &mdash; mọi nhân viên xem được, nhiều người sửa song song, có test cho từng bước, có lịch sử phiên bản để biết độ chính xác thay đổi là do sửa rubric hay do model mới.</li>
+  </ul>
+
+  <h3>5.3. Triển khai để không thành &ldquo;thứ công ty áp đặt&rdquo;</h3>
+  <p>Bài note nhắc đến 3 việc nhưng danh sách không xuất hiện trong phần chữ tôi trích được; webinar (khoảng 38:50&ndash;40:30) nói rõ cả ba:</p>
+  <ol>
+    <li><strong>Có giai đoạn chạy thử:</strong> con người vẫn calibration và sửa kết quả (làm &ldquo;dữ liệu đáp án&rdquo;), và các chỉnh sửa đó được công khai, để mọi người có thời gian làm quen.</li>
+    <li><strong>Không giấu logic:</strong> toàn bộ bảng chấm công khai nội bộ; ai không hiểu vì sao mình được bậc đó có thể nhờ AI giải thích logic, và gửi feedback nếu thấy lỗi.</li>
+    <li><strong>Kéo toàn công ty tham gia:</strong> vài team thử nghiệm đồng ý công khai kết quả đánh giá của mình để mọi người cùng thảo luận &ldquo;chỗ này có hợp lý không&rdquo; &mdash; đánh giá trở thành sản phẩm cả công ty cùng làm.</li>
+  </ol>
+</section>
+
+<!-- ================================================================ -->
+<section id="s6">
+  <h2>6. Những gì học được &amp; vai trò còn lại của con người</h2>
+
+  <div class="compare-grid">
+    <div class="card card-info">
+      <h3 style="margin-top:0">Làm rõ mục đích tới mức triết lý</h3>
+      <p>Ubie viết ra 3 câu theo thứ tự: (1) chia nhiều đãi ngộ hơn cho người tạo thành quả lớn; (2) đo thành quả bằng số, tính cả giá trị kỳ vọng; (3) đánh giá năng lực vì cần năng lực để lặp lại thành quả. Câu (3) để bù cho những việc mà chỉ đo thành quả sẽ bỏ sót: việc gián tiếp, việc trung&ndash;dài hạn, xây nền tảng, ngăn sự cố. Nếu chỉ dừng ở &ldquo;đánh giá người có thành quả&rdquo;, AI không biết &ldquo;thành quả&rdquo; là gì và rốt cuộc con người lại phải quyết từng ca.</p>
+    </div>
+    <div class="card card-info">
+      <h3 style="margin-top:0">Định nghĩa trước phần của con người</h3>
+      <p>Ubie trả lời câu hỏi &ldquo;AI đánh giá rồi thì người làm gì?&rdquo; bằng 2 thứ: <strong>kết nối với con người</strong> (xây niềm tin, lấy thông tin gốc mà AI không có) và <strong>gửi gắm ý chí</strong> (cắm cờ việc cần làm, làm chủ tới khi thành hình). Có câu trả lời này trước thì mới chia được việc giữa AI và người. Họ cũng định nghĩa lại vai trò thành 5 kiểu thay vì theo chức danh.</p>
+    </div>
+  </div>
+  <div class="card card-success">
+    <h3 style="margin-top:0">Dữ liệu cho đánh giá mang lợi ích ngoài đánh giá</h3>
+    <p>Lãnh đạo xem được tình hình kinh doanh mà không phải hỏi qua người khác; manager nắm tình hình thành viên (có người nói &ldquo;không còn mất thời gian báo cáo tình hình, giờ họp chỉ bàn nội dung&rdquo;); nhân viên mới hoặc chuyển dự án tự tìm thông tin dễ hơn. Tác giả coi việc tạo ra &ldquo;lực kéo&rdquo; ghi chép này là bài học lớn nhất.</p>
+  </div>
+
+  <h3>Điều gì còn lại cho người quản lý?</h3>
+  <p>Giả thuyết của tác giả: phần còn lại là <strong>đối diện với cảm xúc con người</strong> &mdash; ngồi cùng người vừa nhận đánh giá của AI để quyết định bước phát triển tiếp theo. Ngược lại, việc thu thập thông tin để đánh giá và viết đánh giá chỉ dựa vào kinh nghiệm cá nhân sẽ dần biến mất; manager chỉ giỏi trong chuyên môn hẹp của mình sẽ bớt giá trị.</p>
+
+  <h3>Những điểm thẳng thắn trong phần Q&amp;A</h3>
+  <ul>
+    <li><strong>Độ chính xác chưa hoàn hảo:</strong> theo cảm nhận của diễn giả, khoảng 30% ca AI tự ra đúng như con người; một phần khoảng 30% nữa chỉ cần người đưa thêm hướng dẫn; phần còn lại thì ngay cả cách hướng dẫn cũng khó &mdash; thường là người bậc cao, vì họ làm những việc &ldquo;chưa có mẫu&rdquo;.</li>
+    <li><strong>Khó nhất:</strong> chia tỷ lệ đóng góp khi 3&ndash;4 người cùng làm (người đặt vấn đề vs người thực thi), và đánh giá việc trung&ndash;dài hạn (người xây nền tảng vs người dùng nền tảng tạo ra lợi nhuận).</li>
+    <li><strong>Cảm giác bị giám sát:</strong> câu trả lời dựa vào văn hóa minh bạch sẵn có, và chuyển cảm giác từ &ldquo;bị theo dõi&rdquo; sang &ldquo;được nhìn thấy&rdquo; &mdash; đi kèm cơ chế hỗ trợ sớm khi khối lượng việc tăng hay hiệu suất giảm; tránh tạo thế đối đầu công ty vs cá nhân.</li>
+    <li><strong>Một người nhiều vai trò:</strong> đầu kỳ, nhân viên và leadership thống nhất &ldquo;vai trò được kỳ vọng&rdquo; (không phải chỉ tiêu cứng); thành quả ngoài kỳ vọng vẫn được tính.</li>
+    <li><strong>Phát hiện bất ngờ:</strong> chính những người đánh giá là con người chia rẽ khá rõ giữa nhóm coi trọng thành quả và nhóm coi trọng năng lực/tiềm năng.</li>
+  </ul>
+</section>
+
+<!-- ================================================================ -->
+<section id="s7">
+  <h2>7. Bài học cá nhân</h2>
+  <ol>
+    <li><strong>AI đánh giá thực chất là bài toán dữ liệu, không phải bài toán prompt.</strong> Phần lớn công sức của Ubie nằm ở Activity Report: gom, lọc, gắn nguồn, xử lý bằng SQL trước khi đến LLM. Đây là việc kỹ sư làm tốt &mdash; và là lý do một đội 3 người làm được.</li>
+    <li><strong>Rubric là &ldquo;unit test&rdquo; cho quá trình đánh giá.</strong> Chia 3 tầng (thu thập &ndash; diễn giải &ndash; đánh giá) giống cách ta debug pipeline: lỗi nằm ở đầu vào, ở biến đổi hay ở logic. Tôi có thể dùng ngay tư duy này cho các agent khác, không chỉ HR.</li>
+    <li><strong>Minh bạch là điều kiện cần, không phải tính năng phụ.</strong> Mọi điểm thuyết phục được nhân viên (fact có nguồn, nhân viên sửa được, logic trên GitHub, giải thích vì sao không lên/xuống một bậc) đều là minh bạch. Không có nó, AI đánh giá sẽ chỉ là &ldquo;hộp đen mới thay cho hộp đen cũ&rdquo;.</li>
+    <li><strong>Phải nói rõ con người còn làm gì.</strong> Nếu không, nhân viên và manager sẽ phản đối vì sợ, không phải vì hệ thống dở.</li>
+    <li><strong>Đừng sao chép thiên kiến.</strong> Dùng điểm cũ của con người làm đáp án là cách nhanh nhất để tự động hóa sự thiếu công bằng. Hãy dạy AI tiêu chí, không phải dạy AI bắt chước kết quả.</li>
+    <li><strong>Hệ thống này chưa hoàn hảo, và họ nói thẳng điều đó.</strong> Con số kiểu &ldquo;khoảng 30% tự đúng&rdquo; nhắc tôi rằng nên bắt đầu bằng vai trò <em>trợ lý</em> (nháp có nguồn) trước khi nghĩ tới vai trò <em>người quyết định</em>.</li>
+  </ol>
+</section>
+
+<!-- ================================================================ -->
+<section id="s8">
+  <h2>8. Áp dụng tại Scuti AI: quy trình HR, công việc hằng ngày, quyền riêng tư &amp; công bằng</h2>
+  <p>Scuti AI là công ty phát triển phần mềm/AI theo mô hình outsourcing tại Việt Nam. Công việc của chúng ta phần lớn đã để lại dấu vết số: ticket, commit, pull request, review, kết quả test, kênh chat dự án, biên bản họp với khách hàng. Nghĩa là <strong>nguyên liệu cho Activity Report gần như có sẵn</strong>. Khác biệt lớn so với Ubie: dữ liệu nằm trong dự án của <em>khách hàng</em>, nên bảo mật và hợp đồng phải đi trước. Dưới đây là đề xuất cá nhân của tôi, không phải quy trình Scuti đang áp dụng.</p>
+
+  <div class="screenshot-wrap">
+    <img src="images/diagram-02-scuti-rollout.png" alt="Sơ đồ đề xuất áp dụng tại Scuti AI">
+    <div class="caption">Sơ đồ 2 (tự vẽ bằng HTML/SVG) &mdash; Dữ liệu nên dùng/không thu, lộ trình 4 giai đoạn, phần con người giữ lại và các rào chắn</div>
+  </div>
+
+  <h3>8.1. Ánh xạ kỹ thuật của Ubie vào quy trình HR của Scuti</h3>
+  <div class="table-wrap">
+  <table class="data-table">
+    <thead><tr><th style="width:24%">Kỹ thuật của Ubie</th><th>Áp dụng vào Scuti</th></tr></thead>
+    <tbody>
+      <tr><td>Activity Report hằng ngày</td><td>Tự tổng hợp từ Jira/Backlog/Redmine, Git và kênh dự án thành bản nháp daily stand-up và weekly report gửi khách hàng. <strong>Lợi ích ngay cả khi chưa đụng tới đánh giá</strong>: bớt thời gian viết báo cáo, PM/BrSE nắm tình hình nhanh hơn.</td></tr>
+      <tr><td>Fact Sheet có nguồn, nhân viên tự sửa</td><td>Thay phần &ldquo;tự viết bản thành tích&rdquo; khi review định kỳ: AI soạn danh sách việc đã làm kèm link ticket/PR, nhân viên bổ sung những việc &ldquo;vô hình&rdquo; (mentoring, hỗ trợ dự án khác, xử lý sự cố đêm, phỏng vấn tuyển dụng, viết bài chia sẻ kỹ thuật).</td></tr>
+      <tr><td>Khung thành quả (doanh thu / tổn thất, hiện thực / kỳ vọng, năng lực sản xuất)</td><td>Định nghĩa thành quả cho từng vai trò outsourcing: <em>Dev</em> &mdash; tính năng giao đúng hạn, giảm bug lọt sang khách; <em>QA</em> &mdash; lỗi phát hiện trước release (tổn thất đã ngăn); <em>BrSE/PM</em> &mdash; giữ chân khách, mở rộng hợp đồng, giảm change request phát sinh; <em>người làm nền tảng</em> &mdash; template, CI/CD, thư viện nội bộ giúp các dự án khác nhanh hơn.</td></tr>
+      <tr><td>Năng lực theo chuẩn hành vi + skill map</td><td>Gắn với khung năng lực/career path hiện có (nếu có); thêm các kỹ năng đặc thù: giao tiếp với khách hàng, tiếng Nhật/Anh, ước lượng effort, sử dụng AI trong công việc.</td></tr>
+      <tr><td>Companion agent</td><td>Bot nội bộ giúp nhân viên tự hỏi &ldquo;quý này mình đã đóng góp gì, nên cải thiện gì để lên level?&rdquo; trước buổi 1-on-1 &mdash; manager dùng thời gian 1-on-1 để nói chuyện thật thay vì hỏi &ldquo;dạo này em làm gì&rdquo;.</td></tr>
+      <tr><td>Rubric 3 tầng + Human-on-the-loop</td><td>Bộ phận HR + một nhóm kỹ sư nhỏ quản lý rubric như code (Git, review, test); khi kết quả lệch, sửa rubric thay vì sửa tay từng người.</td></tr>
+      <tr><td>Dữ liệu phục vụ ngoài đánh giá</td><td>Onboarding nhân viên mới vào dự án, phân bổ nguồn lực (ai đang quá tải), phát hiện sớm dự án có rủi ro.</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>8.2. Quyền riêng tư &amp; công bằng: những điều kiện bắt buộc</h3>
+  <div class="card card-warning">
+    <ul style="margin-bottom:0">
+      <li><strong>Pháp lý:</strong> dữ liệu hoạt động gắn với tên người là dữ liệu cá nhân. Cần làm việc với pháp chế theo Nghị định 13/2023/NĐ-CP về bảo vệ dữ liệu cá nhân và Luật Bảo vệ dữ liệu cá nhân 2025 (hiệu lực từ 01/01/2026): thông báo mục đích, có sự đồng ý, giới hạn thời gian lưu, đánh giá tác động trước khi xử lý.</li>
+      <li><strong>Bảo mật khách hàng:</strong> mã nguồn và tài liệu của khách thuộc NDA. Chỉ dùng metadata (ticket, trạng thái, link) hoặc chạy model trong môi trường đã được duyệt; không gửi dữ liệu khách ra dịch vụ AI bên ngoài khi chưa được phép; không để nhà cung cấp dùng dữ liệu để train.</li>
+      <li><strong>Tối thiểu hóa:</strong> chỉ dùng dữ liệu công việc. Không đọc DM, không keylogger, không chụp màn hình, không webcam. Học theo chính danh sách &ldquo;không đưa vào&rdquo; trong demo của Ubie (kênh kín, nội dung 1-on-1, kết quả đánh giá cũ).</li>
+      <li><strong>Không đo bằng chỉ số thô:</strong> số dòng code, số commit, số giờ online rất dễ bị &ldquo;game&rdquo; và bất công với người làm việc khó, ít đầu ra.</li>
+      <li><strong>Công bằng:</strong> mỗi kỳ so sánh phân bố kết quả theo vai trò, dự án, giới tính, ngôn ngữ làm việc; người làm dự án có ít công cụ số (ví dụ khách yêu cầu làm trên hệ thống của họ) không được bị thiệt vì &ldquo;thiếu log&rdquo;.</li>
+      <li><strong>Quyền của nhân viên:</strong> xem toàn bộ dữ liệu về mình, sửa, bổ sung, khiếu nại; mọi quyết định lương, thưởng, thăng tiến, cho nghỉ việc đều có người chịu trách nhiệm cuối.</li>
+    </ul>
+  </div>
+
+  <h3>8.3. Hướng dẫn nhanh: bắt đầu thử nghiệm trong 1 dự án</h3>
+  <div class="step-row"><span class="step-num">1</span><p><strong>Viết mục đích trong 3 câu</strong> (giống Ubie): đánh giá để làm gì, đo thành quả thế nào, vì sao cần đo năng lực. Công bố cho team thử nghiệm.</p></div>
+  <div class="step-row"><span class="step-num">2</span><p><strong>Chọn 1 dự án tự nguyện</strong> có sự đồng ý của thành viên và của khách hàng (nếu dữ liệu dự án liên quan). Chốt danh sách nguồn: ticket + Git + kênh dự án public.</p></div>
+  <div class="step-row"><span class="step-num">3</span><p><strong>Xuất dữ liệu bằng script</strong> (API của Jira/Backlog, GitHub/GitLab) thành NDJSON theo người &ndash; ngày; lọc bằng code trước, chỉ đưa phần tóm tắt cho LLM.</p></div>
+  <div class="step-row"><span class="step-num">4</span><p><strong>Sinh Activity Report hằng tuần chỉ cho chủ nhân xem</strong>, dùng để viết weekly report. Thu feedback: thiếu gì, sai gì.</p></div>
+  <div class="step-row"><span class="step-num">5</span><p><strong>Cuối quý, chạy song song</strong>: AI soạn Fact Sheet + bản nháp, manager vẫn đánh giá như cũ; so độ lệch để sửa rubric. Chưa gắn với lương thưởng.</p></div>
+
+  <p>Ví dụ prompt cho bước tạo Activity Report (sau khi code đã lọc dữ liệu):</p>
+  <div class="prompt-box"><span class="label">PROMPT MẪU</span>Bạn là trợ lý tổng hợp hoạt động công việc. Đầu vào là các dòng NDJSON của MỘT nhân viên trong MỘT ngày,
+mỗi dòng có: source (jira|git|chat|meeting), time, title, url, summary.
+
+Yêu cầu:
+1. Viết timeline ngắn theo giờ, nhóm theo nguồn.
+2. Mỗi ý PHẢI kèm url gốc. Không suy diễn việc không có trong dữ liệu.
+3. Nếu một ý có nhiều người tham gia, chỉ ghi phần mà dữ liệu cho thấy người này đã làm
+   (khởi xướng / thực hiện / review). Không chắc thì ghi "chưa rõ vai trò".
+4. Cuối report: liệt kê "dữ liệu có thể đang thiếu" (ví dụ cuộc họp không có biên bản).
+5. Không đánh giá, không chấm điểm, không nhận xét về con người.</div>
+</section>
+
+<!-- ================================================================ -->
+<section id="s9">
+  <h2>9. Video demo &amp; cách làm blog</h2>
+  <p>Toàn bộ quá trình đọc nguồn được quay lại trong <strong>một</strong> video liền mạch: mở bài note &rarr; cuộn các phần chính &rarr; mở video YouTube, mô tả, bảng chép lời, tua tới các đoạn demo &rarr; mở 2 sơ đồ &rarr; kết thúc bằng blog này được cuộn từ đầu đến cuối.</p>
+  <div class="video-embed">
+    <video src="video/ai-hr-performance-evaluation-demo.mp4" controls width="860" preload="metadata"></video>
+    <div class="src-note">File: <code>video/ai-hr-performance-evaluation-demo.mp4</code></div>
+  </div>
+  <p>Video gốc của webinar:</p>
+  <div class="video-embed">
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/X52tm3MsSjA" title="Ubieが実践するAI時代の人事評価" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+  </div>
+  <div class="card card-info">
+    <strong>Minh bạch về cách làm:</strong> tôi đọc trực tiếp bài note và lưu lại văn bản để đối chiếu; transcript webinar lấy từ phụ đề tự động (ASR) tiếng Nhật nên có lỗi nhận dạng (ví dụ tên công ty bị nhận sai), tôi đối chiếu với slide và màn hình demo trong video trước khi dùng. Hai sơ đồ do tôi tự vẽ bằng HTML/SVG rồi xuất PNG. Không đăng nhập tài khoản nào.
+  </div>
+</section>
+
+<!-- ================================================================ -->
+<section id="s10">
+  <h2>10. Kết luận &amp; tài liệu tham khảo</h2>
+  <p>Điều đáng học nhất từ Ubie không phải là &ldquo;AI chấm điểm nhân viên&rdquo;, mà là cách họ biến hoạt động hằng ngày thành <strong>dữ kiện có nguồn</strong>, để AI làm phần thu thập &ndash; tổng hợp &ndash; lập luận, còn con người tập trung vào việc đặt tiêu chí, sửa rubric và đối thoại với nhân viên. Với Scuti AI, bước đầu hợp lý là <strong>Activity Report phục vụ chính nhân viên</strong> (bớt viết báo cáo), sau đó mới tới Fact Sheet cho kỳ review, và luôn giữ quyết định cuối cùng ở con người, với quyền riêng tư và bảo mật khách hàng làm điều kiện tiên quyết.</p>
+
+  <h3>Tài liệu tham khảo</h3>
+  <ul>
+    <li><a href="https://note.com/hashiyaman/n/na03108694c97" target="_blank">hashiyaman &mdash; 評価をAIに委ねたとき、人の役割はどこに残るのか (note.com, 30/09/2026)</a></li>
+    <li><a href="https://www.youtube.com/watch?v=X52tm3MsSjA" target="_blank">Ubieが実践するAI時代の人事評価〜評価をAIに委ねたとき、人はループのどこに残るのか〜 (YouTube, ユビー公式チャンネル)</a></li>
+  </ul>
+</section>
+
+<div class="footer">
+  <p>AI Quest &mdash; Investigate What &middot; Scuti AI &middot; File: <code>blog-html/ai-hr-performance-evaluation/ai-hr-performance-evaluation-blog.html</code></p>
+  <p>English version: <a href="ai-hr-performance-evaluation-blog-en.html">ai-hr-performance-evaluation-blog-en.html</a></p>
+</div>
+
+</div>
+</body>
+</html>

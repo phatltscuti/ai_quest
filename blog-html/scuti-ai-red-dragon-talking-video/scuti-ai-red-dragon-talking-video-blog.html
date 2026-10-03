@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Làm video Rồng Đỏ biết nói giới thiệu Scuti AI</title>
+<style>
+  :root {
+    --primary: #0d47a1;
+    --primary-light: #1976d2;
+    --accent: #d32f2f;
+    --accent-light: #ff8a80;
+    --bg: #fafafa;
+    --card: #ffffff;
+    --text: #212121;
+    --text-secondary: #616161;
+    --border: #e0e0e0;
+    --code-bg: #263238;
+    --success: #2e7d32;
+    --success-bg: #e8f5e9;
+    --warning: #f57f17;
+    --warning-bg: #fff8e1;
+    --error: #c62828;
+    --gradient-start: #8e1414;
+    --gradient-mid: #d32f2f;
+    --gradient-end: #0d47a1;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.75;
+    font-size: 16px;
+  }
+  .hero {
+    background: linear-gradient(135deg, var(--gradient-start), var(--gradient-mid), var(--gradient-end));
+    color: white;
+    padding: 64px 20px;
+    text-align: center;
+  }
+  .hero h1 { font-size: 2.3em; margin-bottom: 14px; font-weight: 700; letter-spacing: -0.5px; }
+  .hero .subtitle { font-size: 1.12em; opacity: 0.93; max-width: 760px; margin: 0 auto; }
+  .hero .badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.18);
+    padding: 6px 20px;
+    border-radius: 20px;
+    font-size: 0.84em;
+    margin-bottom: 18px;
+    backdrop-filter: blur(4px);
+  }
+  .container { max-width: 940px; margin: 0 auto; padding: 32px 20px; }
+
+  .toc {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px 32px;
+    margin-bottom: 38px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  }
+  .toc h2 { font-size: 1.3em; margin-bottom: 14px; color: var(--primary); border: none; padding: 0; }
+  .toc ol { padding-left: 22px; }
+  .toc li { margin-bottom: 6px; }
+  .toc a { color: var(--primary-light); text-decoration: none; }
+  .toc a:hover { text-decoration: underline; }
+
+  section { margin-bottom: 44px; }
+  h2 {
+    font-size: 1.55em;
+    color: var(--primary);
+    border-bottom: 3px solid var(--primary);
+    padding-bottom: 8px;
+    margin-bottom: 22px;
+  }
+  h3 { font-size: 1.22em; color: var(--text); margin: 22px 0 10px; }
+  h4 { font-size: 1.05em; color: var(--text-secondary); margin: 16px 0 8px; }
+  p { margin-bottom: 14px; }
+  a { color: var(--primary-light); }
+
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+  }
+  .card-accent { border-left: 4px solid var(--accent); }
+  .card-info { border-left: 4px solid var(--primary-light); }
+  .card-warning { border-left: 4px solid var(--warning); background: var(--warning-bg); }
+  .card-success { border-left: 4px solid var(--success); background: var(--success-bg); }
+
+  .prompt-box {
+    background: var(--code-bg);
+    color: #cfd8dc;
+    border-radius: 10px;
+    padding: 30px 24px 22px;
+    margin: 14px 0 22px;
+    font-family: 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+    font-size: 0.88em;
+    line-height: 1.65;
+    white-space: pre-wrap;
+    position: relative;
+    overflow-x: auto;
+  }
+  .prompt-box .label {
+    position: absolute;
+    top: 8px;
+    right: 12px;
+    background: var(--accent);
+    color: white;
+    font-size: 0.7em;
+    padding: 2px 12px;
+    border-radius: 8px;
+    font-family: 'Segoe UI', sans-serif;
+    font-weight: 600;
+  }
+
+  table.data-table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+  table.data-table th, table.data-table td {
+    border: 1px solid var(--border);
+    padding: 10px 14px;
+    text-align: left;
+    font-size: 0.93em;
+    vertical-align: top;
+  }
+  table.data-table th { background: var(--primary); color: white; font-weight: 600; }
+  table.data-table tr:nth-child(even) { background: #f5f5f5; }
+  table.data-table tr:hover { background: #e3f2fd; }
+  .table-wrap { overflow-x: auto; }
+
+  .step-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    background: var(--primary);
+    color: white;
+    border-radius: 50%;
+    font-weight: 700;
+    font-size: 0.9em;
+    margin-right: 12px;
+    flex-shrink: 0;
+  }
+  .step-head { display: flex; align-items: center; margin: 30px 0 10px; }
+  .step-head h3 { margin: 0; }
+
+  .screenshot-wrap { margin: 16px 0; text-align: center; }
+  .screenshot-wrap img {
+    max-width: 100%;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+  .screenshot-wrap .caption { margin-top: 8px; font-size: 0.85em; color: var(--text-secondary); }
+
+  .video-wrap { margin: 18px 0; text-align: center; }
+  .video-wrap video { width: 100%; border-radius: 12px; background: #000; box-shadow: 0 4px 16px rgba(0,0,0,0.18); }
+  .video-wrap .caption { margin-top: 8px; font-size: 0.85em; color: var(--text-secondary); }
+
+  ul, ol { margin-bottom: 14px; padding-left: 24px; }
+  li { margin-bottom: 6px; }
+
+  .flow-diagram {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 22px 0;
+    font-size: 0.92em;
+  }
+  .flow-step { background: var(--primary); color: white; padding: 10px 18px; border-radius: 10px; font-weight: 600; }
+  .flow-step.red { background: var(--accent); }
+  .flow-arrow { color: var(--text-secondary); font-size: 1.4em; }
+
+  .footer {
+    text-align: center;
+    padding: 32px;
+    color: var(--text-secondary);
+    font-size: 0.85em;
+    border-top: 1px solid var(--border);
+    margin-top: 40px;
+  }
+  code { background: #eceff1; padding: 2px 6px; border-radius: 4px; font-size: 0.9em; }
+  .tag {
+    display: inline-block;
+    background: #ffebee;
+    color: var(--accent);
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 0.8em;
+    margin: 2px 4px 2px 0;
+  }
+  .highlight-box {
+    background: linear-gradient(135deg, #ffebee, #e3f2fd);
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin: 18px 0;
+    border: 1px solid #ffcdd2;
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="badge">AI Quest &mdash; Investigate How</div>
+  <h1>Làm video Rồng Đỏ biết nói giới thiệu Scuti AI</h1>
+  <p class="subtitle">Kịch bản &rarr; giọng đọc AI &rarr; rồng hoạt hình mấp máy miệng theo giọng &rarr; video MP4 33 giây có tiếng. Miễn phí, làm trên máy cá nhân.</p>
+</div>
+
+<div class="container">
+
+<nav class="toc">
+  <h2>Mục lục</h2>
+  <ol>
+    <li><a href="#s1">Video tham khảo làm như thế nào?</a></li>
+    <li><a href="#s2">Kết quả: Rồng Đỏ giới thiệu Scuti AI</a></li>
+    <li><a href="#s3">Cách làm trong 4 bước</a></li>
+    <li><a href="#s4">Demo từng bước</a></li>
+    <li><a href="#s5">Video toàn bộ quá trình</a></li>
+    <li><a href="#s6">So sánh với công cụ trong video tham khảo</a></li>
+    <li><a href="#s7">Ý kiến cá nhân &amp; áp dụng vào công việc</a></li>
+    <li><a href="#s8">Tự làm lại &amp; tài liệu tham khảo</a></li>
+  </ol>
+</nav>
+
+<!-- 1 -->
+<section id="s1">
+  <h2>1. Video tham khảo làm như thế nào?</h2>
+  <p>Video tham khảo: <a href="https://www.youtube.com/watch?v=G3urGJ1RjEo" target="_blank"><strong>&ldquo;Today, Claude killed the video industry...&rdquo;</strong></a> (kênh RKJ VIDEO). Ý tưởng chính rất đơn giản:</p>
+  <div class="card card-info">
+    <p style="margin:0"><strong>Đưa cho AI kịch bản và giọng nói &rarr; AI viết code để dựng hoạt hình khớp với âm thanh &rarr; xuất video &rarr; tự xem lại và sửa.</strong></p>
+  </div>
+
+  <div class="table-wrap">
+  <table class="data-table">
+    <thead><tr><th>Việc</th><th>Công cụ tác giả dùng</th></tr></thead>
+    <tbody>
+      <tr><td>Viết code dựng video, khớp hình với tiếng</td><td><span class="tag">Claude Code</span> (model Claude Opus 5.5)</td></tr>
+      <tr><td>Giọng đọc AI</td><td><span class="tag">Fish Audio</span></td></tr>
+      <tr><td>Nhân vật mấp máy miệng (lip-sync)</td><td><span class="tag">Topview</span></td></tr>
+      <tr><td>Cảnh quay người thật bằng AI</td><td><span class="tag">Higgsfield</span> (kết nối qua MCP)</td></tr>
+      <tr><td>Nhạc nền</td><td><span class="tag">Artlist</span></td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>Prompt mình rút ra từ video</h3>
+  <p>Trong video, tác giả chỉ cần một prompt nêu rõ <em>thời lượng, nhân vật, lời thoại, giọng nói</em>. Mình viết lại theo cách đó cho Scuti AI và giao cho Claude Code:</p>
+  <div class="prompt-box"><span class="label">PROMPT</span>Hãy làm một video quảng bá ~30 giây cho Scuti AI.
+- Nhân vật chính: linh vật Rồng Đỏ (chibi, sừng vàng, khăn quàng xanh có chữ S). Rồng phải NÓI bằng giọng tiếng Việt.
+- Giọng đọc: dùng edge-tts đọc file kịch bản, lưu lại mốc thời gian của từng từ.
+- Hoạt hình: HTML/SVG, khung 1280×720, 5 cảnh theo 5 câu thoại. Miệng rồng mở to/nhỏ theo âm lượng giọng nói, phụ đề tô sáng từng từ đang đọc.
+- Làm một trang "Studio" để mình gõ kịch bản, bấm tạo giọng, xem trước và bấm ghi ra file MP4 có tiếng.
+- Làm xong, tự trích vài khung hình để kiểm tra miệng và phụ đề có khớp với giọng không.</div>
+
+  <p>Đoạn code quan trọng nhất Claude viết ra là <strong>hàm tính độ mở miệng</strong> từ âm lượng của file giọng nói. Nhờ nó mà rồng &ldquo;nói&rdquo; được mà không cần công cụ lip-sync trả phí:</p>
+  <div class="prompt-box"><span class="label">assets/scuti-dragon.html</span>// env = âm lượng giọng nói, 50 giá trị mỗi giây (tính sẵn từ file mp3)
+function mouthOpen(t) {
+  const e = TL.env[Math.floor(t * TL.fps)] || 0;
+  return Math.max(0, Math.min(1, (e - 0.10) / 0.65));  // bỏ tiếng thở, 0 = ngậm, 1 = há to
+}</div>
+</section>
+
+<!-- 2 -->
+<section id="s2">
+  <h2>2. Kết quả: Rồng Đỏ giới thiệu Scuti AI</h2>
+  <div class="video-wrap">
+    <video controls preload="metadata" src="video/scuti-ai-red-dragon.mp4"></video>
+    <div class="caption">Bật tiếng để nghe Rồng Đỏ nói &mdash; 33 giây, 1280&times;720, MP4 (H.264 + AAC)</div>
+  </div>
+  <ul>
+    <li><strong>5 cảnh:</strong> Chào hỏi &rarr; Về Scuti AI &rarr; Dịch vụ &rarr; &ldquo;Video này cũng do AI làm&rdquo; &rarr; Kêu gọi hành động.</li>
+    <li><strong>Rồng nói thật:</strong> miệng mở theo giọng, phụ đề tô sáng đúng từ đang đọc, các thẻ dịch vụ hiện ra đúng lúc rồng nhắc tới.</li>
+    <li><strong>Chi phí:</strong> 0 đồng, không cần tài khoản dịch vụ nào.</li>
+  </ul>
+  <div class="card card-warning">
+    <strong>Lưu ý:</strong> Rồng Đỏ trong video được vẽ lại bằng SVG, không phải file thiết kế chính thức của Scuti. Khi dùng thật chỉ cần thay hình rồng bằng asset của team brand, các bước còn lại giữ nguyên.
+  </div>
+</section>
+
+<!-- 3 -->
+<section id="s3">
+  <h2>3. Cách làm trong 4 bước</h2>
+  <div class="flow-diagram">
+    <div class="flow-step red">1. Viết kịch bản</div><div class="flow-arrow">&rarr;</div>
+    <div class="flow-step">2. Tạo giọng đọc (edge-tts)</div><div class="flow-arrow">&rarr;</div>
+    <div class="flow-step">3. Rồng nói theo giọng (HTML/SVG)</div><div class="flow-arrow">&rarr;</div>
+    <div class="flow-step red">4. Ghi thành MP4</div>
+  </div>
+  <div class="table-wrap">
+  <table class="data-table">
+    <thead><tr><th>Công cụ</th><th>Dùng để làm gì</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Rồng Đỏ Studio</strong> (trang web chạy trên máy)</td><td>Nơi thao tác: gõ kịch bản, chọn giọng, nghe thử, mở trang hoạt hình</td></tr>
+      <tr><td><code>edge-tts</code></td><td>Đọc kịch bản thành giọng tiếng Việt (miễn phí) và trả về thời điểm của từng từ</td></tr>
+      <tr><td>HTML / SVG / JavaScript</td><td>Vẽ Rồng Đỏ, cảnh, phụ đề; miệng mở theo âm lượng giọng</td></tr>
+      <tr><td>Google Chrome</td><td>Xem trước và <strong>ghi lại tab kèm âm thanh</strong> bằng tính năng có sẵn (MediaRecorder)</td></tr>
+      <tr><td><code>ffmpeg</code></td><td>Đổi file ghi được sang MP4 (H.264 + AAC) để xem ở mọi nơi</td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<!-- 4 -->
+<section id="s4">
+  <h2>4. Demo từng bước</h2>
+  <p>Mở terminal trong thư mục dự án, chạy <code>python studio/studio_server.py</code>, rồi mở <code>http://localhost:8765/studio/</code> trên Chrome.</p>
+
+  <div class="step-head"><span class="step-num">1</span><h3>Mở Rồng Đỏ Studio</h3></div>
+  <p>Màn hình gồm 3 phần: (1) ô kịch bản và chọn giọng, (2) nghe thử giọng đọc, (3) xem rồng nói và xuất video.</p>
+  <div class="screenshot-wrap"><img src="images/step-01-mo-studio.png" alt="Rồng Đỏ Studio"><div class="caption">Bước 1 &mdash; Giao diện Rồng Đỏ Studio</div></div>
+
+  <div class="step-head"><span class="step-num">2</span><h3>Gõ kịch bản và chọn giọng</h3></div>
+  <p>Mỗi câu là một cảnh. Mình chọn giọng <strong>Nam Minh</strong> cho rồng.</p>
+  <div class="prompt-box"><span class="label">KỊCH BẢN</span>Xin chào! Mình là Rồng Đỏ, linh vật của Scuti AI.
+Ở Scuti, các kỹ sư Việt Nam kết hợp cùng trí tuệ nhân tạo để xây dựng phần mềm nhanh hơn và thông minh hơn.
+Từ AI agent, tự động hóa quy trình, đến ứng dụng web và di động, chúng mình đồng hành cùng bạn từ ý tưởng đến sản phẩm.
+Ngay cả video này cũng được làm bằng AI: giọng nói tổng hợp, hoạt hình viết bằng code, và ghép tiếng bằng ffmpeg.
+Bạn đang có ý tưởng? Hãy cùng Scuti AI biến nó thành hiện thực nhé!</div>
+  <div class="screenshot-wrap"><img src="images/step-02-go-kich-ban.png" alt="Gõ kịch bản"><div class="caption">Bước 2 &mdash; Kịch bản 5 câu, giọng Nam Minh</div></div>
+  <div class="card card-accent"><strong>Mẹo:</strong> đặt những từ muốn hiện lên màn hình (&ldquo;AI agent&rdquo;, &ldquo;web&rdquo;, &ldquo;di động&rdquo;) ngay trong câu nói, hiệu ứng sẽ xuất hiện đúng lúc rồng đọc tới từ đó.</div>
+
+  <div class="step-head"><span class="step-num">3</span><h3>Bấm &ldquo;Tạo giọng đọc&rdquo;</h3></div>
+  <p>Sau vài giây Studio báo kết quả: độ dài giọng đọc, số từ, số câu và hình sóng âm. Mốc thời gian từng từ được lưu lại để rồng mấp máy miệng và chạy phụ đề.</p>
+  <div class="screenshot-wrap"><img src="images/step-03-tao-giong-doc.png" alt="Tạo giọng đọc xong"><div class="caption">Bước 3 &mdash; Giọng đọc khoảng 32 giây đã sẵn sàng</div></div>
+
+  <div class="step-head"><span class="step-num">4</span><h3>Nghe thử giọng đọc</h3></div>
+  <p>Bấm play trên trình phát để nghe. Nếu chưa ưng thì sửa kịch bản hoặc đổi giọng rồi bấm tạo lại.</p>
+  <div class="screenshot-wrap"><img src="images/step-04-nghe-thu.png" alt="Nghe thử"><div class="caption">Bước 4 &mdash; Nghe thử ngay trong Studio</div></div>
+
+  <div class="step-head"><span class="step-num">5</span><h3>Mở trang hoạt hình và xem trước</h3></div>
+  <p>Bấm <strong>&ldquo;Mở trang hoạt hình&rdquo;</strong> rồi bấm <strong>&ldquo;▶ Xem trước&rdquo;</strong>: Rồng Đỏ nói, miệng mở theo giọng, phụ đề tô sáng từ đang đọc.</p>
+  <div class="screenshot-wrap"><img src="images/step-05-xem-truoc-rong.png" alt="Xem trước rồng nói"><div class="caption">Bước 5 &mdash; Rồng Đỏ đang nói, phụ đề chạy theo giọng</div></div>
+
+  <div class="step-head"><span class="step-num">6</span><h3>Bấm &ldquo;⏺ Ghi video&rdquo;</h3></div>
+  <p>Chrome hỏi quyền ghi lại tab, bấm <strong>Cho phép</strong>. Hoạt hình chạy lại từ đầu, Chrome ghi cả hình lẫn tiếng. Góc dưới hiện đồng hồ &ldquo;Đang ghi&rdquo;. Phần này nằm ngoài khung 1280&times;720 nên không có trong video.</p>
+  <div class="screenshot-wrap"><img src="images/step-06-dang-ghi-video.png" alt="Đang ghi video"><div class="caption">Bước 6 &mdash; Đang ghi: các thẻ dịch vụ hiện ra đúng lúc rồng nhắc tới</div></div>
+
+  <div class="step-head"><span class="step-num">7</span><h3>Video MP4 được lưu tự động</h3></div>
+  <p>Hết lời thoại, Studio đổi file ghi sang MP4 và báo: tên file, thời lượng, có âm thanh hay không.</p>
+  <div class="screenshot-wrap"><img src="images/step-07-xuat-video-xong.png" alt="Xuất video xong"><div class="caption">Bước 7 &mdash; Đã lưu <code>video/scuti-ai-red-dragon.mp4</code>, 33 giây, có âm thanh</div></div>
+
+  <div class="step-head"><span class="step-num">8</span><h3>Mở video và kiểm tra</h3></div>
+  <p>Bấm <strong>&ldquo;▶ Mở video&rdquo;</strong> để xem thành phẩm. Kiểm tra nhanh: miệng rồng có khớp giọng không, phụ đề có đúng từ không, cảnh có chuyển đúng câu không.</p>
+  <div class="screenshot-wrap"><img src="images/step-08-phat-video-mp4.png" alt="Phát video MP4"><div class="caption">Bước 8 &mdash; Video thành phẩm đang phát</div></div>
+</section>
+
+<!-- 5 -->
+<section id="s5">
+  <h2>5. Video toàn bộ quá trình</h2>
+  <p>Toàn bộ thao tác từ lúc mở Studio đến khi có video MP4 và mở ra xem:</p>
+  <div class="video-wrap">
+    <video controls preload="metadata" src="video/scuti-ai-red-dragon-talking-video-demo.mp4"></video>
+    <div class="caption">Video quá trình (không có tiếng). Muốn nghe Rồng Đỏ nói, xem video ở mục 2.</div>
+  </div>
+</section>
+
+<!-- 6 -->
+<section id="s6">
+  <h2>6. So sánh với công cụ trong video tham khảo</h2>
+  <div class="table-wrap">
+  <table class="data-table">
+    <thead><tr><th></th><th>Video tham khảo<br>(Claude Code + Fish Audio + Topview + Higgsfield)</th><th>Cách của mình<br>(Claude Code + edge-tts + HTML/SVG + Chrome)</th></tr></thead>
+    <tbody>
+      <tr><td>Chi phí</td><td>Gói Claude trả phí + credit từng dịch vụ</td><td><strong>0 đồng</strong></td></tr>
+      <tr><td>Giọng nói</td><td>Có cảm xúc, có thể clone giọng</td><td>Rõ ràng nhưng ngữ điệu còn đều</td></tr>
+      <tr><td>Khẩu hình</td><td>Khớp từng âm, dùng được cho mặt người</td><td>Theo âm lượng: đủ cho nhân vật hoạt hình</td></tr>
+      <tr><td>Thương hiệu</td><td>AI sinh hình có thể lệch màu, logo, chữ</td><td><strong>Đúng tuyệt đối</strong> màu, logo, chữ tiếng Việt</td></tr>
+      <tr><td>Sửa nội dung</td><td>Sinh lại, mỗi lần một khác</td><td>Sửa 1 câu kịch bản &rarr; tạo giọng &rarr; ghi lại (~1 phút)</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>Hai cách có chung một nguyên tắc: <strong>giọng nói là &ldquo;xương sống&rdquo;, hình được code để chạy theo giọng</strong>. Khi có ngân sách, chỉ cần thay bước giọng đọc bằng Fish Audio hoặc Azure TTS, các bước khác giữ nguyên.</p>
+</section>
+
+<!-- 7 -->
+<section id="s7">
+  <h2>7. Ý kiến cá nhân &amp; áp dụng vào công việc</h2>
+  <ul>
+    <li><strong>Tiêu đề &ldquo;Claude killed the video industry&rdquo; hơi cường điệu</strong>, nhưng ý chính đúng: khi video là code, một AI viết code giỏi trở thành một studio nhỏ. Phần khó nhất vẫn là kịch bản hay.</li>
+    <li><strong>Để giọng nói dẫn dắt mọi thứ.</strong> Cảnh, phụ đề, hiệu ứng đều lấy mốc từ giọng đọc. Đổi giọng hay sửa câu thì video tự khớp lại.</li>
+    <li><strong>Khẩu hình theo âm lượng là đủ cho linh vật.</strong> Với mặt người mới cần công cụ chuyên dụng như Topview.</li>
+    <li><strong>Điểm cần cải thiện:</strong> giọng còn đều, chưa có nhạc nền. Đây là chỗ đáng đầu tư nếu làm chiến dịch marketing thật.</li>
+  </ul>
+
+  <div class="table-wrap">
+  <table class="data-table">
+    <thead><tr><th>Việc hằng ngày</th><th>Áp dụng</th></tr></thead>
+    <tbody>
+      <tr><td>Release note / demo sprint</td><td>Rồng Đỏ đọc 30 giây tóm tắt tính năng mới cho mỗi bản phát hành</td></tr>
+      <tr><td>Đào tạo nội bộ</td><td>Mỗi quy trình (git flow, bảo mật…) là một kịch bản ngắn; sửa chữ là có video mới</td></tr>
+      <tr><td>Khách hàng Nhật / quốc tế</td><td>Đổi sang giọng <code>ja-JP</code> hoặc <code>en-US</code>, phụ đề và thời điểm tự cập nhật</td></tr>
+      <tr><td>Proposal cho khách</td><td>Thêm đoạn video linh vật giới thiệu đề xuất, làm trong vài phút</td></tr>
+      <tr><td>Phụ đề cho mọi video</td><td>Dùng mốc thời gian từng từ để xuất file phụ đề SRT</td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<!-- 8 -->
+<section id="s8">
+  <h2>8. Tự làm lại &amp; tài liệu tham khảo</h2>
+  <div class="prompt-box"><span class="label">TERMINAL</span>pip install edge-tts imageio-ffmpeg
+cd scuti-ai-red-dragon-talking-video
+python studio/studio_server.py
+# mở http://localhost:8765/studio/ trên Chrome và làm theo mục 4</div>
+  <h3>Tài liệu tham khảo</h3>
+  <ul>
+    <li><a href="https://www.youtube.com/watch?v=G3urGJ1RjEo" target="_blank">RKJ VIDEO &mdash; Today, Claude killed the video industry... (YouTube)</a></li>
+    <li><a href="https://github.com/rany2/edge-tts" target="_blank">edge-tts (GitHub)</a></li>
+    <li><a href="https://developer.mozilla.org/docs/Web/API/MediaRecorder" target="_blank">MediaRecorder API (MDN)</a></li>
+  </ul>
+</section>
+
+</div>
+
+<div class="footer">
+  AI Quest &mdash; Investigate How &bull; Scuti AI Red Dragon Talking Video &bull; 2026
+</div>
+
+</body>
+</html>

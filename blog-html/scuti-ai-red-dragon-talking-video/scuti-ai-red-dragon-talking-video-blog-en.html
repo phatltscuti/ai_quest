@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Making a Talking Red Dragon Video for Scuti AI</title>
+<style>
+  :root {
+    --primary: #0d47a1;
+    --primary-light: #1976d2;
+    --accent: #d32f2f;
+    --accent-light: #ff8a80;
+    --bg: #fafafa;
+    --card: #ffffff;
+    --text: #212121;
+    --text-secondary: #616161;
+    --border: #e0e0e0;
+    --code-bg: #263238;
+    --success: #2e7d32;
+    --success-bg: #e8f5e9;
+    --warning: #f57f17;
+    --warning-bg: #fff8e1;
+    --error: #c62828;
+    --gradient-start: #8e1414;
+    --gradient-mid: #d32f2f;
+    --gradient-end: #0d47a1;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.75;
+    font-size: 16px;
+  }
+  .hero {
+    background: linear-gradient(135deg, var(--gradient-start), var(--gradient-mid), var(--gradient-end));
+    color: white;
+    padding: 64px 20px;
+    text-align: center;
+  }
+  .hero h1 { font-size: 2.3em; margin-bottom: 14px; font-weight: 700; letter-spacing: -0.5px; }
+  .hero .subtitle { font-size: 1.12em; opacity: 0.93; max-width: 760px; margin: 0 auto; }
+  .hero .badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.18);
+    padding: 6px 20px;
+    border-radius: 20px;
+    font-size: 0.84em;
+    margin-bottom: 18px;
+    backdrop-filter: blur(4px);
+  }
+  .container { max-width: 940px; margin: 0 auto; padding: 32px 20px; }
+
+  .toc {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px 32px;
+    margin-bottom: 38px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  }
+  .toc h2 { font-size: 1.3em; margin-bottom: 14px; color: var(--primary); border: none; padding: 0; }
+  .toc ol { padding-left: 22px; }
+  .toc li { margin-bottom: 6px; }
+  .toc a { color: var(--primary-light); text-decoration: none; }
+  .toc a:hover { text-decoration: underline; }
+
+  section { margin-bottom: 44px; }
+  h2 {
+    font-size: 1.55em;
+    color: var(--primary);
+    border-bottom: 3px solid var(--primary);
+    padding-bottom: 8px;
+    margin-bottom: 22px;
+  }
+  h3 { font-size: 1.22em; color: var(--text); margin: 22px 0 10px; }
+  h4 { font-size: 1.05em; color: var(--text-secondary); margin: 16px 0 8px; }
+  p { margin-bottom: 14px; }
+  a { color: var(--primary-light); }
+
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+  }
+  .card-accent { border-left: 4px solid var(--accent); }
+  .card-info { border-left: 4px solid var(--primary-light); }
+  .card-warning { border-left: 4px solid var(--warning); background: var(--warning-bg); }
+  .card-success { border-left: 4px solid var(--success); background: var(--success-bg); }
+
+  .prompt-box {
+    background: var(--code-bg);
+    color: #cfd8dc;
+    border-radius: 10px;
+    padding: 30px 24px 22px;
+    margin: 14px 0 22px;
+    font-family: 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+    font-size: 0.88em;
+    line-height: 1.65;
+    white-space: pre-wrap;
+    position: relative;
+    overflow-x: auto;
+  }
+  .prompt-box .label {
+    position: absolute;
+    top: 8px;
+    right: 12px;
+    background: var(--accent);
+    color: white;
+    font-size: 0.7em;
+    padding: 2px 12px;
+    border-radius: 8px;
+    font-family: 'Segoe UI', sans-serif;
+    font-weight: 600;
+  }
+
+  table.data-table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+  table.data-table th, table.data-table td {
+    border: 1px solid var(--border);
+    padding: 10px 14px;
+    text-align: left;
+    font-size: 0.93em;
+    vertical-align: top;
+  }
+  table.data-table th { background: var(--primary); color: white; font-weight: 600; }
+  table.data-table tr:nth-child(even) { background: #f5f5f5; }
+  table.data-table tr:hover { background: #e3f2fd; }
+  .table-wrap { overflow-x: auto; }
+
+  .step-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    background: var(--primary);
+    color: white;
+    border-radius: 50%;
+    font-weight: 700;
+    font-size: 0.9em;
+    margin-right: 12px;
+    flex-shrink: 0;
+  }
+  .step-head { display: flex; align-items: center; margin: 30px 0 10px; }
+  .step-head h3 { margin: 0; }
+
+  .screenshot-wrap { margin: 16px 0; text-align: center; }
+  .screenshot-wrap img {
+    max-width: 100%;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+  .screenshot-wrap .caption { margin-top: 8px; font-size: 0.85em; color: var(--text-secondary); }
+
+  .video-wrap { margin: 18px 0; text-align: center; }
+  .video-wrap video { width: 100%; border-radius: 12px; background: #000; box-shadow: 0 4px 16px rgba(0,0,0,0.18); }
+  .video-wrap .caption { margin-top: 8px; font-size: 0.85em; color: var(--text-secondary); }
+
+  ul, ol { margin-bottom: 14px; padding-left: 24px; }
+  li { margin-bottom: 6px; }
+
+  .flow-diagram {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 22px 0;
+    font-size: 0.92em;
+  }
+  .flow-step { background: var(--primary); color: white; padding: 10px 18px; border-radius: 10px; font-weight: 600; }
+  .flow-step.red { background: var(--accent); }
+  .flow-arrow { color: var(--text-secondary); font-size: 1.4em; }
+
+  .footer {
+    text-align: center;
+    padding: 32px;
+    color: var(--text-secondary);
+    font-size: 0.85em;
+    border-top: 1px solid var(--border);
+    margin-top: 40px;
+  }
+  code { background: #eceff1; padding: 2px 6px; border-radius: 4px; font-size: 0.9em; }
+  .tag {
+    display: inline-block;
+    background: #ffebee;
+    color: var(--accent);
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 0.8em;
+    margin: 2px 4px 2px 0;
+  }
+  .highlight-box {
+    background: linear-gradient(135deg, #ffebee, #e3f2fd);
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin: 18px 0;
+    border: 1px solid #ffcdd2;
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="badge">AI Quest &mdash; Investigate How</div>
+  <h1>Making a Talking Red Dragon Video for Scuti AI</h1>
+  <p class="subtitle">Script &rarr; AI voice &rarr; an animated dragon that moves its mouth with the voice &rarr; a 33-second MP4 with sound. Free, made on a personal laptop.</p>
+</div>
+
+<div class="container">
+
+<nav class="toc">
+  <h2>Table of contents</h2>
+  <ol>
+    <li><a href="#s1">How does the reference video do it?</a></li>
+    <li><a href="#s2">Result: the Red Dragon introduces Scuti AI</a></li>
+    <li><a href="#s3">The method in 4 steps</a></li>
+    <li><a href="#s4">Step-by-step demo</a></li>
+    <li><a href="#s5">Full process video</a></li>
+    <li><a href="#s6">Comparison with the reference tools</a></li>
+    <li><a href="#s7">My opinion &amp; how I apply it</a></li>
+    <li><a href="#s8">Do it yourself &amp; references</a></li>
+  </ol>
+</nav>
+
+<section id="s1">
+  <h2>1. How does the reference video do it?</h2>
+  <p>Reference: <a href="https://www.youtube.com/watch?v=G3urGJ1RjEo" target="_blank"><strong>&ldquo;Today, Claude killed the video industry...&rdquo;</strong></a> (RKJ VIDEO channel). The core idea is simple:</p>
+  <div class="card card-info">
+    <p style="margin:0"><strong>Give the AI a script and a voice &rarr; the AI writes code that animates in sync with the audio &rarr; export the video &rarr; review and fix.</strong></p>
+  </div>
+  <div class="table-wrap">
+  <table class="data-table">
+    <thead><tr><th>Job</th><th>Tool used by the author</th></tr></thead>
+    <tbody>
+      <tr><td>Write the video as code, sync visuals to audio</td><td><span class="tag">Claude Code</span> (Claude Opus 5.5)</td></tr>
+      <tr><td>AI voice</td><td><span class="tag">Fish Audio</span></td></tr>
+      <tr><td>Lip-sync</td><td><span class="tag">Topview</span></td></tr>
+      <tr><td>AI live-action shots</td><td><span class="tag">Higgsfield</span> (via MCP)</td></tr>
+      <tr><td>Background music</td><td><span class="tag">Artlist</span></td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>The prompt I derived from the video</h3>
+  <p>In the video, the author uses a single prompt that clearly states <em>length, character, dialogue and voice</em>. I rewrote it for Scuti AI and gave it to Claude Code:</p>
+  <div class="prompt-box"><span class="label">PROMPT</span>Make a ~30-second promo video for Scuti AI.
+- Main character: the Red Dragon mascot (chibi, yellow horns, navy scarf with an S). The dragon must SPEAK in Vietnamese.
+- Voice: use edge-tts to read the script file and keep the timing of every word.
+- Animation: HTML/SVG, 1280×720, 5 scenes for 5 sentences. The dragon's mouth opens with the loudness of the voice; subtitles highlight the word being spoken.
+- Build a "Studio" page where I type the script, generate the voice, preview, and record an MP4 with sound.
+- When done, grab a few frames yourself to check that mouth and subtitles match the voice.</div>
+  <p>The most important piece of code Claude wrote is the <strong>mouth-opening function</strong> driven by the loudness of the voice file. That is what makes the dragon "talk" without a paid lip-sync tool:</p>
+  <div class="prompt-box"><span class="label">assets/scuti-dragon.html</span>// env = loudness of the voice, 50 values per second (pre-computed from the mp3)
+function mouthOpen(t) {
+  const e = TL.env[Math.floor(t * TL.fps)] || 0;
+  return Math.max(0, Math.min(1, (e - 0.10) / 0.65));  // ignore breath noise; 0 = closed, 1 = wide open
+}</div>
+</section>
+
+<section id="s2">
+  <h2>2. Result: the Red Dragon introduces Scuti AI</h2>
+  <div class="video-wrap">
+    <video controls preload="metadata" src="video/scuti-ai-red-dragon.mp4"></video>
+    <div class="caption">Turn the sound on to hear the Red Dragon &mdash; 33 s, 1280&times;720, MP4 (H.264 + AAC)</div>
+  </div>
+  <ul>
+    <li><strong>5 scenes:</strong> Greeting &rarr; About Scuti AI &rarr; Services &rarr; &ldquo;This video was made with AI&rdquo; &rarr; Call to action.</li>
+    <li><strong>The dragon really talks:</strong> the mouth follows the voice, subtitles highlight the current word, service cards appear exactly when the dragon mentions them.</li>
+    <li><strong>Cost:</strong> zero, no service accounts needed.</li>
+  </ul>
+  <div class="card card-warning">
+    <strong>Note:</strong> the Red Dragon was redrawn in SVG and is not Scuti's official design file. For real use, swap in the brand team's asset; everything else stays the same.
+  </div>
+</section>
+
+<section id="s3">
+  <h2>3. The method in 4 steps</h2>
+  <div class="flow-diagram">
+    <div class="flow-step red">1. Write the script</div><div class="flow-arrow">&rarr;</div>
+    <div class="flow-step">2. Generate the voice (edge-tts)</div><div class="flow-arrow">&rarr;</div>
+    <div class="flow-step">3. Dragon talks with the voice (HTML/SVG)</div><div class="flow-arrow">&rarr;</div>
+    <div class="flow-step red">4. Record to MP4</div>
+  </div>
+  <div class="table-wrap">
+  <table class="data-table">
+    <thead><tr><th>Tool</th><th>What it does</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Red Dragon Studio</strong> (a local web page)</td><td>Where you work: type the script, pick a voice, listen, open the animation</td></tr>
+      <tr><td><code>edge-tts</code></td><td>Reads the script in a Vietnamese voice (free) and returns the timing of every word</td></tr>
+      <tr><td>HTML / SVG / JavaScript</td><td>Draws the dragon, scenes and subtitles; the mouth opens with the voice</td></tr>
+      <tr><td>Google Chrome</td><td>Previews and <strong>records the tab with sound</strong> using the built-in MediaRecorder</td></tr>
+      <tr><td><code>ffmpeg</code></td><td>Converts the recording to MP4 (H.264 + AAC) so it plays everywhere</td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<section id="s4">
+  <h2>4. Step-by-step demo</h2>
+  <p>Open a terminal in the project folder, run <code>python studio/studio_server.py</code>, then open <code>http://localhost:8765/studio/</code> in Chrome.</p>
+
+  <div class="step-head"><span class="step-num">1</span><h3>Open Red Dragon Studio</h3></div>
+  <p>Three panels: (1) script and voice, (2) listen to the voice, (3) watch the dragon and export the video.</p>
+  <div class="screenshot-wrap"><img src="images/step-01-mo-studio.png" alt="Red Dragon Studio"><div class="caption">Step 1 &mdash; The Red Dragon Studio page</div></div>
+
+  <div class="step-head"><span class="step-num">2</span><h3>Type the script and pick a voice</h3></div>
+  <p>One sentence = one scene. I picked the <strong>Nam Minh</strong> voice for the dragon.</p>
+  <div class="prompt-box"><span class="label">SCRIPT (Vietnamese)</span>Xin chào! Mình là Rồng Đỏ, linh vật của Scuti AI.
+Ở Scuti, các kỹ sư Việt Nam kết hợp cùng trí tuệ nhân tạo để xây dựng phần mềm nhanh hơn và thông minh hơn.
+Từ AI agent, tự động hóa quy trình, đến ứng dụng web và di động, chúng mình đồng hành cùng bạn từ ý tưởng đến sản phẩm.
+Ngay cả video này cũng được làm bằng AI: giọng nói tổng hợp, hoạt hình viết bằng code, và ghép tiếng bằng ffmpeg.
+Bạn đang có ý tưởng? Hãy cùng Scuti AI biến nó thành hiện thực nhé!</div>
+  <div class="screenshot-wrap"><img src="images/step-02-go-kich-ban.png" alt="Typing the script"><div class="caption">Step 2 &mdash; 5-sentence script, Nam Minh voice</div></div>
+  <div class="card card-accent"><strong>Tip:</strong> put the words you want on screen (&ldquo;AI agent&rdquo;, &ldquo;web&rdquo;, &ldquo;mobile&rdquo;) inside the spoken sentence, so the effect appears exactly when the dragon says it.</div>
+
+  <div class="step-head"><span class="step-num">3</span><h3>Click &ldquo;Generate voice&rdquo;</h3></div>
+  <p>A few seconds later the Studio shows the voice length, word count, sentence count and the waveform. Word timings are saved for lip-sync and subtitles.</p>
+  <div class="screenshot-wrap"><img src="images/step-03-tao-giong-doc.png" alt="Voice generated"><div class="caption">Step 3 &mdash; About 32 seconds of voice ready</div></div>
+
+  <div class="step-head"><span class="step-num">4</span><h3>Listen to the voice</h3></div>
+  <p>Press play in the player. Not happy? Edit the script or switch voice and generate again.</p>
+  <div class="screenshot-wrap"><img src="images/step-04-nghe-thu.png" alt="Listening"><div class="caption">Step 4 &mdash; Listening inside the Studio</div></div>
+
+  <div class="step-head"><span class="step-num">5</span><h3>Open the animation and preview</h3></div>
+  <p>Click <strong>&ldquo;Open animation page&rdquo;</strong>, then <strong>&ldquo;▶ Preview&rdquo;</strong>: the dragon talks, its mouth follows the voice, subtitles highlight the current word.</p>
+  <div class="screenshot-wrap"><img src="images/step-05-xem-truoc-rong.png" alt="Preview"><div class="caption">Step 5 &mdash; The Red Dragon speaking, subtitles follow the voice</div></div>
+
+  <div class="step-head"><span class="step-num">6</span><h3>Click &ldquo;⏺ Record video&rdquo;</h3></div>
+  <p>Chrome asks for permission to record the tab, so click <strong>Allow</strong>. The animation restarts and Chrome records picture and sound together. A "Recording" timer appears below the 1280&times;720 frame, so it is not part of the video.</p>
+  <div class="screenshot-wrap"><img src="images/step-06-dang-ghi-video.png" alt="Recording"><div class="caption">Step 6 &mdash; Recording: service cards pop up when the dragon mentions them</div></div>
+
+  <div class="step-head"><span class="step-num">7</span><h3>The MP4 is saved automatically</h3></div>
+  <p>When the narration ends, the Studio converts the recording to MP4 and reports the file name, duration and whether it has sound.</p>
+  <div class="screenshot-wrap"><img src="images/step-07-xuat-video-xong.png" alt="Export done"><div class="caption">Step 7 &mdash; Saved <code>video/scuti-ai-red-dragon.mp4</code>, 33 s, with audio</div></div>
+
+  <div class="step-head"><span class="step-num">8</span><h3>Open and check the video</h3></div>
+  <p>Click <strong>&ldquo;▶ Open video&rdquo;</strong>. Quick checks: does the mouth match the voice, are the subtitles right, do scenes change on the right sentence?</p>
+  <div class="screenshot-wrap"><img src="images/step-08-phat-video-mp4.png" alt="Playing the MP4"><div class="caption">Step 8 &mdash; The final video playing</div></div>
+</section>
+
+<section id="s5">
+  <h2>5. Full process video</h2>
+  <p>Every action from opening the Studio to the finished MP4 playing:</p>
+  <div class="video-wrap">
+    <video controls preload="metadata" src="video/scuti-ai-red-dragon-talking-video-demo.mp4"></video>
+    <div class="caption">Process video (no sound). To hear the dragon, watch the video in section 2.</div>
+  </div>
+</section>
+
+<section id="s6">
+  <h2>6. Comparison with the reference tools</h2>
+  <div class="table-wrap">
+  <table class="data-table">
+    <thead><tr><th></th><th>Reference video<br>(Claude Code + Fish Audio + Topview + Higgsfield)</th><th>My approach<br>(Claude Code + edge-tts + HTML/SVG + Chrome)</th></tr></thead>
+    <tbody>
+      <tr><td>Cost</td><td>Paid Claude plan + credits for each service</td><td><strong>Free</strong></td></tr>
+      <tr><td>Voice</td><td>Expressive, voice cloning</td><td>Clear but flat intonation</td></tr>
+      <tr><td>Lip-sync</td><td>Phoneme-accurate, works for human faces</td><td>Loudness-based: enough for a cartoon mascot</td></tr>
+      <tr><td>Branding</td><td>Generated visuals may drift (colors, logo, text)</td><td><strong>Exact</strong> colors, logo and Vietnamese text</td></tr>
+      <tr><td>Editing</td><td>Regenerate; results vary each time</td><td>Edit one sentence &rarr; regenerate voice &rarr; record (~1 min)</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>Both share one principle: <strong>the voice is the backbone, and the visuals are coded to follow it</strong>. With budget, just swap the voice step for Fish Audio or Azure TTS and keep the rest.</p>
+</section>
+
+<section id="s7">
+  <h2>7. My opinion &amp; how I apply it</h2>
+  <ul>
+    <li><strong>&ldquo;Claude killed the video industry&rdquo; is an exaggeration</strong>, but the point stands: when video is code, an AI that writes good code becomes a small studio. The hardest part is still a good script.</li>
+    <li><strong>Let the voice drive everything.</strong> Scenes, subtitles and effects take their timing from the voice, so changing the voice or a sentence re-syncs the whole video.</li>
+    <li><strong>Loudness-based lip-sync is enough for a mascot.</strong> Human faces need a dedicated tool like Topview.</li>
+    <li><strong>To improve:</strong> the voice is still flat and there is no music. That is where to spend money for a real campaign.</li>
+  </ul>
+  <div class="table-wrap">
+  <table class="data-table">
+    <thead><tr><th>Daily work</th><th>How I apply it</th></tr></thead>
+    <tbody>
+      <tr><td>Release notes / sprint demos</td><td>The Red Dragon reads a 30-second summary of new features for every release</td></tr>
+      <tr><td>Internal training</td><td>Each process (git flow, security…) is a short script; edit the text to get a new video</td></tr>
+      <tr><td>Japanese / global clients</td><td>Switch to a <code>ja-JP</code> or <code>en-US</code> voice; subtitles and timing update automatically</td></tr>
+      <tr><td>Client proposals</td><td>Add a short mascot intro video in minutes</td></tr>
+      <tr><td>Subtitles for any video</td><td>Export word timings to an SRT subtitle file</td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<section id="s8">
+  <h2>8. Do it yourself &amp; references</h2>
+  <div class="prompt-box"><span class="label">TERMINAL</span>pip install edge-tts imageio-ffmpeg
+cd scuti-ai-red-dragon-talking-video
+python studio/studio_server.py
+# open http://localhost:8765/studio/ in Chrome and follow section 4</div>
+  <h3>References</h3>
+  <ul>
+    <li><a href="https://www.youtube.com/watch?v=G3urGJ1RjEo" target="_blank">RKJ VIDEO &mdash; Today, Claude killed the video industry... (YouTube)</a></li>
+    <li><a href="https://github.com/rany2/edge-tts" target="_blank">edge-tts (GitHub)</a></li>
+    <li><a href="https://developer.mozilla.org/docs/Web/API/MediaRecorder" target="_blank">MediaRecorder API (MDN)</a></li>
+  </ul>
+</section>
+
+</div>
+
+<div class="footer">
+  AI Quest &mdash; Investigate How &bull; Scuti AI Red Dragon Talking Video &bull; 2026
+</div>
+
+</body>
+</html>

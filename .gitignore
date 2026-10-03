@@ -1,0 +1,8 @@
+.idea/
+__pycache__/
+*.pyc
+tools/windows-terminal/
+blog-html/scuti-ai-motion-graphics-video/claude-terminal/shots/
+blog-html/scuti-ai-motion-graphics-video/claude-terminal/*.mkv
+blog-html/scuti-ai-motion-graphics-video/claude-terminal/session.cmd
+blog-html/scuti-ai-motion-graphics-video/claude-terminal/drive.log

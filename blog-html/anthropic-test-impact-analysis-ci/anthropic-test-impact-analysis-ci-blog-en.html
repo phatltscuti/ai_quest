@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agentic coding is straining CI &ndash; How Anthropic scaled Test Impact Analysis</title>
+<style>
+  :root {
+    --primary: #0d47a1;
+    --primary-light: #1976d2;
+    --accent: #ff6d00;
+    --bg: #fafafa;
+    --card: #ffffff;
+    --text: #212121;
+    --text-secondary: #616161;
+    --border: #e0e0e0;
+    --code-bg: #263238;
+    --success: #2e7d32;
+    --success-bg: #e8f5e9;
+    --warning: #f57f17;
+    --warning-bg: #fff8e1;
+    --error: #c62828;
+    --gradient-start: #0d47a1;
+    --gradient-mid: #1565c0;
+    --gradient-end: #00838f;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.75;
+    font-size: 16px;
+  }
+  .hero {
+    background: linear-gradient(135deg, var(--gradient-start), var(--gradient-mid), var(--gradient-end));
+    color: white;
+    padding: 64px 20px;
+    text-align: center;
+  }
+  .hero h1 { font-size: 2.2em; margin-bottom: 14px; font-weight: 700; letter-spacing: -0.5px; max-width: 900px; margin-left: auto; margin-right: auto; }
+  .hero .subtitle { font-size: 1.12em; opacity: 0.93; max-width: 760px; margin: 0 auto; }
+  .hero .badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.18);
+    padding: 6px 20px;
+    border-radius: 20px;
+    font-size: 0.84em;
+    margin-bottom: 18px;
+  }
+  .container { max-width: 940px; margin: 0 auto; padding: 32px 20px; }
+  .toc {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px 32px;
+    margin-bottom: 38px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  }
+  .toc h2 { font-size: 1.3em; margin-bottom: 14px; color: var(--primary); border: none; padding: 0; }
+  .toc ol { padding-left: 22px; }
+  .toc li { margin-bottom: 6px; }
+  .toc a { color: var(--primary-light); text-decoration: none; }
+  .toc a:hover { text-decoration: underline; }
+  section { margin-bottom: 44px; }
+  h2 {
+    font-size: 1.55em;
+    color: var(--primary);
+    border-bottom: 3px solid var(--primary);
+    padding-bottom: 8px;
+    margin-bottom: 22px;
+  }
+  h3 { font-size: 1.22em; color: var(--text); margin: 22px 0 10px; }
+  p { margin-bottom: 14px; }
+  a { color: var(--primary-light); }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+  }
+  .card-accent { border-left: 4px solid var(--accent); }
+  .card-info { border-left: 4px solid var(--primary-light); }
+  .card-warning { border-left: 4px solid var(--warning); background: var(--warning-bg); }
+  .card-success { border-left: 4px solid var(--success); background: var(--success-bg); }
+  .prompt-box {
+    background: var(--code-bg);
+    color: #cfd8dc;
+    border-radius: 10px;
+    padding: 22px 24px;
+    margin: 14px 0 22px;
+    font-family: 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+    font-size: 0.88em;
+    line-height: 1.65;
+    white-space: pre-wrap;
+    position: relative;
+    overflow-x: auto;
+  }
+  .prompt-box .label {
+    position: absolute; top: 8px; right: 12px;
+    background: var(--accent); color: white;
+    font-size: 0.7em; padding: 2px 12px; border-radius: 8px;
+    font-family: 'Segoe UI', sans-serif; font-weight: 600;
+  }
+  table.data-table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+  table.data-table th, table.data-table td {
+    border: 1px solid var(--border);
+    padding: 10px 14px;
+    text-align: left;
+    font-size: 0.93em;
+    vertical-align: top;
+  }
+  table.data-table th { background: var(--primary); color: white; font-weight: 600; }
+  table.data-table tr:nth-child(even) { background: #f5f5f5; }
+  table.data-table tr:hover { background: #e3f2fd; }
+  .table-wrap { overflow-x: auto; }
+  .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 18px 0; }
+  @media (max-width: 700px) { .compare-grid { grid-template-columns: 1fr; } .hero h1 { font-size: 1.6em; } }
+  .step-num {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 34px; height: 34px; background: var(--primary); color: white;
+    border-radius: 50%; font-weight: 700; font-size: 0.9em; margin-right: 12px; flex-shrink: 0;
+  }
+  .step-row { display: flex; align-items: flex-start; margin-bottom: 14px; }
+  .step-row p { margin: 0; }
+  .screenshot-wrap { margin: 18px 0; text-align: center; }
+  .screenshot-wrap img, .screenshot-wrap video {
+    max-width: 100%;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+  .screenshot-wrap .caption { margin-top: 8px; font-size: 0.85em; color: var(--text-secondary); }
+  ul, ol { margin-bottom: 14px; padding-left: 24px; }
+  li { margin-bottom: 6px; }
+  .flow-diagram { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 8px; margin: 22px 0; font-size: 0.92em; }
+  .flow-step { background: var(--primary); color: white; padding: 10px 18px; border-radius: 10px; font-weight: 600; }
+  .flow-step.green { background: var(--success); }
+  .flow-arrow { color: var(--text-secondary); font-size: 1.4em; }
+  .stat-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 18px 0; }
+  @media (max-width: 700px) { .stat-row { grid-template-columns: 1fr 1fr; } }
+  .stat { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 16px; text-align: center; }
+  .stat b { display: block; font-size: 1.8em; color: var(--primary); line-height: 1.2; }
+  .stat span { font-size: 0.85em; color: var(--text-secondary); }
+  .footer {
+    text-align: center; padding: 32px; color: var(--text-secondary);
+    font-size: 0.85em; border-top: 1px solid var(--border); margin-top: 40px;
+  }
+  code { background: #eceff1; padding: 2px 6px; border-radius: 4px; font-size: 0.9em; }
+  .tag { display: inline-block; background: #e3f2fd; color: var(--primary); padding: 2px 10px; border-radius: 12px; font-size: 0.8em; margin: 2px 4px 2px 0; }
+  .highlight-box {
+    background: linear-gradient(135deg, #e3f2fd, #e8f5e9);
+    border-radius: 12px; padding: 20px 24px; margin: 18px 0; border: 1px solid #bbdefb;
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="badge">AI Quest &mdash; Investigate What</div>
+  <h1>Agentic coding is straining CI &mdash; how Anthropic scaled Test Impact Analysis</h1>
+  <p class="subtitle">A summary and analysis of Anthropic&rsquo;s post: why CI becomes the bottleneck once AI writes 80% of the code, why three quick fixes expired faster and faster, and how a stateless design stabilised the test selection service &mdash; plus how we can apply it at Scuti AI.</p>
+</div>
+
+<div class="container">
+
+<nav class="toc">
+  <h2>Table of contents</h2>
+  <ol>
+    <li><a href="#s1">The source article &amp; why it matters</a></li>
+    <li><a href="#s2">The challenge: how agentic coding loads CI</a></li>
+    <li><a href="#s3">Test Impact Analysis at Anthropic: the v0 architecture</a></li>
+    <li><a href="#s4">Three patches &mdash; each one bought less time</a></li>
+    <li><a href="#s5">The redesign: the mechanism in detail</a></li>
+    <li><a href="#s6">What the author would do differently</a></li>
+    <li><a href="#s7">Tiny illustration: changed files &rarr; dependency map &rarr; selected tests</a></li>
+    <li><a href="#s8">Personal learnings &amp; how to apply them at Scuti AI</a></li>
+    <li><a href="#s9">Demo video of the research session</a></li>
+    <li><a href="#s10">Conclusion &amp; references</a></li>
+  </ol>
+</nav>
+
+<section id="s1">
+  <h2>1. The source article &amp; why it matters</h2>
+  <p><a href="https://claude.com/blog/agentic-coding-is-straining-ci-heres-how-we-scaled-test-impact-analysis-at-anthropic" target="_blank"><em>&ldquo;Agentic coding is straining CI. Here&rsquo;s how we scaled test impact analysis at Anthropic&rdquo;</em></a> was written by <strong>Sachin Malhotra</strong> and published on the claude.com blog on <strong>September 14, 2026</strong> (about a 6-minute read). It reads like a real incident diary: the team patched its test selection service three times before rebuilding it.</p>
+  <div class="card card-info">
+    <strong>One-sentence takeaway:</strong> as agents write and review code faster, CI jobs grow exponentially; the usual fixes (bigger box, sharding, restarts) buy less time each round, while a proper redesign has become much cheaper &mdash; so <strong>plan for the exponential</strong> from day one.
+  </div>
+  <p>The author is explicit that the scaling techniques themselves are not the insight. The point is <strong>how quickly half-measures expire</strong> and <strong>how much cheaper a rebuild has become</strong> now that writing code is no longer the constraint.</p>
+</section>
+
+<section id="s2">
+  <h2>2. The challenge: how agentic coding loads CI</h2>
+  <div class="stat-row">
+    <div class="stat"><b>8&times;</b><span>code shipped per engineer per quarter vs. 2021&ndash;2025</span></div>
+    <div class="stat"><b>80%</b><span>of that code authored by Claude (which also helps review/approve PRs)</span></div>
+    <div class="stat"><b>10&times;</b><span>more tests in the codebase</span></div>
+    <div class="stat"><b>25&times;</b><span>more CI jobs over six months</span></div>
+  </div>
+  <h3>2.1. The bottleneck moves downstream</h3>
+  <p>The constraint used to be <em>writing</em> code. Once Claude wrote most of it, the constraint moved to <em>PR review</em>; once review was accelerated too, the pressure landed on <strong>CI</strong>. Headcount grew only nominally, yet CI jobs grew 25&times; &mdash; and that is with selective, not exhaustive, test runs.</p>
+  <div class="screenshot-wrap">
+    <img src="images/step-02-bottleneck-moves-downstream.png" alt="Bottleneck moves from build to review to CI">
+    <div class="caption">Image 1 &mdash; Figure from the source: the bottleneck moves BUILD &rarr; REVIEW &rarr; CI.</div>
+  </div>
+  <h3>2.2. Why jobs grow faster than code</h3>
+  <ul>
+    <li><strong>Smaller, more granular PRs:</strong> Claude prefers them, and every PR is a CI run.</li>
+    <li><strong>More agents per engineer</strong> working in parallel.</li>
+    <li><strong>No quiet hours:</strong> agents push overnight and on weekends, raising the floor, while traffic stays bursty because humans still drive and approve many PRs.</li>
+  </ul>
+  <h3>2.3. &ldquo;Run everything&rdquo; stops working &mdash; and agents need precise test sets</h3>
+  <p>Running every test on every change works up to a point, then CI gates become <strong>slow, expensive and untrustworthy</strong>. Humans can shrug off failures that obviously aren&rsquo;t theirs; agents need context. Given a <strong>specific set of valid tests</strong>, an agent can self-verify and iterate far more effectively.</p>
+  <div class="screenshot-wrap">
+    <img src="images/step-03-ci-job-volume-runway.png" alt="CI job volume and runway each patch bought">
+    <div class="caption">Image 2 &mdash; Figure from the source: CI job volume (the article cites 25&times; in six months) and the runway each patch bought (~10 weeks, 29 days, &lt;1 day).</div>
+  </div>
+</section>
+
+<section id="s3">
+  <h2>3. Test Impact Analysis at Anthropic: the v0 architecture</h2>
+  <p>Anthropic built a <strong>deterministic test impact analysis (test selection) service</strong> that decides which tests run for each change, based on <strong>past performance</strong> and <strong>package relevance</strong>. The author notes this is not unusual &mdash; there is a whole vendor category for it.</p>
+  <div class="flow-diagram">
+    <div class="flow-step">CI job finishes</div><div class="flow-arrow">&rarr;</div>
+    <div class="flow-step">Listener records result</div><div class="flow-arrow">&rarr;</div>
+    <div class="flow-step">Per-test history</div><div class="flow-arrow">&rarr;</div>
+    <div class="flow-step green">Selector picks tests per PR</div>
+  </div>
+  <ul>
+    <li><strong>Listener:</strong> records test results from every CI run.</li>
+    <li><strong>Selector:</strong> reads that history and decides which tests run on which open PRs.</li>
+  </ul>
+  <p>The two must stay in sync. In v0 everything ran in <strong>a single process</strong>, because keeping a running history per test meant a single writer had to apply results in order. That made <strong>horizontal sharding impossible</strong>.</p>
+  <div class="card card-warning">
+    <strong>What listener lag does:</strong> with several CI jobs per second, 20 minutes of lag can mean <strong>tens of thousands of test updates</strong> the selector hasn&rsquo;t seen:
+    <ul style="margin-top:8px">
+      <li>A bad change gets merged &rarr; a test fails for everyone &rarr; many needless investigations.</li>
+      <li>A dependency starts flaking &rarr; flaky reds block merges.</li>
+      <li>A test is fixed or added &rarr; it won&rsquo;t run until the listener catches up &rarr; regression risk.</li>
+    </ul>
+  </div>
+</section>
+
+<section id="s4">
+  <h2>4. Three patches &mdash; each one bought less time</h2>
+  <p>By October 2025 the service showed strain and on-call was paged two days in a row. As early as December 2025 someone on the team had flagged that the design would need replacing before &ldquo;we can&rsquo;t simply get a bigger boat&rdquo;. The sequence:</p>
+  <div class="table-wrap">
+  <table class="data-table">
+    <thead><tr><th>Patch</th><th>What</th><th>Lasted</th><th>Why it didn&rsquo;t hold</th></tr></thead>
+    <tbody>
+      <tr><td><strong>1. Bigger machine</strong></td><td>Doubled the cores</td><td>~70 days</td><td>Load was exponential; everybody knew it was temporary. Ownership was also murky &mdash; nobody wanted another piece of infra.</td></tr>
+      <tr><td><strong>2. Sharding</strong></td><td>Realised the listener needs one writer <em>per package</em>, not one overall. Claude generated the code to split each package&rsquo;s state into its own shard and worker.</td><td>29 days</td><td>Still an in-memory, stateful process; load kept climbing.</td></tr>
+      <tr><td><strong>3. Daily restarts</strong></td><td>By March the process hit its memory limit by mid-afternoon most weekdays. Four bugs found, swapping the allocator did nothing, profiling a loaded singleton felt too risky &rarr; restart.</td><td>&lt; 1 day</td><td>Restarts made it fall further behind; several times it lagged &gt;1 hour and many job results were never recorded.</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <div class="screenshot-wrap">
+    <img src="images/step-07-listener-memory-limit.png" alt="Listener memory against pod limit">
+    <div class="caption">Image 3 &mdash; Listener memory repeatedly hitting the pod limit; daily restarts begin.</div>
+  </div>
+  <h3>4.1. Claude as a long-running on-call partner</h3>
+  <p>During patch 2 the author kept a <strong>long-running session in an internal version of Claude Tag</strong> dedicated to the service: whenever listener lag exceeded <strong>50,000 jobs</strong>, Claude pinged him and resumed the conversation about next steps &mdash; for months, without re-explaining context. Notably, <strong>Claude often argued for an overhaul</strong>; the humans usually settled for another patch. For example, with the pod at hundreds of GiB, Claude offered both a quick unblock (restart the pod) and the simplest real fix (evict cold shards after flush).</p>
+  <div class="card card-info">
+    <strong>Important clarification:</strong> missed results did <em>not</em> mean PRs skipped CI or untested code reached production. It meant the selector decided with <strong>stale data</strong> &mdash; mostly causing it to run tests that were already very flaky or failing across the board.
+  </div>
+</section>
+
+<section id="s5">
+  <h2>5. The redesign: the mechanism in detail</h2>
+  <p>The team finally took Claude&rsquo;s advice: <strong>give the test selection service a database</strong> &mdash; specifically an <strong>in-memory data store</strong> &mdash; offloading most of the in-memory processing the singleton used to do.</p>
+  <div class="screenshot-wrap">
+    <img src="images/diagram-01-tia-pipeline.png" alt="TIA pipeline before and after redesign">
+    <div class="caption">Diagram 1 (my own, HTML/SVG &rarr; PNG) &mdash; v0 singleton plus three patches (top) vs. the stateless redesign (bottom).</div>
+  </div>
+  <h3>5.1. Four building blocks</h3>
+  <div class="step-row"><span class="step-num">1</span><p><strong>Stateless listener workers:</strong> any worker can process any result &mdash; append it to the journal and move on, holding nothing in memory. Need more throughput? Add workers.</p></div>
+  <div class="step-row"><span class="step-num">2</span><p><strong>A journal in the in-memory store:</strong> raw results in arrival order, decoupling ingestion from history computation.</p></div>
+  <div class="step-row"><span class="step-num">3</span><p><strong>A small, separate rollup consumer:</strong> every few seconds it folds the journal into per-test history.</p></div>
+  <div class="step-row"><span class="step-num">4</span><p><strong>A selector with fast lookups</strong> of the rolled-up history to pick tests per PR.</p></div>
+  <div class="screenshot-wrap">
+    <img src="images/step-08-selection-service-before-after.png" alt="Before and after of CI test selection service">
+    <div class="caption">Image 4 &mdash; Figure from the source: BEFORE (one listener process holding all history) vs. AFTER (many listeners + a journal outside every process).</div>
+  </div>
+  <h3>5.2. Results and trade-offs</h3>
+  <ul>
+    <li><strong>More expensive to run</strong>, but far <strong>easier to scale and memory-profile</strong> than a shaky singleton.</li>
+    <li><strong>Three weeks, one engineer</strong> (with Claude). A year earlier the author estimates it would have taken close to <strong>a quarter</strong>.</li>
+    <li>Tuning (journal size, worker count) was <strong>largely done autonomously by Claude</strong>; the service has been stable since.</li>
+    <li>The queued-event backlog used to build up most days and grow week over week; after cutover and tuning it is <strong>flat</strong>.</li>
+  </ul>
+  <div class="screenshot-wrap">
+    <img src="images/step-09-listener-backlog-after-redesign.png" alt="Listener backlog before and after redesign">
+    <div class="caption">Image 5 &mdash; Figure from the source: listener backlog before/after (redesign shipped May 9, sized and tuned by May 14).</div>
+  </div>
+  <div class="screenshot-wrap">
+    <img src="images/diagram-02-patch-timeline.png" alt="Agentic load vs. how long each fix lasted">
+    <div class="caption">Diagram 2 (my own) &mdash; Load pressure and the shrinking lifetime of each patch.</div>
+  </div>
+</section>
+
+<section id="s6">
+  <h2>6. What the author would do differently</h2>
+  <div class="card card-accent">
+    <ol>
+      <li><strong>Account for the AI exponential:</strong> build or buy, assume <strong>25&times; load within two quarters</strong>. The bar for &ldquo;over-engineering&rdquo; has moved much higher; budget permitting, design v0 for <strong>10&ndash;20&times; the perceived scale</strong>.</li>
+      <li><strong>Instrument services as Claude&rsquo;s eyes and ears</strong> so it can hill-climb and fix issues incrementally. Above all: <strong>CI jobs in must equal CI jobs out</strong>.</li>
+      <li><strong>Keep state out of the process from the start</strong>, and don&rsquo;t run a critical service as a single instance unless you can measure it and every canary change.</li>
+    </ol>
+  </div>
+</section>
+
+<section id="s7">
+  <h2>7. Tiny illustration: changed files &rarr; dependency map &rarr; selected tests</h2>
+  <div class="card card-warning">
+    <strong>Note:</strong> the code below is <strong>my own toy example</strong> with fake data, written to understand the idea. <strong>It is NOT Anthropic&rsquo;s code</strong> &mdash; the article publishes no source and does not detail the selection algorithm beyond &ldquo;past performance + package relevance&rdquo;.
+  </div>
+  <p><code>tia_demo.py</code> (Python standard library only) simulates both halves:</p>
+  <ul>
+    <li><strong>Write path:</strong> three stateless &ldquo;listener workers&rdquo; append results to a journal; a rollup consumer folds them into per-test history; it prints <code>jobs in / jobs rolled up / lag</code> &mdash; the &ldquo;in = out&rdquo; signal the author recommends.</li>
+    <li><strong>Select path:</strong> changed files &rarr; touched packages &rarr; plus reverse dependencies &rarr; candidate tests &rarr; classified by history: <em>healthy/new</em> run, <em>flaky</em> run non-blocking, <em>broken on main</em> skipped (my design choice).</li>
+  </ul>
+  <div class="prompt-box"><span class="label">PowerShell</span>cd anthropic-test-impact-analysis-ci
+python tia_demo.py</div>
+  <div class="screenshot-wrap">
+    <img src="images/diagram-03-tia-demo-output.png" alt="Output of tia_demo.py">
+    <div class="caption">Diagram 3 &mdash; Real output of <code>tia_demo.py</code>: a PR touching <code>billing/tax_jp.py</code> runs only 3 of 8 tests.</div>
+  </div>
+  <p>My earlier post on <a href="../playwright-parallel-e2e-ci/index.html">Playwright parallel E2E + CI tuning</a> also used an <code>impact-map.json</code> at E2E level. The two complement each other: that one optimises <em>how</em> tests run, this one <em>which</em> tests run.</p>
+</section>
+
+<section id="s8">
+  <h2>8. Personal learnings &amp; how to apply them at Scuti AI</h2>
+  <h3>8.1. Personal learnings</h3>
+  <ul>
+    <li><strong>Supporting systems are now front-line.</strong> I used to treat CI as &ldquo;good enough&rdquo; infra. With heavy Claude Code usage, CI, test selection and queues are where things break first.</li>
+    <li><strong>Measure the lifetime of a patch.</strong> If each fix lives shorter than the last, it&rsquo;s time to redesign, not patch again.</li>
+    <li><strong>The cost of a rewrite has changed.</strong> &ldquo;A rebuild takes a quarter&rdquo; used to justify tech debt; with agents that argument is much weaker.</li>
+    <li><strong>Listen to the AI when it has the data.</strong> Claude argued for an overhaul early; humans hesitated. Clear ownership matters as much as technique.</li>
+    <li><strong>Agents need precise test sets.</strong> An agent handed 300 irrelevant red tests burns tokens and may &ldquo;fix&rdquo; the wrong thing. Good test selection is part of context engineering.</li>
+  </ul>
+  <h3>8.2. Applying it to outsourcing projects (Japanese clients)</h3>
+  <p>Our projects are far smaller than Anthropic&rsquo;s, so we don&rsquo;t need an in-memory store or worker pool yet &mdash; but the principles carry over. A phased plan:</p>
+  <div class="table-wrap">
+  <table class="data-table">
+    <thead><tr><th>Phase</th><th>Actions</th><th>Suggested tools (common, not from the source)</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Weeks 1&ndash;2: Measure</strong></td><td>Baseline CI jobs/day, p50/p95 duration, queue wait, flaky rate, share of agent-authored PRs. Store test results (JUnit XML) centrally to build test history.</td><td>GitHub Actions / GitLab CI artifacts, JUnit reports, a simple Postgres table or sheet</td></tr>
+      <tr><td><strong>Weeks 3&ndash;4: Change-based selection</strong></td><td>Filter by path and dependency graph; run only related tests on PRs. Keep an <em>always-run</em> list for critical flows (login, payment, tax/money calculation).</td><td><code>paths</code> / <code>rules:changes</code>, Nx affected, Turborepo, <code>jest --findRelatedTests</code>, pytest-testmon, <code>playwright test --only-changed</code></td></tr>
+      <tr><td><strong>Month 2: Safety net</strong></td><td>Run the <strong>full suite nightly and before every delivery/release</strong>. New or fixed tests always run. Quarantine flaky tests (run, don&rsquo;t block) with an owner.</td><td>Scheduled pipelines, <code>@flaky</code>/quarantine tags, bounded retries</td></tr>
+      <tr><td><strong>Ongoing: Agent-ready</strong></td><td>Put the selected-test command in <code>CLAUDE.md</code> so Claude Code self-verifies before opening PRs; encourage small PRs; track &ldquo;jobs in = jobs out&rdquo;.</td><td>Claude Code, pre-commit hooks, CI dashboard</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <h3>8.3. Daily operations &amp; system design for clients</h3>
+  <div class="compare-grid">
+    <div class="card card-success">
+      <strong>CI/CD operations</strong>
+      <ul style="margin-top:8px">
+        <li>Add <em>queue lag</em> and <em>in = out</em> metrics for runners; alert on drift.</li>
+        <li>Track the lifetime of each runner/cache scale-up; if it shrinks, plan a redesign.</li>
+        <li>Assign a clear owner for CI infra at project kickoff.</li>
+        <li>Include CI metrics in the weekly quality report (品質報告) to clients.</li>
+      </ul>
+    </div>
+    <div class="card card-success">
+      <strong>Client system design</strong>
+      <ul style="margin-top:8px">
+        <li>Workers/consumers: <strong>push state to Redis/DB</strong> from v0; avoid RAM-stateful singletons.</li>
+        <li>Use the <em>journal + rollup</em> pattern (fast append, aggregate later) for logs, events and stats.</li>
+        <li>Size for 10&times; when clients start running AI agents or automated batches.</li>
+        <li>Deterministic selection is explainable &mdash; useful when Japanese clients ask for testing evidence.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="highlight-box">
+    <strong>The rule I&rsquo;ll keep:</strong> <em>select smartly on PRs, run everything at the release gate</em>. That cuts CI time and cost as humans and agents open more PRs, without trading away delivery quality (受入テスト / acceptance testing) for our clients.
+  </div>
+</section>
+
+<section id="s9">
+  <h2>9. Demo video of the research session</h2>
+  <p>I recorded my whole reading session as one video: open the source &rarr; scroll through the key parts &rarr; show my diagrams &rarr; end on the finished blog opened via <code>file://</code>.</p>
+  <div class="screenshot-wrap">
+    <video controls preload="metadata" width="880" src="video/anthropic-test-impact-analysis-ci-demo.mp4"></video>
+    <div class="caption">Video: <a href="video/anthropic-test-impact-analysis-ci-demo.mp4">video/anthropic-test-impact-analysis-ci-demo.mp4</a></div>
+  </div>
+</section>
+
+<section id="s10">
+  <h2>10. Conclusion &amp; references</h2>
+  <p>Anthropic&rsquo;s post doesn&rsquo;t introduce a new selection algorithm; its value is a <strong>real case study</strong> of agentic coding pushing the bottleneck into CI, and of familiar fixes expiring faster under exponential load. The fix &mdash; stateless listeners, journal + rollup in an in-memory store, fast selector lookups &mdash; is simple in concept; the lasting lesson is the <strong>mindset: design for 10&ndash;25&times;, keep state out of the process, and measure in = out</strong>.</p>
+  <p><strong>Three things to do now:</strong></p>
+  <ol>
+    <li>Baseline CI for the current project (jobs/day, p95, flaky rate).</li>
+    <li>Enable change-based test selection on PRs; keep the full suite nightly and pre-release.</li>
+    <li>Audit workers/queues that keep state in memory and plan to move it out.</li>
+  </ol>
+  <h3>References</h3>
+  <ul>
+    <li><a href="https://claude.com/blog/agentic-coding-is-straining-ci-heres-how-we-scaled-test-impact-analysis-at-anthropic" target="_blank">Anthropic (Sachin Malhotra) &mdash; Agentic coding is straining CI. Here&rsquo;s how we scaled test impact analysis at Anthropic (Sep 14, 2026)</a></li>
+    <li><a href="../playwright-parallel-e2e-ci/index.html">Related post: Playwright Parallel E2E + CI Tuning</a></li>
+  </ul>
+  <p style="font-size:0.88em;color:var(--text-secondary)">All numbers and the charts/figures (images 1&ndash;5) come from the source article. Diagrams 1&ndash;3 and <code>tia_demo.py</code> are my own illustrations.</p>
+</section>
+
+</div>
+
+<div class="footer">
+  AI Quest &mdash; Investigate What &bull; Anthropic Test Impact Analysis &amp; Agentic CI &bull; Scuti AI &bull; 2026
+</div>
+
+</body>
+</html>

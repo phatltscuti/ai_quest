@@ -1,0 +1,90 @@
+[
+  {
+    "step": "intro-product-page",
+    "t": 7.9
+  },
+  {
+    "url": "https://docs.google.com/images/d/1T3DfmsYoPwYRSLZSj-2ZrAvStnjQEu83pYHd9Ty9GaU/edit",
+    "step": "doc-url",
+    "t": 14.6
+  },
+  {
+    "step": "step-12-pics-home.png",
+    "t": 14.7
+  },
+  {
+    "step": "step-13-prompt-entered.png",
+    "t": 25.7
+  },
+  {
+    "seconds": 16.8,
+    "step": "generate-done",
+    "t": 43.3
+  },
+  {
+    "step": "step-14-generated-variations.png",
+    "t": 49.9
+  },
+  {
+    "x": 670,
+    "y": 460,
+    "label": "Describe changes for the cartoon dragon",
+    "step": "try-element",
+    "t": 56.1
+  },
+  {
+    "label": "Describe changes for the cartoon dragon",
+    "step": "select-element",
+    "t": 56.1
+  },
+  {
+    "step": "step-15-select-element-edit.png",
+    "t": 59.8
+  },
+  {
+    "seconds": 16.8,
+    "step": "element-edit-done",
+    "t": 79.6
+  },
+  {
+    "step": "step-15b-element-edit-result.png",
+    "t": 81.4
+  },
+  {
+    "seconds": 16.8,
+    "step": "translate-done",
+    "t": 104.7
+  },
+  {
+    "step": "step-16-translate-text.png",
+    "t": 105.0
+  },
+  {
+    "step": "step-17-crop-aspect-ratio.png",
+    "t": 114.2
+  },
+  {
+    "step": "step-18-download-menu.png",
+    "t": 122.4
+  },
+  {
+    "ok": true,
+    "step": "download-2k",
+    "t": 141.7
+  },
+  {
+    "seconds": 24.9,
+    "found": true,
+    "step": "gemini-done",
+    "t": 183.7
+  },
+  {
+    "step": "step-19-nanobanana-gemini.png",
+    "t": 188.7
+  },
+  {
+    "path": "D:\\ai_quest\\blog-html\\google-pics-vs-nanobanana\\video\\google-pics-live-session.mp4",
+    "step": "video",
+    "t": 214.1
+  }
+]

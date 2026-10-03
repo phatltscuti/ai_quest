@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agentic coding làm CI quá tải – Anthropic đã mở rộng Test Impact Analysis như thế nào</title>
+<style>
+  :root {
+    --primary: #0d47a1;
+    --primary-light: #1976d2;
+    --accent: #ff6d00;
+    --bg: #fafafa;
+    --card: #ffffff;
+    --text: #212121;
+    --text-secondary: #616161;
+    --border: #e0e0e0;
+    --code-bg: #263238;
+    --success: #2e7d32;
+    --success-bg: #e8f5e9;
+    --warning: #f57f17;
+    --warning-bg: #fff8e1;
+    --error: #c62828;
+    --gradient-start: #0d47a1;
+    --gradient-mid: #1565c0;
+    --gradient-end: #00838f;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.75;
+    font-size: 16px;
+  }
+  .hero {
+    background: linear-gradient(135deg, var(--gradient-start), var(--gradient-mid), var(--gradient-end));
+    color: white;
+    padding: 64px 20px;
+    text-align: center;
+  }
+  .hero h1 { font-size: 2.2em; margin-bottom: 14px; font-weight: 700; letter-spacing: -0.5px; max-width: 900px; margin-left: auto; margin-right: auto; }
+  .hero .subtitle { font-size: 1.12em; opacity: 0.93; max-width: 760px; margin: 0 auto; }
+  .hero .badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.18);
+    padding: 6px 20px;
+    border-radius: 20px;
+    font-size: 0.84em;
+    margin-bottom: 18px;
+  }
+  .container { max-width: 940px; margin: 0 auto; padding: 32px 20px; }
+  .toc {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px 32px;
+    margin-bottom: 38px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  }
+  .toc h2 { font-size: 1.3em; margin-bottom: 14px; color: var(--primary); border: none; padding: 0; }
+  .toc ol { padding-left: 22px; }
+  .toc li { margin-bottom: 6px; }
+  .toc a { color: var(--primary-light); text-decoration: none; }
+  .toc a:hover { text-decoration: underline; }
+  section { margin-bottom: 44px; }
+  h2 {
+    font-size: 1.55em;
+    color: var(--primary);
+    border-bottom: 3px solid var(--primary);
+    padding-bottom: 8px;
+    margin-bottom: 22px;
+  }
+  h3 { font-size: 1.22em; color: var(--text); margin: 22px 0 10px; }
+  p { margin-bottom: 14px; }
+  a { color: var(--primary-light); }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+  }
+  .card-accent { border-left: 4px solid var(--accent); }
+  .card-info { border-left: 4px solid var(--primary-light); }
+  .card-warning { border-left: 4px solid var(--warning); background: var(--warning-bg); }
+  .card-success { border-left: 4px solid var(--success); background: var(--success-bg); }
+  .prompt-box {
+    background: var(--code-bg);
+    color: #cfd8dc;
+    border-radius: 10px;
+    padding: 22px 24px;
+    margin: 14px 0 22px;
+    font-family: 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+    font-size: 0.88em;
+    line-height: 1.65;
+    white-space: pre-wrap;
+    position: relative;
+    overflow-x: auto;
+  }
+  .prompt-box .label {
+    position: absolute; top: 8px; right: 12px;
+    background: var(--accent); color: white;
+    font-size: 0.7em; padding: 2px 12px; border-radius: 8px;
+    font-family: 'Segoe UI', sans-serif; font-weight: 600;
+  }
+  table.data-table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+  table.data-table th, table.data-table td {
+    border: 1px solid var(--border);
+    padding: 10px 14px;
+    text-align: left;
+    font-size: 0.93em;
+    vertical-align: top;
+  }
+  table.data-table th { background: var(--primary); color: white; font-weight: 600; }
+  table.data-table tr:nth-child(even) { background: #f5f5f5; }
+  table.data-table tr:hover { background: #e3f2fd; }
+  .table-wrap { overflow-x: auto; }
+  .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 18px 0; }
+  @media (max-width: 700px) { .compare-grid { grid-template-columns: 1fr; } .hero h1 { font-size: 1.6em; } }
+  .step-num {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 34px; height: 34px; background: var(--primary); color: white;
+    border-radius: 50%; font-weight: 700; font-size: 0.9em; margin-right: 12px; flex-shrink: 0;
+  }
+  .step-row { display: flex; align-items: flex-start; margin-bottom: 14px; }
+  .step-row p { margin: 0; }
+  .screenshot-wrap { margin: 18px 0; text-align: center; }
+  .screenshot-wrap img, .screenshot-wrap video {
+    max-width: 100%;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+  .screenshot-wrap .caption { margin-top: 8px; font-size: 0.85em; color: var(--text-secondary); }
+  ul, ol { margin-bottom: 14px; padding-left: 24px; }
+  li { margin-bottom: 6px; }
+  .flow-diagram { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 8px; margin: 22px 0; font-size: 0.92em; }
+  .flow-step { background: var(--primary); color: white; padding: 10px 18px; border-radius: 10px; font-weight: 600; }
+  .flow-step.green { background: var(--success); }
+  .flow-arrow { color: var(--text-secondary); font-size: 1.4em; }
+  .stat-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 18px 0; }
+  @media (max-width: 700px) { .stat-row { grid-template-columns: 1fr 1fr; } }
+  .stat { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 16px; text-align: center; }
+  .stat b { display: block; font-size: 1.8em; color: var(--primary); line-height: 1.2; }
+  .stat span { font-size: 0.85em; color: var(--text-secondary); }
+  .footer {
+    text-align: center; padding: 32px; color: var(--text-secondary);
+    font-size: 0.85em; border-top: 1px solid var(--border); margin-top: 40px;
+  }
+  code { background: #eceff1; padding: 2px 6px; border-radius: 4px; font-size: 0.9em; }
+  .tag { display: inline-block; background: #e3f2fd; color: var(--primary); padding: 2px 10px; border-radius: 12px; font-size: 0.8em; margin: 2px 4px 2px 0; }
+  .highlight-box {
+    background: linear-gradient(135deg, #e3f2fd, #e8f5e9);
+    border-radius: 12px; padding: 20px 24px; margin: 18px 0; border: 1px solid #bbdefb;
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="badge">AI Quest &mdash; Investigate What</div>
+  <h1>Agentic coding làm CI quá tải &mdash; Anthropic đã mở rộng Test Impact Analysis như thế nào?</h1>
+  <p class="subtitle">Tóm tắt &amp; phân tích bài blog của Anthropic: vì sao khi AI viết 80% code thì nút thắt dịch chuyển sang CI, ba bản vá tạm bị &ldquo;hết hạn&rdquo; ngày càng nhanh, và kiến trúc stateless giúp dịch vụ chọn test ổn định trở lại &mdash; kèm cách áp dụng cho dự án tại Scuti AI.</p>
+</div>
+
+<div class="container">
+
+<nav class="toc">
+  <h2>Mục lục</h2>
+  <ol>
+    <li><a href="#s1">Bài viết gốc &amp; vì sao đáng đọc</a></li>
+    <li><a href="#s2">Thách thức: agentic coding đè lên CI ra sao</a></li>
+    <li><a href="#s3">Test Impact Analysis ở Anthropic: kiến trúc v0 (listener + selector)</a></li>
+    <li><a href="#s4">Ba bản vá &mdash; mỗi lần mua được ít thời gian hơn</a></li>
+    <li><a href="#s5">Bản thiết kế lại: cơ chế chi tiết</a></li>
+    <li><a href="#s6">Điều tác giả sẽ làm khác đi</a></li>
+    <li><a href="#s7">Minh họa nhỏ: changed files &rarr; dependency map &rarr; selected tests</a></li>
+    <li><a href="#s8">Bài học cá nhân &amp; cách áp dụng tại Scuti AI</a></li>
+    <li><a href="#s9">Video demo quá trình nghiên cứu</a></li>
+    <li><a href="#s10">Kết luận &amp; tài liệu tham khảo</a></li>
+  </ol>
+</nav>
+
+<!-- ================================================================ -->
+<section id="s1">
+  <h2>1. Bài viết gốc &amp; vì sao đáng đọc</h2>
+  <p>Bài <a href="https://claude.com/blog/agentic-coding-is-straining-ci-heres-how-we-scaled-test-impact-analysis-at-anthropic" target="_blank"><em>&ldquo;Agentic coding is straining CI. Here&rsquo;s how we scaled test impact analysis at Anthropic&rdquo;</em></a> được <strong>Sachin Malhotra</strong> đăng trên blog claude.com ngày <strong>14/09/2026</strong> (khoảng 6 phút đọc, chuyên mục Claude Code / Enterprise AI). Đây là một &ldquo;nhật ký sự cố&rdquo; thật: đội ngũ của tác giả vá dịch vụ chọn test ba lần trước khi quyết định viết lại toàn bộ.</p>
+
+
+  <div class="card card-info">
+    <strong>Ý chính trong một câu:</strong> khi agent viết và review code nhanh hơn, số CI job tăng theo hàm mũ; những cách chữa cháy quen thuộc (máy to hơn, chia shard, restart) mua được ngày càng ít thời gian, trong khi việc thiết kế lại cho đúng giờ đã rẻ hơn rất nhiều &mdash; nên hãy <strong>&ldquo;plan for the exponential&rdquo;</strong> ngay từ đầu.
+  </div>
+
+  <p>Lưu ý: tác giả nói rõ các kỹ thuật scale cụ thể không phải điểm mới. Thông điệp thật sự là <strong>tốc độ &ldquo;hết hạn&rdquo; của các bản vá</strong> và <strong>chi phí thiết kế lại đã giảm mạnh</strong> khi viết code không còn là nút thắt.</p>
+</section>
+
+<!-- ================================================================ -->
+<section id="s2">
+  <h2>2. Thách thức: agentic coding đè lên CI ra sao</h2>
+
+  <div class="stat-row">
+    <div class="stat"><b>8&times;</b><span>lượng code mỗi kỹ sư ship/quý so với giai đoạn 2021&ndash;2025</span></div>
+    <div class="stat"><b>80%</b><span>số code đó do Claude viết (Claude còn tham gia review/approve PR)</span></div>
+    <div class="stat"><b>10&times;</b><span>số lượng test trong codebase</span></div>
+    <div class="stat"><b>25&times;</b><span>số CI job trong vòng 6 tháng</span></div>
+  </div>
+
+  <h3>2.1. Nút thắt di chuyển xuôi dòng</h3>
+  <p>Trước đây nút thắt nằm ở khâu <em>viết code</em>. Khi Claude viết phần lớn code, nút thắt chuyển sang <em>review PR</em>. Khi review cũng được AI tăng tốc, áp lực dồn xuống <strong>CI</strong>. Số kỹ sư chỉ tăng &ldquo;không đáng kể&rdquo;, nhưng số job CI tăng 25 lần &mdash; và đó là khi chưa chạy mọi test trên mọi PR.</p>
+
+  <div class="screenshot-wrap">
+    <img src="images/step-02-bottleneck-moves-downstream.png" alt="Biểu đồ nút thắt dịch chuyển từ build sang review rồi CI">
+    <div class="caption">Ảnh 1 &mdash; Hình trong bài gốc: nút thắt dịch chuyển từ BUILD &rarr; REVIEW &rarr; CI.</div>
+  </div>
+
+  <h3>2.2. Vì sao số job tăng nhanh hơn số code?</h3>
+  <ul>
+    <li><strong>PR nhỏ và nhiều hơn:</strong> Claude thích PR nhỏ, chia nhỏ &mdash; mỗi PR là một lượt CI.</li>
+    <li><strong>Nhiều agent trên mỗi kỹ sư:</strong> mỗi người điều phối nhiều agent song song.</li>
+    <li><strong>Không có &ldquo;giờ nghỉ&rdquo;:</strong> agent đẩy code cả đêm và cuối tuần nên mức tải nền bị nâng lên, nhưng vẫn có đỉnh (bursty) vì con người vẫn duyệt nhiều PR trong giờ làm.</li>
+  </ul>
+
+  <h3>2.3. &ldquo;Chạy hết mọi test&rdquo; không còn khả thi &mdash; và agent cần tập test chính xác</h3>
+  <p>Nhiều công ty vẫn chạy toàn bộ test cho mỗi thay đổi. Cách này ổn đến một ngưỡng, rồi CI gate trở nên <strong>chậm, đắt và kém đáng tin</strong>. Điểm tinh tế: con người giỏi nhận ra &ldquo;test đỏ này không liên quan đến mình&rdquo;, còn agent thì cần ngữ cảnh rõ. Khi được giao <strong>đúng tập test hợp lệ</strong>, agent tự kiểm chứng và lặp lại hiệu quả hơn nhiều.</p>
+
+  <div class="screenshot-wrap">
+    <img src="images/step-03-ci-job-volume-runway.png" alt="Biểu đồ CI job volume và thời gian mỗi bản vá mua được">
+    <div class="caption">Ảnh 2 &mdash; Hình trong bài gốc: số CI job tăng vọt (bài viết nêu 25&times; trong 6 tháng) và &ldquo;đường băng&rdquo; mà mỗi bản vá mua được (~10 tuần, 29 ngày, &lt;1 ngày).</div>
+  </div>
+</section>
+
+<!-- ================================================================ -->
+<section id="s3">
+  <h2>3. Test Impact Analysis ở Anthropic: kiến trúc v0</h2>
+  <p>Anthropic tự xây một dịch vụ <strong>test impact analysis (TIA) / test selection có tính tất định (deterministic)</strong>: với mỗi thay đổi, nó quyết định test nào cần chạy dựa trên <strong>lịch sử kết quả (past performance)</strong> và <strong>mức liên quan theo package</strong>. Tác giả cũng thừa nhận đây không phải ý tưởng hiếm &mdash; đã có cả một nhóm vendor bán giải pháp loại này.</p>
+
+  <div class="flow-diagram">
+    <div class="flow-step">CI job xong</div><div class="flow-arrow">&rarr;</div>
+    <div class="flow-step">Listener ghi kết quả</div><div class="flow-arrow">&rarr;</div>
+    <div class="flow-step">Lịch sử từng test</div><div class="flow-arrow">&rarr;</div>
+    <div class="flow-step green">Selector chọn test cho PR</div>
+  </div>
+
+  <ul>
+    <li><strong>Listener:</strong> ghi lại kết quả test của <em>mọi</em> lượt CI.</li>
+    <li><strong>Selector:</strong> đọc lịch sử kết quả và quyết định test nào chạy trên PR nào.</li>
+  </ul>
+  <p>Hai thành phần này phải <strong>luôn đồng bộ</strong>. Ở bản v0, mọi thứ chạy trong <strong>một tiến trình duy nhất</strong>, vì việc duy trì &ldquo;lịch sử chạy&rdquo; cho từng test được thiết kế với một writer duy nhất để áp kết quả theo đúng thứ tự. Hệ quả: <strong>không thể shard ngang</strong>.</p>
+
+  <div class="card card-warning">
+    <strong>Khi listener bị trễ (lag), chuyện gì xảy ra?</strong> Với nhiều CI job mỗi giây, chỉ 20 phút lag có thể tương đương <strong>hàng chục nghìn cập nhật test</strong> chưa được selector nhìn thấy:
+    <ul style="margin-top:8px">
+      <li>Một thay đổi xấu đã merge &rarr; test bắt đầu đỏ với <em>tất cả mọi người</em> &rarr; nhiều cuộc điều tra không cần thiết.</li>
+      <li>Một dependency bắt đầu flaky &rarr; các lần đỏ &ldquo;ảo&rdquo; chặn merge.</li>
+      <li>Test vừa được sửa hoặc mới thêm &rarr; chưa được chạy cho đến khi listener đuổi kịp &rarr; rủi ro regression.</li>
+    </ul>
+  </div>
+
+</section>
+
+<!-- ================================================================ -->
+<section id="s4">
+  <h2>4. Ba bản vá &mdash; mỗi lần mua được ít thời gian hơn</h2>
+  <p>Từ tháng 10 năm trước (2025), dịch vụ bắt đầu có dấu hiệu quá tải và đội on-call bị page hai ngày liền. Ngay từ 12/2025 đã có người trong team cảnh báo rằng thiết kế này cần được thay thế trước khi &ldquo;không thể chỉ mua máy to hơn&rdquo;. Đây là chuỗi bản vá:</p>
+
+  <div class="table-wrap">
+  <table class="data-table">
+    <thead><tr><th>Bản vá</th><th>Làm gì</th><th>Kéo dài được</th><th>Vì sao không bền</th></tr></thead>
+    <tbody>
+      <tr><td><strong>1. Máy to hơn</strong></td><td>Tăng gấp đôi số core cho dịch vụ</td><td>~70 ngày</td><td>Tải tăng theo hàm mũ; ai cũng biết là tạm. Thêm nữa, &ldquo;ownership&rdquo; mơ hồ &mdash; không ai muốn ôm thêm hạ tầng.</td></tr>
+      <tr><td><strong>2. Sharding</strong></td><td>Nhận ra không cần <em>một</em> writer cho tất cả, chỉ cần <em>một writer cho mỗi package</em>. Claude sinh code tách state mỗi package thành một shard có worker riêng.</td><td>29 ngày</td><td>Vẫn là tiến trình giữ state trong bộ nhớ; tải tiếp tục tăng.</td></tr>
+      <tr><td><strong>3. Restart hằng ngày</strong></td><td>Tiến trình chạm giới hạn bộ nhớ vào khoảng giữa chiều mỗi ngày làm việc (tháng 3). Tìm được 4 bug, thử đổi memory allocator (không tác dụng), ngại memory-profile một singleton đang chịu tải nặng &rarr; restart.</td><td>&lt; 1 ngày</td><td>Mỗi lần restart làm dịch vụ tụt lại xa hơn; có lúc trễ &gt;1 giờ và rất nhiều kết quả job không được ghi nhận.</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="screenshot-wrap">
+    <img src="images/step-07-listener-memory-limit.png" alt="Biểu đồ bộ nhớ listener so với giới hạn pod">
+    <div class="caption">Ảnh 3 &mdash; Bộ nhớ của listener liên tục chạm giới hạn pod; các lần restart hằng ngày bắt đầu.</div>
+  </div>
+
+  <h3>4.1. Claude như một đồng nghiệp on-call dài hạn</h3>
+  <p>Ở giai đoạn bản vá 2, tác giả mở một <strong>phiên làm việc dài hạn trên bản nội bộ của Claude Tag</strong> chuyên theo dõi dịch vụ: mỗi khi listener tụt lại hơn <strong>50.000 job</strong>, Claude ping tác giả và tiếp tục cuộc trò chuyện về bước tiếp theo. Cuộc trò chuyện kéo dài nhiều tháng, không phải nhắc lại ngữ cảnh. Điều thú vị: <strong>Claude thường đề xuất đại tu</strong>, nhưng con người lại hay chọn thêm một bản vá. Ví dụ, khi pod lên tới hàng trăm GiB, Claude đưa ra cả &ldquo;cách gỡ nhanh&rdquo; (restart pod) lẫn &ldquo;cách sửa thật đơn giản nhất&rdquo; (evict các shard nguội sau khi flush).</p>
+
+
+  <div class="card card-info">
+    <strong>Làm rõ quan trọng:</strong> việc listener bỏ sót kết quả <em>không</em> có nghĩa là PR không chạy CI hay code chưa test lên production. Nó có nghĩa selector dùng <strong>dữ liệu cũ</strong> để quyết định &mdash; thực tế chủ yếu dẫn đến việc chạy những test vốn đã rất flaky hoặc đang đỏ trên diện rộng.
+  </div>
+</section>
+
+<!-- ================================================================ -->
+<section id="s5">
+  <h2>5. Bản thiết kế lại: cơ chế chi tiết</h2>
+  <p>Cuối cùng đội nghe theo lời khuyên của Claude: <strong>cho dịch vụ chọn test một database</strong> &mdash; chính xác là một <strong>in-memory data store</strong> &mdash; để gỡ phần lớn việc xử lý trong bộ nhớ mà singleton từng gánh.</p>
+
+  <div class="screenshot-wrap">
+    <img src="images/diagram-01-tia-pipeline.png" alt="Sơ đồ cơ chế TIA trước và sau khi thiết kế lại">
+    <div class="caption">Sơ đồ 1 (tự vẽ, HTML/SVG &rarr; PNG) &mdash; Pipeline TIA: singleton v0 + 3 bản vá (trên) và kiến trúc stateless sau khi thiết kế lại (dưới).</div>
+  </div>
+
+  <h3>5.1. Bốn mảnh ghép của kiến trúc mới</h3>
+  <div class="step-row"><span class="step-num">1</span><p><strong>Listener worker stateless:</strong> bất kỳ worker nào cũng xử lý được bất kỳ kết quả nào &mdash; chỉ việc <em>append</em> vào journal rồi đi tiếp, không giữ gì trong bộ nhớ. Muốn chịu tải cao hơn thì thêm worker (scale ngang).</p></div>
+  <div class="step-row"><span class="step-num">2</span><p><strong>Journal trong in-memory store:</strong> nơi ghi tuần tự các kết quả job &mdash; tách &ldquo;nhận dữ liệu&rdquo; khỏi &ldquo;tính toán lịch sử&rdquo;.</p></div>
+  <div class="step-row"><span class="step-num">3</span><p><strong>Consumer rollup nhỏ, tách riêng:</strong> vài giây một lần gộp journal thành <em>lịch sử theo từng test</em>.</p></div>
+  <div class="step-row"><span class="step-num">4</span><p><strong>Selector tra cứu nhanh:</strong> đọc lịch sử đã rollup để chọn test cho từng PR.</p></div>
+
+  <div class="screenshot-wrap">
+    <img src="images/step-08-selection-service-before-after.png" alt="Hình before after của CI test selection service">
+    <div class="caption">Ảnh 4 &mdash; Hình trong bài gốc: BEFORE (một listener giữ toàn bộ lịch sử, vá bằng máy to/shard/restart) và AFTER (nhiều listener + journal nằm ngoài mọi tiến trình).</div>
+  </div>
+
+  <h3>5.2. Kết quả và đánh đổi</h3>
+  <ul>
+    <li><strong>Chi phí vận hành cao hơn</strong>, nhưng <strong>dễ scale và dễ memory-profile</strong> hơn hẳn một singleton chập chờn.</li>
+    <li><strong>3 tuần, 1 kỹ sư</strong> (cùng Claude). Tác giả ước lượng một năm trước việc này sẽ mất gần <strong>một quý</strong>.</li>
+    <li>Việc tinh chỉnh (kích thước journal, số worker) do <strong>Claude làm phần lớn một cách tự động</strong>; dịch vụ ổn định từ đó.</li>
+    <li>Backlog sự kiện chưa xử lý: trước đây tích tụ gần như mỗi ngày và tăng dần theo tuần; sau cutover và tuning thì <strong>đi ngang</strong>.</li>
+  </ul>
+
+  <div class="screenshot-wrap">
+    <img src="images/step-09-listener-backlog-after-redesign.png" alt="Biểu đồ backlog của listener trước và sau redesign">
+    <div class="caption">Ảnh 5 &mdash; Hình trong bài gốc: backlog của listener trước/sau thiết kế lại (redesign ship ngày 9/5, tune xong 14/5).</div>
+  </div>
+
+  <div class="screenshot-wrap">
+    <img src="images/diagram-02-patch-timeline.png" alt="Sơ đồ tải agentic và thời gian mỗi bản vá kéo dài">
+    <div class="caption">Sơ đồ 2 (tự vẽ) &mdash; Áp lực tải và &ldquo;tuổi thọ&rdquo; ngắn dần của các bản vá.</div>
+  </div>
+</section>
+
+<!-- ================================================================ -->
+<section id="s6">
+  <h2>6. Điều tác giả sẽ làm khác đi</h2>
+  <div class="card card-accent">
+    <ol>
+      <li><strong>Tính đến &ldquo;hàm mũ AI&rdquo;:</strong> dù build hay buy, hãy giả định kiến trúc sẽ chịu <strong>tải 25&times; trong vòng hai quý</strong>. Ngưỡng của &ldquo;over-engineering&rdquo; đã dịch lên rất cao &mdash; nếu ngân sách cho phép, thiết kế v0 cho <strong>10&ndash;20&times; quy mô cảm nhận</strong>.</li>
+      <li><strong>Gắn instrument để dịch vụ là &ldquo;tai mắt&rdquo; của Claude:</strong> có số liệu thì Claude mới hill-climb và sửa dần tốt hơn, nhanh hơn làm tay. Đặc biệt: <strong>số CI job đi vào phải bằng số đi ra</strong>.</li>
+      <li><strong>Đưa state ra ngoài tiến trình ngay từ đầu</strong> và tránh chạy dịch vụ quan trọng dưới dạng một instance duy nhất, trừ khi đo được nó và mọi thay đổi canary.</li>
+    </ol>
+  </div>
+</section>
+
+<!-- ================================================================ -->
+<section id="s7">
+  <h2>7. Minh họa nhỏ: changed files &rarr; dependency map &rarr; selected tests</h2>
+  <div class="card card-warning">
+    <strong>Lưu ý:</strong> đoạn code dưới đây là <strong>ví dụ tự viết của tác giả blog</strong> để hiểu ý tưởng, dữ liệu là giả lập. <strong>Đây KHÔNG phải code của Anthropic</strong> &mdash; bài gốc không công bố mã nguồn và cũng không mô tả chi tiết thuật toán chọn test ngoài &ldquo;lịch sử kết quả + mức liên quan theo package&rdquo;.
+  </div>
+  <p>File <code>tia_demo.py</code> (chỉ dùng thư viện chuẩn Python) mô phỏng hai nửa của cơ chế:</p>
+  <ul>
+    <li><strong>Nửa ghi:</strong> 3 &ldquo;listener worker&rdquo; stateless append kết quả vào một journal; một consumer rollup thành lịch sử theo test; in ra <code>jobs in / jobs rolled up / lag</code> (chính là chỉ số &ldquo;vào = ra&rdquo; mà tác giả khuyên theo dõi).</li>
+    <li><strong>Nửa chọn:</strong> file thay đổi &rarr; package bị chạm &rarr; cộng thêm các package phụ thuộc ngược (reverse deps) &rarr; tập test ứng viên &rarr; phân loại theo lịch sử: <em>healthy/new</em> thì chạy, <em>flaky</em> thì chạy nhưng không chặn merge, <em>đỏ trên main</em> thì bỏ qua (đây là lựa chọn thiết kế của tôi).</li>
+  </ul>
+  <div class="prompt-box"><span class="label">PowerShell</span>cd anthropic-test-impact-analysis-ci
+python tia_demo.py</div>
+  <div class="screenshot-wrap">
+    <img src="images/diagram-03-tia-demo-output.png" alt="Kết quả chạy tia_demo.py">
+    <div class="caption">Sơ đồ 3 &mdash; Output thật của <code>tia_demo.py</code>: PR sửa <code>billing/tax_jp.py</code> chỉ cần chạy 3/8 test.</div>
+  </div>
+  <p>Bài blog trước của tôi về <a href="../playwright-parallel-e2e-ci/index-vi.html">Playwright parallel E2E + CI tuning</a> cũng có một <code>impact-map.json</code> ở mức E2E &mdash; hai bài bổ sung cho nhau: bài đó tối ưu <em>cách chạy</em>, bài này tối ưu <em>chọn chạy cái gì</em>.</p>
+</section>
+
+<!-- ================================================================ -->
+<section id="s8">
+  <h2>8. Bài học cá nhân &amp; cách áp dụng tại Scuti AI</h2>
+
+  <h3>8.1. Bài học cá nhân</h3>
+  <ul>
+    <li><strong>Hiệu năng của &ldquo;hệ thống phụ trợ&rdquo; giờ là vấn đề tuyến đầu.</strong> Tôi vốn coi CI là hạ tầng &ldquo;đủ dùng&rdquo;. Bài này cho thấy khi team dùng Claude Code mạnh tay, CI, test selection, queue&hellip; sẽ là nơi vỡ đầu tiên.</li>
+    <li><strong>Đo tuổi thọ của bản vá.</strong> Nếu bản vá sau sống ngắn hơn bản vá trước, đó là tín hiệu đã đến lúc thiết kế lại chứ không phải vá tiếp.</li>
+    <li><strong>Chi phí thiết kế lại đã thay đổi.</strong> &ldquo;Viết lại mất cả quý&rdquo; từng là lý do để chấp nhận nợ kỹ thuật; với agent, lý do đó yếu đi nhiều.</li>
+    <li><strong>Lắng nghe AI khi nó có đủ dữ liệu.</strong> Claude đề xuất đại tu từ sớm; con người mới là bên chần chừ. Ownership rõ ràng quan trọng không kém kỹ thuật.</li>
+    <li><strong>Agent cần tập test chính xác.</strong> Một agent nhận 300 test đỏ không liên quan sẽ lãng phí token và dễ &ldquo;sửa nhầm&rdquo;. Test selection tốt là một phần của prompt/context engineering.</li>
+  </ul>
+
+  <h3>8.2. Áp dụng vào dự án outsource (khách hàng Nhật)</h3>
+  <p>Các dự án của chúng ta nhỏ hơn quy mô Anthropic nhiều, nên không cần in-memory store hay worker pool ngay. Nhưng nguyên lý giữ nguyên. Đề xuất theo lộ trình:</p>
+
+  <div class="table-wrap">
+  <table class="data-table">
+    <thead><tr><th>Giai đoạn</th><th>Việc cần làm</th><th>Công cụ gợi ý (phổ biến, không phải từ bài gốc)</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Tuần 1&ndash;2: Đo</strong></td><td>Lấy baseline: số CI job/ngày, thời gian p50/p95, thời gian chờ queue, tỷ lệ test flaky, tỷ lệ PR do agent tạo. Lưu kết quả test (JUnit XML) vào một nơi tập trung để có &ldquo;lịch sử test&rdquo;.</td><td>GitHub Actions / GitLab CI artifacts, JUnit report, một bảng Postgres/Sheets đơn giản</td></tr>
+      <tr><td><strong>Tuần 3&ndash;4: Chọn test theo thay đổi</strong></td><td>Lọc theo đường dẫn và đồ thị phụ thuộc; chỉ chạy test liên quan trên PR. Giữ danh sách <em>always-run</em> cho luồng sống còn (đăng nhập, thanh toán, tính thuế/tiền).</td><td><code>paths</code> / <code>rules:changes</code>, Nx affected, Turborepo, <code>jest --findRelatedTests</code>, pytest-testmon, <code>playwright test --only-changed</code></td></tr>
+      <tr><td><strong>Tháng 2: Lưới an toàn</strong></td><td>Chạy <strong>full suite hằng đêm và trước mỗi lần bàn giao/release</strong> cho khách. Test mới/vừa sửa luôn được chạy. Cách ly test flaky (chạy nhưng không chặn merge) và có owner xử lý.</td><td>Scheduled pipeline, nhãn <code>@flaky</code>/quarantine, retry có giới hạn</td></tr>
+      <tr><td><strong>Liên tục: Agent-ready</strong></td><td>Ghi lệnh chạy test đã chọn vào <code>CLAUDE.md</code> để Claude Code tự kiểm chứng trước khi mở PR; khuyến khích PR nhỏ; theo dõi &ldquo;job vào = job ra&rdquo;.</td><td>Claude Code, hook trước commit, dashboard CI</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>8.3. Áp dụng vào vận hành hằng ngày &amp; thiết kế hệ thống cho khách</h3>
+  <div class="compare-grid">
+    <div class="card card-success">
+      <strong>Vận hành CI/CD</strong>
+      <ul style="margin-top:8px">
+        <li>Thêm chỉ số <em>queue lag</em> và <em>in = out</em> cho runner, alert khi lệch.</li>
+        <li>Theo dõi &ldquo;tuổi thọ&rdquo; của mỗi lần tăng runner/cache; nếu ngắn dần, lên kế hoạch thiết kế lại.</li>
+        <li>Chỉ định owner rõ ràng cho hạ tầng CI ngay từ đầu dự án.</li>
+        <li>Báo cáo chỉ số CI trong báo cáo tuần (品質報告) gửi khách để minh bạch chất lượng.</li>
+      </ul>
+    </div>
+    <div class="card card-success">
+      <strong>Thiết kế hệ thống cho khách</strong>
+      <ul style="margin-top:8px">
+        <li>Worker/consumer: <strong>đẩy state ra Redis/DB</strong> ngay từ v0, tránh singleton giữ state trong RAM.</li>
+        <li>Mẫu <em>journal + rollup</em> (append nhanh, tổng hợp sau) cho log, sự kiện, thống kê.</li>
+        <li>Ước lượng tải ở 10&times; khi khách bắt đầu dùng AI agent/batch tự động.</li>
+        <li>Selection tất định = giải thích được vì sao test nào được bỏ qua &mdash; quan trọng khi khách Nhật yêu cầu bằng chứng kiểm thử.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="highlight-box">
+    <strong>Nguyên tắc tôi sẽ giữ:</strong> <em>chọn test thông minh trên PR, chạy đầy đủ ở cổng release</em>. Như vậy vừa giảm thời gian/chi phí CI khi team và agent tạo nhiều PR, vừa không đánh đổi chất lượng bàn giao (受入テスト) với khách hàng.
+  </div>
+</section>
+
+<!-- ================================================================ -->
+<section id="s9">
+  <h2>9. Video demo quá trình nghiên cứu</h2>
+  <p>Tôi quay lại toàn bộ quá trình đọc và ghi chú thành một video: mở bài gốc &rarr; cuộn qua các phần chính &rarr; mở các sơ đồ tự vẽ &rarr; kết thúc bằng bài blog hoàn chỉnh mở qua <code>file://</code>.</p>
+  <div class="screenshot-wrap">
+    <video controls preload="metadata" width="880" src="video/anthropic-test-impact-analysis-ci-demo.mp4"></video>
+    <div class="caption">Video: <a href="video/anthropic-test-impact-analysis-ci-demo.mp4">video/anthropic-test-impact-analysis-ci-demo.mp4</a></div>
+  </div>
+</section>
+
+<!-- ================================================================ -->
+<section id="s10">
+  <h2>10. Kết luận &amp; tài liệu tham khảo</h2>
+  <p>Bài viết của Anthropic không giới thiệu một thuật toán test selection mới; giá trị của nó là một <strong>case study thật</strong> về việc agentic coding đẩy nút thắt sang CI, và về việc các bản vá quen thuộc &ldquo;hết hạn&rdquo; nhanh dần dưới tải hàm mũ. Lời giải &mdash; listener stateless, journal + rollup trong in-memory store, selector tra cứu nhanh &mdash; đơn giản về mặt ý tưởng, nhưng điều đáng học nhất là <strong>tư duy: thiết kế cho 10&ndash;25&times;, đưa state ra ngoài process, và đo &ldquo;vào = ra&rdquo;</strong>.</p>
+  <p><strong>3 việc nên làm ngay:</strong></p>
+  <ol>
+    <li>Đo baseline CI của dự án hiện tại (job/ngày, p95, flaky rate).</li>
+    <li>Bật chọn test theo thay đổi trên PR, giữ full suite hằng đêm và trước release.</li>
+    <li>Rà các worker/queue đang giữ state trong bộ nhớ và lên kế hoạch đưa state ra ngoài.</li>
+  </ol>
+
+  <h3>Tài liệu tham khảo</h3>
+  <ul>
+    <li><a href="https://claude.com/blog/agentic-coding-is-straining-ci-heres-how-we-scaled-test-impact-analysis-at-anthropic" target="_blank">Anthropic (Sachin Malhotra) &mdash; Agentic coding is straining CI. Here&rsquo;s how we scaled test impact analysis at Anthropic (14/09/2026)</a></li>
+    <li><a href="../playwright-parallel-e2e-ci/index-vi.html">Blog liên quan: Playwright Parallel E2E + CI Tuning</a></li>
+  </ul>
+  <p style="font-size:0.88em;color:var(--text-secondary)">Mọi số liệu và các hình biểu đồ/sơ đồ (ảnh 1&ndash;5) lấy từ bài gốc. Sơ đồ 1&ndash;3 và <code>tia_demo.py</code> là phần tự làm, chỉ mang tính minh họa.</p>
+</section>
+
+</div>
+
+<div class="footer">
+  AI Quest &mdash; Investigate What &bull; Anthropic Test Impact Analysis &amp; Agentic CI &bull; Scuti AI &bull; 2026
+</div>
+
+</body>
+</html>

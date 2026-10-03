@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Làm video Motion Graphics giới thiệu Scuti AI bằng code</title>
+<style>
+  :root {
+    --primary: #b10d16;
+    --primary-light: #e3121b;
+    --accent: #ff6d00;
+    --bg: #fafafa;
+    --card: #ffffff;
+    --text: #212121;
+    --text-secondary: #616161;
+    --border: #e0e0e0;
+    --code-bg: #1e1e24;
+    --success: #2e7d32;
+    --success-bg: #e8f5e9;
+    --warning: #f57f17;
+    --warning-bg: #fff8e1;
+    --error: #c62828;
+    --gradient-start: #0b0b10;
+    --gradient-mid: #3a070c;
+    --gradient-end: #b10d16;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background: var(--bg); color: var(--text); line-height: 1.75; font-size: 16px; }
+  .hero { background: linear-gradient(135deg, var(--gradient-start), var(--gradient-mid), var(--gradient-end)); color: white; padding: 64px 20px; text-align: center; }
+  .hero h1 { font-size: 2.2em; margin-bottom: 14px; font-weight: 700; letter-spacing: -0.5px; }
+  .hero .subtitle { font-size: 1.1em; opacity: 0.93; max-width: 760px; margin: 0 auto; }
+  .hero .badge { display: inline-block; background: rgba(255,255,255,0.16); padding: 6px 20px; border-radius: 20px; font-size: 0.84em; margin-bottom: 18px; }
+  .container { max-width: 960px; margin: 0 auto; padding: 32px 20px; }
+  .toc { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 28px 32px; margin-bottom: 38px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+  .toc h2 { font-size: 1.3em; margin-bottom: 14px; color: var(--primary); border: 0; padding: 0; }
+  .toc ol { padding-left: 22px; } .toc li { margin-bottom: 6px; }
+  .toc a { color: var(--primary-light); text-decoration: none; } .toc a:hover { text-decoration: underline; }
+  section { margin-bottom: 46px; }
+  h2 { font-size: 1.55em; color: var(--primary); border-bottom: 3px solid var(--primary); padding-bottom: 8px; margin-bottom: 22px; }
+  h3 { font-size: 1.22em; color: var(--text); margin: 22px 0 10px; }
+  h4 { font-size: 1.05em; color: var(--text-secondary); margin: 16px 0 8px; }
+  p { margin-bottom: 14px; } a { color: var(--primary-light); }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 22px 24px; margin-bottom: 20px; box-shadow: 0 1px 2px rgba(0,0,0,0.04); }
+  .card-accent { border-left: 4px solid var(--accent); }
+  .card-info { border-left: 4px solid var(--primary-light); }
+  .card-warning { border-left: 4px solid var(--warning); background: var(--warning-bg); }
+  .card-success { border-left: 4px solid var(--success); background: var(--success-bg); }
+  .prompt-box { background: var(--code-bg); color: #e6e1e1; border-radius: 10px; padding: 22px 24px; margin: 14px 0 22px; font-family: 'Cascadia Code', 'Fira Code', Consolas, monospace; font-size: 0.86em; line-height: 1.6; white-space: pre-wrap; position: relative; overflow-x: auto; }
+  .prompt-box .label { position: absolute; top: 8px; right: 12px; background: var(--primary-light); color: white; font-size: 0.72em; padding: 2px 12px; border-radius: 8px; font-family: 'Segoe UI', sans-serif; font-weight: 600; }
+  table.data-table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+  table.data-table th, table.data-table td { border: 1px solid var(--border); padding: 10px 14px; text-align: left; font-size: 0.93em; vertical-align: top; }
+  table.data-table th { background: var(--primary); color: white; font-weight: 600; }
+  table.data-table tr:nth-child(even) { background: #f7f2f2; }
+  .table-wrap { overflow-x: auto; }
+  .step { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 24px; margin-bottom: 28px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+  .step-head { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+  .step-num { display: inline-flex; align-items: center; justify-content: center; width: 38px; height: 38px; background: var(--primary-light); color: white; border-radius: 50%; font-weight: 700; flex-shrink: 0; }
+  .step-head h3 { margin: 0; }
+  .tip { background: #fff3f3; border-left: 4px solid var(--primary-light); border-radius: 8px; padding: 10px 14px; margin-top: 12px; font-size: 0.94em; }
+  .screenshot-wrap { margin: 16px 0; text-align: center; }
+  .screenshot-wrap img { max-width: 100%; border: 1px solid var(--border); border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+  .screenshot-wrap .caption { margin-top: 8px; font-size: 0.85em; color: var(--text-secondary); }
+  .video-wrap { margin: 18px 0; text-align: center; }
+  .video-wrap video { width: 100%; max-width: 900px; border-radius: 12px; background: #000; box-shadow: 0 4px 16px rgba(0,0,0,0.25); }
+  .video-wrap .caption { margin-top: 8px; font-size: 0.85em; color: var(--text-secondary); }
+  .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 18px 0; }
+  .compare-grid video { width: 100%; border-radius: 10px; background: #000; }
+  @media (max-width: 700px) { .compare-grid { grid-template-columns: 1fr; } }
+  ul, ol { margin-bottom: 14px; padding-left: 24px; } li { margin-bottom: 6px; }
+  .flow-diagram { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 8px; margin: 22px 0; font-size: 0.92em; }
+  .flow-step { background: var(--primary); color: white; padding: 10px 16px; border-radius: 10px; font-weight: 600; }
+  .flow-arrow { color: var(--text-secondary); font-size: 1.4em; }
+  .highlight-box { background: linear-gradient(135deg, #fff1f1, #fff8f0); border-radius: 12px; padding: 20px 24px; margin: 18px 0; border: 1px solid #f3c9cb; }
+  code { background: #f3e9e9; padding: 2px 6px; border-radius: 4px; font-size: 0.9em; }
+  .tag { display: inline-block; background: #fdeaea; color: var(--primary); padding: 2px 10px; border-radius: 12px; font-size: 0.8em; margin: 2px 4px 2px 0; }
+  .footer { text-align: center; padding: 32px; color: var(--text-secondary); font-size: 0.85em; border-top: 1px solid var(--border); margin-top: 40px; }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="badge">AI Quest &mdash; Investigate How</div>
+  <h1>Làm video Motion Graphics giới thiệu Scuti AI bằng code</h1>
+  <p class="subtitle">Claude Code viết animation bằng HTML + GSAP, review bằng một &ldquo;critic&rdquo; độc lập qua 3 vòng, rồi render từng frame thành MP4 Full HD. Thành phẩm 18 giây.</p>
+</div>
+
+<div class="container">
+
+<nav class="toc">
+  <h2>Mục lục</h2>
+  <ol>
+    <li><a href="#s1">Giới thiệu</a></li>
+    <li><a href="#s2">Thành phẩm: video giới thiệu Scuti AI</a></li>
+    <li><a href="#s3">Cách làm trong 4 bước</a></li>
+    <li><a href="#s4">Demo từng bước</a></li>
+    <li><a href="#s5">Critic đã giúp sửa gì? (v1 &rarr; v4)</a></li>
+    <li><a href="#s6">Claude Code trong terminal: vòng critic 3</a></li>
+    <li><a href="#s7">Video toàn bộ quá trình</a></li>
+    <li><a href="#s8">Nhận xét cá nhân &amp; áp dụng vào công việc</a></li>
+    <li><a href="#s9">Tự làm lại &amp; tài liệu tham khảo</a></li>
+  </ol>
+</nav>
+
+<!-- 1 -->
+<section id="s1">
+  <h2>1. Giới thiệu</h2>
+  <p>Bài này ghi lại cách mình làm video giới thiệu Scuti AI dài 18 giây bằng Claude Code. Ý tưởng lấy từ bài <a href="https://x.com/everestchris6/status/2104231799090217078" target="_blank"><strong>&ldquo;how to run an ai video agency (FULL GUIDE)&rdquo;</strong></a> của Chris (@everestchris6) trên X: <strong>video motion graphics có thể &ldquo;viết bằng code&rdquo;</strong>. AI viết chữ, chuyển động và chuyển cảnh bằng HTML + GSAP, rồi render từng frame ra MP4. Không cần After Effects.</p>
+  <p>Quy trình gồm 3 bước: <strong>storyboard</strong> &rarr; <strong>build</strong> &rarr; <strong>critic</strong>. Ở bước critic, một agent mới chưa từng xem quá trình build sẽ review video. Mình viết mỗi bước thành 1 prompt:</p>
+  <div class="prompt-box"><span class="label">PROMPT 1 &mdash; STORYBOARD</span>Plan an 18-second intro video for Scuti AI (facts only from scuti.asia).
+- Write a storyboard shot by shot: what's on screen, what moves, how long it holds, how it gets to the next shot.
+- One object carries the story across all shots: the 5-node red network from the Scuti AI logo.
+- No empty frames. Don't invent testimonials, ratings, prices or results.</div>
+  <div class="prompt-box"><span class="label">PROMPT 2 &mdash; BUILD</span>Build the storyboard as a single HTML page (1920x1080, GSAP 3).
+- ONE paused master timeline + window.seekTo(t), so it can be previewed in the browser and rendered frame by frame.
+- Motion rules: the thing in front becomes the transition; one main movement with smaller overlapping ones;
+  hold to read -> leave fast (power3.in) -> arrive slow (expo.out).
+- Add a preview bar (play / pause / scrub).</div>
+  <div class="prompt-box"><span class="label">PROMPT 3 &mdash; CRITIC</span>You're reviewing a video you did not build. Be honest.
+- Here are timestamped contact sheets, the brief and the motion rules.
+- List every problem, biggest first, each with a time in the video:
+  empty frames, shots that hold too long, text that collides, text visible too early.</div>
+
+</section>
+
+<!-- 2 -->
+<section id="s2">
+  <h2>2. Thành phẩm: video giới thiệu Scuti AI</h2>
+  <div class="video-wrap">
+    <video controls preload="metadata" poster="video/poster.jpg" src="video/scuti-ai-motion-graphics.mp4"></video>
+    <div class="caption">18 giây &middot; 1920&times;1080 &middot; 30 fps &middot; có nhạc nền</div>
+  </div>
+  <div class="table-wrap">
+  <table class="data-table">
+    <thead><tr><th>Shot</th><th>Thời gian</th><th>Nội dung</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>0 &ndash; 3.9s</td><td>Mạng 5 nút đỏ vẽ dần + &ldquo;We make services <em>people love</em>&rdquo;</td></tr>
+      <tr><td>2</td><td>3.9 &ndash; 6s</td><td>Mạng bay vào camera &rarr; &ldquo;by the power of <b>Gen AI.</b>&rdquo;</td></tr>
+      <tr><td>3</td><td>6 &ndash; 9.75s</td><td>5 dịch vụ bay ra từ tâm mạng</td></tr>
+      <tr><td>4</td><td>9.75 &ndash; 12.5s</td><td>Số liệu: 2015 &middot; 400+ &middot; 300+ &middot; 6</td></tr>
+      <tr><td>5</td><td>12.5 &ndash; 18s</td><td>Rồng đỏ bay vào, logo + tagline + scuti.asia</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <div class="card card-warning">
+    <strong>Lưu ý:</strong> mọi chữ và số liệu lấy từ <a href="https://scuti.asia" target="_blank">scuti.asia</a>. Logo được dựng lại bằng SVG để nổi trên nền tối. Con rồng là hình minh họa vẽ bằng SVG, không phải mascot chính thức, nên thay bằng asset của công ty khi dùng thật.
+  </div>
+</section>
+
+<!-- 3 -->
+<section id="s3">
+  <h2>3. Cách làm trong 4 bước</h2>
+  <div class="flow-diagram">
+    <div class="flow-step">1. Storyboard</div><div class="flow-arrow">&rarr;</div>
+    <div class="flow-step">2. Build HTML + GSAP</div><div class="flow-arrow">&rarr;</div>
+    <div class="flow-step">3. Critic review &amp; sửa</div><div class="flow-arrow">&rarr;</div>
+    <div class="flow-step">4. Render MP4</div>
+  </div>
+  <div class="table-wrap">
+  <table class="data-table">
+    <thead><tr><th>Công cụ</th><th>Dùng để làm gì</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Claude Code</strong> (Claude Opus 5.5)</td><td>Viết storyboard, code animation, và gọi một agent mới làm critic</td></tr>
+      <tr><td><strong>HTML/CSS + GSAP 3</strong></td><td>&ldquo;Video là code&rdquo;: một timeline GSAP, tua được tới bất kỳ giây nào</td></tr>
+      <tr><td><strong>Motion Studio</strong> (trang web chạy trên máy)</td><td>Nơi thao tác: xem storyboard, xem trước, tạo contact sheet, bấm render</td></tr>
+      <tr><td><strong>Chrome + ffmpeg</strong></td><td>Tua tới từng frame, chụp ảnh Full HD, ghép thành MP4 kèm nhạc nền</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <div class="card card-accent">
+    <strong>Vì sao không dùng HyperFrames?</strong> HyperFrames cần Node.js 22 trở lên, còn máy mình đang dùng Node 16. Vì vậy mình làm lại đúng ý tưởng cốt lõi của nó: dừng timeline, tua tới từng frame, chụp ảnh, rồi ghép bằng ffmpeg. Video ra mượt 30 fps, không rớt frame như khi quay màn hình.
+  </div>
+</section>
+
+<!-- 4 -->
+<section id="s4">
+  <h2>4. Demo từng bước</h2>
+  <p>Chạy <code>python studio/studio_server.py</code> rồi mở <code>http://localhost:8766/studio/</code> trên Chrome.</p>
+
+  <div class="step">
+    <div class="step-head"><span class="step-num">1</span><h3>Mở Motion Studio</h3></div>
+    <p>Bên trái là storyboard 5 shot, bên phải là 2 việc còn lại: review bằng critic và render MP4.</p>
+    <div class="screenshot-wrap"><img src="images/step-01-mo-studio.png" alt="Mở Motion Studio"><div class="caption">Motion Studio với storyboard 5 shot</div></div>
+  </div>
+  <div class="step">
+    <div class="step-head"><span class="step-num">2</span><h3>Xem trước</h3></div>
+    <p>Bấm <strong>&ldquo;▶ Mở bản xem trước&rdquo;</strong>, animation chạy ngay trong Chrome và kéo thanh thời gian được. Sửa code &rarr; F5 &rarr; xem lại.</p>
+    <div class="screenshot-wrap"><img src="images/step-02-xem-truoc.png" alt="Xem trước"><div class="caption">Shot 1 trong bản xem trước</div></div>
+  </div>
+  <div class="step">
+    <div class="step-head"><span class="step-num">3</span><h3>Contact sheet và critic</h3></div>
+    <p>Bấm <strong>&ldquo;🖼️ Tạo contact sheet&rdquo;</strong> để ghép 8 khung hình có ghi giây, gửi cho một agent mới chưa thấy quá trình build (Prompt 3). Bấm <strong>&ldquo;📝 Xem nhận xét critic&rdquo;</strong> để xem lỗi qua 3 vòng.</p>
+    <div class="screenshot-wrap"><img src="images/step-05-nhan-xet-critic.png" alt="Contact sheet và critic"><div class="caption">Contact sheet và nhận xét critic</div></div>
+  </div>
+  <div class="step">
+    <div class="step-head"><span class="step-num">4</span><h3>Render MP4</h3></div>
+    <p>Bấm <strong>&ldquo;🎬 Render MP4&rdquo;</strong>: tua 540 frame, chụp 1920&times;1080, ffmpeg ghép thành MP4 kèm nhạc. Xong thì bấm <strong>&ldquo;▶ Mở video&rdquo;</strong> để xem.</p>
+    <div class="screenshot-wrap"><img src="images/step-07-render-xong.png" alt="Render MP4"><div class="caption">Render xong: 18 giây, 1920&times;1080, 30 fps</div></div>
+  </div>
+</section>
+
+<!-- 5 -->
+<section id="s5">
+  <h2>5. Critic đã giúp sửa gì? (v1 &rarr; v4)</h2>
+  <div class="table-wrap">
+  <table class="data-table">
+    <thead><tr><th>Bản</th><th>Critic chỉ ra (lỗi lớn nhất)</th><th>Đã sửa</th></tr></thead>
+    <tbody>
+      <tr><td><span class="tag">v1</span> 19s</td><td>Khung trống 1.5 giây, chữ đứng yên quá lâu, chữ trên thẻ hiện khi thẻ còn đang bay, năm &ldquo;đếm&rdquo; 1991 &rarr; 2015</td><td>Dựng lại timeline, chữ hiện khi thẻ hạ cánh, năm cố định</td></tr>
+      <tr><td><span class="tag">v2</span> 18s</td><td>Chấm 6/10: số liệu rời không đều, chữ dính nhau khi phóng to, mạng gần như biến mất ở shot 2</td><td>Số liệu rời cùng lúc, chữ trồi từ dưới lên, mạng luôn hiện rõ</td></tr>
+      <tr><td><span class="tag">v3</span> 18s</td><td>Vòng 3, critic mới phải ghi mức độ từng lỗi: 2 lỗi major. Ở 6.5s các thẻ hiện ra dưới dạng khung rỗng; ở 12.5&ndash;14s có khoảng 2 giây không có chữ, nửa khung hình trống</td><td>Thẻ có chữ ngay khi bay ra, chữ logo hiện từ 12.85s thay vì 14s</td></tr>
+      <tr><td><span class="tag">v4</span> 18s</td><td>Còn 6 lỗi minor và khoảng 0.5s chuyển cảnh không có chữ, dừng vòng lặp</td><td>Bản cuối</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <div class="compare-grid">
+    <div><video controls preload="metadata" src="video/scuti-ai-motion-graphics-v1.mp4"></video><div class="caption" style="text-align:center;font-size:.85em;color:#616161">v1 (trước critic)</div></div>
+    <div><video controls preload="metadata" src="video/scuti-ai-motion-graphics.mp4"></video><div class="caption" style="text-align:center;font-size:.85em;color:#616161">v4 (bản cuối)</div></div>
+  </div>
+</section>
+
+<!-- 6 -->
+<section id="s6">
+  <h2>6. Claude Code trong terminal: vòng critic 3</h2>
+  <p>Vòng 3 mình làm thẳng trong terminal với 2 prompt, tổng cộng khoảng 10 phút.</p>
+
+  <div class="step">
+    <div class="step-head"><span class="step-num">1</span><h3>Critic review</h3></div>
+    <p>Prompt 1: chụp ảnh tĩnh, ghép contact sheet, gọi subagent critic mới, mỗi lỗi ghi rõ <em>major</em> hay <em>minor</em>. Critic tìm ra 2 lỗi major mà 2 vòng trước bỏ sót: thẻ rỗng ở 6.5s và khoảng 2 giây không có chữ ở 12.5&ndash;14s.</p>
+    <div class="screenshot-wrap"><img src="images/terminal-03-danh-sach-loi.png" alt="Critic review"><div class="caption">Danh sách lỗi của critic</div></div>
+  </div>
+  <div class="step">
+    <div class="step-head"><span class="step-num">2</span><h3>Sửa, render, kiểm tra</h3></div>
+    <p>Prompt 2: <em>&ldquo;Fix the major problems only&rdquo;</em>. Claude sửa timeline GSAP, render lại và kiểm tra bằng ffmpeg, đồng thời ghi rõ phần chưa sửa (6 lỗi minor).</p>
+    <div class="screenshot-wrap"><img src="images/terminal-06-ket-qua.png" alt="Sửa, render, kiểm tra"><div class="caption">Kết quả: 18s, 1920&times;1080, 30 fps, có audio</div></div>
+  </div>
+</section>
+
+<!-- 7 -->
+<section id="s7">
+  <h2>7. Video toàn bộ quá trình</h2>
+  <p>Video quá trình có 2 phần. Phần đầu (khoảng 2 phút) là phiên Claude Code trong terminal ở mục 6; các đoạn chờ được tua nhanh. Phần sau là thao tác trên Motion Studio, từ lúc mở Studio đến khi render xong và phát video thành phẩm.</p>
+  <div class="video-wrap">
+    <video controls preload="metadata" src="video/scuti-ai-motion-graphics-video-demo1.mp4"></video>
+    <div class="caption">Video quá trình 4:03: terminal Claude Code (0:00&ndash;1:50), Motion Studio (1:50&ndash;4:03), không có tiếng</div>
+  </div>
+</section>
+
+<!-- 8 -->
+<section id="s8">
+  <h2>8. Nhận xét cá nhân &amp; áp dụng vào công việc</h2>
+  <ul>
+    <li><strong>&ldquo;Video là code&rdquo; rất hợp với kỹ sư:</strong> diff và review được, sửa xong render lại khoảng 2 phút.</li>
+    <li><strong>Nhịp quan trọng hơn hiệu ứng:</strong> một vật thể xuyên suốt và nhịp &ldquo;giữ &rarr; rời nhanh &rarr; tới chậm&rdquo;.</li>
+    <li><strong>Critic độc lập đáng giá nhất:</strong> vòng 1 critic thấy 10 lỗi, vòng 3 vẫn thấy thêm 2 lỗi lớn. Cách này dùng được cho code review, tài liệu, slide.</li>
+    <li><strong>Hạn chế:</strong> con rồng SVG còn &ldquo;đồ chơi&rdquo;; critic chỉ xem ảnh tĩnh nên vẫn cần người xem lại độ mượt và âm thanh.</li>
+    <li><strong>Áp dụng:</strong> video release note từ một template, video mở đầu proposal với dữ liệu của khách, video onboarding / recap sprint.</li>
+  </ul>
+</section>
+
+<!-- 9 -->
+<section id="s9">
+  <h2>9. Tự làm lại &amp; tài liệu tham khảo</h2>
+  <div class="prompt-box"><span class="label">TERMINAL</span>pip install -r requirements.txt
+cd scuti-ai-motion-graphics-video
+python studio/studio_server.py
+# mở http://localhost:8766/studio/ trên Chrome và làm theo mục 4
+# hoặc mở Claude Code trong thư mục này và dùng 2 prompt ở mục 6</div>
+  <h3>Tài liệu tham khảo</h3>
+  <ul>
+    <li><a href="https://x.com/everestchris6/status/2104231799090217078" target="_blank">Chris (@everestchris6): how to run an ai video agency (FULL GUIDE)</a></li>
+    <li><a href="https://github.com/heygen-com/hyperframes" target="_blank">HyperFrames (heygen-com/hyperframes)</a></li>
+    <li><a href="https://gsap.com/docs/v3/" target="_blank">GSAP 3 docs</a></li>
+    <li><a href="https://scuti.asia" target="_blank">Scuti AI: scuti.asia</a></li>
+  </ul>
+</section>
+
+</div>
+
+<div class="footer">
+  AI Quest &mdash; Investigate How &bull; Scuti AI Motion Graphics Video &bull; 2026
+</div>
+
+</body>
+</html>

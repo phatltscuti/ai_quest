@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<title>Diagram 01 - Optimization map</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Segoe UI',Roboto,Arial,sans-serif;background:#eef1f5;color:#1f2933}
+  #canvas{width:1400px;padding:36px 40px 28px;background:#fafafa}
+  .head{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:22px}
+  .head h1{font-size:30px;color:#0d47a1}
+  .head p{font-size:15px;color:#52606d;margin-top:4px}
+  .tag{font-size:13px;background:#fff3e0;color:#e65100;border:1px solid #ffcc80;padding:5px 12px;border-radius:14px;white-space:nowrap}
+  .row{display:grid;grid-template-columns:190px 1fr;gap:16px;margin-bottom:14px;align-items:stretch}
+  .lab{border-radius:10px;color:#fff;padding:14px;display:flex;flex-direction:column;justify-content:center}
+  .lab b{font-size:19px}
+  .lab span{font-size:13px;opacity:.9;margin-top:4px;line-height:1.35}
+  .cells{display:grid;gap:10px}
+  .c4{grid-template-columns:repeat(4,1fr)} .c5{grid-template-columns:repeat(5,1fr)} .c3{grid-template-columns:repeat(3,1fr)}
+  .card{background:#fff;border:1px solid #d9e2ec;border-radius:9px;padding:10px 12px;font-size:13.5px;line-height:1.42}
+  .card h4{font-size:14.5px;margin-bottom:4px}
+  .card .n{display:inline-block;margin-top:5px;font-weight:700;font-size:13px;padding:1px 7px;border-radius:6px}
+  .m .lab{background:#1565c0} .m .card h4{color:#1565c0} .m .n{background:#e3f2fd;color:#0d47a1}
+  .l .lab{background:#00838f} .l .card h4{color:#00838f} .l .n{background:#e0f7fa;color:#006064}
+  .o .lab{background:#ef6c00} .o .card h4{color:#e65100} .o .n{background:#fff3e0;color:#bf360c}
+  .g .lab{background:#2e7d32} .g .card h4{color:#2e7d32} .g .n{background:#e8f5e9;color:#1b5e20}
+  .s .lab{background:#5e35b1} .s .card h4{color:#5e35b1}
+  .loop{display:flex;align-items:center;gap:8px;flex-wrap:nowrap}
+  .loop .step{flex:1;background:#fff;border:1px solid #b2ebf2;border-radius:9px;padding:9px 10px;font-size:13.5px;text-align:center;line-height:1.35}
+  .loop .step b{display:block;color:#00838f;font-size:14px}
+  .loop .arr{color:#00838f;font-size:22px;font-weight:700}
+  .foot{margin-top:14px;font-size:12.5px;color:#7b8794;display:flex;justify-content:space-between}
+</style>
+</head>
+<body>
+<div id="canvas">
+  <div class="head">
+    <div>
+      <h1 data-vi="Bản đồ các tối ưu giúp claude.ai nhanh hơn ~3x" data-en="Map of the optimizations that made claude.ai ~3x faster"></h1>
+      <p data-vi="5 lớp: đo lường → vòng lặp → kỹ thuật cụ thể → guardrail → con người điều hướng (sprint 2 tuần, 08/2026)" data-en="5 layers: measurement → loop → concrete techniques → guardrails → human steering (2-week sprint, Aug 2026)"></p>
+    </div>
+    <div class="tag" data-vi="Sơ đồ tự vẽ – tóm tắt từ bài gốc claude.dev" data-en="Own diagram – summarised from the claude.dev post"></div>
+  </div>
+
+  <div class="row m">
+    <div class="lab"><b data-vi="1. Đo lường" data-en="1. Measure"></b><span data-vi="“Đo được là leo được”" data-en="“If you can measure it, you can climb it”"></span></div>
+    <div class="cells c5">
+      <div class="card"><h4 data-vi="RUM p75 theo hành trình" data-en="p75 RUM per journey"></h4><span data-vi="4 hành trình = 95% hoạt động, 13 phép đo; mốc từ thao tác user đến khi render xong, tách client/server" data-en="4 journeys = 95% of activity, 13 measurements; from user action to rendered result, client vs. server split"></span></div>
+      <div class="card"><h4 data-vi="Đếm lệnh CPU" data-en="CPU instruction counts"></h4><span data-vi="Valgrind + <code>node --predictable</code>: tất định, 1 lần chạy là đủ" data-en="Valgrind + <code>node --predictable</code>: deterministic, one run is enough"></span><br><span class="n">−48% instr → −78% wall</span></div>
+      <div class="card"><h4 data-vi="Bộ đếm trình duyệt" data-en="Browser counters"></h4><span data-vi="React commit, số lời gọi hàm (V8 coverage), style recalc, DOM mutation, hook census" data-en="React commits, call counts (V8 coverage), style recalcs, DOM mutations, hook census"></span></div>
+      <div class="card"><h4>Layout Instability API</h4><span data-vi="Gắn mỗi layout shift với vùng (sidebar, transcript) và pha (trước paint, sau khi gõ được)" data-en="Map each layout shift to a region (sidebar, transcript) and a phase (before paint, after typeable)"></span><br><span class="n" data-vi="31% lượt tải bị xê dịch" data-en="31% of loads shifted"></span></div>
+      <div class="card"><h4 data-vi="Rig 120 Hz" data-en="120 Hz rig"></h4><span data-vi="Headless Chrome + DevTools begin-frame: bước từng frame 8,33 ms, đọc chính xác" data-en="Headless Chrome + DevTools begin-frame: step each 8.33 ms frame, exact read"></span></div>
+    </div>
+  </div>
+
+  <div class="row l">
+    <div class="lab"><b data-vi="2. Vòng lặp" data-en="2. The loop"></b><span data-vi="1 thread Slack = 1 điểm chậm; &gt;150 thread song song" data-en="1 Slack thread = 1 slow spot; 150+ threads in parallel"></span></div>
+    <div class="loop">
+      <div class="step"><b data-vi="Mở thread" data-en="Open thread"></b><span data-vi="ảnh / video đoạn chậm" data-en="screenshot / recording"></span></div><div class="arr">→</div>
+      <div class="step"><b data-vi="Benchmark" data-en="Benchmark"></b><span data-vi="trace + tái hiện trong lab" data-en="trace + reproduce in lab"></span></div><div class="arr">→</div>
+      <div class="step"><b>PR</b><span data-vi="nhiều PR nhỏ, theo rủi ro, sau flag" data-en="several, sized for risk, behind a flag"></span></div><div class="arr">→</div>
+      <div class="step"><b data-vi="Deploy + đọc field" data-en="Deploy + read field"></b><span data-vi="theo build &amp; nền tảng" data-en="by build &amp; platform"></span></div><div class="arr">→</div>
+      <div class="step"><b data-vi="Nhanh hơn?" data-en="Faster?"></b><span data-vi="Có: ratchet benchmark xuống<br>Không: tắt flag, làm lại" data-en="Yes: ratchet the bench down<br>No: flag off, iterate"></span></div><div class="arr">↺</div>
+    </div>
+  </div>
+
+  <div class="row o">
+    <div class="lab"><b data-vi="3. Kỹ thuật" data-en="3. Techniques"></b><span data-vi="Những thay đổi cụ thể được nêu trong bài" data-en="Concrete changes named in the post"></span></div>
+    <div class="cells c4">
+      <div class="card"><h4 data-vi="Khởi động" data-en="Launch"></h4><span data-vi="• Static composer nhúng sẵn vào HTML, gõ được khi React đang khởi tạo<br>• V8 code cache biên dịch sẵn cho main process desktop" data-en="• Static composer baked into the HTML, typeable while React boots<br>• Precompiled V8 code cache for the desktop main process"></span><br><span class="n">web 3,085 → 550 ms</span></div>
+      <div class="card"><h4 data-vi="Điều hướng" data-en="Navigation"></h4><span data-vi="• Giữ composer mounted giữa các hội thoại<br>• Prefetch session khi hover<br>• Giảm re-render sidebar 90%" data-en="• Keep the composer mounted across conversations<br>• Prefetch sessions on hover<br>• Sidebar re-renders cut 90%"></span></div>
+      <div class="card"><h4 data-vi="Gõ &amp; gửi" data-en="Typing &amp; sending"></h4><span data-vi="• 6.900 hook + 900 store subscription re-render mỗi phím<br>• 1 selector <code>:root:has()</code> tốn 24 ms mỗi DOM change<br>• Message tree: tra ID 1 lần thay vì 3" data-en="• 6,900 hooks + 900 store subscriptions re-rendering per key<br>• One <code>:root:has()</code> selector cost 24 ms per DOM change<br>• Message tree: resolve each ID once, not 3x"></span><br><span class="n">Cowork send 928 → 48 ms</span></div>
+      <div class="card"><h4 data-vi="Streaming &amp; nền" data-en="Streaming &amp; background"></h4><span data-vi="• Memo khối đã xong, tokenize ở worker, bảng hiện từng ô<br>• Chép code block sang chuỗi 1-byte (lỗi em dash UTF-16)<br>• Xoá <code>location.reload()</code> thừa: ~500k reload ẩn/ngày<br>• Bỏ clone cache vào IndexedDB 2 lần/phút" data-en="• Memoize finished blocks, tokenize in a worker, tables cell by cell<br>• Copy code blocks to one-byte strings (em dash UTF-16 bug)<br>• Remove stray <code>location.reload()</code>: ~500k hidden reloads/day<br>• Stop cloning cache into IndexedDB twice a minute"></span><br><span class="n">main thread 750 → ~200 ms</span></div>
+    </div>
+  </div>
+
+  <div class="row g">
+    <div class="lab"><b data-vi="4. Guardrail" data-en="4. Guardrails"></b><span data-vi="3.000+ thay đổi, 0 sự cố khách hàng, 0 rollback" data-en="3,000+ changes, 0 customer incidents, 0 rollbacks"></span></div>
+    <div class="cells c4">
+      <div class="card"><h4 data-vi="Review &amp; test" data-en="Review &amp; tests"></h4><span data-vi="Review tự động + ≥1 người duyệt; unit test viết trước khi tối ưu" data-en="Automated review + ≥1 human approval; unit tests before optimizations"></span></div>
+      <div class="card"><h4 data-vi="Feature flag ngắn hạn" data-en="Short-lived flags"></h4><span data-vi="Phân loại kill switch / ramp; ~200 flag, &gt;1/2 đã gỡ khi hết sprint" data-en="Classified kill switch / ramp; ~200 flags, &gt;half retired by the end"></span></div>
+      <div class="card"><h4 data-vi="Ratchet trong CI" data-en="Ratchets in CI"></h4><span data-vi="PR làm tăng số đếm → fail; job hằng ngày hạ trần khi số giảm" data-en="A PR that raises the count fails; a daily job lowers the ceiling"></span></div>
+      <div class="card"><h4 data-vi="Rollout từng bước" data-en="Staged rollout"></h4><span data-vi="Nhân viên → 1% → toàn bộ; test 14 viewport lệch ≤1 px, test gõ phím qua handoff" data-en="Employees → 1% → everyone; 14-viewport ≤1 px test, keystroke handoff test"></span></div>
+    </div>
+  </div>
+
+  <div class="row s">
+    <div class="lab"><b data-vi="5. Điều hướng" data-en="5. Steering"></b><span data-vi="Con người quyết định, Claude thực thi" data-en="Humans decide, Claude executes"></span></div>
+    <div class="cells c3">
+      <div class="card"><h4 data-vi="Tham vọng" data-en="Ambition"></h4><span data-vi="Thúc Claude mạnh dạn hơn: “mục tiêu không phải điểm dừng”" data-en="Push Claude to be bolder: “the targets are not the stopping point”"></span></div>
+      <div class="card"><h4 data-vi="Gu (taste)" data-en="Taste"></h4><span data-vi="Mỗi thread có owner; thay đổi người dùng thấy được → video before/after để quyết" data-en="Every thread has an owner; user-visible changes judged on before/after recordings"></span></div>
+      <div class="card"><h4 data-vi="Định hướng" data-en="Direction"></h4><span data-vi="Thread hẹp, 1 benchmark; chọn thứ tự ưu tiên, gộp/đóng thread, từ chối PR phức tạp lợi ít" data-en="Narrow threads, one benchmark each; sequencing, merging/closing threads, rejecting low-value complexity"></span></div>
+    </div>
+  </div>
+  <div class="foot"><span data-vi="Nguồn số liệu: “How we made claude.ai 3x faster in two weeks”, claude.dev, 23/09/2026" data-en="Figures from: “How we made claude.ai 3x faster in two weeks”, claude.dev, Sep 23, 2026"></span><span>Scuti AI · AI Quest</span></div>
+</div>
+<script src="_common.js"></script>
+</body>
+</html>

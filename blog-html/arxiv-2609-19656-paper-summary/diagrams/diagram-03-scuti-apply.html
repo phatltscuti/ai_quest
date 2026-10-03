@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8" />
+<title>Apply at Scuti</title>
+<style>
+  body{margin:0;background:#fff;font-family:Arial,sans-serif;color:#222}
+  #card{width:1200px;padding:28px 32px;box-sizing:border-box}
+  h1{font-size:26px;margin:0 0 4px}
+  .sub{color:#555;margin:0 0 20px;font-size:15px}
+  .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+  .col{border:1px solid #ddd;border-radius:10px;padding:14px;background:#fafafa}
+  .col h3{margin:0 0 4px;font-size:17px}
+  .col .w{font-size:12px;color:#fff;display:inline-block;padding:2px 8px;border-radius:10px;margin-bottom:8px}
+  .c1 .w{background:#0066cc}.c2 .w{background:#d98a00}.c3 .w{background:#2e7d32}.c4 .w{background:#6a1b9a}
+  ul{margin:6px 0 0;padding-left:18px;font-size:14px;line-height:1.55}
+  .bar{margin-top:18px;display:flex;gap:10px;font-size:14px}
+  .bar div{flex:1;border-radius:8px;padding:10px 12px}
+  .ok{background:#e8f5e9;border:1px solid #2e7d32}
+  .ng{background:#fdecea;border:1px solid #c62828}
+  .note{font-size:13px;color:#666;margin-top:14px}
+</style>
+</head>
+<body>
+<div id="card">
+  <h1>&Aacute;p d&#7909;ng &yacute; t&#432;&#7903;ng Self-Index v&agrave;o d&#7921; &aacute;n RAG t&#7841;i Scuti AI</h1>
+  <p class="sub">L&#7897; tr&igrave;nh 4 b&#432;&#7899;c &mdash; &#273;&#7873; xu&#7845;t c&#7911;a t&aacute;c gi&#7843; blog, kh&ocirc;ng ph&#7843;i n&#7897;i dung paper</p>
+  <div class="grid">
+    <div class="col c1"><span class="w">Tu&#7847;n 1</span><h3>1. &#272;o tr&#432;&#7899;c</h3>
+      <ul><li>Gom 50&ndash;100 c&acirc;u h&#7887;i th&#7853;t (log chatbot, ticket, Q&amp;A v&#7899;i kh&aacute;ch Nh&#7853;t)</li><li>Ghi nDCG@10 / Recall@5 c&#7911;a index hi&#7879;n t&#7841;i</li><li>T&aacute;ch b&#7897; test ri&ecirc;ng, kh&ocirc;ng d&ugrave;ng &#273;&#7875; t&#7889;i &#432;u</li></ul></div>
+    <div class="col c2"><span class="w">Tu&#7847;n 2</span><h3>2. Th&ecirc;m &ldquo;key&rdquo;</h3>
+      <ul><li>Gi&#7919; nguy&ecirc;n chunk g&#7889;c l&agrave;m 1 key</li><li>Th&ecirc;m t&#7889;i &#273;a ~9 key sinh b&#7857;ng LLM (c&acirc;u h&#7887;i ki&#7875;u ng&#432;&#7901;i d&ugrave;ng, JP + VI + EN)</li><li>Score = max(key) &rarr; kh&ocirc;ng c&#7847;n tune tr&#7885;ng s&#7889;</li></ul></div>
+    <div class="col c3"><span class="w">Tu&#7847;n 3</span><h3>3. V&ograve;ng l&#7863;p ch&#7849;n &#273;o&aacute;n</h3>
+      <ul><li>Query gi&#7843; l&#7853;p (2 b&#432;&#7899;c: t&oacute;m v&#7845;n &#273;&#7873; &rarr; vi&#7871;t c&acirc;u h&#7887;i)</li><li>T&igrave;m doc hay b&#7883; &ldquo;&#273;&#7909;ng h&agrave;ng&rdquo; (co-retrieval)</li><li>S&#7917;a key, ch&#7841;y 3 b&#7897; l&#7885;c Faithful / Specific / Separated</li></ul></div>
+    <div class="col c4"><span class="w">Tu&#7847;n 4</span><h3>4. Gate &amp; v&#7853;n h&agrave;nh</h3>
+      <ul><li>So test set tr&#432;&#7899;c/sau; ch&#7881; merge n&#7871;u t&#259;ng</li><li>L&#432;u version key (rollback &#273;&#432;&#7907;c)</li><li>B&aacute;o c&aacute;o cho kh&aacute;ch: s&#7889; li&#7879;u + v&iacute; d&#7909; key tr&#432;&#7899;c/sau</li></ul></div>
+  </div>
+  <div class="bar">
+    <div class="ok"><b>N&ecirc;n d&ugrave;ng khi:</b> kho t&agrave;i li&#7879;u &#7893;n &#273;&#7883;nh (spec, manual, FAQ, schema DB, ticket c&#361;), ng&#432;&#7901;i h&#7887;i d&ugrave;ng t&#7915; ng&#7919; kh&aacute;c t&agrave;i li&#7879;u, agent g&#7885;i search nhi&#7873;u l&#7847;n.</div>
+    <div class="ng"><b>C&#7849;n th&#7853;n khi:</b> d&#7919; li&#7879;u b&#7843;o m&#7853;t c&#7911;a kh&aacute;ch (ph&#7843;i d&ugrave;ng LLM self-host/&#273;&#432;&#7907;c ph&eacute;p), t&agrave;i li&#7879;u &#273;&#7893;i li&ecirc;n t&#7909;c, ch&#432;a c&oacute; b&#7897; test &#273;&#7875; ch&#7913;ng minh c&#7843;i thi&#7879;n.</div>
+  </div>
+  <p class="note">D&#7921;a tr&ecirc;n c&#417; ch&#7871; m&ocirc; t&#7843; trong arXiv:2609.19656 (Sec. 3, Appendix A). Th&#7901;i gian 4 tu&#7847;n l&agrave; &#432;&#7899;c l&#432;&#7907;ng cho m&#7897;t PoC n&#7897;i b&#7897;, ch&#432;a &#273;&#432;&#7907;c ki&#7875;m ch&#7913;ng.</p>
+</div>
+</body>
+</html>

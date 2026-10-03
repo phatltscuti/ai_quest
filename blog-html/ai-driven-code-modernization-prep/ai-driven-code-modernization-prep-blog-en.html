@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Preparing for AI-driven Code Modernization &ndash; 6 steps before you let the agent run</title>
+<style>
+  :root {
+    --primary: #0d47a1; --primary-light: #1976d2; --accent: #ff6d00; --bg: #fafafa; --card: #ffffff;
+    --text: #212121; --text-secondary: #616161; --border: #e0e0e0; --code-bg: #263238;
+    --success: #2e7d32; --success-bg: #e8f5e9; --warning: #f57f17; --warning-bg: #fff8e1; --error: #c62828;
+    --gradient-start: #0d47a1; --gradient-mid: #1565c0; --gradient-end: #00838f;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background: var(--bg); color: var(--text); line-height: 1.75; font-size: 16px; }
+  .hero { background: linear-gradient(135deg, var(--gradient-start), var(--gradient-mid), var(--gradient-end)); color: white; padding: 64px 20px; text-align: center; }
+  .hero h1 { font-size: 2.3em; margin-bottom: 14px; font-weight: 700; letter-spacing: -0.5px; }
+  .hero .subtitle { font-size: 1.12em; opacity: 0.93; max-width: 760px; margin: 0 auto; }
+  .hero .badge { display: inline-block; background: rgba(255,255,255,0.18); padding: 6px 20px; border-radius: 20px; font-size: 0.84em; margin-bottom: 18px; }
+  .container { max-width: 940px; margin: 0 auto; padding: 32px 20px; }
+  .toc { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 28px 32px; margin-bottom: 38px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+  .toc h2 { font-size: 1.3em; margin-bottom: 14px; color: var(--primary); border: none; padding: 0; }
+  .toc ol { padding-left: 22px; }
+  .toc a { color: var(--primary-light); text-decoration: none; }
+  .toc a:hover { text-decoration: underline; }
+  section { margin-bottom: 44px; }
+  h2 { font-size: 1.55em; color: var(--primary); border-bottom: 3px solid var(--primary); padding-bottom: 8px; margin-bottom: 22px; }
+  h3 { font-size: 1.22em; color: var(--text); margin: 22px 0 10px; }
+  h4 { font-size: 1.05em; color: var(--text-secondary); margin: 16px 0 8px; }
+  p { margin-bottom: 14px; }
+  a { color: var(--primary-light); }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin-bottom: 20px; box-shadow: 0 1px 2px rgba(0,0,0,0.04); }
+  .card-accent { border-left: 4px solid var(--accent); }
+  .card-info { border-left: 4px solid var(--primary-light); }
+  .card-warning { border-left: 4px solid var(--warning); background: var(--warning-bg); }
+  .card-success { border-left: 4px solid var(--success); background: var(--success-bg); }
+  .prompt-box { background: var(--code-bg); color: #cfd8dc; border-radius: 10px; padding: 22px 24px; margin: 14px 0 22px; font-family: 'Cascadia Code', 'Fira Code', Consolas, monospace; font-size: 0.9em; line-height: 1.65; white-space: pre-wrap; position: relative; overflow-x: auto; }
+  .prompt-box .label { position: absolute; top: 8px; right: 12px; background: var(--accent); color: white; font-size: 0.7em; padding: 2px 12px; border-radius: 8px; font-family: 'Segoe UI', sans-serif; font-weight: 600; }
+  .table-wrap { overflow-x: auto; }
+  table.data-table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+  table.data-table th, table.data-table td { border: 1px solid var(--border); padding: 10px 14px; text-align: left; font-size: 0.93em; vertical-align: top; }
+  table.data-table th { background: var(--primary); color: white; font-weight: 600; }
+  table.data-table tr:nth-child(even) { background: #f5f5f5; }
+  table.data-table tr:hover { background: #e3f2fd; }
+  .step-num { display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px; background: var(--primary); color: white; border-radius: 50%; font-weight: 700; font-size: 0.9em; margin-right: 12px; flex-shrink: 0; }
+  .step-row { display: flex; align-items: flex-start; margin-bottom: 14px; }
+  .step-row p { margin: 0; }
+  .screenshot-wrap { margin: 16px 0; text-align: center; }
+  .screenshot-wrap img, .screenshot-wrap video { max-width: 100%; border: 1px solid var(--border); border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+  .screenshot-wrap .caption { margin-top: 8px; font-size: 0.85em; color: var(--text-secondary); }
+  ul, ol { margin-bottom: 14px; padding-left: 24px; }
+  li { margin-bottom: 6px; }
+  .flow-diagram { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 8px; margin: 22px 0; font-size: 0.92em; }
+  .flow-step { background: var(--primary); color: white; padding: 10px 18px; border-radius: 10px; font-weight: 600; }
+  .flow-arrow { color: var(--text-secondary); font-size: 1.4em; }
+  .footer { text-align: center; padding: 32px; color: var(--text-secondary); font-size: 0.85em; border-top: 1px solid var(--border); margin-top: 40px; }
+  code { background: #eceff1; padding: 2px 6px; border-radius: 4px; font-size: 0.9em; }
+  .highlight-box { background: linear-gradient(135deg, #e3f2fd, #e8f5e9); border-radius: 12px; padding: 20px 24px; margin: 18px 0; border: 1px solid #bbdefb; }
+  .checklist { list-style: none; padding-left: 0; }
+  .checklist li { padding-left: 30px; position: relative; }
+  .checklist li::before { content: ""; position: absolute; left: 4px; top: 6px; width: 15px; height: 15px; border: 2px solid var(--primary-light); border-radius: 3px; background: #fff; }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="badge">AI Quest &mdash; Investigate What</div>
+  <h1>Preparing for AI-driven Code Modernization</h1>
+  <p class="subtitle">A summary of the six preparation steps from Anthropic's article &mdash; and how I plan to apply them to legacy PHP / Java / VB migration projects for Japanese clients at Scuti AI</p>
+</div>
+
+<div class="container">
+
+<nav class="toc">
+  <h2>Table of Contents</h2>
+  <ol>
+    <li><a href="#s1">What the article is about</a></li>
+    <li><a href="#s2">Step 1 &mdash; Define the target</a></li>
+    <li><a href="#s3">Step 2 &mdash; Define the certificate</a></li>
+    <li><a href="#s4">Step 3 &mdash; Set the promotion policy</a></li>
+    <li><a href="#s5">Step 4 &mdash; Put the prerequisites in place</a></li>
+    <li><a href="#s6">Steps 5 &amp; 6 &mdash; Build the workflow and run it</a></li>
+    <li><a href="#s7">Token cost &amp; what you keep afterwards</a></li>
+    <li><a href="#s8">Companion tool: the Code Modernization plugin</a></li>
+    <li><a href="#s9">Roadmap diagram</a></li>
+    <li><a href="#s10">Personal learnings</a></li>
+    <li><a href="#s11">Applying this at Scuti AI</a></li>
+    <li><a href="#s12">Practical preparation checklist</a></li>
+    <li><a href="#s13">Demo video &amp; references</a></li>
+  </ol>
+</nav>
+
+<section id="s1">
+  <h2>1. What the article is about</h2>
+  <p><a href="https://claude.com/blog/how-to-prepare-for-ai-driven-code-modernization-projects" target="_blank"><strong>How to prepare for AI-driven code modernization projects</strong></a> (Claude blog, September 23, 2026, by Jonah Ezekiel &amp; Lexie Tonelli) starts from a simple observation: with agents such as Claude Code, <em>writing</em> the changes for a modernization can take weeks or months instead of years. The organization around those changes &mdash; who reviews, where tests run, who owns production risk &mdash; does not speed up on its own.</p>
+  <div class="highlight-box">
+    <strong>Key message:</strong> once agents accelerate the writing, <strong>the bottleneck moves from producing changes to mobilizing the organization around them</strong>. Most of the preparation is about people and process, not the model.
+  </div>
+  <p>The article proposes a <strong>six-step</strong> framework plus a note on token cost:</p>
+  <div class="flow-diagram">
+    <div class="flow-step">1. Target</div><div class="flow-arrow">&rarr;</div>
+    <div class="flow-step">2. Certificate</div><div class="flow-arrow">&rarr;</div>
+    <div class="flow-step">3. Promotion Policy</div><div class="flow-arrow">&rarr;</div>
+    <div class="flow-step">4. Prerequisites</div><div class="flow-arrow">&rarr;</div>
+    <div class="flow-step">5. Workflow</div><div class="flow-arrow">&rarr;</div>
+    <div class="flow-step">6. Run</div>
+  </div>
+</section>
+
+<section id="s2">
+  <h2>2. Step 1 &mdash; Define the target</h2>
+  <p>Before the agent does anything, answer: <em>what does the system look like when we are done?</em> The answer picks the modernization type, and each type needs a different level of detail in its target.</p>
+  <div class="table-wrap">
+  <table class="data-table">
+    <thead><tr><th>Type</th><th>Meaning</th><th>Choose when</th><th>Target to define</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Uplift</strong></td><td>Version upgrade within the same stack (article example: C++11 &rarr; C++20)</td><td>The stack is still viable, but runtimes are end-of-life, vulnerabilities are unpatched, or dependencies can no longer be upgraded</td><td>Runtime version + package set</td></tr>
+      <tr><td><strong>Transform</strong></td><td>Rewrite on another stack, <strong>behavior stays fixed</strong> (e.g. COBOL &rarr; Java)</td><td>The stack itself is the problem, but the behavior is trusted</td><td>Uplift + language, frameworks, architectural conventions</td></tr>
+      <tr><td><strong>Reimagine</strong></td><td>Greenfield rebuild, <strong>behavior changes too</strong></td><td>Both behavior and code need to change</td><td>Transform + a written behavioral spec for the new system</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <h3>Map the codebase and extract the behavioral spec</h3>
+  <p>The key work here is finding out what the legacy code <em>actually</em> does, which often differs from the documents. This surfaces forgotten business logic and edge cases. Claude can map dependencies and document workflows; the code modernization plugin's <code>assess</code>, <code>map</code> and <code>extract-rules</code> commands mine business rules with source citations for human review.</p>
+  <h3>Justification and goals</h3>
+  <p>The article stresses that <strong>risk reduction</strong> is often a bigger benefit than cost reduction: unpatched vulnerabilities, unsupported runtimes and a shrinking pool of engineers who know the old stack.</p>
+</section>
+
+<section id="s3">
+  <h2>3. Step 2 &mdash; Define the certificate</h2>
+  <p>The <strong>certificate</strong> is the set of conditions or tests that <em>every</em> change must meet, and it must be <strong>checkable without a human</strong>. It is what lets an agentic workflow iterate on its own or flag a change for human review.</p>
+  <div class="card card-info">
+    <h4>Possible certificate components (from the article)</h4>
+    <ul>
+      <li>The original test suite passes; Claude-authored tests pass; coverage meets an agreed threshold</li>
+      <li>Performance benchmarks stay within bounds</li>
+      <li>Independent adversarial Claude reviews find no blocking issues</li>
+      <li>UI regressions detected through Claude-driven computer use</li>
+      <li>Current and target versions produce identical outputs; persisted state and wire formats round-trip correctly</li>
+      <li>Staging shows no regression in error rates, latency or alerts</li>
+      <li>Static analysis and security scans show no new findings; targets build cleanly and pass type checks</li>
+    </ul>
+  </div>
+  <p>Build the certificate <strong>with the people who will review and promote changes</strong> (developers, user groups, business leads). A good test: <em>&ldquo;Would they comfortably merge based on the certificate evidence alone?&rdquo;</em></p>
+  <div class="table-wrap">
+  <table class="data-table">
+    <thead><tr><th>Type</th><th>What the certificate is anchored on</th></tr></thead>
+    <tbody>
+      <tr><td>Uplift</td><td>Parity with the original codebase; the original test suite is the core</td></tr>
+      <tr><td>Transform</td><td>Parity with the original too, but old tests rarely run on the new stack &rarr; production traffic replay, old-vs-new differential testing, prod-parallel deployment</td></tr>
+      <tr><td>Reimagine</td><td>The behavioral spec: tests written from the spec, adversarial reviews against the spec, differential checks where old behavior is kept. Expect to revise the certificate as the spec matures</td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<section id="s4">
+  <h2>4. Step 3 &mdash; Set the promotion policy</h2>
+  <p>Agents can produce far more changes than humans can review line by line at the same depth. The <strong>promotion policy</strong> is a tiered review path, agreed <em>in advance</em>, that sets how deep human review goes based on each change's characteristics.</p>
+  <div class="card card-accent">
+    <h4>Four key rules</h4>
+    <ol>
+      <li><strong>Tier by blast radius and agent confidence</strong> &mdash; reuse the organization's existing change/risk classes; keep full human review on critical paths.</li>
+      <li><strong>Fix recurring flags at the source</strong> &mdash; group flagged changes over time; when a flag keeps coming back, fix the workflow or certificate instead of reviewing each instance.</li>
+      <li><strong>Design the output format with reviewers</strong> &mdash; agree on the information, format and signals that speed up review; show reviewers early samples in Step 5.</li>
+      <li><strong>Spend SME time wisely</strong> &mdash; subject matter experts will not read every diff; give them direct access to the highest-risk tier and the agent's flagged decisions.</li>
+    </ol>
+  </div>
+  <div class="card card-warning">
+    <strong>Speed vs. review:</strong> projects racing a hard deadline (e.g. runtime end of support) need a faster policy with lighter review and an <em>explicit agreement</em> to accept more risk per change. Longer projects can afford deeper review and slower cutover. In regulated environments the policy should come from leadership, and responsibility for bugs that reach production should be <strong>shared</strong>, not pinned on individual approvers.
+  </div>
+</section>
+
+<section id="s5">
+  <h2>5. Step 4 &mdash; Put the prerequisites in place</h2>
+  <p>This step pulls in teams outside the modernization: platform/infrastructure, QA/release engineering, security/compliance. The article advises <strong>opening those conversations early, while Steps 1&ndash;3 are still underway</strong>, because this is usually where the waiting happens.</p>
+  <div class="table-wrap">
+  <table class="data-table">
+    <thead><tr><th>Area</th><th>What to prepare</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Environment</strong></td><td>A dedicated remote host for the workflow, with the codebase and relevant sources reachable by Claude; test capacity required by the certificate; systems that strengthen the certificate (production telemetry, a prod-parallel setup, production data for replay)</td></tr>
+      <tr><td><strong>Codebase &amp; CI/CD</strong></td><td>A dependency map grounded in build logs, import analysis or runtime traces; planned treatment of dependencies and packages as part of the target; a compatibility check ready for CI/CD; an agreed code-freeze policy for in-place work; a communication plan for active developers</td></tr>
+      <tr><td><strong>Teams &amp; review</strong></td><td>Agreement from dependent teams to take part (certificate sign-off, promotion policy review); allocated reviewer time</td></tr>
+      <tr><td><strong>Security &amp; compliance</strong></td><td>An approved model access path for using Claude Code on source code; least privilege (write only to modernization branches, no production credentials); secrets and PII scrubbed or masked; every change traceable via a PR linked to the agent transcript and certificate evidence; license and vulnerability checks on new dependencies</td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<section id="s6">
+  <h2>6. Steps 5 &amp; 6 &mdash; Build the workflow and run it</h2>
+  <h3>Step 5: Build and refine the agentic workflow</h3>
+  <div class="step-row"><span class="step-num">1</span><div><p>Build a dynamic workflow in Claude Code, starting from the <strong>code modernization plugin</strong>.</p></div></div>
+  <div class="step-row"><span class="step-num">2</span><div><p>Put everything it needs on the file system or behind MCP: target, certificate, promotion policy, codebase, documentation, data sources and tooling.</p></div></div>
+  <div class="step-row"><span class="step-num">3</span><div><p>Run it on a small part of the codebase; have SMEs review the changes, the agent's process and the certificate evidence.</p></div></div>
+  <div class="step-row"><span class="step-num">4</span><div><p>When something is wrong, <strong>fix the workflow, not individual changes</strong>. The goal is confidence that, at scale, changes will meet the certificate consistently and reviewers will approve them comfortably under the policy.</p></div></div>
+  <h3>Step 6: Run the modernization</h3>
+  <p>Run one full cycle end to end on a small partition &mdash; including review and landing under the promotion policy. Fix issues while they are cheap, repeat until confident, then scale to the full codebase.</p>
+  <div class="table-wrap">
+  <table class="data-table">
+    <thead><tr><th>Deployment model</th><th>Fits</th><th>How</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Separate build</strong></td><td>Transform, Reimagine</td><td>Build the target alongside the existing system, cut over when complete</td></tr>
+      <tr><td><strong>In-place</strong></td><td>Uplift (systems that cannot go down, or change too fast to keep a separate copy)</td><td>Split the codebase into logical partitions <strong>from the leaves inward</strong>; freeze and modernize one partition at a time; gate CI/CD so new commits cannot undo modernized partitions</td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<section id="s7">
+  <h2>7. Token cost &amp; what you keep afterwards</h2>
+  <p>The article is candid that token usage varies widely. The main drivers:</p>
+  <ul>
+    <li>How much of the codebase must be <em>read</em> versus <em>changed</em></li>
+    <li>Certificate complexity &mdash; in regulated environments <strong>verification usually costs more than writing the changes</strong></li>
+    <li>How much new test writing and test repair is needed</li>
+    <li>Reconciliation when other teams keep merging during the run</li>
+  </ul>
+  <div class="card card-info">
+    <h4>Estimating and optimizing</h4>
+    <ul>
+      <li>Measure tokens on the small pilot and extrapolate; treat unseen work (like reconciling a live codebase) as unknowns &rarr; you get a <strong>cost floor</strong>.</li>
+      <li>Find the parts of the workflow that burn the most tokens; put compute-heavy verification <strong>behind</strong> cheaper gates.</li>
+      <li>Use cost-efficient models (such as Sonnet) for mechanical, high-volume work the certificate fully checks; keep more capable models for hard transformations and adversarial reviews.</li>
+      <li>Escalate to expensive models when cheap ones fail the certificate &mdash; but watch retry rates: several cheap attempts can cost more than one expensive one.</li>
+    </ul>
+  </div>
+  <div class="card card-success">
+    <strong>Beyond the modernization:</strong> you keep the modernized codebase, a reusable workflow, a written certificate defining correctness, an accepted promotion policy, and an evidence trail for every landed change. The article recommends codifying this as a <strong>playbook</strong> for the next upgrade or rewrite.
+  </div>
+</section>
+
+<section id="s8">
+  <h2>8. Companion tool: the Code Modernization plugin</h2>
+  <p>The article links to the <a href="https://github.com/anthropics/claude-plugins-official/tree/main/plugins/code-modernization" target="_blank">code-modernization</a> plugin in <code>anthropics/claude-plugins-official</code>. I also read the plugin README (a secondary source, not part of the article) for more detail:</p>
+  <div class="prompt-box"><span class="label">INSTALL</span>/plugin install code-modernization@claude-plugins-official</div>
+  <ul>
+    <li>Command flow: <code>modernize</code> (captures intent in <code>INTENT.md</code>) &rarr; <code>modernize-preflight</code> &rarr; <code>modernize-assess</code> &rarr; <code>modernize-map</code> &rarr; <code>modernize-extract-rules</code> / <code>modernize-review</code> &rarr; <code>modernize-brief</code> &rarr; uplift / transform / reimagine &rarr; <code>modernize-verify</code> &rarr; <code>modernize-harden</code>.</li>
+    <li>Business rules come out as Given/When/Then cards, ranked P0/P1/P2, with file citations.</li>
+    <li><code>modernize-verify</code> returns PROVEN / PARTLY PROVEN / NOT PROVEN per module &mdash; very close to the article's &ldquo;certificate&rdquo; idea.</li>
+    <li>Safety: legacy source is never edited (deny <code>Edit(/legacy/**)</code>), secrets go to a gitignored file, analyzed code is treated as untrusted, and nothing is auto-committed.</li>
+    <li>The README lists trial runs on public codebases including osCommerce (PHP &rarr; Python), Eclipse Jetty (Java 8 &rarr; 17) and Spring PetClinic (Spring Boot 2 &rarr; 3) &mdash; close to the kind of projects we handle.</li>
+  </ul>
+</section>
+
+<section id="s9">
+  <h2>9. Roadmap diagram</h2>
+  <p>I put the six steps, the main question and the output of each step into one diagram to use at project kick-off (diagram labels are in Vietnamese for my team):</p>
+  <div class="screenshot-wrap">
+    <img src="images/diagram-01-six-step-roadmap-en.png" alt="Six-step roadmap diagram">
+    <div class="caption">Diagram 1 &ndash; Six-step roadmap to prepare an AI-driven code modernization project (hand-built in HTML/CSS)</div>
+  </div>
+</section>
+
+<section id="s10">
+  <h2>10. Personal learnings</h2>
+  <div class="card card-accent">
+    <ol>
+      <li><strong>&ldquo;AI writes code fast&rdquo; does not mean &ldquo;the project finishes fast&rdquo;.</strong> I used to think the hard part of a migration was rewriting code. The article showed me the slow part is review, test environments, access and stakeholder agreement.</li>
+      <li><strong>The certificate is the most valuable concept.</strong> It turns the subjective &ldquo;is this code OK?&rdquo; into a machine-checkable list. With it, the agent can iterate on its own and reviewers have a basis for trust.</li>
+      <li><strong>Fix the process, not each output.</strong> When an agent gets something wrong, a developer's reflex is to patch it by hand. At volume, you have to fix the prompt/workflow/certificate so the error does not return.</li>
+      <li><strong>Risk reduction sells better than cost reduction.</strong> When proposing a migration to a client, talking about EOL, vulnerabilities and retiring maintainers is more convincing than just &ldquo;it is cheaper&rdquo;.</li>
+      <li><strong>Run a small pilot through the full loop</strong> before scaling &mdash; both to validate the workflow and to get real token numbers for estimates.</li>
+    </ol>
+  </div>
+</section>
+
+<section id="s11">
+  <h2>11. Applying this at Scuti AI</h2>
+  <p>Scuti AI is an outsourcing company in Vietnam; many of our Japanese clients run legacy systems (old PHP, Java/Struts, VB6/VB.NET). Below is how I propose to apply the six steps &mdash; this is my own plan, not yet an official company process.</p>
+  <div class="table-wrap">
+  <table class="data-table">
+    <thead><tr><th>Step</th><th>Concrete application</th></tr></thead>
+    <tbody>
+      <tr><td>1. Target</td><td>At the estimation stage, classify clearly with the client: PHP 5 &rarr; PHP 8 or Java 8 &rarr; 17 is <strong>Uplift</strong>; VB6 &rarr; C#/.NET is <strong>Transform</strong>; &ldquo;rebuild the system around a new process&rdquo; is <strong>Reimagine</strong>. Legacy specification documents (仕様書) are often outdated &rarr; use Claude Code / the plugin to extract business rules from code with file citations, then share a summary for the client to confirm.</td></tr>
+      <tr><td>2. Certificate</td><td>Make the certificate part of the <strong>acceptance criteria</strong> (受入基準) in the contract / test plan: old tests pass, old-vs-new output comparison on the same dataset, clean security scan, benchmarks no worse. Japanese clients are very quality-focused, so automated evidence is an advantage.</td></tr>
+      <tr><td>3. Promotion Policy</td><td>Agree with PM/BrSE and the client: money, tax calculation and authorization modules &rarr; full review; mechanical changes (deprecated APIs, syntax) &rarr; sampled review. Use a fixed review report format (Vietnamese&ndash;Japanese if needed).</td></tr>
+      <tr><td>4. Prerequisites</td><td>Ask the client <strong>in week one</strong>: may AI be used on the source code (NDA/contract), is there a staging environment / test data with personal information (個人情報) masked, who signs off on their side. Containerize the old system with Docker for comparison runs.</td></tr>
+      <tr><td>5. Workflow</td><td>Build the workflow in an internal repo with the code-modernization plugin; keep <code>INTENT.md</code>, the certificate and the policy in the repo so every member (and the agent) reads the same source.</td></tr>
+      <tr><td>6. Run</td><td>Pick one small, low-dependency module as the pilot; measure tokens/time to estimate the rest more accurately. If the client keeps developing in parallel, go in-place with per-partition code freeze.</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <h3>In daily work (even without a big migration)</h3>
+  <ul>
+    <li><strong>Before handing a task to an agent:</strong> write three lines of &ldquo;target&rdquo; + &ldquo;what done means&rdquo; (a mini-certificate: which test command must pass, which lint must be clean).</li>
+    <li><strong>When reviewing AI-made PRs:</strong> ask the PR to include evidence (test results, output diffs) instead of only reading the code.</li>
+    <li><strong>When the agent makes the same mistake twice:</strong> update CLAUDE.md / the prompt / rules instead of only fixing by hand.</li>
+    <li><strong>Agent permissions:</strong> work on its own branch only, no production credentials, no access to secret files.</li>
+  </ul>
+  <div class="prompt-box"><span class="label">SAMPLE KICK-OFF PROMPT (proposal)</span>Read the whole legacy/ folder (PHP 5.6, do not modify any file in it).
+1. List dependencies (composer, PHP extensions, deprecated functions) with file:line citations.
+2. Extract business rules as Given/When/Then for the billing module, ranked P0/P1/P2.
+3. Propose a certificate for upgrading to PHP 8.3: which tests are needed, which outputs to compare.
+Write the results to analysis/ as Markdown. Do not commit.</div>
+</section>
+
+<section id="s12">
+  <h2>12. Practical preparation checklist</h2>
+  <p>The checklist I use before letting an agent run at scale (combined from the article plus my own proposals for the outsourcing context):</p>
+  <div class="screenshot-wrap">
+    <img src="images/diagram-02-preparation-checklist-en.png" alt="Preparation checklist diagram">
+    <div class="caption">Diagram 2 &ndash; Preparation checklist in four groups + the gate before scaling</div>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;">
+    <div class="card card-info">
+      <h4>A. Target &amp; justification</h4>
+      <ul class="checklist">
+        <li>Uplift / Transform / Reimagine chosen and recorded</li>
+        <li>Dependency map grounded in build logs / imports / runtime</li>
+        <li>Business rules extracted, cited, reviewed by the client</li>
+        <li>Justification states the risks (EOL, CVEs, missing people)</li>
+      </ul>
+    </div>
+    <div class="card card-info">
+      <h4>B. Certificate &amp; policy</h4>
+      <ul class="checklist">
+        <li>Certificate written down and machine-checkable</li>
+        <li>Reviewers confirm &ldquo;we would merge on this evidence&rdquo;</li>
+        <li>Review tiers agreed; critical paths fully reviewed</li>
+        <li>Accepted risk level agreed if the deadline is tight</li>
+      </ul>
+    </div>
+    <div class="card card-info">
+      <h4>C. Environment &amp; CI/CD</h4>
+      <ul class="checklist">
+        <li>Dedicated remote host with enough test capacity</li>
+        <li>Old system runnable for output comparison (or replay data)</li>
+        <li>Code freeze + communication plan for developers</li>
+        <li>CI gate prevents breaking modernized partitions</li>
+      </ul>
+    </div>
+    <div class="card card-info">
+      <h4>D. Security &amp; contract</h4>
+      <ul class="checklist">
+        <li>Client approves using the model on source code</li>
+        <li>Least privilege, no production credentials</li>
+        <li>Secrets / PII masked in the working branch</li>
+        <li>PRs link transcript + evidence; license/CVE checks on new dependencies</li>
+      </ul>
+    </div>
+  </div>
+  <div class="card card-success">
+    <strong>Gate before scaling:</strong> one small partition has gone through the full loop (agent change &rarr; certificate pass &rarr; review under the policy &rarr; merge), tokens have been measured to estimate a cost floor, and the workflow has been adjusted from SME feedback.
+  </div>
+</section>
+
+<section id="s13">
+  <h2>13. Demo video &amp; references</h2>
+  <p>The video walks through how I read the article and pulled this summary together: opening the original article, scrolling through the key steps, opening the plugin page, showing both diagrams and ending on the finished blog.</p>
+  <div class="screenshot-wrap">
+    <video controls width="100%" src="video/ai-driven-code-modernization-prep-demo.mp4"></video>
+    <div class="caption">Demo video &ndash; <a href="video/ai-driven-code-modernization-prep-demo.mp4">video/ai-driven-code-modernization-prep-demo.mp4</a></div>
+  </div>
+  <h3>References</h3>
+  <ul>
+    <li><a href="https://claude.com/blog/how-to-prepare-for-ai-driven-code-modernization-projects" target="_blank">Claude Blog: How to prepare for AI-driven code modernization projects</a> (main source)</li>
+    <li><a href="https://github.com/anthropics/claude-plugins-official/tree/main/plugins/code-modernization" target="_blank">GitHub: code-modernization plugin</a></li>
+    <li><a href="https://claude.com/blog/the-ai-native-sdlc-playbook" target="_blank">Claude Blog: The AI-native SDLC playbook</a></li>
+    <li><a href="https://resources.anthropic.com/code-modernization-playbook" target="_blank">Anthropic: Code modernization playbook</a></li>
+    <li><a href="https://claude.com/blog/how-ai-helps-break-cost-barrier-cobol-modernization" target="_blank">Claude Blog: How AI helps break the cost barrier to COBOL modernization</a></li>
+  </ul>
+</section>
+
+</div>
+
+<div class="footer">
+  AI Quest &mdash; Investigate What &bull; AI-driven Code Modernization Preparation &bull; 2026
+</div>
+
+</body>
+</html>

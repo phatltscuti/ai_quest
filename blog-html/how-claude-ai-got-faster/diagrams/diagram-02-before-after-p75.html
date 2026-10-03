@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<title>Diagram 02 - Before/after p75</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Segoe UI',Roboto,Arial,sans-serif;background:#eef1f5}
+  #canvas{width:1400px;padding:34px 40px 26px;background:#fcfcfb;color:#0b0b0b;
+    --before:#b4b2a9;--after:#2a78d6;--text2:#52514e;--grid:#e6e5df}
+  h1{font-size:28px;color:#0d47a1}
+  .sub{font-size:15px;color:var(--text2);margin:4px 0 14px}
+  .legend{display:flex;gap:22px;font-size:14px;color:var(--text2);margin-bottom:6px;align-items:center}
+  .legend i{display:inline-block;width:22px;height:10px;border-radius:3px;margin-right:6px;vertical-align:middle}
+  .tag{float:right;font-size:13px;background:#fff3e0;color:#e65100;border:1px solid #ffcc80;padding:5px 12px;border-radius:14px}
+  svg text{font-family:'Segoe UI',Roboto,Arial,sans-serif}
+  .foot{font-size:12.5px;color:#7b8794;margin-top:6px}
+</style>
+</head>
+<body>
+<div id="canvas">
+  <span class="tag" data-vi="Biểu đồ tự vẽ lại từ số liệu bài gốc" data-en="Own chart, redrawn from the post's figures"></span>
+  <h1 data-vi="Trước và sau sprint: 13 phép đo p75 (ms, thấp hơn là tốt hơn)" data-en="Before vs. after the sprint: 13 p75 measurements (ms, lower is better)"></h1>
+  <div class="sub" data-vi="Real user monitoring, 13/08 so với 27/08/2026 · trung bình nhân: nhanh hơn 3,1x" data-en="Real user monitoring, Aug 13 vs. Aug 27, 2026 · geometric mean: 3.1x faster"></div>
+  <div class="legend"><span><i style="background:var(--before)"></i><span data-vi="Trước (13/08)" data-en="Before (Aug 13)"></span></span><span><i style="background:var(--after)"></i><span data-vi="Sau (27/08)" data-en="After (Aug 27)"></span></span></div>
+  <svg id="chart" width="1320" height="780"></svg>
+  <div class="foot" data-vi="Nguồn: claude.dev – “How we made claude.ai 3x faster in two weeks” (biểu đồ “Core user journeys, p75”). Gửi tin nhắn = chỉ phần client-side." data-en="Source: claude.dev – “How we made claude.ai 3x faster in two weeks” (“Core user journeys, p75” chart). Sending a message = client-side share only."></div>
+</div>
+<script src="_common.js"></script>
+<script>
+const en = location.hash === '#en';
+const G = en
+  ? ['Launching the app','Starting a conversation','Loading a conversation','Sending a message']
+  : ['Mở ứng dụng','Bắt đầu hội thoại','Tải hội thoại','Gửi tin nhắn'];
+const rows = [
+  [0,'claude.ai web · fresh load',3085,550,'5.6x'],
+  [0,(en?'Desktop app · cold start':'Desktop app · cold start'),6310,3328,'1.9x'],
+  [1,'Chat · web',416,273,'1.5x'],
+  [1,'Chat · desktop',460,224,'2.1x'],
+  [1,'Claude Code · desktop',837,347,'2.4x'],
+  [2,'Chat · web',1557,646,'2.4x'],
+  [2,'Chat · desktop',1353,488,'2.8x'],
+  [2,'Claude Cowork · cloud',2566,728,'3.5x'],
+  [2,'Claude Code · desktop',545,262,'2.1x'],
+  [3,'Chat · web',180,59,'3.1x'],
+  [3,'Chat · desktop',140,64,'2.2x'],
+  [3,'Claude Cowork · cloud',928,48,'19x'],
+  [3,'Claude Code · desktop',250,52,'4.8x'],
+];
+const svg = document.getElementById('chart'), NS='http://www.w3.org/2000/svg';
+const X0=300, W=880, max=6500, sx=v=>X0+v/max*W;
+function el(t,a,txt){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(txt!=null)e.textContent=txt;svg.appendChild(e);return e;}
+// grid
+for(let v=0;v<=6000;v+=1000){el('line',{x1:sx(v),x2:sx(v),y1:10,y2:760,stroke:'#e6e5df'});el('text',{x:sx(v),y:776,'font-size':12,fill:'#52514e','text-anchor':'middle'},v.toLocaleString('en-US')+' ms');}
+el('text',{x:1300,y:22,'font-size':13,fill:'#52514e','text-anchor':'end','font-weight':700},en?'speedup':'nhanh hơn');
+let y=14,last=-1;
+rows.forEach(r=>{
+  if(r[0]!==last){ if(last>=0) y+=12; el('text',{x:0,y:y+12,'font-size':13,'font-weight':700,fill:'#0d47a1'},G[r[0]].toUpperCase()); y+=20; last=r[0]; }
+  el('text',{x:X0-12,y:y+19,'font-size':14,fill:'#0b0b0b','text-anchor':'end'},r[1]);
+  el('rect',{x:X0,y:y+2,width:Math.max(sx(r[2])-X0,3),height:12,rx:3,fill:'#b4b2a9'});
+  el('rect',{x:X0,y:y+16,width:Math.max(sx(r[3])-X0,3),height:12,rx:3,fill:'#2a78d6'});
+  el('text',{x:sx(r[2])+6,y:y+12,'font-size':12,fill:'#52514e'},r[2].toLocaleString('en-US'));
+  el('text',{x:sx(r[3])+6,y:y+27,'font-size':12,fill:'#0b0b0b','font-weight':600},r[3].toLocaleString('en-US'));
+  el('text',{x:1300,y:y+21,'font-size':15,'font-weight':700,fill:'#0b0b0b','text-anchor':'end'},r[4]);
+  y+=36;
+});
+svg.setAttribute('height',y+30);
+svg.querySelectorAll('line').forEach(l=>l.setAttribute('y2',y));
+svg.querySelectorAll('text').forEach(t=>{if(t.textContent.endsWith(' ms')&&t.getAttribute('y')==='776')t.setAttribute('y',y+18);});
+</script>
+</body>
+</html>

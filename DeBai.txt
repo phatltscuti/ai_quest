@@ -1,0 +1,139 @@
+1.
+@channel AI Quest Type 1 (Investigate What)
+
+Summarize the key findings and technical methodologies of the research paper
+
+https://arxiv.org/abs/2609.19656
+
+
+Requirements:
+
+Summarize the main technical contributions, methodologies, and key findings presented in the arXiv paper.
+Write the article in Vietnamese or English. A mere direct translation of the source paper is strictly prohibited; you must explain the concepts in your own words.
+Share your personal learnings and explicitly state how you can apply these technical insights to your own current projects and daily operations.
+
+2.
+@channel AI Quest Type 2 (Investigate How)
+
+Create a motion graphics video introducing Scuti Ai based on the referenced example
+
+https://x.com/everestchris6/status/2104231799090217078
+
+
+Requirements:
+
+Actually create a motion graphics video introducing Scuti Ai, inspired by the techniques shown in the reference link. You may freely decide the content, but the video must be at least 10 seconds long.
+Document the specific creation process, including the tools, prompts, or methods you used to generate the video, and share the final output.
+Share your own opinion and explicitly state in your own words how you can apply these motion graphics creation techniques to your own daily tasks, client proposals, or internal projects.
+
+3.
+@channel AI Quest Type 1 (Investigate What)
+
+Summarize how Anthropic scaled Test Impact Analysis to handle the strain of agentic coding on CI https://claude.com/blog/agentic-coding-is-straining-ci-heres-how-we-scaled-test-impact-analysis-at-anthropic
+
+Requirements:
+
+Summarize the specific challenges agentic coding poses to CI and the detailed mechanism of how Anthropic scaled their Test Impact Analysis to solve them.
+Write the article in Vietnamese or English. You must write it in your own words; a mere direct translation of the source article is strictly prohibited.
+Share your personal learnings and explicitly state how you can apply these testing strategies or CI/CD improvements to your own current projects and daily operations.
+4.
+@channel AI Quest Type 1 (Investigate What)
+
+Summarize the roadmap, required organizational structure, and strategies to overcome bottlenecks for company-wide AI adoption
+
+https://speakerdeck.com/lmi/pek2026-link-and-motivation
+https://speakerdeck.com/yoshikikonishi_/smarthr-no-zensha-ai-suishin-ha-dou-hajimata-ka
+
+
+Requirements:
+
+Abstractly summarize the key concepts regarding the roadmap, necessary organizational structures, common bottlenecks, and solutions for driving AI adoption within an organization based on the provided slides.
+Write the article in Vietnamese or English. A mere direct translation or simple summary of the source materials is strictly prohibited; you must grasp the content abstractly and explain your learnings in your own words.
+Compare the insights from the slides with the current processes at Scuti Ai, and explicitly state in your own words what strategies you want to try and how you can utilize them to further accelerate AI promotion in the company.
+
+5.
+@channel AI Quest Type 1 (Investigate What)
+
+Summarize the engineering practices and technical improvements used to make Claude AI faster
+
+https://claude.dev/blog/how-we-made-claude-ai-faster/
+
+
+Requirements:
+
+Summarize the specific technical approaches and engineering strategies described in the article that contributed to improving the speed of Claude AI.
+Write the article in Vietnamese or English. A mere direct translation of the source article is strictly prohibited; you must explain the concepts in your own words.
+Share your personal learnings and explicitly state how you can apply these performance optimization techniques or engineering methodologies to your own current projects and daily operations.
+
+6.
+@channel AI Quest Type 2 (Investigate How)
+
+Create an audio-enabled video introducing Scuti Ai featuring a speaking red dragon mascot
+
+https://www.youtube.com/watch?v=G3urGJ1RjEo
+
+
+Requirements:
+
+Summarize the specific methods and tools for generating an audio-enabled video based on the reference link.
+Actually create a promotional video for Scuti Ai that is at least 20 seconds long, ensuring that the company’s red dragon mascot is featured and speaks in the video.
+Share your own opinion and explicitly state in your own words how you can apply these audio-visual generation techniques to your own daily tasks and projects.
+
+7.
+@channel AI Quest Type 1 (Investigate What)
+
+Summarize the key insights from Greg Isenberg’s post on X
+
+https://x.com/gregisenberg/status/2103927365977928019
+
+
+Requirements:
+
+Summarize the core message and specific insights discussed in the provided X (Twitter) post.
+Write the article in Vietnamese or English. A mere direct translation of the source text is strictly prohibited; you must explain the concepts in your own words.
+Share your personal learnings and explicitly state how you can apply these insights to your own current projects and daily operations.
+
+8.
+@channel AI Quest Type 1 (Investigate What)
+
+Summarize how AI can be utilized in HR performance evaluation and identify methods for practical implementation
+
+https://note.com/hashiyaman/n/na03108694c97
+https://www.youtube.com/watch?v=X52tm3MsSjA
+
+
+Requirements:
+
+Summarize the key insights on AI-driven HR evaluation from the provided materials, accurately explaining how daily activity data is collected and utilized.
+Write the article in Vietnamese or English. A mere direct translation of the source materials is strictly prohibited; you must explain the concepts in your own words.
+Share your personal learnings and explicitly state in your own words how these evaluation techniques and data utilization methods can be applied to your company’s HR processes and daily operations.
+
+9.
+@channel AI Quest Type 1 (Investigate What)
+
+Summarize the essential preparations and best practices for executing AI-driven code modernization projects
+
+https://claude.com/blog/how-to-prepare-for-ai-driven-code-modernization-projects
+
+
+Requirements:
+
+Summarize the specific steps and strategies required to prepare for modernizing codebases using AI as described in the article.
+Write the article in Vietnamese or English. A mere direct translation of the source article is strictly prohibited; you must explain the concepts in your own words.
+Share your personal learnings and explicitly state how you can apply these AI-driven preparation techniques to your own current projects and daily operations.
+
+10.
+@channel AI Quest Type 2 (Investigate How)
+
+Try Google Pics and explore its features compared to NanoBanana
+
+https://www.youtube.com/watch?v=S18L1NFTda8
+https://workspaceupdates.googleblog.com/2026/09/google-pics-brings-pro-level-ai-image-creation-and-editing-to-Google-Workspace.html
+https://workspace.google.com/products/pics/
+
+
+Requirements:
+
+Summarize the overview of what Google Pics can do and clarify the specific differences between Google Pics and NanoBanana.
+Actually try using Google Pics to generate or edit an image and share the results of your practical experience.
+Share your own opinion and explicitly state in your own words how you can apply Google Pics and its features to your own daily tasks and projects.

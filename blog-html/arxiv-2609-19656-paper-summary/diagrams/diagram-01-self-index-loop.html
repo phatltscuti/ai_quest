@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8" />
+<title>Self-Index loop</title>
+<style>
+  body{margin:0;background:#fff;font-family:Arial,sans-serif;color:#222}
+  #card{width:1200px;padding:28px 32px;box-sizing:border-box}
+  h1{font-size:26px;margin:0 0 4px}
+  .sub{color:#555;margin:0 0 18px;font-size:15px}
+  svg text{font-family:Arial,sans-serif}
+  .note{font-size:13px;color:#666;margin-top:8px}
+</style>
+</head>
+<body>
+<div id="card">
+  <h1>Self-Index: v&ograve;ng l&#7863;p t&#7921; ti&#7871;n h&oacute;a c&#7911;a index</h1>
+  <p class="sub">Minh h&#7885;a l&#7841;i theo Figure 1 &amp; Algorithm 1&ndash;3 c&#7911;a paper arXiv:2609.19656 (v&#7869; b&#7903;i t&aacute;c gi&#7843; blog, kh&ocirc;ng ph&#7843;i h&igrave;nh g&#7889;c)</p>
+  <svg width="1136" height="520" viewBox="0 0 1136 520">
+    <defs>
+      <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+        <path d="M0,0 L10,5 L0,10 z" fill="#444"/>
+      </marker>
+    </defs>
+    <!-- Query simulator -->
+    <rect x="10" y="40" width="250" height="210" rx="10" fill="#eef6ff" stroke="#0066cc" stroke-width="2"/>
+    <text x="135" y="70" text-anchor="middle" font-size="18" font-weight="bold" fill="#0066cc">Query Simulator</text>
+    <text x="135" y="92" text-anchor="middle" font-size="13" fill="#333">(Self-Exploration)</text>
+    <text x="28" y="122" font-size="13">1. L&#7845;y ng&#7851;u nhi&ecirc;n n t&agrave;i li&#7879;u</text>
+    <text x="28" y="146" font-size="13">2. LLM t&oacute;m &ldquo;v&#7845;n &#273;&#7873; ng&#432;&#7901;i d&ugrave;ng g&#7863;p&rdquo;</text>
+    <text x="28" y="170" font-size="13">3. Vi&#7871;t c&acirc;u h&#7887;i ki&#7875;u forum</text>
+    <text x="28" y="194" font-size="13">4. L&#7885;c Answerability &ge; 2/3</text>
+    <text x="28" y="218" font-size="13">5. L&#7885;c tr&ugrave;ng: Jaccard &lt; 0.8</text>
+
+    <rect x="10" y="300" width="250" height="110" rx="10" fill="#f7f7f7" stroke="#999" stroke-dasharray="6 4" stroke-width="1.5"/>
+    <text x="135" y="330" text-anchor="middle" font-size="15" font-weight="bold" fill="#555">Ngu&#7891;n query kh&aacute;c</text>
+    <text x="135" y="354" text-anchor="middle" font-size="13" fill="#555">log t&igrave;m ki&#7871;m th&#7853;t, d&#7919; li&#7879;u c&oacute; s&#7861;n</text>
+    <text x="135" y="376" text-anchor="middle" font-size="13" fill="#555">(paper th&#7917; v&#7899;i ReasonIR HQ)</text>
+
+    <line x1="260" y1="150" x2="330" y2="150" stroke="#444" stroke-width="2" marker-end="url(#ar)"/>
+    <line x1="260" y1="355" x2="330" y2="230" stroke="#999" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#ar)"/>
+    <text x="268" y="140" font-size="12" fill="#444">128 query</text>
+    <text x="268" y="168" font-size="12" fill="#444">/ v&ograve;ng</text>
+
+    <!-- Optimizer -->
+    <rect x="335" y="20" width="560" height="420" rx="12" fill="#fffbe6" stroke="#f5c542" stroke-width="2"/>
+    <text x="615" y="48" text-anchor="middle" font-size="19" font-weight="bold">Optimizer (LLM + quy&#7873;n g&#7885;i retriever)</text>
+
+    <rect x="355" y="70" width="520" height="95" rx="8" fill="#fff" stroke="#d9a400"/>
+    <text x="370" y="95" font-size="16" font-weight="bold">&#9312; Self-Diagnosis</text>
+    <text x="370" y="118" font-size="13">Ch&#7841;y query &rarr; top-30 key; d&#7921;ng <tspan font-weight="bold">co-retrieval profile</tspan> (key c&#7911;a t&agrave;i li&#7879;u</text>
+    <text x="370" y="138" font-size="13">kh&aacute;c hay &ldquo;&#273;i c&ugrave;ng&rdquo;). LLM ch&#7881; ra key n&agrave;o y&#7871;u, v&igrave; sao, n&ecirc;n s&#7917;a g&igrave;.</text>
+    <text x="370" y="157" font-size="12" fill="#777">Kh&ocirc;ng c&#7847;n nh&atilde;n relevance &mdash; gi&#7889;ng pseudo-relevance feedback</text>
+
+    <rect x="355" y="180" width="520" height="95" rx="8" fill="#fff" stroke="#d9a400"/>
+    <text x="370" y="205" font-size="16" font-weight="bold">&#9313; Self-Revision</text>
+    <text x="370" y="228" font-size="13">Ch&#7881; s&#7917;a key set c&#7911;a t&agrave;i li&#7879;u b&#7883; ch&#7849;n &#273;o&aacute;n, s&#7917;a c&#7843; b&#7897; m&#7897;t l&#7847;n.</text>
+    <text x="370" y="248" font-size="13">LLM t&#7921; quy&#7871;t &#273;&#7883;nh d&#7841;ng/&#273;&#7897; d&agrave;i key, vi&#7871;t b&#7857;ng l&#7901;i ng&#432;&#7901;i t&igrave;m ki&#7871;m.</text>
+    <text x="370" y="267" font-size="12" fill="#777">T&#7889;i &#273;a 10 key / t&agrave;i li&#7879;u (g&#7891;m key = v&#259;n b&#7843;n g&#7889;c, kh&ocirc;ng bao gi&#7901; b&#7883; s&#7917;a)</text>
+
+    <rect x="355" y="290" width="520" height="135" rx="8" fill="#fff" stroke="#d9a400"/>
+    <text x="370" y="315" font-size="16" font-weight="bold">&#9314; Self-Validation (c&#7843; 3 ph&#7843;i qua)</text>
+    <text x="370" y="340" font-size="13"><tspan font-weight="bold">Faithfulness</tspan>: LLM judge ch&#7845;m 0&ndash;3, c&#7847;n &ge; 2 (kh&ocirc;ng b&#7883;a)</text>
+    <text x="370" y="362" font-size="13"><tspan font-weight="bold">Specificity</tspan>: d&ugrave;ng key l&agrave;m query, ph&#7843;i k&eacute;o v&#7873; &#273;&uacute;ng t&agrave;i li&#7879;u trong top-K</text>
+    <text x="370" y="384" font-size="13"><tspan font-weight="bold">Separation</tspan>: &#273;&#7897; gi&#7889;ng max v&#7899;i key &#273;&#7889;i th&#7911; ph&#7843;i th&#7845;p h&#417;n key c&#361;</text>
+    <text x="370" y="410" font-size="12" fill="#777">Specificity &amp; Separation d&ugrave;ng ch&iacute;nh h&agrave;m rel() c&#7911;a retriever, kh&ocirc;ng t&#7889;n th&ecirc;m LLM call</text>
+
+    <line x1="615" y1="165" x2="615" y2="178" stroke="#444" stroke-width="2" marker-end="url(#ar)"/>
+    <line x1="615" y1="275" x2="615" y2="288" stroke="#444" stroke-width="2" marker-end="url(#ar)"/>
+
+    <!-- Index -->
+    <line x1="895" y1="357" x2="950" y2="357" stroke="#2e7d32" stroke-width="2" marker-end="url(#ar)"/>
+    <text x="897" y="380" font-size="12" fill="#2e7d32">pass</text>
+    <rect x="955" y="270" width="170" height="170" rx="10" fill="#e8f5e9" stroke="#2e7d32" stroke-width="2"/>
+    <text x="1040" y="300" text-anchor="middle" font-size="18" font-weight="bold" fill="#2e7d32">Index</text>
+    <text x="1040" y="326" text-anchor="middle" font-size="13">K(d) = {v&#259;n b&#7843;n g&#7889;c}</text>
+    <text x="1040" y="346" text-anchor="middle" font-size="13">&cup; key &#273;&atilde; qua ki&#7875;m</text>
+    <text x="1040" y="376" text-anchor="middle" font-size="13">score(q,d) =</text>
+    <text x="1040" y="396" text-anchor="middle" font-size="13" font-weight="bold">max rel(q, k)</text>
+    <text x="1040" y="420" text-anchor="middle" font-size="12" fill="#555">corpus g&#7889;c kh&ocirc;ng &#273;&#7893;i</text>
+
+    <line x1="895" y1="400" x2="940" y2="470" stroke="#c62828" stroke-width="1.5" marker-end="url(#ar)"/>
+    <text x="905" y="490" font-size="12" fill="#c62828">fail &rarr; gi&#7919; key set c&#361;</text>
+
+    <!-- loop back -->
+    <path d="M1040,270 L1040,30 L900,30" fill="none" stroke="#444" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#ar)"/>
+    <text x="1050" y="110" font-size="13" fill="#444">index m&#7899;i</text>
+    <text x="1050" y="128" font-size="13" fill="#444">= &#273;i&#7875;m b&#7855;t</text>
+    <text x="1050" y="146" font-size="13" fill="#444">&#273;&#7847;u v&ograve;ng sau</text>
+    <text x="1050" y="164" font-size="13" fill="#444">(20 v&ograve;ng)</text>
+
+    <text x="10" y="470" font-size="14" fill="#333"><tspan font-weight="bold">Reactive</tspan> (ch&#7881; Optimizer) &rarr; ch&#7881; s&#7917;a &#273;&#432;&#7907;c nh&#7919;ng g&igrave; query &#273;&atilde; l&#7897; ra.</text>
+    <text x="10" y="494" font-size="14" fill="#333"><tspan font-weight="bold">Proactive</tspan> (th&ecirc;m Query Simulator) &rarr; t&#7921; &#273;i t&igrave;m nhu c&#7847;u t&igrave;m ki&#7871;m ch&#432;a ai h&#7887;i.</text>
+  </svg>
+  <p class="note">Ngu&#7891;n: Lee et al., &ldquo;Self-Evolving Search Index&rdquo;, arXiv:2609.19656v1 (Sec. 3, Appendix A, B.3). S&#7889; li&#7879;u c&#7845;u h&igrave;nh: B=128 query/v&ograve;ng, top K=30, m<sub>max</sub>=10, &tau;=0.8, 20 v&ograve;ng.</p>
+</div>
+</body>
+</html>

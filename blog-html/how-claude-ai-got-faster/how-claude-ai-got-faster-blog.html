@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Claude.ai nhanh hơn 3 lần trong 2 tuần – Kỹ thuật &amp; cách áp dụng</title>
+<style>
+  :root {
+    --primary: #0d47a1;
+    --primary-light: #1976d2;
+    --accent: #ff6d00;
+    --bg: #fafafa;
+    --card: #ffffff;
+    --text: #212121;
+    --text-secondary: #616161;
+    --border: #e0e0e0;
+    --code-bg: #263238;
+    --success: #2e7d32;
+    --success-bg: #e8f5e9;
+    --warning: #f57f17;
+    --warning-bg: #fff8e1;
+    --gradient-start: #0d47a1;
+    --gradient-mid: #1565c0;
+    --gradient-end: #00838f;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background: var(--bg); color: var(--text); line-height: 1.75; font-size: 16px; }
+  .hero { background: linear-gradient(135deg, var(--gradient-start), var(--gradient-mid), var(--gradient-end)); color: white; padding: 64px 20px; text-align: center; }
+  .hero h1 { font-size: 2.3em; margin-bottom: 14px; font-weight: 700; letter-spacing: -0.5px; }
+  .hero .subtitle { font-size: 1.12em; opacity: 0.93; max-width: 760px; margin: 0 auto; }
+  .hero .badge { display: inline-block; background: rgba(255,255,255,0.18); padding: 6px 20px; border-radius: 20px; font-size: 0.84em; margin-bottom: 18px; }
+  .container { max-width: 940px; margin: 0 auto; padding: 32px 20px; }
+  .toc { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 28px 32px; margin-bottom: 38px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+  .toc h2 { font-size: 1.3em; margin-bottom: 14px; color: var(--primary); border: none; padding: 0; }
+  .toc ol { padding-left: 22px; }
+  .toc li { margin-bottom: 6px; }
+  .toc a { color: var(--primary-light); text-decoration: none; }
+  .toc a:hover { text-decoration: underline; }
+  section { margin-bottom: 44px; }
+  h2 { font-size: 1.55em; color: var(--primary); border-bottom: 3px solid var(--primary); padding-bottom: 8px; margin-bottom: 22px; }
+  h3 { font-size: 1.22em; color: var(--text); margin: 22px 0 10px; }
+  p { margin-bottom: 14px; }
+  a { color: var(--primary-light); }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin-bottom: 20px; box-shadow: 0 1px 2px rgba(0,0,0,0.04); }
+  .card-accent { border-left: 4px solid var(--accent); }
+  .card-info { border-left: 4px solid var(--primary-light); }
+  .card-warning { border-left: 4px solid var(--warning); background: var(--warning-bg); }
+  .card-success { border-left: 4px solid var(--success); background: var(--success-bg); }
+  .prompt-box { background: var(--code-bg); color: #cfd8dc; border-radius: 10px; padding: 22px 24px; margin: 14px 0 22px; font-family: 'Cascadia Code', 'Fira Code', Consolas, monospace; font-size: 0.86em; line-height: 1.6; white-space: pre-wrap; position: relative; overflow-x: auto; }
+  .prompt-box .label { position: absolute; top: 8px; right: 12px; background: var(--accent); color: white; font-size: 0.75em; padding: 2px 12px; border-radius: 8px; font-family: 'Segoe UI', sans-serif; font-weight: 600; }
+  .table-wrap { overflow-x: auto; }
+  table.data-table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+  table.data-table th, table.data-table td { border: 1px solid var(--border); padding: 10px 14px; text-align: left; font-size: 0.93em; vertical-align: top; }
+  table.data-table th { background: var(--primary); color: white; font-weight: 600; }
+  table.data-table tr:nth-child(even) { background: #f5f5f5; }
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 18px 0; }
+  .stat { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 16px; text-align: center; }
+  .stat b { display: block; font-size: 1.7em; color: var(--primary); line-height: 1.2; }
+  .stat span { font-size: 0.85em; color: var(--text-secondary); }
+  @media (max-width: 700px) { .stats { grid-template-columns: 1fr 1fr; } .hero h1 { font-size: 1.7em; } }
+  .step-num { display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px; background: var(--primary); color: white; border-radius: 50%; font-weight: 700; font-size: 0.9em; margin-right: 12px; flex-shrink: 0; }
+  .step-row { display: flex; align-items: flex-start; margin-bottom: 14px; }
+  .step-row p { margin: 0; }
+  .screenshot-wrap { margin: 16px 0 22px; text-align: center; }
+  .screenshot-wrap img, .screenshot-wrap video { max-width: 100%; border: 1px solid var(--border); border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+  .screenshot-wrap .caption { margin-top: 8px; font-size: 0.85em; color: var(--text-secondary); }
+  ul, ol { margin-bottom: 14px; padding-left: 24px; }
+  li { margin-bottom: 6px; }
+  .footer { text-align: center; padding: 32px; color: var(--text-secondary); font-size: 0.85em; border-top: 1px solid var(--border); margin-top: 40px; }
+  code { background: #eceff1; padding: 2px 6px; border-radius: 4px; font-size: 0.9em; }
+  .prompt-box code { background: none; padding: 0; }
+  .tag { display: inline-block; background: #e3f2fd; color: var(--primary); padding: 2px 10px; border-radius: 12px; font-size: 0.8em; margin: 2px 4px 2px 0; }
+  .highlight-box { background: linear-gradient(135deg, #e3f2fd, #e8f5e9); border-radius: 12px; padding: 20px 24px; margin: 18px 0; border: 1px solid #bbdefb; }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="badge">AI Quest &mdash; Investigate What</div>
+  <h1>Claude.ai nhanh hơn 3 lần trong 2 tuần: họ đã làm gì?</h1>
+  <p class="subtitle">Tóm tắt các kỹ thuật và chiến lược kỹ thuật trong bài &ldquo;How we made claude.ai 3x faster in two weeks&rdquo; (claude.dev), kèm bài học cá nhân và cách áp dụng vào dự án web/app tại Scuti AI</p>
+</div>
+
+<div class="container">
+
+<nav class="toc">
+  <h2>Mục lục</h2>
+  <ol>
+    <li><a href="#s1">Tóm tắt nhanh &amp; con số chính</a></li>
+    <li><a href="#s2">Bối cảnh: một sprint, một kênh Slack, Claude trong mọi thread</a></li>
+    <li><a href="#s3">Chiến lược 1 &ndash; Đo lường trước, &ldquo;cái gì đo được thì leo được&rdquo;</a></li>
+    <li><a href="#s4">Chiến lược 2 &ndash; Vòng lặp theo từng thread</a></li>
+    <li><a href="#s5">Chiến lược 3 &ndash; Các tối ưu kỹ thuật cụ thể</a></li>
+    <li><a href="#s6">Chiến lược 4 &ndash; Guardrail để đi nhanh mà không vỡ</a></li>
+    <li><a href="#s7">Chiến lược 5 &ndash; Con người điều hướng: tham vọng, gu, định hướng</a></li>
+    <li><a href="#s8">Case study: ngân sách 8 mili-giây mỗi frame</a></li>
+    <li><a href="#s9">Bài học cá nhân</a></li>
+    <li><a href="#s10">Áp dụng vào dự án &amp; vận hành hằng ngày tại Scuti AI</a></li>
+    <li><a href="#s11">Video demo &amp; cách làm blog</a></li>
+    <li><a href="#s12">Tài liệu tham khảo</a></li>
+  </ol>
+</nav>
+
+<!-- ================================================================ -->
+<section id="s1">
+  <h2>1. Tóm tắt nhanh &amp; con số chính</h2>
+  <p>Tháng 8/2026, nhóm phát triển claude.ai và Claude desktop app chạy một sprint <strong>hai tuần</strong> để xử lý lời phàn nàn &ldquo;app chậm&rdquo; của người dùng. Kết quả: các hành trình chính nhanh hơn trung bình khoảng <strong>3 lần</strong>. Điểm đặc biệt không nằm ở một &ldquo;mẹo&rdquo; tối ưu nào, mà ở <strong>cách tổ chức công việc</strong>: Claude (qua Claude Tag bản beta, chạy một model nghiên cứu nội bộ tương đương Opus 5.5) tự tìm điểm nghẽn, tự dựng benchmark, gửi PR và theo dõi deploy; kỹ sư đặt mục tiêu, cân nhắc đánh đổi và duyệt từng thay đổi.</p>
+
+  <div class="stats">
+    <div class="stat"><b>3,1x</b><span>nhanh hơn (trung bình nhân của 13 phép đo p75)</span></div>
+    <div class="stat"><b>3,1s &rarr; 0,55s</b><span>thời gian tới trang gõ được (claude.ai, tải mới)</span></div>
+    <div class="stat"><b>3.000+</b><span>thay đổi được merge, 0 sự cố khách hàng, 0 rollback</span></div>
+    <div class="stat"><b>150+</b><span>thread tối ưu chạy song song cùng lúc</span></div>
+  </div>
+
+
+  <div class="screenshot-wrap">
+    <img src="images/diagram-01-optimization-map.png" alt="Sơ đồ 5 lớp tối ưu">
+    <div class="caption">Sơ đồ tự vẽ (HTML &rarr; PNG): bức tranh tổng thể 5 lớp &ndash; đo lường, vòng lặp, kỹ thuật, guardrail, con người điều hướng</div>
+  </div>
+</section>
+
+<!-- ================================================================ -->
+<section id="s2">
+  <h2>2. Bối cảnh: một sprint, một kênh Slack, Claude trong mọi thread</h2>
+  <p>Trước sprint, nhóm tạo một kênh Slack và giao cho Claude một &ldquo;bản mô tả công việc&rdquo; cố định: theo dõi các lần deploy để bắt regression hiệu năng, đánh giá telemetry hiện có có đủ và chính xác không, duy trì dashboard quan sát, chủ động sửa các vấn đề dễ, đề xuất dự án hiệu năng và trao đổi với đồng đội. Nhóm nói rõ: mục tiêu dài hạn là Claude tự chủ nhất có thể, nhưng hiện tại thì chưa.</p>
+  <p>Bước đầu tiên là <strong>chọn đúng thứ cần đo</strong>. Claude phân tích dữ liệu sử dụng qua Datadog MCP server và chỉ ra 4 hành trình chiếm khoảng 95% hoạt động: mở app, bắt đầu hội thoại, tải hội thoại cũ và gửi tin nhắn. Nhân với web/desktop và các sản phẩm (Chat, Claude Code, Cowork) thành <strong>13 phép đo</strong>. Nhóm bổ sung instrumentation để mọi phép đo đều so sánh được: bắt đầu từ một thao tác người dùng, kết thúc khi kết quả đã render, tách bạch phần client và server.</p>
+
+  <div class="screenshot-wrap">
+    <img src="images/step-02-core-journeys-chart-crop.png" alt="Biểu đồ Core user journeys p75 trong bài gốc">
+    <div class="caption">Biểu đồ &ldquo;Core user journeys, p75&rdquo; trong bài gốc: 13 phép đo trước/sau (13/08 so với 27/08)</div>
+  </div>
+
+  <p>Sprint mở đầu với khoảng 20 dự án chọn sẵn; Claude ước lượng mức cải thiện (tính bằng ms) của từng dự án, nhóm cộng lại để đặt mục tiêu. Kết quả bất ngờ: <strong>12/13 mục tiêu đạt ngay ngày thứ ba</strong>. Nhóm liền đặt mục tiêu mới và yêu cầu Claude tìm thêm thứ để đo &ndash; kể cả &ldquo;ý tưởng điên rồ&rdquo;.</p>
+
+
+  <div class="screenshot-wrap">
+    <img src="images/diagram-02-before-after-p75.png" alt="Biểu đồ trước/sau 13 phép đo p75">
+    <div class="caption">Biểu đồ tự vẽ lại từ số liệu của bài gốc (không phải số đo của tôi): thanh xám = trước, thanh xanh = sau. Mức cải thiện lớn nhất là gửi tin trong Cowork (928 &rarr; 48 ms, 19x)</div>
+  </div>
+</section>
+
+<!-- ================================================================ -->
+<section id="s3">
+  <h2>3. Chiến lược 1 &ndash; Đo lường trước: &ldquo;cái gì đo được thì leo được&rdquo;</h2>
+  <p>Vấn đề: số liệu thật từ người dùng (field data) chỉ có sau mỗi lần deploy, còn Claude có thể làm việc liên tục nhiều giờ, kể cả qua đêm. Muốn lặp nhanh hơn nhịp deploy, nhóm cần những <strong>phép đo trong lab</strong> có thể chạy ngay. Thời gian thực (wall-clock) là thứ người dùng cảm nhận nhưng quá nhiễu để làm cổng CI, nên họ tìm các đại lượng <strong>tất định</strong>:</p>
+  <ul>
+    <li><strong>Số lệnh CPU</strong> cho đường nóng thuần JavaScript: chạy benchmark dưới Valgrind với <code>node --predictable</code>, so với baseline đã commit &ndash; chỉ cần một lần chạy, không cần thống kê.</li>
+    <li><strong>Với trình duyệt</strong> (không đếm lệnh được dưới Chromium): số React commit mỗi tương tác, số lời gọi hàm từ V8 precise coverage, số lần layout/style recalc, số DOM mutation.</li>
+  </ul>
+  <p>Mỗi benchmark có hai vai: (1) một con số Claude có thể kéo xuống trong lab, (2) một <strong>guardrail trong CI chỉ được phép giảm</strong> (ratchet). Benchmark nào chập chờn hoặc không tương quan với độ trễ thật thì bị bỏ, để Claude không &ldquo;leo nhầm đồi&rdquo;. Nhóm còn yêu cầu Claude <em>chứng minh</em> việc giảm số đếm thực sự làm giảm thời gian thực.</p>
+
+  <div class="screenshot-wrap">
+    <img src="images/step-04-instruction-vs-wallclock-crop.png" alt="Bảng số lệnh CPU so với wall-clock">
+    <div class="caption">&ldquo;Does the count track the clock?&rdquo;: giảm 48% số lệnh trên đường dựng cây tin nhắn &rarr; nhanh hơn 78% (4,6x); bộ quét status-line giảm 31% lệnh &rarr; nhanh hơn 44%</div>
+  </div>
+
+  <p>Ví dụ cụ thể: khi profile đường dựng cây hội thoại, Claude thấy 1/4 số lệnh là tra cứu từ điển kiểu megamorphic, cùng một message ID bị tra <strong>ba lần</strong>. Sửa thành tra một lần; với bộ quét status-line thì thêm một phép kiểm tra ký tự đầu rẻ tiền trước khi chạy regex. Sau đó hai &ldquo;ratchet&rdquo; được commit: PR nào làm tăng số lệnh sẽ fail CI, và một job hằng ngày tự hạ trần mỗi khi số giảm.</p>
+
+  <div class="card card-info">
+    <strong>Ý chính của cả sprint:</strong> trước đây đo lường là &ldquo;bước 0&rdquo; (thêm metric, chờ dữ liệu, rồi mới hiểu vấn đề). Khi có AI agent, đo lường trở thành &ldquo;bước 1 của việc leo dốc&rdquo;: có con số để vượt là agent bắt đầu tối ưu được ngay. Vì vậy việc có đòn bẩy lớn nhất là <strong>tìm thêm thứ để đo</strong>.
+  </div>
+</section>
+
+<!-- ================================================================ -->
+<section id="s4">
+  <h2>4. Chiến lược 2 &ndash; Vòng lặp theo từng thread</h2>
+  <p>Mọi việc diễn ra trong cùng một kênh Slack, nhiều kỹ sư và Claude cùng tham gia từng thread. Mỗi thread đi theo cùng một vòng lặp:</p>
+  <div class="step-row"><span class="step-num">1</span><p>Ai đó mở thread về một đoạn chậm, thường kèm ảnh chụp hoặc video màn hình.</p></div>
+  <div class="step-row"><span class="step-num">2</span><p>Claude lần theo luồng xử lý, tìm hoặc dựng benchmark tái hiện được vấn đề.</p></div>
+  <div class="step-row"><span class="step-num">3</span><p>Có kết quả tốt trong lab thì gửi PR &ndash; thường nhiều PR nhỏ, chia theo mức rủi ro để dễ review; thay đổi người dùng thấy được thì đặt sau feature flag.</p></div>
+  <div class="step-row"><span class="step-num">4</span><p>Sau khi ship, Claude theo dõi deploy và đọc dữ liệu field.</p></div>
+  <div class="step-row"><span class="step-num">5</span><p>Nhanh hơn &rarr; khoá thành quả bằng cách hạ ngưỡng benchmark (ratchet). Không nhanh hơn &rarr; tắt flag và làm lại.</p></div>
+  <div class="step-row"><span class="step-num">6</span><p>Tiếp tục tìm điểm chậm kế tiếp trong cùng hành trình.</p></div>
+
+  <div class="screenshot-wrap">
+    <img src="images/step-05-loop-figure-crop.png" alt="Hình vòng lặp một thread trong bài gốc">
+    <div class="caption">Hình &ldquo;One thread in the loop&rdquo; trong bài gốc</div>
+  </div>
+
+  <h3>Ví dụ: sidebar &ldquo;giật&rdquo; mà không monitor nào thấy</h3>
+  <p>Một video cho thấy các dòng trong sidebar &ldquo;nhảy&rdquo; vào sau khi trang đã tải. Chỉ số CLS (Cumulative Layout Shift) không bắt được vì mỗi lần xê dịch chỉ khoảng 0,008, thấp hơn nhiều ngưỡng &ldquo;tốt&rdquo; 0,1. Nhóm dùng thẳng <strong>Layout Instability API</strong>: Claude tạo event telemetry gắn mỗi lần xê dịch với <em>vùng</em> (sidebar, transcript&hellip;) và <em>pha</em> (trước first paint, sau khi gõ được), kèm integration test cố ý giữ dữ liệu sidebar tới sau first paint và fail khi có bất kỳ xê dịch nào. Test đỏ 20/20 lần trên main, xanh 20/20 lần trên PR sửa lỗi.</p>
+  <p>Khi event lên production, dữ liệu cho thấy <strong>31% lượt tải web</strong> có thứ gì đó di chuyển sau khi trang đã dùng được. Claude xử lý theo lô các nguyên nhân hàng đầu (header đến muộn, con trỏ trượt khi tên người dùng tải xong, danh sách xê dịch khi thanh cuộn xuất hiện&hellip;), xong lô này thì tìm lô tiếp theo.</p>
+
+</section>
+
+<!-- ================================================================ -->
+<section id="s5">
+  <h2>5. Chiến lược 3 &ndash; Các tối ưu kỹ thuật cụ thể</h2>
+  <p>Khi vòng lặp chạy tốt trên một thread, nhân rộng chỉ là chuyện mở thêm thread &ndash; có lúc hơn 150 thread cùng chạy, một thread có thể sinh 50&ndash;100 PR, và dần dần chính Claude tự mở thread mới từ các phát hiện của nó. Dưới đây là các thay đổi cụ thể được nêu trong bài, tôi gom theo hành trình:</p>
+
+  <div class="table-wrap">
+  <table class="data-table">
+    <thead><tr><th>Nhóm</th><th>Vấn đề / kỹ thuật</th><th>Ý nghĩa</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Khởi động</strong></td><td><strong>Static composer</strong>: nhúng sẵn ô nhập (composer) dạng HTML tĩnh vào trang, React khởi tạo phía sau rồi vẽ đè lên</td><td>Người dùng gõ được trước khi framework sẵn sàng</td></tr>
+      <tr><td><strong>Khởi động desktop</strong></td><td>Biên dịch sẵn <strong>V8 code cache</strong> cho main process của desktop shell</td><td>Không phải biên dịch lại JS từ đầu mỗi lần mở app</td></tr>
+      <tr><td><strong>Điều hướng</strong></td><td>Giữ composer luôn mounted giữa các hội thoại; <strong>prefetch session khi hover</strong>; giảm 90% re-render của sidebar</td><td>Chuyển hội thoại gần như tức thì</td></tr>
+      <tr><td><strong>Gõ phím</strong></td><td>&ldquo;Điều tra dân số&rdquo; hook: 6.900 hook và 900 store subscription trong đường gõ của composer, re-render mỗi phím</td><td>Cắt các subscription thừa trên đường nóng</td></tr>
+      <tr><td><strong>CSS</strong></td><td>Một selector <code>:root:has()</code> làm mỗi thay đổi DOM tốn thêm 24 ms style recalc</td><td>Một dòng CSS cũng có thể là điểm nghẽn</td></tr>
+      <tr><td><strong>Reload ẩn</strong></td><td>Một lời gọi <code>location.reload()</code> sót lại gây khoảng <strong>500.000 lần reload ẩn mỗi ngày</strong> mà không metric tải trang nào thấy</td><td>Phải trace cả những thứ xảy ra sau first paint</td></tr>
+      <tr><td><strong>Tab nhàn rỗi</strong></td><td>Snapshot cache giống hệt nhau bị clone vào IndexedDB hai lần mỗi phút, đều trên main thread</td><td>Profile cả tab &ldquo;không làm gì&rdquo;</td></tr>
+      <tr><td><strong>Syntax highlight</strong></td><td>Chỉ cần một dấu gạch dài (em dash) hay ngoặc kép cong, V8 lưu cả chuỗi dạng UTF-16 &rarr; mọi regex highlight chạy đường 2-byte chậm hơn. Sửa 20 dòng: chép code block sang chuỗi 1-byte trước khi highlight</td><td>Block code đầu tiên: chặn main thread 1,0 s &rarr; 0,35 s</td></tr>
+      <tr><td><strong>Streaming</strong></td><td>Memo các khối đã hoàn tất (bỏ việc O(độ dài tin nhắn) mỗi chunk), chuyển tokenize code fence sang worker, hiện bảng từng ô</td><td>Tổng thời gian chặn main thread ~750 ms &rarr; ~200 ms</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="screenshot-wrap">
+    <img src="images/step-07-em-dash-chart-crop.png" alt="Biểu đồ highlight code block trước và sau">
+    <div class="caption">Biểu đồ trong bài gốc: thời gian chặn main thread khi highlight block code đầu tiên, trước và sau bản sửa &ldquo;em dash&rdquo;</div>
+  </div>
+
+  <p>Có hai hệ quả phụ đáng chú ý: khoảng <strong>1/3 số PR có kèm thêm telemetry hoặc guardrail</strong>, mỗi công cụ đo mới lại sinh thêm thread; và vì mọi thứ diễn ra công khai trong một kênh, các team khác bắt đầu mang thay đổi của họ vào để được review hiệu năng.</p>
+</section>
+
+<!-- ================================================================ -->
+<section id="s6">
+  <h2>6. Chiến lược 4 &ndash; Guardrail để đi nhanh mà không vỡ</h2>
+  <p>Vì gần như mọi thứ đụng vào đều là đường nóng (first paint, composer, transcript), các cơ chế an toàn được dựng <strong>trước</strong> khi tăng tốc:</p>
+  <ul>
+    <li>Mọi PR qua review tự động và ít nhất một người duyệt; <strong>unit test luôn có trước khi tối ưu</strong>.</li>
+    <li>Thay đổi có thể gây lỗi người dùng thấy được thì đặt sau <strong>feature flag ngắn hạn</strong>. Claude phân loại từng flag là kill switch hay ramp và gỡ ngay khi an toàn: gần 200 flag, hơn một nửa đã gỡ khi sprint kết thúc.</li>
+    <li><strong>Ratchet</strong>: thành quả bị &ldquo;khoá&rdquo; trong CI vì hiệu năng sẽ tự xuống cấp trong một codebase thay đổi nhanh.</li>
+    <li><strong>Rollout từng bước</strong>: nhân viên trước, rồi 1% người dùng, rồi toàn bộ.</li>
+  </ul>
+  <p>Riêng static composer vốn &ldquo;mong manh theo thiết kế&rdquo; (lệch một pixel là lộ), nên có hàng chục guardrail: HTML tĩnh được sinh bằng cách render chính component React trong jsdom và có test chống lệch; bộ integration test so trang tĩnh với bản React ở <strong>14 kích thước viewport</strong>, sai số tối đa 1 px; một test gõ phím xuyên qua thời điểm bàn giao và fail nếu mất hay đảo phím; ngoài thực tế, mỗi lần bàn giao báo cáo xê dịch tới 0,1 px và Claude mở thread cho mọi event khác 0.</p>
+
+
+  <div class="screenshot-wrap">
+    <img src="images/diagram-03-static-shell-concept.png" alt="Minh họa khái niệm static composer tự vẽ">
+    <div class="caption">Minh họa khái niệm <strong>do tôi tự vẽ</strong> (không phải số đo): SPA thông thường phải chờ JS + React mới gõ được; với HTML tĩnh, người dùng gõ được gần như ngay</div>
+  </div>
+
+  <h3>Chuyện lỗi &ldquo;không phải của mình&rdquo;: Chrome prerender</h3>
+  <p>Bốn giờ sau khi bật static composer nội bộ, một đồng nghiệp gửi video: thỉnh thoảng mở claude.ai trong tab mới thì ô nhập tụt xuống ~10 px. Claude phân tích từ video: trên trình duyệt do tổ chức quản lý, trang New Tab của Chrome có footer 56 px; Chrome <strong>prerender</strong> trang ngay khi người dùng gõ URL, ở chiều cao ngắn hơn đó, rồi mới resize khoảng 0,1 s sau first paint. Composer đặt ở 18% chiều cao nên tụt 0,18 &times; 56 &asymp; 10 px &ndash; khớp với video. Lỗi luôn tiềm ẩn, chỉ lộ ra vì trang giờ paint sớm hơn. Cách xử lý: cố định layout qua lần resize và thêm test mô phỏng luồng prerender.</p>
+
+</section>
+
+<!-- ================================================================ -->
+<section id="s7">
+  <h2>7. Chiến lược 5 &ndash; Con người điều hướng: tham vọng, gu, định hướng</h2>
+  <p>Vòng lặp hiệu quả nhưng <strong>không tự động hoàn toàn</strong>. Nhóm mô tả vai trò con người gồm ba phần:</p>
+  <div class="table-wrap">
+  <table class="data-table">
+    <thead><tr><th>Vai trò</th><th>Trong bài</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Tham vọng</strong></td><td>Mặc định Claude khá thận trọng: tạo ticket, rào đón tính khả thi, ước lượng dư. Vì đã tin vào guardrail, kỹ sư liên tục thúc nó mạnh dạn hơn (&ldquo;please be braver&rdquo;) và nhắc rằng đạt mục tiêu không phải là điểm dừng.</td></tr>
+      <tr><td><strong>Gu (taste)</strong></td><td>Mỗi thread có một owner là người. Thay đổi người dùng cảm nhận được đều kèm ảnh/video trước&ndash;sau để owner quyết: bảng hiện từng ô hay từng hàng? skeleton hiện ngay hay sau nửa giây? hiệu ứng fade từng chữ có đáng 1/5 ngân sách frame?</td></tr>
+      <tr><td><strong>Định hướng</strong></td><td>Thread cố ý hẹp: một benchmark hoặc một hành trình. Con người quyết thứ tự ưu tiên, gộp các thread dẫm chân nhau, đóng thread khi lợi ích giảm dần. Một PR 900 dòng bị từ chối vì 2 ms mỗi lần gửi không đáng để duy trì một build plugin.</td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<!-- ================================================================ -->
+<section id="s8">
+  <h2>8. Case study: ngân sách 8 mili-giây mỗi frame</h2>
+  <p>Một nhánh phụ cho thấy mọi mảnh ghép hoạt động cùng nhau. Khi demo tối ưu regex cho syntax highlight, Claude gắn kèm video stream một câu trả lời dài, có đồng hồ FPS tính từ timestamp của animation frame. Kỹ sư hỏi: có đẩy lên 120 fps được không? Trình duyệt trong rig đo mặc định chạy 60 Hz, nhưng Claude dùng <strong>DevTools begin-frame control</strong> để bước frame tất định ở 120 Hz (đúng 240 frame cho 240 begin-frame, mỗi frame 8,33 ms) &ndash; nhờ vậy câu hỏi &ldquo;frame này có vừa ngân sách không&rdquo; có câu trả lời chính xác thay vì nhiễu.</p>
+  <p>Từ đó Claude đi từng frame của một câu trả lời dài: memo các khối đã xong, đưa tokenize sang worker, hiện bảng theo từng ô. Riêng thread này có gần <strong>60 PR</strong>. Kết quả: câu trả lời dài chặn main thread tổng ~200 ms thay vì ~750 ms, dùng khoảng 1/3 CPU, giữ 120 fps từ đầu đến cuối trên MacBook 120 Hz; rig 120 Hz trở thành job chạy hằng đêm để bắt regression.</p>
+  <p>Phần cuối bài nói còn việc phải làm: p95, các hành trình khác và hội thoại rất dài; một số đóng góp đã đi ngược lên upstream (Electron, Chromium, Node.js) và sẽ có bài riêng.</p>
+</section>
+
+<!-- ================================================================ -->
+<section id="s9">
+  <h2>9. Bài học cá nhân</h2>
+  <div class="card card-accent">
+    <ol>
+      <li><strong>Nút thắt thật là &ldquo;thiếu phép đo&rdquo;, không phải thiếu ý tưởng.</strong> Phần lớn lỗi trong bài (reload ẩn, selector <code>:has()</code>, em dash UTF-16) không ai đoán ra được; chúng chỉ lộ diện khi có một con số cụ thể để nhìn vào.</li>
+      <li><strong>Chọn metric tất định cho CI, giữ wall-clock cho người dùng.</strong> Đếm lệnh, đếm render, đếm request ổn định hơn nhiều so với ms &ndash; nhưng phải chứng minh nó tương quan với thời gian thật trước khi tin.</li>
+      <li><strong>Ratchet là cách rẻ nhất để giữ thành quả.</strong> Tối ưu xong mà không khoá thì vài sprint sau sẽ mất. Ngưỡng &ldquo;chỉ được giảm&rdquo; biến hiệu năng thành một thuộc tính được bảo vệ, không phải một chiến dịch.</li>
+      <li><strong>Tốc độ đến từ an toàn.</strong> 3.000 thay đổi mà không rollback là nhờ test trước, flag, rollout từng bước &ndash; guardrail không làm chậm mà cho phép đi nhanh.</li>
+      <li><strong>AI agent cần được &ldquo;cho phép&rdquo; tham vọng, và cần con người giữ gu.</strong> Agent mặc định thận trọng; con người quyết điều gì đáng làm (một PR 900 dòng cho 2 ms là không đáng).</li>
+      <li><strong>CLS &ldquo;tốt&rdquo; vẫn có thể là trải nghiệm xấu.</strong> Metric tổng hợp có ngưỡng; người dùng thì không. Đôi khi phải xuống API gốc (Layout Instability) để thấy vấn đề.</li>
+    </ol>
+  </div>
+</section>
+
+<!-- ================================================================ -->
+<section id="s10">
+  <h2>10. Áp dụng vào dự án &amp; vận hành hằng ngày tại Scuti AI</h2>
+  <p>Scuti AI làm outsourcing web/app cho khách hàng Nhật: không có hàng triệu người dùng hay đội riêng về hiệu năng như Anthropic, nhưng các ý tưởng cốt lõi vẫn thu nhỏ được. Đây là phiên bản tôi đề xuất:</p>
+
+  <div class="screenshot-wrap">
+    <img src="images/diagram-04-scuti-perf-loop.png" alt="Vòng lặp hiệu năng đề xuất cho Scuti">
+    <div class="caption">Sơ đồ tự thiết kế: vòng lặp 6 bước &ldquo;cỡ outsourcing&rdquo;, AI agent (Claude Code) làm phần lặp, kỹ sư + PM giữ quyết định</div>
+  </div>
+
+  <h3>10.1. Trong dự án khách hàng</h3>
+  <div class="table-wrap">
+  <table class="data-table">
+    <thead><tr><th>Kỹ thuật trong bài</th><th>Cách áp dụng ở Scuti</th></tr></thead>
+    <tbody>
+      <tr><td>4 hành trình = 95% hoạt động</td><td>Ngay từ giai đoạn đề xuất/kickoff, cùng khách Nhật chốt 3&ndash;5 màn quan trọng nhất (login, danh sách, tìm kiếm, đăng ký&hellip;) và ghi chỉ tiêu p75 vào 非機能要件 (yêu cầu phi chức năng).</td></tr>
+      <tr><td>Benchmark trong lab + metric tất định</td><td>Script benchmark E2E cho từng hành trình với throttling CPU/mạng; trong CI đếm những thứ ổn định: số request, kích thước bundle JS, số query SQL mỗi API (bắt N+1), số re-render (React Profiler).</td></tr>
+      <tr><td>Ratchet trong CI</td><td><code>size-limit</code> / Lighthouse CI budget / test đếm query: PR làm tăng thì fail; khi giảm thì cập nhật ngưỡng mới vào repo.</td></tr>
+      <tr><td>Static composer</td><td>Với màn đầu tiên (login, search), dùng SSR/prerender khung trang và ô nhập để người dùng thao tác được sớm; có test chụp màn hình so khớp và test gõ phím khi hydrate.</td></tr>
+      <tr><td>Prefetch khi hover, giữ component mounted</td><td>Áp dụng cho danh sách → chi tiết (Next.js <code>prefetch</code>, React Query <code>prefetchQuery</code> khi hover).</td></tr>
+      <tr><td>Layout Instability theo vùng</td><td>Gửi <code>layout-shift</code> entry kèm tên vùng lên Sentry/Datadog; khách Nhật rất nhạy với UI &ldquo;giật&rdquo;, đây là điểm cộng chất lượng dễ thấy.</td></tr>
+      <tr><td>Flag + rollout từng bước</td><td>Dev → staging → UAT phía khách → một phần người dùng → toàn bộ; mỗi flag ghi rõ loại (kill switch/ramp) và ngày gỡ.</td></tr>
+      <tr><td>Video before/after cho người có &ldquo;gu&rdquo;</td><td>Đính kèm video trước/sau vào báo cáo tuần (週次報告) cho khách: dễ hiểu hơn bảng số, giúp khách duyệt nhanh thay đổi UI.</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>10.2. Trong vận hành hằng ngày</h3>
+  <ul>
+    <li><strong>Một kênh hiệu năng chung</strong> (Slack/Teams) cho mỗi dự án: ai thấy chậm thì mở thread kèm video; một thread = một vấn đề hẹp, có owner.</li>
+    <li><strong>Giao Claude Code việc lặp đi lặp lại</strong>: đọc trace, viết benchmark, đề xuất PR nhỏ kèm số before/after. Kỹ sư review, quyết định có merge không &ndash; không để AI tự merge.</li>
+    <li><strong>Viết test trước khi tối ưu</strong> &ndash; quy tắc review bắt buộc, giống bài gốc.</li>
+    <li><strong>Đặt mục tiêu bằng con số</strong> thay vì &ldquo;làm cho nhanh hơn&rdquo;; khi đạt rồi thì hỏi tiếp &ldquo;còn gì đo được nữa?&rdquo;.</li>
+    <li><strong>Dọn flag định kỳ</strong> (ví dụ mỗi cuối sprint) để không tích nợ kỹ thuật.</li>
+  </ul>
+
+  <h3>10.3. Ví dụ guardrail tối thiểu có thể dùng ngay</h3>
+  <div class="prompt-box"><span class="label">package.json + CI</span>// 1) Ratchet kích thước bundle (size-limit)
+"size-limit": [
+  { "path": "dist/assets/index-*.js", "limit": "180 KB" }   // chỉ được hạ, không được tăng
+]
+
+// 2) Đo p75 thật bằng web-vitals, gửi kèm tên màn hình
+import { onLCP, onINP, onCLS } from 'web-vitals/attribution';
+const send = (m) => navigator.sendBeacon('/rum', JSON.stringify({
+  screen: location.pathname, name: m.name, value: m.value,
+  target: m.attribution?.largestShiftTarget || m.attribution?.interactionTarget
+}));
+onLCP(send); onINP(send); onCLS(send);</div>
+
+  <div class="prompt-box"><span class="label">Prompt cho Claude Code</span>Mục tiêu: giảm thời gian từ lúc mở /search đến khi ô tìm kiếm gõ được (p75, 4G giả lập).
+1. Viết benchmark E2E tái hiện được, in ra số request, KB JS, số re-render.
+2. Đề xuất tối đa 3 PR nhỏ, mỗi PR kèm số before/after và mức rủi ro.
+3. Thay đổi người dùng nhìn thấy được thì đặt sau feature flag.
+4. Có unit test trước khi tối ưu. Không tự merge.</div>
+
+  <div class="card card-warning">
+    <strong>Lưu ý thực tế:</strong> bài gốc dựa trên RUM của hàng triệu người dùng và một model nội bộ; dự án outsourcing thường ít traffic và khách sở hữu hạ tầng. Vì vậy nên dựa nhiều hơn vào benchmark trong lab và metric tất định, xin phép khách trước khi gửi telemetry, và tôn trọng quy trình phê duyệt release của khách.
+  </div>
+</section>
+
+<!-- ================================================================ -->
+<section id="s11">
+  <h2>11. Video demo &amp; cách làm blog</h2>
+  <p>Video dưới đây quay lại quá trình đọc bài và tổng hợp: mở bài gốc, đọc qua các phần chính, xem lại các sơ đồ tự vẽ, rồi kết thúc ở chính blog này cuộn từ trên xuống dưới.</p>
+  <div class="screenshot-wrap">
+    <video src="video/how-claude-ai-got-faster-demo.mp4" controls preload="metadata" width="880"></video>
+    <div class="caption">Video: <a href="video/how-claude-ai-got-faster-demo.mp4">video/how-claude-ai-got-faster-demo.mp4</a></div>
+  </div>
+</section>
+
+<!-- ================================================================ -->
+<section id="s12">
+  <h2>12. Tài liệu tham khảo</h2>
+  <ul>
+    <li><a href="https://claude.dev/blog/how-we-made-claude-ai-faster/" target="_blank">How we made claude.ai 3x faster in two weeks &ndash; claude.dev Blog (Raymond Wang, Sam Attard, Issac G., 23/09/2026)</a></li>
+    <li><a href="https://developer.mozilla.org/en-US/docs/Web/API/LayoutShift" target="_blank">MDN &ndash; LayoutShift (Layout Instability API)</a></li>
+    <li><a href="https://github.com/GoogleChrome/web-vitals" target="_blank">web-vitals (GoogleChrome)</a></li>
+    <li><a href="https://github.com/ai/size-limit" target="_blank">size-limit</a></li>
+  </ul>
+  <p style="font-size:0.9em;color:var(--text-secondary)">Mọi con số trong mục 1&ndash;8 lấy từ bài gốc. Các sơ đồ và đề xuất ở mục 9&ndash;10 là của tác giả blog này.</p>
+</section>
+
+</div>
+
+<div class="footer">
+  AI Quest &mdash; Investigate What &bull; How Claude.ai got faster &bull; Scuti AI &bull; 2026
+</div>
+
+</body>
+</html>

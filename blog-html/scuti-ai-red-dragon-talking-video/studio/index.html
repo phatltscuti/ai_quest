@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Rồng Đỏ Studio – Scuti AI</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Roboto, Arial, sans-serif; background: #f4f5fb; color: #1a1f3a; }
+  header { background: linear-gradient(120deg, #8e1414, #d32f2f 55%, #0d47a1); color: #fff; padding: 18px 36px;
+           display: flex; align-items: center; gap: 14px; }
+  header .mark { width: 42px; height: 42px; border-radius: 12px; background: #fff; color: #d32f2f; font-weight: 900;
+                 font-size: 26px; display: flex; align-items: center; justify-content: center; }
+  header h1 { font-size: 22px; font-weight: 700; }
+  header span { opacity: .85; font-size: 14px; margin-left: auto; }
+  main { max-width: 1180px; margin: 26px auto; display: grid; grid-template-columns: 1.25fr 1fr; gap: 22px; padding: 0 20px; }
+  .card { background: #fff; border-radius: 16px; padding: 22px 24px; box-shadow: 0 2px 10px rgba(20,30,80,.07); }
+  .card h2 { font-size: 17px; margin-bottom: 12px; display: flex; align-items: center; gap: 10px; }
+  .num { width: 28px; height: 28px; border-radius: 50%; background: #d32f2f; color: #fff; font-size: 14px;
+         display: inline-flex; align-items: center; justify-content: center; }
+  textarea { width: 100%; height: 250px; border: 1.5px solid #d7dbe8; border-radius: 12px; padding: 14px; font: 16px/1.6 'Segoe UI', sans-serif;
+             resize: none; outline: none; }
+  textarea:focus { border-color: #d32f2f; }
+  .row { display: flex; gap: 12px; align-items: center; margin-top: 14px; flex-wrap: wrap; }
+  select { padding: 10px 12px; border-radius: 10px; border: 1.5px solid #d7dbe8; font-size: 15px; }
+  button { padding: 11px 20px; border-radius: 10px; border: none; font-size: 15px; font-weight: 600; cursor: pointer;
+           background: #d32f2f; color: #fff; }
+  button.secondary { background: #0d47a1; }
+  button:disabled { opacity: .45; cursor: default; }
+  .hint { color: #6a6f88; font-size: 13.5px; margin-top: 8px; }
+  .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 12px 0; }
+  .stat { background: #fff4f3; border-radius: 12px; padding: 10px 12px; text-align: center; }
+  .stat b { display: block; font-size: 22px; color: #c62828; }
+  .stat small { color: #6a6f88; }
+  #wave { width: 100%; border-radius: 10px; background: #fafafa; display: none; }
+  audio { width: 100%; margin-top: 10px; display: none; }
+  .status { margin-top: 10px; font-size: 14px; color: #2e7d32; min-height: 20px; }
+  .status.busy { color: #b26a00; }
+  .side { display: flex; flex-direction: column; gap: 22px; }
+  .thumb { width: 100%; border-radius: 12px; display: block; background: #222; aspect-ratio: 16/9; object-fit: cover; }
+  ol.steps { padding-left: 20px; font-size: 14px; color: #4a4f6a; line-height: 1.8; }
+</style>
+</head>
+<body>
+<header>
+  <div class="mark">S</div>
+  <h1>Rồng Đỏ Studio</h1>
+  <span>Kịch bản → giọng đọc → rồng nói → video MP4</span>
+</header>
+
+<main>
+  <section class="card">
+    <h2><span class="num">1</span> Kịch bản lời thoại</h2>
+    <textarea id="script" spellcheck="false" placeholder="Gõ lời thoại cho Rồng Đỏ, mỗi câu một ý…"></textarea>
+    <div class="row">
+      <label for="voice">Giọng đọc:</label>
+      <select id="voice">
+        <option value="vi-VN-HoaiMyNeural">Hoài My (nữ)</option>
+        <option value="vi-VN-NamMinhNeural">Nam Minh (nam)</option>
+      </select>
+      <button id="ttsBtn">🎙️ Tạo giọng đọc</button>
+    </div>
+    <p class="hint">Giọng đọc tạo bằng edge-tts (miễn phí). Studio lưu cả mốc thời gian từng từ để rồng mấp máy miệng và hiện phụ đề đúng lúc.</p>
+  </section>
+
+  <div class="side">
+    <section class="card">
+      <h2><span class="num">2</span> Nghe thử giọng đọc</h2>
+      <div class="stats">
+        <div class="stat"><b id="sDur">–</b><small>giây</small></div>
+        <div class="stat"><b id="sWords">–</b><small>từ</small></div>
+        <div class="stat"><b id="sSent">–</b><small>câu</small></div>
+      </div>
+      <img id="wave" alt="waveform">
+      <audio id="aud" controls></audio>
+      <div class="status" id="ttsStatus"></div>
+    </section>
+
+    <section class="card">
+      <h2><span class="num">3</span> Xem rồng nói &amp; xuất video</h2>
+      <ol class="steps">
+        <li>Mở trang hoạt hình, bấm <b>▶ Xem trước</b> để nghe rồng nói.</li>
+        <li>Bấm <b>⏺ Ghi video</b>: Chrome hỏi quyền ghi tab → <b>Cho phép</b>.</li>
+        <li>Chờ hết lời thoại, video MP4 được lưu tự động.</li>
+      </ol>
+      <div class="row"><button class="secondary" id="openBtn" disabled>🐉 Mở trang hoạt hình</button></div>
+    </section>
+  </div>
+</main>
+
+<script>
+const $ = (id) => document.getElementById(id);
+$('ttsBtn').onclick = async () => {
+  const text = $('script').value.trim();
+  if (!text) return;
+  $('ttsBtn').disabled = true;
+  $('ttsStatus').className = 'status busy';
+  $('ttsStatus').textContent = '⏳ Đang tạo giọng đọc…';
+  const r = await fetch('/api/tts', { method: 'POST', headers: { 'Content-Type': 'application/json' },
+                                     body: JSON.stringify({ text, voice: $('voice').value }) }).then(r => r.json());
+  $('ttsBtn').disabled = false;
+  if (!r.ok) { $('ttsStatus').textContent = '❌ ' + r.error; return; }
+  $('sDur').textContent = r.duration.toFixed(1);
+  $('sWords').textContent = r.words;
+  $('sSent').textContent = r.sentences;
+  const v = '?v=' + Date.now();
+  $('wave').src = '/assets/waveform.png' + v; $('wave').style.display = 'block';
+  $('aud').src = '/assets/narration-vi.mp3' + v; $('aud').style.display = 'block';
+  $('ttsStatus').className = 'status';
+  $('ttsStatus').textContent = `✅ Đã tạo giọng ${r.voice} — ${r.duration.toFixed(1)} giây`;
+  $('openBtn').disabled = false;
+};
+$('openBtn').onclick = () => { location.href = '/assets/scuti-dragon.html?mode=play'; };
+</script>
+</body>
+</html>

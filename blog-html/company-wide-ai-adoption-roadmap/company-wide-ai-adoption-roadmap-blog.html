@@ -1,0 +1,425 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Đưa AI vào toàn công ty: Lộ trình, cơ cấu tổ chức và cách vượt nút thắt (học từ Link and Motivation &amp; SmartHR)</title>
+    <style>
+      *{box-sizing:border-box}
+      body{margin:0;font-family:'Segoe UI',Arial,sans-serif;background:#fff;color:#1a1a1a;line-height:1.7}
+      a{color:#1a73e8;text-decoration:none}a:hover{text-decoration:underline}
+      .wrap{max-width:980px;margin:0 auto;padding:24px}
+      h1{margin:0 0 10px;font-size:30px;color:#1a73e8}
+      h2{margin:36px 0 14px;font-size:24px;border-bottom:3px solid #1a73e8;padding-bottom:8px;color:#202124}
+      h3{margin:22px 0 10px;font-size:19px;color:#333}
+      h4{margin:16px 0 8px;font-size:16px;color:#444}
+      ul,ol{margin:8px 0;padding-left:22px}li{margin-bottom:4px}
+      p{margin:12px 0}
+      code{background:#e8f0fe;border:1px solid #d2e3fc;padding:2px 6px;font-size:13px;font-family:Consolas,monospace;border-radius:3px;color:#1a73e8}
+      .hero{border:2px solid #1a73e8;padding:24px 28px;margin-bottom:24px;background:linear-gradient(135deg,#e8f0fe 0%,#f8f9fa 100%);border-radius:12px}
+      .hero .subtitle{color:#5f6368;font-size:15px;margin-top:8px}
+      .tip{border-left:4px solid #34a853;padding:12px 16px;background:#e6f4ea;margin:14px 0;border-radius:0 8px 8px 0}
+      .warning{border-left:4px solid #ea4335;padding:12px 16px;background:#fce8e6;margin:14px 0;border-radius:0 8px 8px 0}
+      .info{border-left:4px solid #4285f4;padding:12px 16px;background:#e8f0fe;margin:14px 0;border-radius:0 8px 8px 0}
+      .highlight{border-left:4px solid #fbbc04;padding:12px 16px;background:#fef7e0;margin:14px 0;border-radius:0 8px 8px 0}
+      .opinion{border-left:4px solid #9334e6;padding:12px 16px;background:#f3e8fd;margin:14px 0;border-radius:0 8px 8px 0}
+      table{border-collapse:collapse;width:100%;margin:16px 0;border-radius:8px;overflow:hidden;font-size:14.5px}
+      th,td{border:1px solid #dadce0;padding:10px 12px;text-align:left;vertical-align:top}
+      th{background:#1a73e8;color:#fff;font-weight:600}
+      tr:nth-child(even){background:#f8f9fa}
+      .table-wrap{overflow-x:auto}
+      .vs{display:flex;gap:20px;margin:16px 0;flex-wrap:wrap}
+      .vs-card{flex:1;min-width:300px;border:2px solid #dadce0;border-radius:12px;padding:16px;background:#f8f9fa}
+      .vs-card.lmi{border-color:#d93025}.vs-card.shr{border-color:#00a3a3}
+      .vs-card h4{margin-top:0;text-align:center;padding:8px;border-radius:6px;color:#fff}
+      .vs-card.lmi h4{background:#d93025}.vs-card.shr h4{background:#00a3a3}
+      .toc{background:#f8f9fa;border:1px solid #dadce0;border-radius:8px;padding:16px 24px;margin:20px 0}
+      .toc ul{list-style:none;padding-left:0}.toc li{padding:4px 0}
+      .section-num{color:#1a73e8;font-weight:700}
+      .fig{margin:18px 0;text-align:center}
+      .fig img{max-width:100%;border:1px solid #dadce0;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+      .fig figcaption{font-size:13px;color:#5f6368;margin-top:6px}
+      .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+      .grid2 .fig{margin:6px 0}
+      .badge{display:inline-block;padding:2px 10px;border-radius:12px;font-size:12px;font-weight:600;margin-left:6px}
+      .badge.lmi{background:#fce8e6;color:#c5221f;border:1px solid #d93025}
+      .badge.shr{background:#e0f7f7;color:#007b7b;border:1px solid #00a3a3}
+      .badge.me{background:#f3e8fd;color:#9334e6;border:1px solid #9334e6}
+      .strategy{border:2px solid #dadce0;border-radius:12px;padding:14px 18px;margin:14px 0;background:#fff}
+      .strategy h4{margin:0 0 6px;color:#1a73e8}
+      .video-box{border:2px solid #1a73e8;border-radius:12px;padding:12px;background:#f8f9fa;margin:16px 0}
+      .video-box video{width:100%;border-radius:8px;background:#000}
+      .footer{margin-top:36px;font-size:13px;color:#5f6368;border-top:2px solid #dadce0;padding-top:20px}
+      @media(max-width:700px){.vs{flex-direction:column}.grid2{grid-template-columns:1fr}}
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+
+      <!-- HERO -->
+      <div class="hero">
+        <h1>Đưa AI vào toàn công ty: Lộ trình, cơ cấu tổ chức và cách vượt nút thắt</h1>
+        <p class="subtitle">Học từ hai slide deck của <b>Link and Motivation</b> (1.500 nhân viên không phải kỹ sư) và <b>SmartHR</b> (1.652 nhân viên, 6 tháng đầu của phòng AI Operations) &mdash; rồi soi lại cách Scuti AI đang làm và chọn ra những chiến lược sẽ thử.</p>
+        <p style="margin:4px 0 0;font-size:13px;color:#80868b;">
+          Ngày viết: 03/10/2026 &bull; AI Quest &ndash; Type 1 (Investigate What) &bull;
+          Nguồn: <a href="https://speakerdeck.com/lmi/pek2026-link-and-motivation" target="_blank">LMI &ndash; PEK2026</a>,
+          <a href="https://speakerdeck.com/yoshikikonishi_/smarthr-no-zensha-ai-suishin-ha-dou-hajimata-ka" target="_blank">SmartHR &ndash; 全社AI推進はどう始まったか</a>
+        </p>
+      </div>
+
+      <div class="info">
+        <b>Đọc nhanh (TL;DR):</b> Cả hai công ty đều rút ra cùng một điều: <b>“phát tool AI cho mọi người” không phải là triển khai AI</b>.
+        Muốn AI tạo ra kết quả kinh doanh, phải coi nó là <b>một cuộc thay đổi tổ chức</b> &mdash; có đích đến rõ, có người sở hữu ở cấp lãnh đạo,
+        có người thúc đẩy ngồi ngay trong từng bộ phận, có thước đo nối từ “dùng AI” tới “doanh thu / lợi nhuận”, và có <b>guardrail</b> để mọi người
+        (kể cả người không phải kỹ sư) dám làm mà không gây sự cố.
+      </div>
+
+      <!-- TOC -->
+      <div class="toc">
+        <h3 style="margin-top:0;">Mục lục</h3>
+        <ul>
+          <li><a href="#sources">1. Hai nguồn tham khảo: ai, quy mô, đang ở đâu</a></li>
+          <li><a href="#mindset">2. Ý tưởng cốt lõi: AI adoption là thay đổi tổ chức, không phải roll-out tool</a></li>
+          <li><a href="#roadmap">3. Lộ trình 5 giai đoạn (tổng hợp)</a></li>
+          <li><a href="#org">4. Cơ cấu tổ chức cần có</a></li>
+          <li><a href="#bottlenecks">5. Năm nút thắt phổ biến và cách gỡ</a></li>
+          <li><a href="#learnings">6. Bài học rút ra theo cách hiểu của tôi</a></li>
+          <li><a href="#scuti">7. So sánh với Scuti AI (góc nhìn tác giả)</a></li>
+          <li><a href="#apply">8. Chiến lược sẽ thử tại Scuti &amp; cách áp dụng</a></li>
+          <li><a href="#video">9. Video quá trình nghiên cứu</a></li>
+          <li><a href="#conclusion">10. Kết luận</a></li>
+        </ul>
+      </div>
+
+      <!-- 1. SOURCES -->
+      <h2 id="sources"><span class="section-num">1.</span> Hai nguồn tham khảo: ai, quy mô, đang ở đâu</h2>
+
+      <div class="vs">
+        <div class="vs-card lmi">
+          <h4>Link and Motivation (LMI)</h4>
+          <ul>
+            <li>Diễn giả: Kawano Tomonori &ndash; 執行役員 phụ trách AX (AI Transformation)</li>
+            <li>Quy mô: ~1.500 nhân viên không phải kỹ sư + ~100 kỹ sư</li>
+            <li>Đăng: 25/09/2026, 45 slide, sự kiện “PEK2026” (theo URL; nội dung chốt bằng bài học Platform Engineering)</li>
+            <li>Trọng tâm: làm sao để non-engineer <b>dùng AI ra kết quả</b> và <b>tự làm tool an toàn</b></li>
+          </ul>
+          <p><b>Kết quả công bố (tháng 9/2026, mỗi số đo ở bộ phận khác nhau):</b> ~1.500 người dùng AI hằng ngày, ~3.000 tool AI tự làm,
+          doanh thu/người ~140% so với năm trước (bộ phận consulting), số buổi gặp khách/người ~1,8 lần, công vận hành giảm ~50% (mảng outsource).</p>
+        </div>
+        <div class="vs-card shr">
+          <h4>SmartHR</h4>
+          <ul>
+            <li>Diễn giả: Konishi Yoshiki &ndash; trưởng “AIオペレーション室” (AI Operations Office)</li>
+            <li>Quy mô: 1.652 người (4/2026), ~75% thuộc khối không phát triển</li>
+            <li>Đăng: 28/09/2026, 20 slide</li>
+            <li>Trọng tâm: 6 tháng đầu dựng <b>bộ máy</b> đẩy AI toàn công ty: vai trò, governance, đo lường</li>
+          </ul>
+          <p><b>Điểm xuất phát:</b> Gemini và Notion AI đã được dùng rộng, nhưng thiếu luật chung, mỗi bộ phận tự chọn tool,
+          dữ liệu chi phí/sử dụng nằm rải rác. Phòng AI Ops ra đời 4/2026 với <b>1 trưởng phòng kiêm nhiệm, chưa từng làm AI/DX chuyên trách</b>.</p>
+        </div>
+      </div>
+
+      <figure class="fig"><img src="images/step-02-lmi-s04-results-crop.png" alt="LMI results" /><figcaption>Ảnh 1 &ndash; LMI slide 4: hiện trạng tính đến 9/2026 (điểm xuất phát là khảo sát 1/2024)</figcaption></figure>
+
+      <div class="highlight">
+        <b>Vì sao ghép hai deck này?</b> Chúng bổ sung cho nhau rất khớp: LMI kể chuyện <b>từ dưới lên</b> (hiện trường, thói quen, tool tự làm, guardrail)
+        còn SmartHR kể chuyện <b>từ trên xuống</b> (sứ mệnh, mô hình vận hành, governance, đo lường). Ghép lại thành một bức tranh gần như đầy đủ.
+      </div>
+
+      <!-- 2. MINDSET -->
+      <h2 id="mindset"><span class="section-num">2.</span> Ý tưởng cốt lõi: AI adoption là thay đổi tổ chức, không phải roll-out tool</h2>
+
+      <p>
+        Nếu chỉ được nhớ một câu từ hai deck, tôi sẽ chọn: <b>“số người dùng” không phải là kết quả</b>. SmartHR viết thẳng điều này vào sứ mệnh
+        &mdash; không lấy số user hay lượng sử dụng làm đích cuối, mà hướng tới “trạng thái kết quả kinh doanh được tạo ra một cách bền vững”.
+        LMI thì học điều đó bằng thất bại: phát ChatGPT cho tất cả, mở lớp học, và đến 1/2024 khoảng 70% vẫn không dùng nổi một lần mỗi ngày.
+      </p>
+
+      <p>
+        SmartHR vẽ đích đến thành bậc thang ba nấc: kết quả cá nhân → kết quả tổ chức → kết quả kinh doanh, và thiết kế cả chương trình theo khung 5As của McKinsey.
+      </p>
+      <figure class="fig"><img src="images/step-16-smarthr-s10-5as-crop.png" alt="SmartHR 5As" /><figcaption>Ảnh 2 &ndash; SmartHR slide 10: thiết kế AI adoption theo khung 5As (McKinsey)</figcaption></figure>
+
+      <p>Hiểu theo cách của tôi, có ba “dịch chuyển tư duy” xuyên suốt cả hai deck:</p>
+      <table>
+        <thead><tr><th>Từ (cách nghĩ phổ biến)</th><th>Sang (cách hai công ty làm)</th></tr></thead>
+        <tbody>
+          <tr><td>Rộng và nông: phát tool cho tất cả cùng lúc</td><td>Hẹp và sâu: một bộ phận làm “khách hàng đầu tiên”, chứng minh giá trị rồi mới mở rộng</td></tr>
+          <tr><td>Đo số user, số prompt</td><td>Đo cả chuỗi: chi phí → sử dụng → sáng kiến → kết quả tổ chức → kết quả kinh doanh</td></tr>
+          <tr><td>Đội AI là người gác cổng (gatekeeper), cấm/cho phép</td><td>Đội AI là người mở đường (enabler): dựng nền tảng, đường chuẩn, rào chắn để người khác chạy nhanh</td></tr>
+        </tbody>
+      </table>
+
+      <!-- 3. ROADMAP -->
+      <h2 id="roadmap"><span class="section-num">3.</span> Lộ trình 5 giai đoạn (tổng hợp)</h2>
+
+      <p>
+        Không deck nào trình bày một “roadmap” theo đúng nghĩa timeline. Tôi ghép các bước của hai công ty thành 5 giai đoạn, mỗi giai đoạn có một
+        <b>điều kiện qua cổng</b> &mdash; mượn đúng tinh thần “đạt điều kiện hoàn thành rồi mới sang bước sau” trong golden path của LMI.
+      </p>
+
+      <figure class="fig"><img src="images/diagram-roadmap.png" alt="Roadmap diagram" /><figcaption>Hình A (tự vẽ) &ndash; Lộ trình 5 giai đoạn. Mốc tháng là đề xuất của tác giả, không có trong slide.</figcaption></figure>
+
+      <h3>Giai đoạn 0 &ndash; Định hướng &amp; khảo sát (Aspire / Assess)</h3>
+      <p>
+        SmartHR dành gần như trọn tháng đầu chỉ để <b>nhìn cho rõ</b>: phỏng vấn trong/ngoài, kiểm kê tool &ndash; chi phí &ndash; sáng kiến, xem bộ máy hiện có.
+        Lý do: lúc phòng AI Ops ra đời, vấn đề không phải “thiếu AI” mà là <b>mỗi nơi một kiểu</b> &mdash; tool mới phải xin từng nơi nên chậm,
+        không ai đứng ra điều phối, dữ liệu nằm rải rác. Không thể ưu tiên đúng nếu chưa có bức tranh này.
+      </p>
+
+      <h3>Giai đoạn 1 &ndash; Pilot hẹp &amp; sâu</h3>
+      <p>
+        Đây là bước ngoặt của LMI: ngừng “phát cho cả công ty”, chọn <b>một bộ phận làm khách hàng đầu tiên</b> &mdash; đúng như cách một đội platform
+        tìm “pilot team”. Hai nguyên nhân khiến người ta không dùng (khảo sát 1/2024) là <i>không nghĩ ra việc để dùng</i> (57%) và <i>không biết ra lệnh</i> (26%).
+        Cả hai đều không giải được bằng lớp học lý thuyết; chúng cần <b>một người hiểu nghiệp vụ ngồi cạnh</b> và <b>một khoảng thời gian đủ dài để thành thói quen</b>.
+        LMI dẫn nghiên cứu Lally et al. (2010): trung vị 66 ngày để một hành vi thành thói quen, nên họ đồng hành ~2 tháng, review hằng tuần.
+        Nói gọn: lý do thứ nhất được giải bằng “bộ máy” (người thúc đẩy, lịch review), lý do thứ hai bằng “đào tạo kiểu đồng hành”.
+      </p>
+
+      <h3>Giai đoạn 2 &ndash; Nối với kết quả</h3>
+      <p>
+        Khi mọi người đã dùng đều, LMI va vào bức tường thứ hai: hiệu suất tăng nhưng năng suất đi ngang. Câu trích từ hiện trường rất thật:
+        <i>“nhờ tiết kiệm thời gian mà giờ tôi được ăn trưa thong thả hơn”</i>. Nguyên nhân: không ai quyết định thời gian dư dùng vào đâu, và không ai kiểm tra.
+        Cách gỡ là <b>outcome map</b> &mdash; vẽ ngược từ kết quả mong muốn về hành vi dùng AI (ví dụ cho sales: AI làm research/tài liệu → giảm họp nội bộ →
+        tăng thời gian gặp khách → tăng số cuộc hẹn/người/ngày), rồi cùng trưởng bộ phận xem các con số đó định kỳ.
+        SmartHR làm việc tương tự ở cấp công ty bằng một mô hình đo 5 tầng.
+      </p>
+      <div class="grid2">
+        <figure class="fig"><img src="images/step-08-lmi-s20-outcome-map-crop.png" alt="outcome map" /><figcaption>Ảnh 3 &ndash; LMI slide 20: outcome map từ dùng AI đến tác động</figcaption></figure>
+        <figure class="fig"><img src="images/step-19-smarthr-s14-monitoring-crop.png" alt="monitoring" /><figcaption>Ảnh 4 &ndash; SmartHR slide 14: đo 5 tầng + guardrail về chất lượng/chi phí</figcaption></figure>
+      </div>
+
+      <h3>Giai đoạn 3 &ndash; Guardrail &amp; Golden path</h3>
+      <p>
+        Khi AI đã lan rộng, rủi ro tăng theo: tool chưa được duyệt, người dùng bấm “Approve” theo lời AI cho những thao tác nguy hiểm, “tool hoang” mọc khắp nơi.
+        LMI không cấm mà dựng hai thứ: <b>guardrail</b> (cấp quyền tool theo cấp độ năng lực) và <b>golden path</b> (quy trình chuẩn để làm tool nội bộ).
+        Chi tiết ở phần 5.
+      </p>
+
+      <h3>Giai đoạn 4 &ndash; Nhân rộng &amp; vận hành</h3>
+      <p>
+        Mở rộng sang bộ phận khác không phải là “gửi link tool”. LMI dẫn CHAOS Report: ~80% tính năng phần mềm được cung cấp không được dùng. Vì vậy ở bộ phận
+        mới họ lại cử người thúc đẩy, tổ chức buổi “cài đặt và dùng lần đầu cùng nhau”, và phỏng vấn riêng những người chưa dùng.
+        SmartHR thì đóng gói việc nhân rộng thành <b>mô hình vận hành</b>: báo cáo tháng lên ban điều hành, sáng kiến được tổng hợp thành báo cáo kết quả và chia sẻ toàn công ty.
+      </p>
+
+      <!-- 4. ORG -->
+      <h2 id="org"><span class="section-num">4.</span> Cơ cấu tổ chức cần có</h2>
+
+      <figure class="fig"><img src="images/diagram-org-structure.png" alt="Org structure" /><figcaption>Hình B (tự vẽ) &ndash; Cơ cấu tổ chức tổng hợp từ LMI slide 14/16/32 và SmartHR slide 12/13</figcaption></figure>
+
+      <p>Hai công ty gọi tên khác nhau, nhưng bộ khung gần như trùng khớp. Tôi tóm lại thành 4 lớp:</p>
+      <ol>
+        <li><b>Lãnh đạo là owner, không phải nhà tài trợ đứng xa.</b> SmartHR đặt ban điều hành ở vai PO, AI là mục trong chương trình họp ban điều hành.
+          LMI làm điều tương tự ở cấp bộ phận: trưởng bộ phận phải <b>cam kết mục tiêu</b> trước khi bắt đầu.</li>
+        <li><b>Một đội trung tâm nhỏ đóng vai enabler.</b> SmartHR chia vai trò phòng AI Ops thành 3 mảng / 6 chức năng: chiến lược &amp; đo giá trị,
+          đồng hành hiện trường &amp; đào tạo, nền tảng tool &amp; governance. Ở LMI, vai trò này do bộ phận phát triển đảm nhận (cung cấp nền tảng + đồng hành).</li>
+        <li><b>Governance là một nhóm liên phòng ban, không phải một người.</b> SmartHR có WG Governance (bảo mật, pháp chế) bên cạnh WG Promotion (AI Ops, IT).
+          LMI có đội AI security gồm bộ phận phát triển, IT và pháp chế, nhận báo cáo và cập nhật luật liên tục.</li>
+        <li><b>Người thúc đẩy nằm trong từng bộ phận.</b> “AX推進者” ở LMI, “AI Lead” (đang thử) ở SmartHR: là cửa sổ đầu tiên cho câu hỏi, đơn xin, use case,
+          và là kênh đưa tiếng nói hiện trường ngược lên.</li>
+      </ol>
+      <figure class="fig"><img src="images/step-18-smarthr-s13-operating-model-crop.png" alt="SmartHR operating model" /><figcaption>Ảnh 5 &ndash; SmartHR slide 13: PO / PM / WG / AI Lead</figcaption></figure>
+
+      <div class="opinion">
+        <b>Chi tiết tôi thấy đắt giá nhất:</b> LMI chọn AX promoter <b>không dựa trên kỹ năng AI</b>, mà dựa trên 3 tính cách: muốn giúp người xung quanh,
+        không ngại thử&ndash;sai, và “lắm chuyện” lan toả điều hay cho cả team. Kỹ năng thì dạy được; còn sự nhiệt tình lan toả thì khó dạy.
+        Họ cũng có một kỹ thuật thuyết phục trưởng bộ phận rất thực tế: luôn nói <b>“return” (lợi ích bằng con số) đi kèm “request” (người &ndash; thời gian &ndash; mục tiêu cụ thể)</b>,
+        ví dụ: đặt “dùng AI ít nhất 1 lần/ngày” vào mục tiêu của từng người.
+      </div>
+
+      <!-- 5. BOTTLENECKS -->
+      <h2 id="bottlenecks"><span class="section-num">5.</span> Năm nút thắt phổ biến và cách gỡ</h2>
+
+      <p>
+        LMI nói về “2 bức tường” (định hình thói quen, kết quả), SmartHR nói về “3 bức tường” của khối không phát triển (tạo ra, triển khai, tổ chức hoá).
+        Đặt chúng lên cùng một con đường từ “phát tool” đến “kết quả kinh doanh”, tôi thấy chúng là <b>5 chặng nối tiếp</b>, không trùng nhau:
+      </p>
+      <figure class="fig"><img src="images/diagram-bottlenecks.png" alt="Bottleneck map" /><figcaption>Hình C (tự vẽ) &ndash; Bản đồ nút thắt → cách gỡ</figcaption></figure>
+
+      <div class="grid2">
+        <figure class="fig"><img src="images/step-03-lmi-s09-two-walls-crop.png" alt="two walls" /><figcaption>Ảnh 6 &ndash; LMI slide 9: hai bức tường</figcaption></figure>
+        <figure class="fig"><img src="images/step-20-smarthr-s18-three-walls-crop.png" alt="three walls" /><figcaption>Ảnh 7 &ndash; SmartHR slide 18: ba bức tường của khối không phát triển</figcaption></figure>
+      </div>
+
+      <h3>Guardrail theo cấp độ (LMI)</h3>
+      <p>
+        Thay vì phát cùng một tool cho tất cả, LMI chia 3 cấp: <b>Level 1 no-code</b> (Claude Cowork, Gemini &ndash; cho mọi người; chạy trong môi trường
+        cách ly trên cloud nên lỡ bấm sai cũng không chạm tới máy/mạng nội bộ), <b>Level 2 low-code</b> (Dify / n8n tự host, cho người cải tiến nghiệp vụ chung),
+        <b>Level 3 pro-code</b> (Claude Code, chỉ cấp cho người <b>đã có tool tạo ra kết quả</b> và <b>trả lời đúng toàn bộ bài test bảo mật</b>).
+        Slide 27 (ảnh 8) ước lượng tỉ lệ non-engineer ở mỗi cấp khoảng 70% / 20% / 10%; riêng bảng “AI skill map” ở slide 30 lại ghi “tỉ lệ hiện tại” 85% / 10% / 5% &ndash; hai slide trong cùng bộ cho số khác nhau, nên coi đây là con số xấp xỉ. Kỹ sư thì tất cả đều được cấp Claude Code.
+      </p>
+      <figure class="fig"><img src="images/step-09-lmi-s27-guardrail-levels-crop.png" alt="guardrail levels" /><figcaption>Ảnh 8 &ndash; LMI slide 27: cấp tool theo “kỹ năng và thành tích”</figcaption></figure>
+
+      <h3>Golden path “Fit Journey” (LMI)</h3>
+      <p>
+        Non-engineer giờ đã <i>làm</i> được tool, nhưng chưa ai dạy họ <i>quy trình làm sản phẩm</i>. LMI mượn quy trình phát triển sản phẩm mới
+        và áp vào tool nội bộ, 4 pha với điều kiện hoàn thành cứng:
+      </p>
+      <table>
+        <thead><tr><th>Pha</th><th>Ý nghĩa</th><th>Điều kiện qua pha</th></tr></thead>
+        <tbody>
+          <tr><td><b>CPF</b></td><td>Xác định vấn đề</td><td>Vấn đề được người dùng đồng cảm mạnh; To-Be flow + outcome kỳ vọng được trưởng bộ phận đồng ý</td></tr>
+          <tr><td><b>PSF/SPF</b></td><td>Kiểm chứng giá trị</td><td>2&ndash;3 người dùng thử thấy giá trị, đạt mức giảm công dự kiến; qua review bảo mật &amp; chi phí trước khi giao</td></tr>
+          <tr><td><b>PMF</b></td><td>Thẩm thấu</td><td>Sean Ellis test “rất tiếc nếu mất” ≥ 40%; WAU ≥ 70% user đăng ký; đạt outcome</td></tr>
+          <tr><td><b>GTM</b></td><td>Mở rộng sang bộ phận khác</td><td>Mỗi bộ phận mới đạt lại đúng 3 điều kiện của PMF</td></tr>
+        </tbody>
+      </table>
+      <p>Slide 42 của LMI chốt lại: ai làm tool cũng phải đi đủ 4 điều kiện này, không được bỏ bước.</p>
+
+      <!-- 6. LEARNINGS -->
+      <h2 id="learnings"><span class="section-num">6.</span> Bài học rút ra theo cách hiểu của tôi</h2>
+
+      <ol>
+        <li><b>Hãy đối xử với việc triển khai AI như làm một sản phẩm nội bộ.</b> Có khách hàng đầu tiên, có PMF, có metrics, có golden path. Đây là lý do LMI kết luận bằng
+          Platform Engineering: Team Topologies, guardrail, product management, DORA/SPACE &mdash; toàn những thứ dân kỹ sư đã quen.</li>
+        <li><b>Nút thắt dịch chuyển theo thời gian.</b> Lúc đầu là “không ai dùng”, sau đó là “dùng mà không ra kết quả”, rồi “làm được tool mà không ai quản”,
+          cuối cùng là “một người làm được mà tổ chức không duy trì”. Kế hoạch phải đổi trọng tâm theo từng chặng, không có một giải pháp duy nhất.</li>
+        <li><b>Thời gian tiết kiệm được là tài sản cần phân bổ, không phải phần thưởng tự nhiên.</b> Nếu không chủ động quyết định nó đi đâu, nó sẽ “bay hơi”.</li>
+        <li><b>Guardrail là thứ cho phép chạy nhanh hơn, không phải để chặn.</b> Cấp quyền theo năng lực đã chứng minh giúp vừa an toàn vừa tạo động lực “lên level”.</li>
+        <li><b>Bắt đầu nhỏ cũng được.</b> SmartHR bắt đầu với 1 người kiêm nhiệm, chưa có kinh nghiệm AI/DX chuyên trách. Cái quan trọng là được lãnh đạo trao quyền và làm đúng thứ tự: nhìn rõ trước, xây bộ máy sau.</li>
+        <li><b>Đo theo chuỗi, chỉ ra chỗ tắc.</b> Mô hình 5 tầng của SmartHR cho biết giá trị bị kẹt ở đâu (đã chi tiền nhưng không ai dùng? dùng nhiều nhưng không có sáng kiến? có sáng kiến nhưng tổ chức không nhanh hơn?).</li>
+      </ol>
+
+      <!-- 7. SCUTI -->
+      <h2 id="scuti"><span class="section-num">7.</span> So sánh với Scuti AI (góc nhìn tác giả)</h2>
+
+      <div class="warning">
+        <b>Lưu ý:</b> Phần mô tả “Scuti hiện tại” dưới đây là <b>giả định và quan sát cá nhân của tác giả</b> (một kỹ sư trong công ty), không phải số liệu hay chính sách chính thức của Scuti AI.
+        Các giả định chính:
+        <ul>
+          <li>Scuti là công ty phần mềm / AI tại Việt Nam, khách hàng chủ yếu là doanh nghiệp Nhật; tổ chức theo dự án (PM, BrSE, comtor, dev, QA).</li>
+          <li>Kỹ sư đã tự dùng AI (Claude Code, Cursor, Copilot, Gemini trong Google Workspace…) nhưng mức độ khác nhau theo người và theo dự án.</li>
+          <li>Công ty có chương trình <b>AI Quest</b> để nhân viên nghiên cứu và chia sẻ (bài viết này là một quest).</li>
+          <li>Hợp đồng/NDA với khách Nhật quyết định AI nào được chạm vào code/dữ liệu của khách; quy định này hiện xử lý theo từng dự án.</li>
+          <li>Khối không phát triển (HR, kế toán, sales, admin) dùng AI ít hơn khối kỹ thuật; kết quả AI chủ yếu được ghi nhận bằng hoạt động (số quest, số buổi chia sẻ) hơn là bằng chỉ số kinh doanh.</li>
+        </ul>
+      </div>
+
+      <div class="table-wrap">
+      <table>
+        <thead><tr><th style="width:15%">Khía cạnh</th><th>LMI</th><th>SmartHR</th><th>Scuti hiện tại (giả định)</th><th>Khoảng cách / hướng thử</th></tr></thead>
+        <tbody>
+          <tr><td><b>Đích đến</b></td><td>Năng suất bộ phận (doanh thu/người, số buổi gặp khách)</td><td>“Kết quả kinh doanh bền vững”, không lấy số user làm đích</td><td>Khuyến khích học &amp; dùng AI; đích chủ yếu là năng lực cá nhân</td><td>Viết đích bằng chỉ số dự án: lead time, lỗi lọt UAT, biên lợi nhuận/man-month</td></tr>
+          <tr><td><b>Cách bắt đầu</b></td><td>Hẹp &amp; sâu: 1 bộ phận làm khách hàng đầu tiên</td><td>1 tháng Aspire/Assess trước khi làm</td><td>Rộng: mọi người cùng làm quest</td><td>Giữ AI Quest làm “nền”, thêm 1 pilot sâu ở 1 nhóm</td></tr>
+          <tr><td><b>Người thúc đẩy</b></td><td>AX promoter trong bộ phận, chọn theo tính cách</td><td>AI Lead mỗi tổ chức (đang thử)</td><td>Phụ thuộc người tự nguyện, không có vai trò chính thức</td><td>AI Champion mỗi dự án, có thời gian được cấp</td></tr>
+          <tr><td><b>Lãnh đạo</b></td><td>Trưởng bộ phận cam kết mục tiêu (return + request)</td><td>Ban điều hành là PO, báo cáo tháng</td><td>Lãnh đạo ủng hộ, chưa rõ cơ chế báo cáo định kỳ</td><td>Báo cáo AI 1 trang mỗi tháng cho ban điều hành</td></tr>
+          <tr><td><b>Đo lường</b></td><td>Outcome map + xem số với trưởng bộ phận</td><td>5 tầng: chi phí → sử dụng → sáng kiến → tổ chức → kinh doanh</td><td>Đo hoạt động (quest, buổi chia sẻ)</td><td>Dashboard 5 tầng phiên bản tối giản</td></tr>
+          <tr><td><b>Guardrail</b></td><td>3 cấp tool theo năng lực + test bảo mật</td><td>WG Governance duyệt đơn, phân loại rủi ro</td><td>Quy định theo từng dự án/khách</td><td>Ma trận “cấp tool × mức nhạy cảm dữ liệu khách”</td></tr>
+          <tr><td><b>Tool nội bộ</b></td><td>Golden path CPF→PMF→GTM, ~3.000 tool</td><td>Thu thập báo cáo sáng kiến hằng tháng qua Slack</td><td>Script/tool cá nhân nằm rải rác, ít được tái dùng</td><td>Áp Fit Journey rút gọn cho output của AI Quest</td></tr>
+          <tr><td><b>Rủi ro</b></td><td>Đội AI security liên phòng ban</td><td>WG Governance (bảo mật, pháp chế)</td><td>Xử lý khi phát sinh</td><td>Kênh báo rủi ro AI + checklist trước khi dùng AI với dữ liệu khách</td></tr>
+        </tbody>
+      </table>
+      </div>
+
+      <div class="opinion">
+        <b>Điểm khác biệt quan trọng của một công ty outsourcing:</b> LMI và SmartHR là công ty sản phẩm/dịch vụ của chính mình, nên “thời gian tiết kiệm” chuyển thẳng thành năng suất.
+        Với hợp đồng tính theo man-month, tiết kiệm thời gian có thể <b>làm giảm doanh thu</b> nếu không đổi cách định giá. Vì vậy bài học “phải quyết định thời gian dư đi đâu” của LMI
+        với Scuti còn quan trọng hơn: dùng nó để nhận thêm scope trong cùng đội, tăng chất lượng (ít lỗi hơn, ít vòng Q&amp;A hơn), hoặc chuyển dần sang hợp đồng trọn gói / lab có KPI.
+        Đây là quan điểm cá nhân, cần thảo luận với bộ phận kinh doanh.
+      </div>
+
+      <!-- 8. APPLY -->
+      <h2 id="apply"><span class="section-num">8.</span> Chiến lược sẽ thử tại Scuti &amp; cách áp dụng</h2>
+
+      <p>Tôi chọn 6 chiến lược có thể bắt đầu ngay, sắp theo đúng thứ tự của lộ trình ở phần 3:</p>
+
+      <div class="strategy">
+        <h4>S1. Một trang “đích đến + hiện trạng” (Giai đoạn 0, 2 tuần)</h4>
+        <ul>
+          <li>Kiểm kê: tool AI nào đang được trả tiền, ai dùng, dự án nào được phép dùng gì theo hợp đồng.</li>
+          <li>Viết đích bằng 2&ndash;3 chỉ số dự án thay vì số user. Ví dụ: “giảm 30% thời gian từ khi nhận spec tiếng Nhật đến khi chốt Q&amp;A”.</li>
+          <li><b>Dùng thế nào:</b> làm khảo sát ngắn kiểu LMI (“vì sao bạn chưa dùng AI mỗi ngày?”) để biết nút thắt thật trước khi chọn giải pháp.</li>
+        </ul>
+      </div>
+
+      <div class="strategy">
+        <h4>S2. Pilot 66 ngày ở một nhóm (Giai đoạn 1)</h4>
+        <ul>
+          <li>Ứng viên “khách hàng đầu tiên”: nhóm BrSE/comtor (dịch spec, viết Q&amp;A, biên bản họp) hoặc nhóm QA (sinh test case, review).</li>
+          <li>Nói chuyện với leader bằng công thức <b>return + request</b>: “giảm X giờ/tuần cho nhóm” + “cần 1 champion 10% thời gian, leader dự review tuần, mục tiêu cá nhân có ‘dùng AI mỗi ngày’”.</li>
+          <li><b>Dùng thế nào:</b> chọn champion theo 3 tính cách của LMI, chốt 2&ndash;3 “khoảnh khắc dùng AI cố định” mỗi ngày, review 15 phút mỗi tuần.</li>
+        </ul>
+      </div>
+
+      <div class="strategy">
+        <h4>S3. Outcome map cho dự án outsourcing (Giai đoạn 2)</h4>
+        <ul>
+          <li>Ví dụ: <i>AI hỗ trợ dịch &amp; tóm tắt spec</i> → (chỉ số dẫn) số câu Q&amp;A gửi khách giảm, thời gian đọc spec giảm → (chỉ số trễ) lead time ticket giảm, lỗi do hiểu sai spec giảm → (tác động) biên lợi nhuận dự án, mức hài lòng khách.</li>
+          <li><b>Dùng thế nào:</b> lấy số tự động từ Backlog/Jira và lịch họp (giống LMI lấy từ Calendar), xem cùng PM mỗi 2 tuần; nếu chỉ số dẫn không đổi thì điều chỉnh cách dùng, không đổ lỗi cho người dùng.</li>
+        </ul>
+      </div>
+
+      <div class="strategy">
+        <h4>S4. Ma trận guardrail “cấp tool × dữ liệu khách” (Giai đoạn 3)</h4>
+        <ul>
+          <li>Level 1 (mọi người): Gemini / chat AI trong Workspace công ty &mdash; chỉ dữ liệu nội bộ hoặc đã ẩn danh.</li>
+          <li>Level 2 (người cải tiến quy trình): low-code như Workspace Studio / n8n / Dify trên môi trường công ty quản lý, có log.</li>
+          <li>Level 3 (coding agent trên repo khách): chỉ khi <b>hợp đồng cho phép</b> + người dùng qua bài test bảo mật (học cách LMI: phải đúng toàn bộ).</li>
+          <li><b>Dùng thế nào:</b> mỗi dự án có 1 dòng trong ma trận, được PM + bộ phận bảo mật duyệt khi kick-off. Thêm một kênh chat “báo rủi ro AI” không quy lỗi.</li>
+        </ul>
+      </div>
+
+      <div class="strategy">
+        <h4>S5. Golden path rút gọn cho output của AI Quest (Giai đoạn 3&ndash;4)</h4>
+        <ul>
+          <li>Quest có tool/skill/prompt hay sẽ đi qua 4 cổng: vấn đề có người thật cần (CPF) → 2&ndash;3 người dùng thử thấy giá trị + review bảo mật/chi phí (PSF) → WAU, Sean Ellis test trong nhóm (PMF) → nhân sang dự án khác (GTM).</li>
+          <li><b>Dùng thế nào:</b> biến AI Quest từ “nộp bài” thành “ống dẫn” sinh tài sản dùng chung; chỉ quest qua được PMF mới được đưa vào thư viện chung.</li>
+        </ul>
+      </div>
+
+      <div class="strategy">
+        <h4>S6. Mô hình vận hành nhỏ + báo cáo tháng (Giai đoạn 4)</h4>
+        <ul>
+          <li>1 sponsor ở ban điều hành; 2&ndash;3 người kiêm nhiệm làm “AI Ops” (enabler); WG Governance (bảo mật/ISMS, pháp chế, IT); AI Champion mỗi dự án.</li>
+          <li>Báo cáo tháng 1 trang theo 5 tầng của SmartHR: chi phí tool → tỉ lệ dùng → sáng kiến/quest có kết quả → chỉ số dự án → tác động kinh doanh.</li>
+          <li><b>Dùng thế nào:</b> sáng kiến hằng tháng gửi qua 1 form/kênh Slack (giống SmartHR), AI Ops tổng hợp thành báo cáo chia sẻ toàn công ty.</li>
+        </ul>
+      </div>
+
+      <div class="tip">
+        <b>Lộ trình 6 tháng gợi ý cho Scuti (đề xuất cá nhân):</b>
+        Tháng 1: S1 &bull; Tháng 1&ndash;3: S2 (pilot 66 ngày) &bull; Tháng 2&ndash;4: S3 &bull; Tháng 3&ndash;5: S4 + S5 &bull; Tháng 5&ndash;6: S6 và mở rộng sang nhóm thứ hai.
+        Điều kiện để mở rộng: nhóm pilot dùng AI hằng ngày và có ít nhất 1 chỉ số dẫn chuyển động rõ.
+      </div>
+
+      <!-- 9. VIDEO -->
+      <h2 id="video"><span class="section-num">9.</span> Video quá trình nghiên cứu</h2>
+      <p>
+        Video quay lại quá trình đọc và tổng hợp: mở hai deck trên Speaker Deck, lật từng slide và dừng ở các slide quan trọng,
+        xem lại các sơ đồ tự vẽ, rồi kết thúc bằng việc cuộn bài blog này từ đầu đến cuối.
+      </p>
+      <div class="video-box">
+        <video controls preload="metadata" poster="images/diagram-roadmap.png" src="video/company-wide-ai-adoption-roadmap-demo.mp4"></video>
+        <p style="margin:6px 0 0;font-size:13px;color:#5f6368;">File: <a href="video/company-wide-ai-adoption-roadmap-demo.mp4">video/company-wide-ai-adoption-roadmap-demo.mp4</a></p>
+      </div>
+
+      <!-- 10. CONCLUSION -->
+      <h2 id="conclusion"><span class="section-num">10.</span> Kết luận</h2>
+      <p>
+        Hai deck nói cùng một điều theo hai hướng: LMI chứng minh rằng ở hiện trường, <b>thói quen, kết quả và an toàn</b> phải được thiết kế chứ không tự đến;
+        SmartHR chứng minh rằng ở cấp công ty, cần một <b>bộ máy</b> &mdash; lãnh đạo sở hữu, đội enabler nhỏ, governance liên phòng ban, người thúc đẩy trong từng bộ phận và một hệ đo theo chuỗi.
+        Với Scuti, lợi thế lớn nhất là chúng ta vốn là công ty kỹ sư: những thứ như golden path, guardrail, metrics, PMF là “ngôn ngữ mẹ đẻ”.
+        Việc còn lại là mang chúng sang các nhóm bên cạnh &mdash; và như slide cuối của LMI: <b>“trước hết, hãy đến nghe một bộ phận nói chuyện.”</b>
+      </p>
+      <p><b>3 việc tôi sẽ làm tuần tới:</b></p>
+      <ol>
+        <li>Gửi khảo sát 3 câu “vì sao chưa dùng AI mỗi ngày” cho 1 nhóm BrSE/QA.</li>
+        <li>Phác outcome map cho 1 dự án đang chạy và hỏi PM xem số nào lấy được tự động.</li>
+        <li>Đề xuất bảng ma trận guardrail (S4) để bộ phận bảo mật góp ý.</li>
+      </ol>
+
+      <h2>Tài liệu tham khảo</h2>
+      <ul>
+        <li><a href="https://speakerdeck.com/lmi/pek2026-link-and-motivation" target="_blank">Link and Motivation &ndash; 全社員がAIを「使う」の次へ（ノンエンジニア1,500人が安全に業務を作り変えるゴールデンパスとガードレール） &ndash; Speaker Deck, 25/09/2026</a></li>
+        <li><a href="https://speakerdeck.com/yoshikikonishi_/smarthr-no-zensha-ai-suishin-ha-dou-hajimata-ka" target="_blank">SmartHR &ndash; SmartHRの全社AI推進は、どう始まったか &ndash; Speaker Deck, 28/09/2026</a></li>
+        <li>Tài liệu được trích trong slide (chưa đọc trực tiếp): McKinsey “A better way to lead large-scale change” (5As); Lally et al. (2010) về hình thành thói quen; Standish Group CHAOS Report; bài “AI利用率99.8%。SmartHRの「現在地」と「次の壁」”.</li>
+      </ul>
+
+      <div class="footer">
+        <p>File: <code>blog-html/company-wide-ai-adoption-roadmap/company-wide-ai-adoption-roadmap-blog.html</code> &bull; English: <a href="company-wide-ai-adoption-roadmap-blog-en.html">company-wide-ai-adoption-roadmap-blog-en.html</a></p>
+        <p>Ảnh chụp slide thuộc bản quyền của Link and Motivation Group và SmartHR, Inc., chỉ dùng để trích dẫn/học tập. Sơ đồ A/B/C do tác giả tự vẽ (HTML/SVG → PNG).</p>
+      </div>
+    </div>
+  </body>
+</html>

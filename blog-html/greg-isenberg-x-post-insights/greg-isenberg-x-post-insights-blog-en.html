@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Roll-ups: Lessons from Greg Isenberg's Post on X</title>
+<style>
+  :root {
+    --primary: #0d47a1;
+    --primary-light: #1976d2;
+    --accent: #ff6d00;
+    --bg: #fafafa;
+    --card: #ffffff;
+    --text: #212121;
+    --text-secondary: #616161;
+    --border: #e0e0e0;
+    --code-bg: #263238;
+    --success: #2e7d32;
+    --success-bg: #e8f5e9;
+    --warning: #f57f17;
+    --warning-bg: #fff8e1;
+    --error: #c62828;
+    --error-bg: #ffebee;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background: var(--bg); color: var(--text); line-height: 1.75; font-size: 16px; }
+  .hero { background: linear-gradient(135deg, #0d47a1, #1565c0, #00838f); color: white; padding: 64px 20px; text-align: center; }
+  .hero h1 { font-size: 2.3em; margin-bottom: 14px; font-weight: 700; letter-spacing: -0.5px; }
+  .hero .subtitle { font-size: 1.12em; opacity: 0.93; max-width: 760px; margin: 0 auto; }
+  .hero .badge { display: inline-block; background: rgba(255,255,255,0.18); padding: 6px 20px; border-radius: 20px; font-size: 0.84em; margin-bottom: 18px; }
+  .container { max-width: 940px; margin: 0 auto; padding: 32px 20px; }
+  .toc { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 28px 32px; margin-bottom: 38px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+  .toc h2 { font-size: 1.3em; margin-bottom: 14px; color: var(--primary); border: none; padding: 0; }
+  .toc a { color: var(--primary-light); text-decoration: none; }
+  .toc a:hover { text-decoration: underline; }
+  section { margin-bottom: 44px; }
+  h2 { font-size: 1.55em; color: var(--primary); border-bottom: 3px solid var(--primary); padding-bottom: 8px; margin-bottom: 22px; }
+  h3 { font-size: 1.22em; color: var(--text); margin: 22px 0 10px; }
+  h4 { font-size: 1.05em; color: var(--text-secondary); margin: 16px 0 8px; }
+  p { margin-bottom: 14px; }
+  a { color: var(--primary-light); }
+  ul, ol { margin-bottom: 14px; padding-left: 24px; }
+  li { margin-bottom: 6px; }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin-bottom: 20px; box-shadow: 0 1px 2px rgba(0,0,0,0.04); }
+  .card-accent { border-left: 4px solid var(--accent); }
+  .card-info { border-left: 4px solid var(--primary-light); }
+  .card-warning { border-left: 4px solid var(--warning); background: var(--warning-bg); }
+  .card-success { border-left: 4px solid var(--success); background: var(--success-bg); }
+  .card-error { border-left: 4px solid var(--error); background: var(--error-bg); }
+  .highlight-box { background: linear-gradient(135deg, #e3f2fd, #e0f7fa); border-radius: 12px; padding: 20px 24px; margin: 18px 0; border: 1px solid #b3e5fc; }
+  .prompt-box { background: var(--code-bg); color: #cfd8dc; border-radius: 10px; padding: 22px 24px; margin: 14px 0 22px; font-family: 'Cascadia Code', 'Consolas', monospace; font-size: 0.88em; line-height: 1.65; white-space: pre-wrap; position: relative; overflow-x: auto; }
+  .prompt-box .label { position: absolute; top: 8px; right: 12px; background: var(--accent); color: white; font-size: 0.72em; padding: 2px 12px; border-radius: 8px; font-family: 'Segoe UI', sans-serif; font-weight: 600; }
+  table.data-table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+  table.data-table th, table.data-table td { border: 1px solid var(--border); padding: 10px 14px; text-align: left; font-size: 0.93em; vertical-align: top; }
+  table.data-table th { background: var(--primary); color: white; font-weight: 600; }
+  table.data-table tr:nth-child(even) { background: #f5f5f5; }
+  .table-wrap { overflow-x: auto; }
+  .step-num { display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px; background: var(--primary); color: white; border-radius: 50%; font-weight: 700; font-size: 0.9em; margin-right: 12px; flex-shrink: 0; }
+  .step-row { display: flex; align-items: flex-start; margin-bottom: 14px; }
+  .step-row p { margin: 0; }
+  .screenshot-wrap { margin: 16px 0 24px; text-align: center; }
+  .screenshot-wrap img, .screenshot-wrap video { max-width: 100%; border: 1px solid var(--border); border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+  .screenshot-wrap .caption { margin-top: 8px; font-size: 0.85em; color: var(--text-secondary); }
+  .stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 16px 0; }
+  .stat { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 14px; text-align: center; }
+  .stat b { display: block; font-size: 1.5em; color: var(--primary); }
+  .stat span { font-size: 0.85em; color: var(--text-secondary); }
+  @media (max-width: 700px) { .stat-grid { grid-template-columns: repeat(2, 1fr); } .hero h1 { font-size: 1.7em; } }
+  .tag { display: inline-block; background: #e3f2fd; color: var(--primary); border-radius: 10px; padding: 1px 10px; font-size: 0.8em; }
+  .footer { margin-top: 30px; font-size: 0.85em; color: var(--text-secondary); border-top: 1px solid var(--border); padding-top: 20px; }
+  code { background: #eceff1; border-radius: 4px; padding: 1px 6px; font-size: 0.9em; font-family: 'Consolas', monospace; }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="badge">AI Quest · Type 1 – Investigate What · Oct 3, 2026</div>
+  <h1>AI Roll-ups: buy a services business and let AI agents run the back office</h1>
+  <p class="subtitle">Key insights from Greg Isenberg's long-form X post “$5T opportunity: AI Roll Ups”, plus personal learnings and how to apply them to projects and daily operations at Scuti AI.</p>
+</div>
+
+<div class="container">
+
+<div class="toc">
+  <h2>Contents</h2>
+  <ol>
+    <li><a href="#s1">The original post &amp; how the source was accessed</a></li>
+    <li><a href="#s2">The core message</a></li>
+    <li><a href="#s3">Specific insights</a></li>
+    <li><a href="#s4">Playbook infographic</a></li>
+    <li><a href="#s5">Personal learnings</a></li>
+    <li><a href="#s6">Applying it at Scuti AI</a></li>
+    <li><a href="#s7">Demo video</a></li>
+    <li><a href="#s8">Conclusion</a></li>
+  </ol>
+</div>
+
+<section id="s1">
+  <h2>1. The original post &amp; how the source was accessed</h2>
+  <p>The assigned link (<a href="https://x.com/gregisenberg/status/2103927365977928019" target="_blank">x.com/gregisenberg/status/2103927365977928019</a>) is not a short tweet but an <strong>X Article</strong> (a 10–15 minute read) titled <strong>“$5T opportunity: AI Roll Ups”</strong>, published on <strong>September 26, 2026</strong>. Greg Isenberg is CEO of Late Checkout (LCA) and hosts The Startup Ideas Podcast.</p>
+  <div class="stat-grid">
+    <div class="stat"><b>~1.83M</b><span>views</span></div>
+    <div class="stat"><b>4,884</b><span>likes</span></div>
+    <div class="stat"><b>16,014</b><span>bookmarks</span></div>
+    <div class="stat"><b>414</b><span>reposts</span></div>
+  </div>
+  <p style="font-size:0.88em;color:var(--text-secondary)">Engagement numbers as recorded when reading the post (Oct 3, 2026). Bookmarks outnumber likes roughly 3 to 1 — readers treat it as a reference to come back to.</p>
+
+  <div class="card card-warning">
+    <h4>How the content was obtained (source transparency)</h4>
+    <ul>
+      <li>Opening x.com directly in Chrome (logged out): X shows only the title, cover, engagement counts and the first few paragraphs; the rest fades out behind a “Continue to X” button and a “Log in or sign up for X” panel. <strong>No credentials were typed and no account was created.</strong></li>
+      <li>The full Article (title, every paragraph, 8 illustrations) was read through the public fxtwitter.com viewer. Everything summarized below is based on that content.</li>
+      <li>For readability, the article was copied into a clean local reading page (<code>sources/article-reader.html</code>) with the original text unchanged.</li>
+    </ul>
+  </div>
+</section>
+
+<section id="s2">
+  <h2>2. The core message</h2>
+  <div class="highlight-box">
+    <p style="margin:0"><strong>Instead of building an AI product and then hunting for customers, buy a “boring” services business that already has the customers, the licenses and the trust — then use AI agents to rebuild how the work gets done.</strong> Revenue and clients stay the same, the cost per unit of work falls, and profit can grow 3–4x.</p>
+  </div>
+  <p>Greg opens with a macro number: according to McKinsey, about <strong>$5 trillion</strong> of US businesses will change hands by 2035, mostly owned by retiring baby boomers with no successor. His first example is Larson Gross, an accounting firm founded in 1949 with ~200 staff in which Thrive Holdings bought a stake: this tax season its AI processed 7,000 returns, accountants saved 31% of their time on average, and one recurring job dropped from 180 hours a year to 15.</p>
+  <p>What stood out to me: the post doesn't stop at “nice idea”. It goes all the way down to <strong>folder structures, agent lists and concrete prompts</strong> — an operating playbook, not just an investment thesis.</p>
+</section>
+
+<section id="s3">
+  <h2>3. Specific insights</h2>
+
+  <h3>3.1. AI roll-ups are “the new private equity”</h3>
+  <p>A roll-up is an old play: buy many small firms in one industry so the combined company is worth more than the parts. PE has done it for 40 years mostly through financial engineering (shared back office, better vendor contracts, debt, resale). An AI roll-up <strong>changes the middle step</strong>: buy a services business at a services price, then let agents take over a large share of delivery. Greg's thesis: EBITDA margins of <strong>5–10%</strong> can move to <strong>30–40%</strong>.</p>
+
+  <h3>3.2. Why now: three forces at once</h3>
+  <ol>
+    <li><strong>Models are good enough at real work</strong> — data entry, draft tax returns, contract review, support tickets. Two years ago output had to be redone; now it only needs checking.</li>
+    <li><strong>Owners are retiring</strong> — children don't want the firm, employees can't afford to buy it.</li>
+    <li><strong>The arithmetic works</strong> — services firms trade at low multiples because margins are assumed to be stuck. Prove otherwise and you bought at a discount.</li>
+  </ol>
+
+  <h3>3.3. Who is doing it</h3>
+  <div class="table-wrap">
+  <table class="data-table">
+    <tr><th>Company</th><th>Industry</th><th>Results cited in the post</th></tr>
+    <tr><td>Long Lake</td><td>Property management</td><td>18 acquisitions, $100M EBITDA in under two years, margins doubled</td></tr>
+    <tr><td>Crescendo</td><td>Contact centers</td><td>90% of frontline tickets resolved by AI, 4x the margins of traditional operators</td></tr>
+    <tr><td>Titan MSP</td><td>IT services</td><td>30%+ of workflows automated, targeting tripled net margins</td></tr>
+    <tr><td>Dwelly</td><td>UK real estate</td><td>Problem resolution down from 50 to 20 days, margins doubled</td></tr>
+    <tr><td>Thrive Holdings</td><td>Accounting</td><td>Nearly 50 local practices bought in two years, $1B more committed</td></tr>
+    <tr><td>General Catalyst</td><td>Investor</td><td>$1.5B set aside for the strategy, $750M+ into at least ten companies</td></tr>
+  </table>
+  </div>
+  <div class="card card-warning">
+    <p style="margin:0"><strong>Greg's own caveat:</strong> these numbers are <em>self-reported</em> by young companies that are raising money and haven't been through a recession. GC's deal structure is worth copying: roughly 60–70% cash at close and ~30% rolled into equity for the founder, so the relationship holder stays to make the handoff work.</p>
+  </div>
+  <div class="screenshot-wrap">
+    <img src="images/figure-01-who-is-doing-ai-rollups.jpg" alt="Who is doing AI roll-ups">
+    <div class="caption">Figure 1 – “Who’s doing AI roll-ups?”: the key players and the deal structure (Greg Isenberg’s original illustration)</div>
+  </div>
+
+  <h3>3.4. Not only for billion-dollar funds</h3>
+  <p>The counter-intuitive but convincing part: Greg argues big funds will <strong>leave most of the market</strong> to individuals because:</p>
+  <ul>
+    <li>Funds need big deals; a $2M-revenue bookkeeping firm is too small to matter — yet most businesses about to change hands are that size.</li>
+    <li>The tools are the same: Larson Gross's tax agents run on OpenAI Codex; a solo founder can build the workflows with Claude Code or Codex in the evenings.</li>
+    <li>The biggest roll-up risk is <strong>integration lag</strong>. A person who buys one firm <em>is</em> the integration layer — in the office, knowing every client, watching every agent draft.</li>
+    <li>Many owners would rather sell to a person than to a fund met on Zoom.</li>
+    <li>Financing for this size already exists (SBA loans, seller notes).</li>
+  </ul>
+
+  <h3>3.5. Why buy instead of build</h3>
+  <p>The hard parts of a services business aren't software: a client list built over 30 years, personal trust, licenses that took exams and time, and the niche knowledge of what “correct” means. The firm's history — every edge case, every caught mistake — is <strong>training material for the agents</strong> that a startup simply doesn't have. A startup must win the customer and do the work; an acquisition already has the customer and only needs to change the work.</p>
+
+  <h3>3.6. The folder structure is the operating model</h3>
+  <p>Before buying anything, Greg sets up a <code>/holdco</code> folder with <code>/thesis</code>, <code>/deals</code>, <code>/platform</code> (agents, rules, tests), <code>/firms</code> and <code>/runbooks</code>; every acquired firm plugs into the same shape. If you set up nothing else, set up <strong>three files</strong>:</p>
+  <ul>
+    <li><code>target-criteria.md</code> — decides what you buy.</li>
+    <li><code>rules/</code> — decides whether agents can be trusted.</li>
+    <li><code>corrections-log.md</code> — how the rules improve every week.</li>
+  </ul>
+  <div class="screenshot-wrap">
+    <img src="images/figure-02-holdco-folder-structure.jpg" alt="Holdco folder structure">
+    <div class="caption">Figure 2 – “The holdco folder structure” (original illustration from the post)</div>
+  </div>
+  <p>Agents come in two sets: <strong>before the deal</strong> (sourcing, diligence, modeling — humans pick and decide) and <strong>after the deal</strong> (rulebook extractor, intake, preparer, reviewer, client comms, reporting — humans approve rules and send sensitive communications). The key design decision: <strong>the reviewer can block but never ship, and the preparer ships nothing on its own.</strong></p>
+  <div class="screenshot-wrap">
+    <img src="images/figure-03-agents-you-build.jpg" alt="The agents you build">
+    <div class="caption">Figure 3 – Two sets of agents and the “reviewer can block, never ship” rule (original illustration from the post)</div>
+  </div>
+
+  <h3>3.7. Six steps from sourcing to operating</h3>
+  <div class="table-wrap">
+  <table class="data-table">
+    <tr><th>Step</th><th>What to do</th><th>Key point</th></tr>
+    <tr><td>1. Sourcing</td><td>Find unlisted firms via licensing boards, state filings, industry directories; write to the owner yourself</td><td>Once a firm hits a marketplace, most of the “alpha” is gone</td></tr>
+    <tr><td>2. Scorecard</td><td>Score 7 weighted criteria (repeatable work, checkable output, recurring revenue, motivated seller, client loyalty to the firm, clean data, fragmented market)</td><td>Under 60% is a job; above 80% deserves an LOI</td></tr>
+    <tr><td>3. Diligence</td><td>Collect 20–50 real work samples and have AI build an <strong>automation map</strong>: trigger, inputs, time, frequency, checkability, cost of error</td><td>Volume × hours shows where the margin is before signing</td></tr>
+    <tr><td>4. The math</td><td>Example: $2M revenue, margin 10% → 30%, EBITDA $200k → $600k; at 4x, value $800k → $2.4M</td><td>The whole game is <em>holding</em> the margin</td></tr>
+    <tr><td>5. Rulebook</td><td>First 60 days: interview senior staff, turn tacit knowledge into rules with examples; weekly, turn the corrections log into new rules + test cases</td><td>Everyone has the same models; nobody has your list of failure modes</td></tr>
+    <tr><td>6. First 100 days</td><td>1–30: shadow mode, nothing visible to clients; 31–60: move the back office with every draft reviewed; 61–100: expand carefully</td><td>By day 100 know: what agents do reliably, real review cost, who important is unhappy</td></tr>
+  </table>
+  </div>
+
+  <h3>3.8. Rulebook and corrections log are the moat</h3>
+  <p>Every firm runs on unwritten rules: the client who's always late with documents, the deduction the senior partner always double-checks, the phrasing one client finds rude. When seniors leave, the rules leave too. Greg shares two prompts: one to <strong>interview senior staff</strong> and turn answers into numbered rules (active only after they approve), and one to <strong>compare agent drafts with human-approved versions</strong>, classify each change (factual error, client preference, missing info, style) and propose rules for repeated corrections.</p>
+
+  <h3>3.9. Five numbers every Monday</h3>
+  <p>EBITDA margin, minutes of human attention per job (the real cost of the agents), correction rate (should fall monthly), client retention and key-person retention. My favourite line: <em>if margin rises while retention falls, you're selling the asset to pay for the renovation.</em></p>
+  <div class="screenshot-wrap">
+    <img src="images/figure-04-dashboard-5-numbers.jpg" alt="The dashboard">
+    <div class="caption">Figure 4 – “The dashboard: 5 numbers every monday” (original illustration from the post)</div>
+  </div>
+
+  <h3>3.10. What to buy and what breaks</h3>
+  <p><strong>Good fits:</strong> accounting/bookkeeping, property management, insurance agencies, IT managed services, medical billing, payroll, HOA management, title &amp; escrow, freight brokerage, staffing — repeatable work, checkable output, recurring clients, fragmented ownership, many owners near retirement.</p>
+  <div class="card card-error">
+    <h4>Six failure modes Greg warns about</h4>
+    <ol>
+      <li>Buying faster than you can integrate.</li>
+      <li>Key people leave and take relationships with them.</li>
+      <li>Clients loyal to the old owner leave with the owner.</li>
+      <li>Automating trust away — margin comes from the back office, value from the relationship.</li>
+      <li>Agents with too much authority (e.g. emailing clients without a checkpoint).</li>
+      <li>Believing headline numbers — underwrite on your own numbers.</li>
+    </ol>
+  </div>
+</section>
+
+<section id="s4">
+  <h2>4. Playbook infographic</h2>
+  <p>The whole post on one page: six steps, guardrails, dashboard and risks. Figures come from the post; layout and wording are mine.</p>
+  <div class="screenshot-wrap">
+    <img src="images/infographic-01-ai-rollup-playbook-en.png" alt="AI Roll-up Playbook infographic">
+    <div class="caption">Infographic 1 – AI Roll-up Playbook (custom HTML rendered to PNG)</div>
+  </div>
+</section>
+
+<section id="s5">
+  <h2>5. Personal learnings</h2>
+  <div class="card card-accent">
+    <ol>
+      <li><strong>The edge isn't the model, it's the niche's rules.</strong> Everyone can rent the same model. The difference is the rulebook accumulated from hundreds of corrections. For an outsourcing company, that's the client and domain knowledge currently scattered across chats and people's heads.</li>
+      <li><strong>Trust is the most expensive asset — don't automate it away.</strong> Margin comes from the back office, value from relationships. AI belongs behind the counter; people stay client-facing.</li>
+      <li><strong>Measure “human minutes per job”, not “% automated”.</strong> An agent that produces many drafts but needs long reviews isn't cheap. This metric is far more honest than the feeling that “AI can do it now”.</li>
+      <li><strong>Separate the right to create from the right to approve.</strong> “The reviewer can block, never ship” is a design rule I'll carry into every agent workflow.</li>
+      <li><strong>Be sceptical of pretty numbers.</strong> Even while pitching the opportunity, the author notes results are self-reported and untested by a downturn. When proposing AI to clients, we should show our own project measurements rather than quote others' benchmarks.</li>
+    </ol>
+  </div>
+  <p>I'm not buying a company, but the model maps almost one-to-one onto how a software services company operates: <em>the clients and the trust already exist; the job is to change how the work is delivered.</em></p>
+</section>
+
+<section id="s6">
+  <h2>6. Applying it at Scuti AI</h2>
+  <p>Scuti AI is an AI/software outsourcing company in Vietnam serving Japanese clients. At its core it is also a <strong>services business</strong>: recurring clients, repeatable processes (specs, document translation, code, tests, reports) and demanding quality standards. So Greg's ideas map quite directly. The table below is my <strong>personal proposal</strong>, not verified company data.</p>
+  <div class="screenshot-wrap">
+    <img src="images/infographic-02-scuti-application-en.png" alt="Applying to Scuti AI">
+    <div class="caption">Infographic 2 – Mapping Greg's ideas onto Scuti AI's outsourcing projects</div>
+  </div>
+
+  <h3>6.1. Quick guide: 5 steps to start in one project</h3>
+  <div class="step-row"><span class="step-num">1</span><p><strong>Build the project's automation map (week 1).</strong> List repeatable tasks: JP↔VI document translation, test cases from specs, unit tests, basic/detail design updates, weekly reports. Record times/month × hours/time and classify: automate now / automate + review / assist only / keep human.</p></div>
+  <div class="step-row"><span class="step-num">2</span><p><strong>Create the agent rulebook.</strong> Interview the dev lead and BrSE about common junior mistakes and client-specific requirements (coding conventions, document formats, keigo). Store as <code>rules/</code> or <code>CLAUDE.md</code> in the repo, each rule with an example.</p></div>
+  <div class="step-row"><span class="step-num">3</span><p><strong>Run shadow mode on one task type for ~30 days.</strong> Agents work in parallel while people work as usual; compare quality and time. Nothing agent-made goes to the client yet.</p></div>
+  <div class="step-row"><span class="step-num">4</span><p><strong>Log every human correction of agent output</strong> — especially review comments (指摘) from Japanese clients. Weekly, corrections seen twice or more become new rules + test cases.</p></div>
+  <div class="step-row"><span class="step-num">5</span><p><strong>Review five numbers every Monday</strong> internally: project margin, human minutes per ticket, correction rate, client feedback, key-member retention.</p></div>
+
+  <h3>6.2. Ready-to-use templates</h3>
+  <div class="prompt-box"><span class="label">corrections-log.md</span>| Date | Task | Agent output | Corrected by | Change type | Repeated? | Proposed rule |
+|------|------|--------------|--------------|-------------|-----------|---------------|
+| 2026-10-06 | Login screen test cases | Missed account lock after 5 failed attempts | Dev lead | Missing info | 2x | R-012: always generate lockout cases per the security spec |
+| 2026-10-07 | Weekly report (JP) | Plain form instead of keigo | BrSE | Style / client preference | 3x | R-013: client reports always use です・ます調 |</div>
+  <p style="font-size:0.88em;color:var(--text-secondary)">The rows above illustrate the format only; they are not real project data.</p>
+  <div class="prompt-box"><span class="label">Prompt – weekly rule synthesis</span>Compare each agent draft with the version the dev lead / BrSE approved this week.
+Classify every change: factual error, client-specific requirement, missing information, or style.
+For any correction that occurred two or more times, propose a numbered rule with the original input and approved output as an example.
+Flag rules that conflict with existing ones. No rule becomes active until the dev lead approves it.</div>
+
+  <h3>6.3. In daily operations</h3>
+  <ul>
+    <li><strong>Clear agent permissions:</strong> agents may create PRs, draft documents and translations; the review agent may block PRs; only humans merge and send emails/documents to clients.</li>
+    <li><strong>BrSE/PM remain the face to Japanese clients.</strong> AI speeds up preparation; it doesn't replace people in meetings or sensitive conversations.</li>
+    <li><strong>Keep knowledge when people rotate:</strong> the rulebook and corrections log stop newcomers repeating old mistakes — “get the rules out of people's heads and into files”.</li>
+    <li><strong>Report with our own numbers:</strong> when proposing AI to clients, use shadow-mode measurements rather than internet benchmarks.</li>
+  </ul>
+</section>
+
+<section id="s7">
+  <h2>7. Demo video</h2>
+  <p>The video walks through reading the post and putting the summary together: open the post on x.com → hit the login wall → open the full version on fxtwitter → read the article in the clean reading page → view both infographics → open the finished blog and scroll top to bottom.</p>
+  <div class="screenshot-wrap">
+    <video controls width="860" src="video/greg-isenberg-x-post-insights-demo.mp4"></video>
+    <div class="caption"><a href="video/greg-isenberg-x-post-insights-demo.mp4">video/greg-isenberg-x-post-insights-demo.mp4</a></div>
+  </div>
+</section>
+
+<section id="s8">
+  <h2>8. Conclusion</h2>
+  <p>Greg Isenberg's post is a practical playbook: buy trust that already exists, use AI agents to rebuild the back office, keep humans at the checkpoints, and measure with real numbers every week. For Scuti AI the biggest value isn't buying companies but three habits we can start now:</p>
+  <ol>
+    <li>Build an automation map per project to decide what AI should do first.</li>
+    <li>Maintain a rulebook + corrections log so every fix becomes an asset.</li>
+    <li>Separate agent create/approve rights and track five numbers weekly.</li>
+  </ol>
+</section>
+
+<section>
+  <h2>References</h2>
+  <ul>
+    <li><a href="https://x.com/gregisenberg/status/2103927365977928019" target="_blank">Greg Isenberg – “$5T opportunity: AI Roll Ups” (X, Sep 26, 2026)</a></li>
+    <li><a href="https://fxtwitter.com/gregisenberg/status/2103927365977928019" target="_blank">fxtwitter – public view of the post (actual content source used)</a></li>
+    <li>Local copies: <code>sources/article-text.md</code>, <code>sources/article-reader.html</code></li>
+  </ul>
+</section>
+
+<div class="footer">
+  <p>File: <code>blog-html/greg-isenberg-x-post-insights/greg-isenberg-x-post-insights-blog-en.html</code> · Vietnamese version: <a href="greg-isenberg-x-post-insights-blog.html">greg-isenberg-x-post-insights-blog.html</a></p>
+  <p>The original illustrations (Figures 1–4) belong to Greg Isenberg (gregisenberg.com), quoted for summary and learning purposes.</p>
+</div>
+
+</div>
+</body>
+</html>

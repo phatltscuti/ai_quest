@@ -1,0 +1,5 @@
+Xin chào! Mình là Rồng Đỏ, linh vật của Scuti AI.
+Ở Scuti, các kỹ sư Việt Nam kết hợp cùng trí tuệ nhân tạo để xây dựng phần mềm nhanh hơn và thông minh hơn.
+Từ AI agent, tự động hóa quy trình, đến ứng dụng web và di động, chúng mình đồng hành cùng bạn từ ý tưởng đến sản phẩm.
+Ngay cả video này cũng được làm bằng AI: giọng nói tổng hợp, hoạt hình viết bằng code, và ghép tiếng bằng ffmpeg.
+Bạn đang có ý tưởng? Hãy cùng Scuti AI biến nó thành hiện thực nhé!

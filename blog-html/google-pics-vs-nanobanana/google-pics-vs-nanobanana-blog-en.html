@@ -1,0 +1,406 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Trying Google Pics and Comparing It with NanoBanana - Detailed Guide</title>
+    <style>
+      *{box-sizing:border-box}
+      body{ margin:0; font-family: 'Segoe UI', Arial, sans-serif; background: #fff; color: #1a1a1a; line-height: 1.7; }
+      a{ color: #1a73e8; text-decoration: none; }
+      a:hover{ text-decoration: underline; }
+      .wrap{ max-width: 980px; margin:0 auto; padding: 24px; }
+      h1{ margin:0 0 10px 0; font-size: 30px; color: #1a73e8; }
+      h2{ margin: 32px 0 14px; font-size: 24px; border-bottom: 3px solid #1a73e8; padding-bottom: 8px; color: #202124; }
+      h3{ margin: 22px 0 10px; font-size: 19px; color: #333; }
+      h4{ margin: 16px 0 8px; font-size: 16px; color: #444; }
+      ul,ol{ margin: 8px 0; padding-left: 22px; }
+      li{ margin-bottom: 4px; }
+      p{ margin: 12px 0; }
+      code{ background: #e8f0fe; border: 1px solid #d2e3fc; padding: 2px 6px; font-size: 13px; font-family: 'Consolas', monospace; border-radius: 3px; color: #1a73e8; }
+      pre{ white-space: pre-wrap; word-wrap: break-word; border: 1px solid #dadce0; background: #f8f9fa; padding: 14px; overflow:auto; font-size: 13px; font-family: 'Consolas', monospace; margin: 12px 0; border-radius: 8px; }
+      .hero{ border: 2px solid #1a73e8; padding: 24px 28px; margin-bottom: 24px; background: linear-gradient(135deg, #e8f0fe 0%, #f8f9fa 100%); border-radius: 12px; }
+      .hero .subtitle{ color: #5f6368; font-size: 15px; margin-top: 8px; }
+      .tip{ border-left: 4px solid #34a853; padding: 12px 16px; background: #e6f4ea; margin: 14px 0; border-radius: 0 8px 8px 0; }
+      .warning{ border-left: 4px solid #ea4335; padding: 12px 16px; background: #fce8e6; margin: 14px 0; border-radius: 0 8px 8px 0; }
+      .info{ border-left: 4px solid #4285f4; padding: 12px 16px; background: #e8f0fe; margin: 14px 0; border-radius: 0 8px 8px 0; }
+      .highlight{ border-left: 4px solid #fbbc04; padding: 12px 16px; background: #fef7e0; margin: 14px 0; border-radius: 0 8px 8px 0; }
+      .table-wrap{ overflow-x: auto; }
+      table{ border-collapse: collapse; width: 100%; margin: 16px 0; border-radius: 8px; overflow: hidden; }
+      th,td{ border: 1px solid #dadce0; padding: 10px 14px; text-align: left; vertical-align: top; }
+      th{ background: #1a73e8; color: #fff; font-weight: 600; }
+      tr:nth-child(even){ background: #f8f9fa; }
+      .flow-diagram{ background: #f8f9fa; border: 2px solid #dadce0; border-radius: 12px; padding: 20px; margin: 16px 0; text-align: center; }
+      .flow-step{ display: inline-block; background: #fff; border: 2px solid #1a73e8; border-radius: 8px; padding: 10px 18px; margin: 6px; font-weight: 600; color: #1a73e8; }
+      .flow-step.starter{ background: #34a853; border-color: #34a853; color: #fff; }
+      .flow-step.ai{ background: #fbbc04; border-color: #fbbc04; color: #333; }
+      .flow-step.action{ background: #4285f4; border-color: #4285f4; color: #fff; }
+      .flow-step.condition{ background: #ea4335; border-color: #ea4335; color: #fff; }
+      .flow-arrow{ display: inline-block; font-size: 24px; color: #5f6368; margin: 0 4px; vertical-align: middle; }
+      .toc{ background: #f8f9fa; border: 1px solid #dadce0; border-radius: 8px; padding: 16px 24px; margin: 20px 0; }
+      .toc ul{ list-style: none; padding-left: 0; }
+      .toc li{ padding: 4px 0; }
+      .toc li::before{ content: "📌 "; }
+      .badge{ display: inline-block; background: #34a853; color: #fff; padding: 2px 10px; border-radius: 12px; font-size: 12px; font-weight: 600; margin-left: 8px; }
+      .badge.alpha{ background: #ea4335; }
+      .badge.new{ background: #1a73e8; }
+      .badge.pending{ background: #f29900; }
+      .footer{ margin-top: 36px; font-size: 13px; color: #5f6368; border-top: 2px solid #dadce0; padding-top: 20px; }
+      .section-num{ color: #1a73e8; font-weight: 700; }
+      .demo-fig{ margin: 18px 0; text-align: center; }
+      .demo-fig img{ max-width: 100%; height: auto; border: 2px solid #dadce0; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+      .demo-fig figcaption{ font-size: 13px; color: #5f6368; margin-top: 6px; font-style: italic; }
+      /* Anh cho nguoi dung tu chup: neu file chua co -> hien khung placeholder */
+      .img-placeholder{ display:none; background: #fef7e0; border: 2px dashed #f29900; border-radius: 10px; padding: 30px 20px; text-align: center; color: #5f6368; font-size: 14px; }
+      .img-placeholder .icon{ font-size: 28px; }
+      .img-placeholder code{ color:#b06000; background:#fff; border-color:#f6d28b; }
+      .demo-fig.pending.missing img{ display:none; }
+      .demo-fig.pending.missing .img-placeholder{ display:block; }
+      .step-box{ border: 1px solid #dadce0; border-radius: 10px; padding: 4px 18px 10px; margin: 18px 0; }
+      .step-box h3{ margin-top: 14px; }
+      .video-box{ background:#202124; border-radius: 12px; padding: 12px; margin: 16px 0; }
+      .video-box video{ width: 100%; border-radius: 8px; display:block; }
+      .yes{ color:#188038; font-weight:600; }
+      .no{ color:#c5221f; font-weight:600; }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+
+      <div class="hero">
+        <h1>Trying Google Pics &amp; How It Differs from NanoBanana (Gemini Image)</h1>
+        <p class="subtitle">A detailed step-by-step guide &mdash; what Google Pics can do, how it differs from using NanoBanana in Gemini, a Scuti AI poster demo, and how to apply it to everyday work</p>
+        <p style="margin:4px 0 0;font-size:13px;color:#80868b;">
+          Written: Oct 3, 2026 &bull; Sources:
+          <a href="https://www.youtube.com/watch?v=S18L1NFTda8" target="_blank">Official video</a> &bull;
+          <a href="https://workspaceupdates.googleblog.com/2026/09/google-pics-brings-pro-level-ai-image-creation-and-editing-to-Google-Workspace.html" target="_blank">Workspace Updates Blog</a> &bull;
+          <a href="https://workspace.google.com/products/pics/" target="_blank">Product page</a>
+        </p>
+      </div>
+
+      <div class="toc">
+        <h3 style="margin-top:0;">Table of contents</h3>
+        <ul>
+          <li><a href="#overview">What is Google Pics?</a></li>
+          <li><a href="#features">What Google Pics can do &mdash; feature list</a></li>
+          <li><a href="#vs">Google Pics vs NanoBanana: what is different?</a></li>
+          <li><a href="#demo-a">Demo part A: Surveying the official sources (real screenshots)</a></li>
+          <li><a href="#demo-b">Demo part B: Creating &amp; editing a Scuti AI banner in Pics (real run)</a></li>
+          <li><a href="#video">Process video</a></li>
+          <li><a href="#opinion">My opinion</a></li>
+          <li><a href="#apply">Applying Google Pics to daily work</a></li>
+          <li><a href="#tips">Prompting tips for Pics</a></li>
+          <li><a href="#conclusion">Conclusion</a></li>
+        </ul>
+      </div>
+
+      <div class="highlight">
+        <b>Scope of the trial:</b> every demo step below is a <b>real run</b> driven by Playwright in Chrome.
+        <ul>
+          <li><b>Figures 1&ndash;11</b>: official sources (YouTube video, Workspace Updates, product page, Help Center) &mdash; signed-out session.</li>
+          <li><b>Figures 12&ndash;19</b>: real use of Google Pics and the Gemini app with Scuti's Google Workspace account. Sign-in was done <b>manually once</b> in a dedicated Chrome profile
+            (the script never reads or stores passwords); then <code>record_pics_live.py</code> drove the UI, took the screenshots and recorded the video.</li>
+        </ul>
+      </div>
+
+      <h2 id="overview"><span class="section-num">1.</span> What is Google Pics?</h2>
+      <p>
+        <b>Google Pics</b> is Google Workspace's new <b>AI image creation and editing tool</b>, <b>generally available since September 1, 2026</b>.
+        According to <a href="https://workspaceupdates.googleblog.com/2026/09/google-pics-brings-pro-level-ai-image-creation-and-editing-to-Google-Workspace.html" target="_blank">Workspace Updates</a>,
+        Pics brings <i>&ldquo;advanced AI image generation and precise, object-based image editing directly into your Workspace creative workflow&rdquo;</i>.
+      </p>
+      <p>
+        The key to understanding Pics: the official video description says it is <b>&ldquo;Built on our Nano Banana image generation and editing model&rdquo;</b>,
+        and the Help Center says <i>&ldquo;Google Pics is an image creation and editing tool powered by Gemini (Nano Banana)&rdquo;</i>.
+        In other words, <b>NanoBanana is the engine (the model) and Google Pics is the car (the product/canvas)</b> designed for visual work inside Workspace.
+      </p>
+      <div class="info">
+        <b>Quick facts (from official sources):</b>
+        <ul>
+          <li><b>Access:</b> <code>pics.new</code> (redirects to <code>docs.google.com/images/create</code>), or from Google Slides, Docs and Drive.</li>
+          <li><b>Devices:</b> currently <b>Desktop only</b> (latest two versions of Chrome, Firefox, Edge).</li>
+          <li><b>Plans:</b> Business Standard/Plus, Enterprise Standard/Plus, AI Expanded Access, Google AI Pro for Education, Google AI Pro, Google AI Ultra.</li>
+          <li><b>Admin:</b> ON by default, can be disabled per domain/OU/group.</li>
+          <li><b>Prompt languages:</b> 29 languages including <b>Vietnamese</b>.</li>
+          <li><b>Limits:</b> &ldquo;At least through February 28, 2027, users will have higher access&rdquo; &mdash; access may be limited afterwards.</li>
+        </ul>
+      </div>
+
+      <h2 id="features"><span class="section-num">2.</span> What Google Pics can do &mdash; feature list</h2>
+      <div class="flow-diagram">
+        <span class="flow-step starter">Prompt / Upload</span>
+        <span class="flow-arrow">&rarr;</span>
+        <span class="flow-step ai">Variations</span>
+        <span class="flow-arrow">&rarr;</span>
+        <span class="flow-step ai">Edit element / area / text</span>
+        <span class="flow-arrow">&rarr;</span>
+        <span class="flow-step action">Crop &bull; 2K/4K</span>
+        <span class="flow-arrow">&rarr;</span>
+        <span class="flow-step action">Share &bull; Slides/Docs</span>
+      </div>
+      <div class="table-wrap">
+      <table>
+        <thead><tr><th>Group</th><th>Feature</th><th>Details (Help Center / blog)</th></tr></thead>
+        <tbody>
+          <tr><td rowspan="3"><b>Create</b></td><td>Text-to-image</td><td>Write a prompt in the bottom bar &rarr; Pics produces <b>several versions</b> in the left panel; click <b>Retry</b> for more.</td></tr>
+          <tr><td>Reference images</td><td>Add images (drag &amp; drop, paste, Add images) to reuse elements/colors, e.g. &ldquo;Use the blue in this image as the background&rdquo;.</td></tr>
+          <tr><td>Style reference</td><td><b>Style</b> button: borrow the look of an image from computer, Drive or Google Photos (English only for now).</td></tr>
+          <tr><td rowspan="4"><b>Edit</b></td><td>Whole-image prompt edits</td><td>e.g. &ldquo;Desaturate the photo slightly and add cooler tones to shadows&rdquo;.</td></tr>
+          <tr><td>Object-based edits</td><td>Hover &rarr; click an element (e.g. &ldquo;Floor&rdquo;) &rarr; prompt &rarr; <b>Add</b>; queue <b>up to 5 changes</b> and click <b>Apply edits</b> once. You can also drag to select an area.</td></tr>
+          <tr><td>Edit / translate text</td><td>Pics detects text; click it to change wording or style (&ldquo;make the text bold&rdquo;), or translate a whole flyer with one prompt.</td></tr>
+          <tr><td>Crop, rotate, aspect ratio</td><td>16:9, 1:1, 4:3&hellip; for web, social and print.</td></tr>
+          <tr><td rowspan="3"><b>Export &amp; collaborate</b></td><td>Download</td><td>JPEG in <b>Original, 2K, 4K</b> (higher resolutions consume limits faster). Print directly.</td></tr>
+          <tr><td>Version history</td><td>Persistent history to revert unwanted changes.</td></tr>
+          <tr><td>Drive-style sharing</td><td>Viewer/Editor access; collaborators can edit and save.</td></tr>
+          <tr><td><b>Integrations</b></td><td>Slides, Docs, Drive</td><td>In Slides: click image &rarr; <b>Edit image</b> &rarr; Pics opens inside Slides &rarr; <b>Replace image</b>. You can minimize Pics and keep working while it generates.</td></tr>
+        </tbody>
+      </table>
+      </div>
+
+      <h2 id="vs"><span class="section-num">3.</span> Google Pics vs NanoBanana: what is different?</h2>
+      <p>
+        <b>NanoBanana</b> is the name of Gemini's image model family: first <b>Gemini 2.5 Flash Image</b> (Aug 2025), then
+        <b>Nano Banana Pro</b> (Gemini 3 Pro Image) and <b>Nano Banana 2</b> (Gemini 3.1 Flash Image). People usually reach it through the
+        <b>Gemini app</b> (chat &rarr; &ldquo;Create image&rdquo;), the <b>Gemini API / AI Studio / Vertex AI</b>, or image generation in Slides/Docs.
+        Google Pics <b>uses NanoBanana under the hood</b> and adds a canvas built for design work.
+      </p>
+      <div class="table-wrap">
+      <table>
+        <thead><tr><th>Criteria</th><th>Google Pics</th><th>NanoBanana (Gemini app / API)</th></tr></thead>
+        <tbody>
+          <tr><td><b>What it is</b></td><td>A Workspace product/app (like Docs, Slides)</td><td>An AI model for creating &amp; editing images</td></tr>
+          <tr><td><b>Interface</b></td><td>Canvas + prompt bar + versions panel + toolbar (Crop, Zoom, Undo, Download, Share)</td><td>Chat window (Gemini app) or API request</td></tr>
+          <tr><td><b>How you edit</b></td><td>Click <b>individual elements</b>, drag-select areas, click text to edit; queue up to 5 edits then Apply</td><td>Mostly describe the change in conversation; the model infers which region to change</td></tr>
+          <tr><td><b>Options</b></td><td>Several variations by default, Retry for more</td><td>Typically one image per turn; ask again for more</td></tr>
+          <tr><td><b>Text in images</b></td><td>Detected as editable elements; translation keeps fonts/layout</td><td>Good text rendering, but edits go through descriptive prompts</td></tr>
+          <tr><td><b>Finishing</b></td><td>Crop/rotate/aspect ratio, download <b>Original / 2K / 4K</b></td><td>Aspect ratio/resolution via prompt or API parameters</td></tr>
+          <tr><td><b>Storage &amp; versions</b></td><td>Saved like a Workspace file, version history, Viewer/Editor sharing</td><td>Images live in chat history; you download and manage them</td></tr>
+          <tr><td><b>Integration</b></td><td>Opens inside Slides/Docs/Drive, &ldquo;Replace image&rdquo;</td><td>API for your own apps, automated pipelines, batches</td></tr>
+          <tr><td><b>Governance</b></td><td>Admin on/off per OU/group, Workspace data policies</td><td>Gemini app per account; API per Cloud/AI Studio project</td></tr>
+          <tr><td><b>Cost / access</b></td><td>Included with Workspace Business Standard+ / AI Pro, Ultra; usage limits apply</td><td>Gemini app limits per plan; API billed per image</td></tr>
+          <tr><td><b>Best for</b></td><td>Office staff, marketing, PMs who need precise edits fast</td><td>Developers, automation, bulk generation, quick ideation</td></tr>
+        </tbody>
+      </table>
+      </div>
+      <div class="highlight">
+        <b>In one sentence:</b> Pics tackles &ldquo;prompt-and-pray&rdquo; &mdash; instead of rewriting the prompt ten times, you <b>point at exactly what to change</b>. NanoBanana is the brain; Pics is the workbench.
+      </div>
+      <div class="info">
+        <b>About the model version:</b> official docs only say &ldquo;Nano Banana&rdquo;; some news sites (e.g. Camera Jabber) say Pics runs Nano Banana 2.
+        Google does not state a version in the Help Center, so I do not claim one. Also note: in Slides/Docs, Pics usage &ldquo;follow existing usage limits for Slides and Docs for Nano Banana&rdquo;.
+      </div>
+
+      <h2 id="demo-a"><span class="section-num">4.</span> Demo part A: Surveying the official sources (real screenshots)</h2>
+      <p>Part A was run with <code>trial_playwright.py</code> (Python Playwright, real Chrome via <code>channel="chrome"</code>, a dedicated profile, no sign-in) and recorded into the video in Section 6.</p>
+
+      <div class="step-box">
+        <h3>Step 1: Watch the official video &ldquo;Say hello to Google Pics&rdquo;</h3>
+        <p>A 1:38 video from the <b>Google Workspace</b> channel (Sep 1, 2026). The description states Pics is &ldquo;Built on our Nano Banana image generation and editing model&rdquo;.</p>
+        <figure class="demo-fig"><img src="images/step-01-youtube-video.png" alt="YouTube video"><figcaption>Figure 1: Official video page &mdash; title, channel and description mentioning Nano Banana</figcaption></figure>
+      </div>
+      <div class="step-box">
+        <h3>Step 2: Generate &rarr; Pics returns several versions</h3>
+        <p>Around 0:18, after prompting an &ldquo;Oakwood Street Fair&rdquo; poster, Pics shows <b>4 versions</b> in the left column &mdash; a big difference from one-image-per-turn chat.</p>
+        <figure class="demo-fig"><img src="images/step-02-yt-generate-variations.png" alt="Variations"><figcaption>Figure 2: Pics UI in the video &mdash; variations panel on the left, prompt bar at the bottom (&ldquo;Edit image with Gemini or press &uarr; to use past prompts&rdquo;)</figcaption></figure>
+      </div>
+      <div class="step-box">
+        <h3>Step 3: Edit a single element</h3>
+        <p>Click one decorative tile &rarr; small pop-up &rarr; type <code>An illustration of a taco</code> &rarr; <b>Add</b>. The rest of the poster stays intact.</p>
+        <figure class="demo-fig"><img src="images/step-03-yt-add-element.png" alt="Element edit"><figcaption>Figure 3: Object-based editing &mdash; replace one element with a short prompt</figcaption></figure>
+      </div>
+      <div class="step-box">
+        <h3>Step 4: Edit text inside a mockup</h3>
+        <p>Pics detects the &ldquo;THANKS FOR BEING A VALUED CUSTOMER&rdquo; card in a gift box and opens the <b>Edit text</b> tab to retype it, then <b>Save</b>.</p>
+        <figure class="demo-fig"><img src="images/step-04-yt-edit-text.png" alt="Edit text"><figcaption>Figure 4: Edit text / Edit image &mdash; change product-shot copy without Photoshop</figcaption></figure>
+      </div>
+      <div class="step-box">
+        <h3>Step 5: Localize with one prompt</h3>
+        <p>&ldquo;Translate the flyer into &hellip;&rdquo; turns the poster into Spanish while keeping layout, colors and fonts.</p>
+        <figure class="demo-fig"><img src="images/step-05-yt-translate-result.png" alt="Translated"><figcaption>Figure 5: &ldquo;Localize with one click&rdquo; &mdash; Feria Callejera de Oakwood</figcaption></figure>
+      </div>
+      <div class="step-box">
+        <h3>Step 6: Edit an image right inside Google Slides</h3>
+        <p>From a slide with a lawn mower photo, open <b>Edit with Google Pics</b>, prompt <i>&ldquo;Stage this lawn mower in a modern backyard with warm lighting&hellip;&rdquo;</i>, then <b>Replace image</b>.</p>
+        <figure class="demo-fig"><img src="images/step-06-yt-edit-in-slides.png" alt="Pics in Slides"><figcaption>Figure 6: Pics inside Slides &mdash; no download/upload round trip</figcaption></figure>
+      </div>
+      <div class="step-box">
+        <h3>Step 7: Read the GA announcement on Workspace Updates</h3>
+        <p>The Sep 1, 2026 post lists: multiple variations, localized edits, editing/reformatting/translating text, cropping for web/social/print, <b>2K/4K upscaling</b>, version history and one-click editing in Docs/Slides. Rollout: Rapid Release from Sep 1, Scheduled Release from Sep 15, 2026.</p>
+        <figure class="demo-fig"><img src="images/step-07-workspace-updates-post.png" alt="Workspace Updates"><figcaption>Figure 7: &ldquo;Google Pics brings pro-level AI image creation and editing to Google Workspace&rdquo;</figcaption></figure>
+      </div>
+      <div class="step-box">
+        <h3>Steps 8&ndash;9: The product page</h3>
+        <p>Main messages: <i>&ldquo;Boundless AI image generation meets precision editing&rdquo;</i> and <i>&ldquo;No more &lsquo;prompt-and-pray&rsquo;&rdquo;</i>. A banner says Pics is <b>still rolling out</b>.</p>
+        <figure class="demo-fig"><img src="images/step-08-product-page-hero.png" alt="Product page"><figcaption>Figure 8: Product page hero &mdash; &ldquo;Google Pics is currently rolling out&rdquo;</figcaption></figure>
+        <figure class="demo-fig"><img src="images/step-09-product-page-features.png" alt="Product features"><figcaption>Figure 9: &ldquo;No more prompt-and-pray&rdquo; &mdash; object-based editing is the headline feature</figcaption></figure>
+      </div>
+      <div class="step-box">
+        <h3>Step 10: Help Center &mdash; the official how-to</h3>
+        <p><a href="https://support.google.com/docs/answer/17170048" target="_blank">Get started with Google Pics</a> covers two ways to start (upload / prompt), reference images and Style reference, plus related articles on editing, downloading, prompting, and Slides/Docs/Drive.</p>
+        <figure class="demo-fig"><img src="images/step-10-help-center-get-started.png" alt="Help Center"><figcaption>Figure 10: Help Center &mdash; &ldquo;powered by Gemini (Nano Banana)&rdquo;</figcaption></figure>
+      </div>
+      <div class="step-box">
+        <h3>Step 11: Open pics.new while signed out &rarr; account required</h3>
+        <p><code>pics.new</code> redirects to <code>accounts.google.com</code> with a continue URL to <code>docs.google.com/images/u/0/create</code>. That is why an eligible Workspace account is needed. In Part B I signed in manually once in a dedicated Chrome profile and let the script do the rest &mdash; it <b>never</b> types an email or password.</p>
+        <figure class="demo-fig"><img src="images/step-11-pics-signin-wall.png" alt="Sign-in wall"><figcaption>Figure 11: Sign-in wall &mdash; &ldquo;to continue to Google Pics&rdquo;</figcaption></figure>
+      </div>
+
+      <h2 id="demo-b"><span class="section-num">5.</span> Demo part B: Creating &amp; editing a Scuti AI banner in Pics (real run)</h2>
+      <p>Scenario: create an internal event banner <b>&ldquo;SCUTI AI &mdash; AI QUEST 2026&rdquo;</b> with the <b>red dragon mascot</b>, edit only the dragon, translate the text into Vietnamese, try a different frame ratio, export a 2K copy; finally run <b>the same prompt</b> in the Gemini app (NanoBanana) for comparison.
+      The whole session (3 min 11 s) was recorded in one take &mdash; see Section 6.</p>
+      <div class="flow-diagram">
+        <span class="flow-step starter">pics.new</span><span class="flow-arrow">&rarr;</span>
+        <span class="flow-step ai">Banner prompt</span><span class="flow-arrow">&rarr;</span>
+        <span class="flow-step ai">4 variations</span><span class="flow-arrow">&rarr;</span>
+        <span class="flow-step ai">Edit the dragon</span><span class="flow-arrow">&rarr;</span>
+        <span class="flow-step ai">Translate to VI</span><span class="flow-arrow">&rarr;</span>
+        <span class="flow-step action">Transform</span><span class="flow-arrow">&rarr;</span>
+        <span class="flow-step action">Export 2K</span><span class="flow-arrow">&rarr;</span>
+        <span class="flow-step condition">Compare in Gemini</span>
+      </div>
+      <div class="tip">
+        <b>Reproduce:</b> sign in to Google once using normal Chrome with <code>--user-data-dir=D:\chrome-profiles\ai-quest</code>, close Chrome, then run
+        <code>python record_pics_live.py</code>. The script drives the UI, captures <code>images/step-12&hellip;19</code>, downloads <code>images/pics-final-2k.jpg</code> and records <code>video/google-pics-live-session.mp4</code>.
+        Note: every visit to <code>pics.new</code> creates a new image file in Drive.
+      </div>
+
+      <div class="step-box">
+        <h3>Step 12: Open pics.new &mdash; empty canvas</h3>
+        <p><code>pics.new</code> immediately creates a new Pics file (stored in Drive, URL <code>docs.google.com/images/d/&hellip;</code>). Minimal UI: a drop zone (Upload / Drive / Photos), the prompt bar &ldquo;Bring your ideas to life with Gemini&rdquo; with <b>+</b> (reference images) and <b>Style</b>; the top bar has Undo/Redo and a default <b>16:9</b> frame.</p>
+        <figure class="demo-fig"><img src="images/step-12-pics-home.png" alt="Pics home"><figcaption>Figure 12: Google Pics &mdash; empty canvas and prompt bar</figcaption></figure>
+      </div>
+      <div class="step-box">
+        <h3>Step 13: Enter the Scuti AI banner prompt</h3>
+        <pre>A 16:9 tech banner for "SCUTI AI - AI QUEST 2026". Bold headline "SCUTI AI", subtitle "Build. Learn. Ship with AI.". A cute red dragon mascot beside young Vietnamese engineers with laptops, glowing AI chat bubbles. Night city skyline, navy and red palette, flat vector style, footer "scuti.asia".</pre>
+        <p>Subject &rarr; setting &rarr; style &rarr; palette &rarr; layout, with the text to render in double quotes.</p>
+        <figure class="demo-fig"><img src="images/step-13-prompt-entered.png" alt="Prompt entered"><figcaption>Figure 13: Scuti AI prompt in the prompt bar</figcaption></figure>
+      </div>
+      <div class="step-box">
+        <h3>Step 14: Get 4 variations, pick one, Confirm</h3>
+        <p>After <b>Submit</b>, about <b>15 seconds</b> later Pics returns <b>4 variations</b> in the left panel, each with a different layout. Click a thumbnail to preview, <b>&#10003; Confirm</b> to keep it, or <b>&#8635; Generate again</b>. In the chosen version &ldquo;SCUTI AI&rdquo;, &ldquo;AI QUEST 2026&rdquo; and &ldquo;scuti.asia&rdquo; are all spelled correctly. Pics also auto-named the file &ldquo;Scuti AI Quest Banner&rdquo;.</p>
+        <figure class="demo-fig"><img src="images/step-14-generated-variations.png" alt="Variations"><figcaption>Figure 14: 4 variations of the Scuti AI banner (left panel) &mdash; hint &ldquo;Hover over an object or drag to select an area to edit&rdquo;</figcaption></figure>
+      </div>
+      <div class="step-box">
+        <h3>Step 15: Click the dragon &rarr; edit only that element</h3>
+        <p>After Confirm, Pics runs <b>&ldquo;Detecting objects&hellip;&rdquo;</b>. Clicking the dragon outlines it and opens <b>&ldquo;Describe changes for the cartoon dragon&rdquo;</b> &mdash; Pics names the object itself. Type the change &rarr; <b>Add</b> &rarr; the bottom bar shows <b>Discard / Apply 1 edit</b> (several edits can be queued and applied together).</p>
+        <pre>Make the dragon wave its hand and wear a small orange scarf with the text AI</pre>
+        <figure class="demo-fig"><img src="images/step-15-select-element-edit.png" alt="Selecting the dragon"><figcaption>Figure 15a: Pics detects the &ldquo;cartoon dragon&rdquo; and opens an element-level edit box</figcaption></figure>
+        <figure class="demo-fig"><img src="images/step-15b-element-edit-result.png" alt="Dragon edit result"><figcaption>Figure 15b: After Apply &mdash; the dragon waves and wears an orange &ldquo;AI&rdquo; scarf; text, people and background stay <b>unchanged</b></figcaption></figure>
+      </div>
+      <div class="step-box">
+        <h3>Step 16: Translate all text into Vietnamese with one prompt</h3>
+        <pre>Translate all text in this banner into Vietnamese. Keep "SCUTI AI" and "scuti.asia" unchanged. Keep the same fonts, colors and layout.</pre>
+        <p>Result: <b>&ldquo;Xây dựng. Học hỏi. Ra mắt với AI.&rdquo;</b> &mdash; Vietnamese diacritics render correctly in the same font and position; &ldquo;SCUTI AI&rdquo; and &ldquo;scuti.asia&rdquo; are kept as asked.
+        Interesting: Pics also translated the event name &ldquo;AI QUEST 2026&rdquo; into <b>&ldquo;CHINH PHỤC AI 2026&rdquo;</b> &mdash; list every proper noun you want to keep. The translation turn also returned 4 variations.</p>
+        <figure class="demo-fig"><img src="images/step-16-translate-text.png" alt="Translated"><figcaption>Figure 16: Banner localized into Vietnamese &mdash; layout, people and the edited dragon unchanged</figcaption></figure>
+      </div>
+      <div class="step-box">
+        <h3>Step 17: Transform &mdash; frame ratio / rotation</h3>
+        <p>Click the ratio button (<b>16:9</b>) &rarr; <b>Transform &ndash; Adjust your frame</b> with 16:9, 4:3, 3:2, 5:4, 1:1 (&#8942; for more), a -90&deg;&hellip;+90&deg; rotation dial, zoom, <b>Reset</b> and <b>Exit</b>. The screenshot shows a <b>1:1</b> frame (for social posts); in the demo I switched back to 16:9 and exited to keep the banner.</p>
+        <figure class="demo-fig"><img src="images/step-17-crop-aspect-ratio.png" alt="Transform 1:1"><figcaption>Figure 17: Transform &mdash; a 1:1 frame over the 16:9 banner</figcaption></figure>
+      </div>
+      <div class="step-box">
+        <h3>Step 18: Export &mdash; Original / 2K / 4K</h3>
+        <p>The <b>Export</b> icon (top right) offers <b>Original size</b> (1365&times;768), <b>2K JPEG</b> and <b>4K JPEG</b> (&ldquo;Upscale with Gemini&rdquo;). The 2K download took about <b>15 seconds</b>; the actual file is <b>2752&times;1536</b> (~0.5 MB).</p>
+        <figure class="demo-fig"><img src="images/step-18-download-menu.png" alt="Export menu"><figcaption>Figure 18: Export menu &mdash; Original, 2K JPEG, 4K JPEG</figcaption></figure>
+        <figure class="demo-fig"><img src="images/pics-final-2k.jpg" alt="Scuti AI 2K banner from Pics"><figcaption>Final output: the 2K Scuti AI banner downloaded from Google Pics (<code>images/pics-final-2k.jpg</code>)</figcaption></figure>
+      </div>
+      <div class="step-box">
+        <h3>Step 19: Same prompt in the Gemini app (NanoBanana)</h3>
+        <p>In <code>gemini.google.com</code> with the same account, send <code>Create an image: &lt;Step 13 prompt&gt;</code>. After about <b>25 seconds</b> Gemini returns <b>one image</b> in the chat. Text rendering is on par with Pics (same NanoBanana foundation), but editing the dragon means describing it again in words in the next turn &mdash; no click-to-select, no variations panel, no Transform or 2K/4K export.</p>
+        <figure class="demo-fig"><img src="images/step-19-nanobanana-gemini.png" alt="Gemini"><figcaption>Figure 19: NanoBanana in the Gemini app with the same prompt &mdash; one image per turn, edit by conversation</figcaption></figure>
+      </div>
+      <div class="highlight">
+        <b>Results sheet (run on Oct 3, 2026):</b>
+        <div class="table-wrap">
+        <table>
+          <thead><tr><th>Check</th><th>Google Pics</th><th>Gemini (NanoBanana)</th></tr></thead>
+          <tbody>
+            <tr><td>Options per turn</td><td><b>4</b> (left panel, Confirm / Generate again)</td><td><b>1</b> image in chat</td></tr>
+            <tr><td>&ldquo;SCUTI AI&rdquo;, &ldquo;scuti.asia&rdquo; spelled correctly?</td><td>Yes</td><td>Yes</td></tr>
+            <tr><td>Vietnamese diacritics after translation</td><td>Correct, same font &amp; position (but it also translated the event name)</td><td>Not tested in this run</td></tr>
+            <tr><td>Element edit keeps the rest intact?</td><td><b>Yes</b> &mdash; only the dragon changed</td><td>No element selection; edit by describing in words</td></tr>
+            <tr><td>Generation time (measured)</td><td>~15 s per turn (create, edit, translate); 2K export ~15 s</td><td>~25 s per image</td></tr>
+            <tr><td>Export</td><td>Original 1365&times;768, 2K (2752&times;1536), 4K</td><td>Download from chat</td></tr>
+          </tbody>
+        </table>
+        </div>
+      </div>
+
+      <h2 id="video"><span class="section-num">6.</span> Process video</h2>
+      <p>The complete video records the whole process with Playwright: official sources (YouTube, Workspace Updates, product page, Help Center) &rarr; <b>real use of Google Pics</b> (prompt &rarr; 4 variations &rarr; dragon edit &rarr; Vietnamese translation &rarr; Transform &rarr; 2K export) &rarr; the same prompt in the Gemini app &rarr; the finished blog scrolled top to bottom.</p>
+      <div class="video-box"><video controls preload="metadata" src="video/google-pics-vs-nanobanana-demo.mp4"></video></div>
+      <p style="font-size:13px;color:#5f6368;">File: <code>video/google-pics-vs-nanobanana-demo.mp4</code> (complete video). The Pics + Gemini part alone: <code>video/google-pics-live-session.mp4</code> (3:11).</p>
+
+      <h2 id="opinion"><span class="section-num">7.</span> My opinion</h2>
+      <h3>What I like</h3>
+      <ul>
+        <li><b>It hits a real pain point:</b> with NanoBanana in chat, fixing one small detail often changes something else. Click-to-select plus batching 5 edits is how designers work, not how chatbots work.</li>
+        <li><b>Text becomes an object:</b> editing/translating text is what office teams need most (posters, cards, multilingual banners).</li>
+        <li><b>It lives in Workspace:</b> sharing permissions, version history and admin control make it company-friendly compared with images scattered in personal chat history.</li>
+        <li><b>Slides &ldquo;Replace image&rdquo;:</b> removes the download &rarr; edit &rarr; re-upload loop.</li>
+      </ul>
+      <h3>What to watch out for</h3>
+      <ul>
+        <li><b>Access barrier:</b> Business Standard+ or AI Pro/Ultra; Business Starter is not included. Signed out, <code>pics.new</code> goes straight to the Sign in page.</li>
+        <li><b>Desktop only</b> and still rolling out &mdash; eligible accounts may not see it yet.</li>
+        <li><b>Limits:</b> &ldquo;higher access&rdquo; is only promised through Feb 28, 2027; 2K/4K downloads use limits faster.</li>
+        <li><b>Not an API replacement:</b> for hundreds of data-driven images, use NanoBanana via the Gemini API.</li>
+        <li><b>The official video says &ldquo;Sequences shortened and simulated&rdquo;</b> &mdash; yet in my real run each turn took only ~15 seconds, faster than expected.</li>
+        <li><b>Over-eager translation:</b> Pics translated the event name &ldquo;AI QUEST&rdquo; too &mdash; list every proper noun that must stay unchanged.</li>
+      </ul>
+
+      <h2 id="apply"><span class="section-num">8.</span> Applying Google Pics to daily work</h2>
+      <div class="table-wrap">
+      <table>
+        <thead><tr><th>Situation</th><th>How to use Pics</th><th>Use the NanoBanana API instead when&hellip;</th></tr></thead>
+        <tbody>
+          <tr><td><b>Client proposals / demo slides</b></td><td>In Slides: click image &rarr; Edit image &rarr; stage the product in the client's context &rarr; Replace image</td><td>You need images generated automatically for whole decks</td></tr>
+          <tr><td><b>Internal event posters (AI Quest, team building)</b></td><td>Prompt &rarr; pick a variation &rarr; edit elements &rarr; download 2K for print</td><td>&mdash;</td></tr>
+          <tr><td><b>Vietnamese &ndash; Japanese &ndash; English materials</b></td><td>One prompt to translate text in an infographic/banner, layout preserved</td><td>Large batches through a pipeline</td></tr>
+          <tr><td><b>UI mockups / project doc illustrations</b></td><td>Upload screenshots, use Style reference for a consistent look</td><td>Generating test image data for apps</td></tr>
+          <tr><td><b>Social / recruiting visuals</b></td><td>Crop 1:1, 4:5, 16:9 from one master; share as Editor with HR</td><td>Scheduled automatic post generation</td></tr>
+          <tr><td><b>AI features for clients</b></td><td>Use Pics to prototype prompts and lock in a style</td><td><b>Always use the API</b> inside Scuti's products</td></tr>
+        </tbody>
+      </table>
+      </div>
+      <div class="tip"><b>Suggested team workflow:</b> explore and lock the prompt in Pics (fast, visual) &rarr; save the canonical prompt in Docs &rarr; move it to the Gemini API (NanoBanana) in code when you need scale.</div>
+
+      <h2 id="tips"><span class="section-num">9.</span> Prompting tips for Pics</h2>
+      <ul>
+        <li><b>Be specific:</b> subject, action, setting, mood. &ldquo;A cat&rdquo; &rarr; &ldquo;A fluffy ginger cat napping on a sun-drenched windowsill&rdquo;.</li>
+        <li><b>Positive framing:</b> &ldquo;empty street&rdquo; instead of &ldquo;no cars&rdquo;.</li>
+        <li><b>Specify style &amp; lighting:</b> &ldquo;flat vector illustration&rdquo;, &ldquo;three-point softbox setup&rdquo;, &ldquo;golden hour backlighting&rdquo;.</li>
+        <li><b>Put text to render in double quotes</b> and keep it short.</li>
+        <li><b>Iterate:</b> start simple, then edit elements instead of rewriting everything.</li>
+        <li><b>Press &uarr;</b> in the prompt bar to reuse past prompts (seen in the official video).</li>
+      </ul>
+
+      <h2 id="conclusion"><span class="section-num">10.</span> Conclusion</h2>
+      <p>
+        Google Pics is not a new model &mdash; it is <b>NanoBanana packaged as a design tool</b> inside Workspace: variations, element-level edits,
+        text editing/translation, crop, 2K/4K, version history, sharing and Slides/Docs/Drive integration. If you need <b>precise edits</b> and teamwork in Workspace, use Pics.
+        If you need <b>automation and scale</b>, use NanoBanana through the API.
+      </p>
+      <div class="tip"><b>Get started:</b> open <a href="https://pics.new" target="_blank">pics.new</a> with a Workspace Business Standard+ or Google AI Pro account, or run <code>record_pics_live.py</code> to reproduce this demo.</div>
+
+      <div class="footer">
+        <p>
+          <b>References:</b><br>
+          &bull; <a href="https://www.youtube.com/watch?v=S18L1NFTda8" target="_blank">Video: Say hello to Google Pics from Google Workspace</a><br>
+          &bull; <a href="https://workspaceupdates.googleblog.com/2026/09/google-pics-brings-pro-level-ai-image-creation-and-editing-to-Google-Workspace.html" target="_blank">Workspace Updates: Google Pics brings pro-level AI image creation and editing</a><br>
+          &bull; <a href="https://workspace.google.com/products/pics/" target="_blank">Google Pics product page</a><br>
+          &bull; <a href="https://blog.google/products-and-platforms/products/workspace/google-pics/" target="_blank">Google Blog: Try Google Pics</a><br>
+          &bull; <a href="https://support.google.com/docs/answer/17170048" target="_blank">Help: Get started with Google Pics</a> &bull;
+          <a href="https://support.google.com/docs/answer/17170454" target="_blank">Edit images</a> &bull;
+          <a href="https://support.google.com/docs/answer/17170934" target="_blank">Download/print/share</a> &bull;
+          <a href="https://support.google.com/docs/answer/17256710" target="_blank">Availability</a> &bull;
+          <a href="https://support.google.com/docs/answer/17499238" target="_blank">Write effective prompts</a> &bull;
+          <a href="https://support.google.com/docs/answer/17499039" target="_blank">Edit in Slides</a>
+        </p>
+        <p>AI Quest &bull; Scuti AI &bull; Oct 3, 2026</p>
+      </div>
+
+    </div>
+  </body>
+</html>

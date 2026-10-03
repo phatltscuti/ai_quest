@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Diagram 01 – Daily activity data → AI analysis → Evaluation</title>
+<style>
+  body { margin: 0; background: #eef2f7; font-family: 'Segoe UI', Roboto, Arial, sans-serif; }
+  #canvas { width: 1400px; margin: 20px auto; background: #fff; border-radius: 16px; box-shadow: 0 2px 10px rgba(0,0,0,.08); }
+  svg { display: block; }
+  .title { font-size: 26px; font-weight: 700; fill: #0d47a1; }
+  .sub { font-size: 15px; fill: #616161; }
+  .lane { font-size: 13px; font-weight: 700; letter-spacing: 1.5px; fill: #90a4ae; }
+  .src rect { fill: #e3f2fd; stroke: #90caf9; }
+  .src text { font-size: 15px; fill: #0d47a1; font-weight: 600; }
+  .box text { font-size: 14px; fill: #263238; }
+  .box text.h { font-size: 16px; font-weight: 700; }
+  .arrow { stroke: #546e7a; stroke-width: 2.4; fill: none; marker-end: url(#ah); }
+  .arrow.dash { stroke-dasharray: 7 6; }
+  .arrow.orange { stroke: #ef6c00; marker-end: url(#ahO); }
+  .arrow.green { stroke: #2e7d32; marker-end: url(#ahG); }
+  .lbl { font-size: 13px; fill: #455a64; font-style: italic; }
+  .step { font-size: 13px; font-weight: 700; fill: #fff; }
+</style>
+</head>
+<body>
+<div id="canvas">
+<svg id="d" width="1400" height="900" viewBox="0 0 1400 900" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="ah" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#546e7a"/></marker>
+    <marker id="ahO" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#ef6c00"/></marker>
+    <marker id="ahG" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d32"/></marker>
+  </defs>
+
+  <text class="title t" x="40" y="50" data-vi="Luồng dữ liệu: hoạt động hằng ngày → AI phân tích → đánh giá" data-en="Data flow: daily activity → AI analysis → evaluation"></text>
+  <text class="sub t" x="40" y="78" data-vi="Tóm tắt từ mô hình Ubie (bài note của hashiyaman + webinar trên YouTube). Sơ đồ do tác giả blog tự vẽ lại." data-en="Summarised from Ubie's setup (hashiyaman's note article + YouTube webinar). Redrawn by the blog author."></text>
+
+  <!-- lane labels -->
+  <text class="lane t" x="40" y="120" data-vi="① NGUỒN DỮ LIỆU" data-en="① DATA SOURCES"></text>
+  <text class="lane t" x="270" y="120" data-vi="② THU THẬP &amp; TIỀN XỬ LÝ" data-en="② COLLECT &amp; PRE-PROCESS"></text>
+  <text class="lane t" x="560" y="120" data-vi="③ ACTIVITY REPORT" data-en="③ ACTIVITY REPORT"></text>
+  <text class="lane t" x="830" y="120" data-vi="④ EVALUATION AI AGENT" data-en="④ EVALUATION AI AGENT"></text>
+  <text class="lane t" x="1200" y="120" data-vi="⑤ QUYẾT ĐỊNH" data-en="⑤ DECISION"></text>
+
+  <!-- sources -->
+  <g class="src">
+    <rect x="40" y="140" width="190" height="48" rx="10"/><text x="135" y="170" text-anchor="middle">Slack</text>
+    <rect x="40" y="200" width="190" height="48" rx="10"/><text class="t" x="135" y="230" text-anchor="middle" data-vi="Biên bản họp / Meet" data-en="Meeting notes / Meet"></text>
+    <rect x="40" y="260" width="190" height="48" rx="10"/><text x="135" y="290" text-anchor="middle">GitHub</text>
+    <rect x="40" y="320" width="190" height="48" rx="10"/><text x="135" y="350" text-anchor="middle">Jira</text>
+    <rect x="40" y="380" width="190" height="48" rx="10"/><text x="135" y="410" text-anchor="middle">Notion</text>
+    <rect x="40" y="440" width="190" height="48" rx="10"/><text class="t" x="135" y="470" text-anchor="middle" data-vi="Ghi chép thương vụ" data-en="Sales deal records"></text>
+  </g>
+  <text class="lbl t" x="40" y="512" data-vi="Thu tự động, mỗi ngày," data-en="Collected automatically,"></text>
+  <text class="lbl t" x="40" y="530" data-vi="cho toàn bộ nhân viên" data-en="daily, for every employee"></text>
+
+  <!-- arrows sources -> collect -->
+  <path d="M232,164 C250,164 248,315 262,315 M232,224 C250,224 248,315 262,315 M232,284 C250,284 248,315 262,315 M232,344 C250,344 248,315 262,315 M232,404 C250,404 248,315 262,315 M232,464 C250,464 248,315 262,315" stroke="#90a4ae" stroke-width="2" fill="none"/>
+  <path class="arrow" d="M258,315 L268,315"/>
+
+  <!-- collect box -->
+  <g class="box">
+    <rect x="270" y="150" width="250" height="330" rx="12" fill="#fff8e1" stroke="#ffb300"/>
+    <text class="h t" x="290" y="182" data-vi="Kho dữ liệu chung" data-en="Central data store"></text>
+    <text class="t" x="290" y="206" data-vi="(webinar: Google BigQuery)" data-en="(webinar: Google BigQuery)"></text>
+    <line x1="290" y1="222" x2="500" y2="222" stroke="#ffe082"/>
+    <text class="h t" x="290" y="250" data-vi="Code / SQL lo phần" data-en="Code / SQL handles the"></text>
+    <text class="h t" x="290" y="272" data-vi="cần chính xác:" data-en="precision work:"></text>
+    <text class="t" x="290" y="298" data-vi="• trích xuất, đếm, tổng hợp" data-en="• extract, count, aggregate"></text>
+    <text class="t" x="290" y="322" data-vi="• cắt nhiễu, giảm dung lượng" data-en="• strip noise, shrink volume"></text>
+    <text class="t" x="290" y="346" data-vi="• gắn nguồn để AI không" data-en="• keep source links so AI"></text>
+    <text class="t" x="290" y="368" data-vi="  &quot;bịa&quot; ra việc không có" data-en="  can't invent facts"></text>
+    <line x1="290" y1="388" x2="500" y2="388" stroke="#ffe082"/>
+    <text class="h t" x="290" y="414" data-vi="GenAI lo phần diễn giải:" data-en="GenAI handles interpretation:"></text>
+    <text class="t" x="290" y="440" data-vi="tóm tắt, suy luận, tìm ý nghĩa" data-en="summarise, infer, find meaning"></text>
+  </g>
+
+  <path class="arrow" d="M522,315 L556,315"/>
+
+  <!-- activity report -->
+  <g class="box">
+    <rect x="560" y="150" width="240" height="330" rx="12" fill="#e8f5e9" stroke="#66bb6a"/>
+    <text class="h t" x="580" y="182" data-vi="Activity Report" data-en="Activity Report"></text>
+    <text class="t" x="580" y="206" data-vi="(giống &quot;nhật ký công việc&quot;)" data-en="(like an auto daily report)"></text>
+    <line x1="580" y1="222" x2="780" y2="222" stroke="#a5d6a7"/>
+    <text class="t" x="580" y="250" data-vi="• Sinh tự động mỗi ngày" data-en="• Generated every day"></text>
+    <text class="t" x="580" y="274" data-vi="• Timeline tóm tắt theo" data-en="• Timeline summary per"></text>
+    <text class="t" x="580" y="296" data-vi="  từng công cụ" data-en="  tool (Meet, Jira, Slack…)"></text>
+    <text class="t" x="580" y="320" data-vi="• Định dạng NDJSON" data-en="• Stored as NDJSON"></text>
+    <text class="t" x="580" y="344" data-vi="• Hỏi AI được theo người," data-en="• Ask AI per person,"></text>
+    <text class="t" x="580" y="366" data-vi="  team hoặc dự án" data-en="  team or project"></text>
+    <rect x="580" y="392" width="200" height="66" rx="8" fill="#fff" stroke="#a5d6a7"/>
+    <text x="590" y="414" style="font-family:Consolas,monospace;font-size:12px;fill:#2e7d32">{"user":"…","date":"…",</text>
+    <text x="590" y="432" style="font-family:Consolas,monospace;font-size:12px;fill:#2e7d32"> "source":"jira",</text>
+    <text x="590" y="450" style="font-family:Consolas,monospace;font-size:12px;fill:#2e7d32"> "summary":"…"}</text>
+  </g>
+  <text class="lbl t" x="560" y="500" data-vi="(JSON minh họa)" data-en="(illustrative JSON)"></text>
+
+  <path class="arrow" d="M802,250 L826,250"/>
+
+  <!-- evaluation agent -->
+  <g class="box">
+    <rect x="830" y="150" width="340" height="420" rx="12" fill="#ede7f6" stroke="#9575cd"/>
+    <rect x="850" y="170" width="300" height="82" rx="10" fill="#fff" stroke="#b39ddb"/>
+    <text class="h t" x="866" y="196" data-vi="A. Fact Sheet" data-en="A. Fact Sheet"></text>
+    <text class="t" x="866" y="220" data-vi="Gom sự kiện trong kỳ, xếp theo thời" data-en="Facts of the period, ordered by time"></text>
+    <text class="t" x="866" y="240" data-vi="gian &amp; vai trò, kèm nguồn dữ liệu" data-en="&amp; role, each with its data source"></text>
+
+    <rect x="850" y="268" width="300" height="62" rx="10" fill="#fff3e0" stroke="#ffb74d"/>
+    <text class="h t" x="866" y="294" data-vi="B. Nhân viên bổ sung / phản biện" data-en="B. Employee adds / disputes"></text>
+    <text class="t" x="866" y="316" data-vi="thêm việc bị sót, sửa chỗ sai" data-en="adds missing work, fixes errors"></text>
+
+    <rect x="850" y="346" width="300" height="104" rx="10" fill="#fff" stroke="#b39ddb"/>
+    <text class="h t" x="866" y="372" data-vi="C. Evaluation Report" data-en="C. Evaluation Report"></text>
+    <text class="t" x="866" y="396" data-vi="Thành quả × Năng lực → bậc (grade)" data-en="Achievement × Ability → grade"></text>
+    <text class="t" x="866" y="418" data-vi="kèm công thức, lý do, vì sao không" data-en="with formula, reasons, why not one"></text>
+    <text class="t" x="866" y="438" data-vi="cao hơn / thấp hơn một bậc" data-en="grade higher / lower"></text>
+
+    <rect x="850" y="466" width="300" height="86" rx="10" fill="#fce4ec" stroke="#f06292"/>
+    <text class="h t" x="866" y="490" data-vi="Rubric 3 tầng (AI tự chấm)" data-en="3-tier rubric (AI self-grades)"></text>
+    <text class="t" x="866" y="512" data-vi="1) Thu đủ hoạt động chưa?" data-en="1) Enough activity collected?"></text>
+    <text class="t" x="866" y="530" data-vi="2) Hiểu đúng mức đóng góp chưa?" data-en="2) Contribution read correctly?"></text>
+    <text class="t" x="866" y="548" data-vi="3) Đánh giá thành quả/năng lực hợp lý?" data-en="3) Achievement/ability sound?"></text>
+  </g>
+  <path class="arrow" d="M1000,253 L1000,266"/>
+  <path class="arrow" d="M1000,331 L1000,344"/>
+  <!-- self loop -->
+  <path class="arrow orange" d="M1150,500 C1192,500 1192,400 1153,400"/>
+  <text class="lbl t" x="1196" y="440" data-vi="lặp 8–12 giờ" data-en="loops 8–12 h"></text>
+  <text class="lbl t" x="1196" y="458" data-vi="/ người" data-en="/ person"></text>
+
+  <!-- decision -->
+  <path class="arrow" d="M1172,300 L1213,300"/>
+  <g class="box">
+    <rect x="1213" y="240" width="160" height="130" rx="12" fill="#0d47a1" stroke="#0d47a1"/>
+    <text class="h t" x="1297" y="280" text-anchor="middle" style="fill:#fff" data-vi="CEO phê duyệt" data-en="CEO approves"></text>
+    <text class="t" x="1297" y="306" text-anchor="middle" style="fill:#e3f2fd" data-vi="người duy nhất" data-en="the only human"></text>
+    <text class="t" x="1297" y="326" text-anchor="middle" style="fill:#e3f2fd" data-vi="quyết định cuối" data-en="decision-maker"></text>
+    <text class="t" x="1297" y="350" text-anchor="middle" style="fill:#bbdefb;font-size:12px" data-vi="(tập trung ca đổi bậc)" data-en="(focus on grade changes)"></text>
+  </g>
+
+  <!-- human on the loop (top) -->
+  <g class="box">
+    <rect x="830" y="612" width="540" height="96" rx="12" fill="#fff" stroke="#ef6c00" stroke-dasharray="6 5"/>
+    <text class="h t" x="850" y="640" style="fill:#e65100" data-vi="Human-on-the-loop: người sửa rubric, không duyệt từng bản" data-en="Human-on-the-loop: people fix the rubric, not each draft"></text>
+    <text class="t" x="850" y="664" data-vi="Logic &amp; rubric trên GitHub: có version, có test, mọi nhân viên đều xem được →" data-en="Logic &amp; rubric live in GitHub: versioned, tested, visible to all staff →"></text>
+    <text class="t" x="850" y="686" data-vi="tách được thay đổi do sửa rubric hay do model mới." data-en="you can tell a rubric change from a model upgrade."></text>
+  </g>
+  <path class="arrow orange dash" d="M1000,610 L1000,572"/>
+
+  <!-- companion agent loop (bottom) -->
+  <g class="box">
+    <rect x="270" y="612" width="530" height="96" rx="12" fill="#e0f7fa" stroke="#26a69a"/>
+    <text class="h t" x="290" y="640" style="fill:#00695c" data-vi="Companion AI agent (伴走AI) – hỏi bất cứ lúc nào" data-en="Companion AI agent – ask any time"></text>
+    <text class="t" x="290" y="664" data-vi="Dùng cùng logic với AI đánh giá: &quot;tháng này mình làm gì?&quot;, &quot;muốn" data-en="Same logic as the evaluator: &quot;what did I do this month?&quot;, &quot;how do"></text>
+    <text class="t" x="290" y="686" data-vi="lên bậc thì nên cải thiện gì?&quot; → phản hồi theo ngày, không chờ cuối kỳ" data-en="I grow to the next grade?&quot; → daily feedback, not end-of-term"></text>
+  </g>
+  <path class="arrow green" d="M720,482 L720,608"/>
+  <text class="lbl t" x="730" y="560" data-vi="đọc report" data-en="reads reports"></text>
+  <path class="arrow green" d="M268,680 C150,680 135,600 135,540"/>
+  <text class="lbl t" x="40" y="729" data-vi="Nhân viên chỉnh hành vi → hoạt động mới lại được ghi nhận (vòng phản hồi hằng ngày)" data-en="Employee adjusts behaviour → new activity is recorded again (daily feedback loop)"></text>
+
+  <!-- footer legend -->
+  <rect x="40" y="740" width="1330" height="130" rx="12" fill="#f5f7fa" stroke="#e0e0e0"/>
+  <text class="h t" x="60" y="772" style="font-size:16px;font-weight:700;fill:#0d47a1" data-vi="5 bước chính thức (theo bài viết):" data-en="The 5 official steps (per the article):"></text>
+  <g>
+    <rect x="60" y="790" width="240" height="36" rx="18" fill="#1976d2"/><text class="step t" x="180" y="813" text-anchor="middle" data-vi="1. Dữ liệu hoạt động tích lũy" data-en="1. Activity data piles up"></text>
+    <rect x="320" y="790" width="200" height="36" rx="18" fill="#1976d2"/><text class="step t" x="420" y="813" text-anchor="middle" data-vi="2. AI viết bản nháp" data-en="2. AI drafts"></text>
+    <rect x="540" y="790" width="250" height="36" rx="18" fill="#ef6c00"/><text class="step t" x="665" y="813" text-anchor="middle" data-vi="3. Nhân viên bổ sung thông tin" data-en="3. Employee adds information"></text>
+    <rect x="810" y="790" width="200" height="36" rx="18" fill="#1976d2"/><text class="step t" x="910" y="813" text-anchor="middle" data-vi="4. AI kiểm chứng" data-en="4. AI verifies"></text>
+    <rect x="1030" y="790" width="200" height="36" rx="18" fill="#0d47a1"/><text class="step t" x="1130" y="813" text-anchor="middle" data-vi="5. CEO phê duyệt" data-en="5. CEO approves"></text>
+  </g>
+  <text class="lbl t" x="60" y="852" data-vi="Không có manager hay ban lãnh đạo xen giữa → con người chỉ xuất hiện ở 2 điểm (bước 3 và 5)." data-en="No managers or executives in between → humans appear at only 2 points (steps 3 and 5)."></text>
+</svg>
+</div>
+<script>
+  const lang = new URLSearchParams(location.search).get('lang') === 'en' ? 'en' : 'vi';
+  document.documentElement.lang = lang;
+  document.querySelectorAll('.t').forEach(el => { const v = el.getAttribute('data-' + lang); if (v !== null) el.textContent = v; });
+</script>
+</body>
+</html>

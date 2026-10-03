@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><title>TIA pipeline - before vs after</title>
+<style>
+body{margin:0;background:#fafafa;font-family:'Segoe UI',Roboto,Arial,sans-serif}
+#canvas{width:1400px;padding:24px;box-sizing:border-box}
+</style></head><body>
+<div id="canvas">
+<svg width="1352" height="860" viewBox="0 0 1352 860" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Roboto, Arial, sans-serif">
+  <defs>
+    <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#455a64"/></marker>
+    <marker id="arR" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c62828"/></marker>
+    <marker id="arG" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d32"/></marker>
+  </defs>
+  <rect width="1352" height="860" fill="#ffffff" rx="16" stroke="#e0e0e0"/>
+  <text x="676" y="44" text-anchor="middle" font-size="26" font-weight="700" fill="#0d47a1">Test Impact Analysis service — how the pipeline changed</text>
+  <text x="676" y="72" text-anchor="middle" font-size="15" fill="#616161">Redrawn from the description in Anthropic's blog (Sachin Malhotra, Sep 2026). Author's own diagram, simplified.</text>
+
+  <!-- ===== TOP: v0 ===== -->
+  <rect x="24" y="96" width="1304" height="330" rx="12" fill="#fff8e1" stroke="#f57f17"/>
+  <text x="44" y="128" font-size="20" font-weight="700" fill="#e65100">v0 — single process (singleton) … then Patch 1 / 2 / 3</text>
+
+  <!-- CI jobs -->
+  <rect x="50" y="160" width="190" height="110" rx="10" fill="#e3f2fd" stroke="#1976d2"/>
+  <text x="145" y="195" text-anchor="middle" font-size="17" font-weight="700" fill="#0d47a1">CI jobs</text>
+  <text x="145" y="220" text-anchor="middle" font-size="14" fill="#333">many per second</text>
+  <text x="145" y="242" text-anchor="middle" font-size="14" fill="#333">(x25 in 6 months)</text>
+  <line x1="240" y1="215" x2="318" y2="215" stroke="#455a64" stroke-width="2.5" marker-end="url(#ar)"/>
+  <text x="279" y="205" text-anchor="middle" font-size="12" fill="#616161">results</text>
+
+  <!-- singleton -->
+  <rect x="322" y="150" width="560" height="200" rx="12" fill="#ffffff" stroke="#c62828" stroke-width="2.5" stroke-dasharray="8 5"/>
+  <text x="602" y="176" text-anchor="middle" font-size="16" font-weight="700" fill="#c62828">ONE process — holds all state in memory</text>
+  <rect x="346" y="192" width="240" height="90" rx="8" fill="#ffebee" stroke="#c62828"/>
+  <text x="466" y="222" text-anchor="middle" font-size="16" font-weight="700" fill="#b71c1c">Listener</text>
+  <text x="466" y="245" text-anchor="middle" font-size="13" fill="#333">single writer, keeps a</text>
+  <text x="466" y="263" text-anchor="middle" font-size="13" fill="#333">running history per test</text>
+  <rect x="618" y="192" width="240" height="90" rx="8" fill="#ffebee" stroke="#c62828"/>
+  <text x="738" y="222" text-anchor="middle" font-size="16" font-weight="700" fill="#b71c1c">Selector</text>
+  <text x="738" y="245" text-anchor="middle" font-size="13" fill="#333">reads history → decides</text>
+  <text x="738" y="263" text-anchor="middle" font-size="13" fill="#333">which tests run per PR</text>
+  <line x1="586" y1="237" x2="614" y2="237" stroke="#455a64" stroke-width="2" marker-end="url(#ar)"/>
+  <text x="602" y="312" text-anchor="middle" font-size="13" fill="#c62828">lag: 20 min ≈ tens of thousands of test updates not applied</text>
+  <text x="602" y="334" text-anchor="middle" font-size="13" fill="#c62828">memory limit hit by mid-afternoon (March)</text>
+
+  <line x1="882" y1="237" x2="958" y2="237" stroke="#455a64" stroke-width="2.5" marker-end="url(#ar)"/>
+  <rect x="962" y="160" width="160" height="110" rx="10" fill="#e3f2fd" stroke="#1976d2"/>
+  <text x="1042" y="200" text-anchor="middle" font-size="16" font-weight="700" fill="#0d47a1">PR test set</text>
+  <text x="1042" y="224" text-anchor="middle" font-size="13" fill="#333">built on</text>
+  <text x="1042" y="244" text-anchor="middle" font-size="13" fill="#c62828" font-weight="700">STALE data</text>
+
+  <!-- patches -->
+  <rect x="1140" y="150" width="172" height="200" rx="10" fill="#ffffff" stroke="#f57f17"/>
+  <text x="1226" y="176" text-anchor="middle" font-size="15" font-weight="700" fill="#e65100">Quick patches</text>
+  <text x="1154" y="206" font-size="13" fill="#333">1. 2x cores</text>
+  <text x="1290" y="206" text-anchor="end" font-size="13" font-weight="700" fill="#2e7d32">70 d</text>
+  <text x="1154" y="236" font-size="13" fill="#333">2. shard per</text>
+  <text x="1154" y="254" font-size="13" fill="#333">    package</text>
+  <text x="1290" y="236" text-anchor="end" font-size="13" font-weight="700" fill="#f57f17">29 d</text>
+  <text x="1154" y="284" font-size="13" fill="#333">3. daily restart</text>
+  <text x="1290" y="284" text-anchor="end" font-size="13" font-weight="700" fill="#c62828">&lt;1 d</text>
+  <text x="1226" y="326" text-anchor="middle" font-size="12" fill="#616161">each fix buys less time</text>
+
+  <text x="50" y="402" font-size="14" fill="#333">Symptoms on PRs: a bad merge breaks a test for everyone · flaky dependency blocks merges · new/fixed tests don't run until the listener catches up</text>
+
+  <!-- arrow down -->
+  <line x1="676" y1="430" x2="676" y2="470" stroke="#2e7d32" stroke-width="3" marker-end="url(#arG)"/>
+  <text x="700" y="456" font-size="15" font-weight="700" fill="#2e7d32">Redesign: move state OUT of the process (3 weeks, 1 engineer + Claude)</text>
+
+  <!-- ===== BOTTOM: redesign ===== -->
+  <rect x="24" y="478" width="1304" height="360" rx="12" fill="#e8f5e9" stroke="#2e7d32"/>
+  <text x="44" y="510" font-size="20" font-weight="700" fill="#1b5e20">Redesign — stateless, horizontally scalable</text>
+
+  <rect x="50" y="560" width="170" height="110" rx="10" fill="#e3f2fd" stroke="#1976d2"/>
+  <text x="135" y="598" text-anchor="middle" font-size="17" font-weight="700" fill="#0d47a1">CI jobs</text>
+  <text x="135" y="622" text-anchor="middle" font-size="13" fill="#333">job-result events</text>
+
+  <!-- workers -->
+  <g>
+    <rect x="270" y="536" width="200" height="46" rx="8" fill="#fff" stroke="#2e7d32"/>
+    <text x="370" y="565" text-anchor="middle" font-size="14" font-weight="700" fill="#1b5e20">Listener worker 1</text>
+    <rect x="270" y="592" width="200" height="46" rx="8" fill="#fff" stroke="#2e7d32"/>
+    <text x="370" y="621" text-anchor="middle" font-size="14" font-weight="700" fill="#1b5e20">Listener worker 2</text>
+    <rect x="270" y="648" width="200" height="46" rx="8" fill="#fff" stroke="#2e7d32"/>
+    <text x="370" y="677" text-anchor="middle" font-size="14" font-weight="700" fill="#1b5e20">Listener worker N</text>
+    <text x="370" y="718" text-anchor="middle" font-size="13" fill="#333">any worker takes any result,</text>
+    <text x="370" y="736" text-anchor="middle" font-size="13" fill="#333">appends &amp; moves on (no memory)</text>
+  </g>
+  <line x1="220" y1="615" x2="266" y2="559" stroke="#455a64" stroke-width="2" marker-end="url(#ar)"/>
+  <line x1="220" y1="615" x2="266" y2="615" stroke="#455a64" stroke-width="2" marker-end="url(#ar)"/>
+  <line x1="220" y1="615" x2="266" y2="671" stroke="#455a64" stroke-width="2" marker-end="url(#ar)"/>
+
+  <!-- store -->
+  <rect x="530" y="540" width="330" height="200" rx="12" fill="#ffffff" stroke="#0d47a1" stroke-width="2.5"/>
+  <text x="695" y="570" text-anchor="middle" font-size="17" font-weight="700" fill="#0d47a1">In-memory data store</text>
+  <rect x="552" y="586" width="286" height="54" rx="6" fill="#e3f2fd" stroke="#1976d2"/>
+  <text x="695" y="610" text-anchor="middle" font-size="14" font-weight="700" fill="#0d47a1">Journal (append-only)</text>
+  <text x="695" y="629" text-anchor="middle" font-size="12" fill="#333">raw results, in arrival order</text>
+  <rect x="552" y="666" width="286" height="54" rx="6" fill="#e3f2fd" stroke="#1976d2"/>
+  <text x="695" y="690" text-anchor="middle" font-size="14" font-weight="700" fill="#0d47a1">Per-test history</text>
+  <text x="695" y="709" text-anchor="middle" font-size="12" fill="#333">pass / fail / flaky over time</text>
+  <line x1="470" y1="559" x2="548" y2="606" stroke="#455a64" stroke-width="2" marker-end="url(#ar)"/>
+  <line x1="470" y1="615" x2="548" y2="613" stroke="#455a64" stroke-width="2" marker-end="url(#ar)"/>
+  <line x1="470" y1="671" x2="548" y2="620" stroke="#455a64" stroke-width="2" marker-end="url(#ar)"/>
+
+  <!-- rollup consumer -->
+  <rect x="900" y="560" width="190" height="80" rx="10" fill="#fff" stroke="#6a1b9a"/>
+  <text x="995" y="592" text-anchor="middle" font-size="15" font-weight="700" fill="#6a1b9a">Rollup consumer</text>
+  <text x="995" y="614" text-anchor="middle" font-size="12" fill="#333">small separate process,</text>
+  <text x="995" y="630" text-anchor="middle" font-size="12" fill="#333">every few seconds</text>
+  <path d="M838,605 C870,590 870,590 896,595" fill="none" stroke="#6a1b9a" stroke-width="2" marker-end="url(#ar)"/>
+  <text x="880" y="578" text-anchor="middle" font-size="12" fill="#6a1b9a">read</text>
+  <path d="M995,640 C995,690 900,700 842,693" fill="none" stroke="#6a1b9a" stroke-width="2" marker-end="url(#ar)"/>
+  <text x="968" y="688" font-size="11" fill="#6a1b9a">write</text>
+
+  <!-- selector -->
+  <rect x="1120" y="650" width="190" height="90" rx="10" fill="#fff" stroke="#2e7d32" stroke-width="2"/>
+  <text x="1215" y="682" text-anchor="middle" font-size="16" font-weight="700" fill="#1b5e20">Selector</text>
+  <text x="1215" y="704" text-anchor="middle" font-size="12" fill="#333">fast lookup of history</text>
+  <text x="1215" y="722" text-anchor="middle" font-size="12" fill="#333">+ package relevance</text>
+  <line x1="842" y1="700" x2="1116" y2="700" stroke="#2e7d32" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#arG)"/>
+  <text x="980" y="756" text-anchor="middle" font-size="12" fill="#2e7d32">lookup</text>
+  <rect x="1120" y="540" width="190" height="80" rx="10" fill="#e3f2fd" stroke="#1976d2"/>
+  <text x="1215" y="572" text-anchor="middle" font-size="15" font-weight="700" fill="#0d47a1">PR test set</text>
+  <text x="1215" y="596" text-anchor="middle" font-size="12" fill="#2e7d32" font-weight="700">fresh data, backlog flat</text>
+  <line x1="1215" y1="650" x2="1215" y2="624" stroke="#2e7d32" stroke-width="2.5" marker-end="url(#arG)"/>
+
+  <text x="50" y="800" font-size="14" fill="#333"><tspan font-weight="700">Trade-off:</tspan> more expensive to run, but easy to scale out and to memory-profile.  <tspan font-weight="700">Health signal:</tspan> CI jobs in = CI jobs out (queued events ≈ 0).</text>
+</svg>
+</div>
+</body></html>

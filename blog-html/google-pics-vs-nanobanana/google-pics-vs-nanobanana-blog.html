@@ -1,0 +1,533 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Dùng thử Google Pics và so sánh với NanoBanana - Hướng dẫn chi tiết</title>
+    <style>
+      *{box-sizing:border-box}
+      body{ margin:0; font-family: 'Segoe UI', Arial, sans-serif; background: #fff; color: #1a1a1a; line-height: 1.7; }
+      a{ color: #1a73e8; text-decoration: none; }
+      a:hover{ text-decoration: underline; }
+      .wrap{ max-width: 980px; margin:0 auto; padding: 24px; }
+      h1{ margin:0 0 10px 0; font-size: 30px; color: #1a73e8; }
+      h2{ margin: 32px 0 14px; font-size: 24px; border-bottom: 3px solid #1a73e8; padding-bottom: 8px; color: #202124; }
+      h3{ margin: 22px 0 10px; font-size: 19px; color: #333; }
+      h4{ margin: 16px 0 8px; font-size: 16px; color: #444; }
+      ul,ol{ margin: 8px 0; padding-left: 22px; }
+      li{ margin-bottom: 4px; }
+      p{ margin: 12px 0; }
+      code{ background: #e8f0fe; border: 1px solid #d2e3fc; padding: 2px 6px; font-size: 13px; font-family: 'Consolas', monospace; border-radius: 3px; color: #1a73e8; }
+      pre{ white-space: pre-wrap; word-wrap: break-word; border: 1px solid #dadce0; background: #f8f9fa; padding: 14px; overflow:auto; font-size: 13px; font-family: 'Consolas', monospace; margin: 12px 0; border-radius: 8px; }
+      .hero{ border: 2px solid #1a73e8; padding: 24px 28px; margin-bottom: 24px; background: linear-gradient(135deg, #e8f0fe 0%, #f8f9fa 100%); border-radius: 12px; }
+      .hero .subtitle{ color: #5f6368; font-size: 15px; margin-top: 8px; }
+      .tip{ border-left: 4px solid #34a853; padding: 12px 16px; background: #e6f4ea; margin: 14px 0; border-radius: 0 8px 8px 0; }
+      .warning{ border-left: 4px solid #ea4335; padding: 12px 16px; background: #fce8e6; margin: 14px 0; border-radius: 0 8px 8px 0; }
+      .info{ border-left: 4px solid #4285f4; padding: 12px 16px; background: #e8f0fe; margin: 14px 0; border-radius: 0 8px 8px 0; }
+      .highlight{ border-left: 4px solid #fbbc04; padding: 12px 16px; background: #fef7e0; margin: 14px 0; border-radius: 0 8px 8px 0; }
+      .table-wrap{ overflow-x: auto; }
+      table{ border-collapse: collapse; width: 100%; margin: 16px 0; border-radius: 8px; overflow: hidden; }
+      th,td{ border: 1px solid #dadce0; padding: 10px 14px; text-align: left; vertical-align: top; }
+      th{ background: #1a73e8; color: #fff; font-weight: 600; }
+      tr:nth-child(even){ background: #f8f9fa; }
+      .flow-diagram{ background: #f8f9fa; border: 2px solid #dadce0; border-radius: 12px; padding: 20px; margin: 16px 0; text-align: center; }
+      .flow-step{ display: inline-block; background: #fff; border: 2px solid #1a73e8; border-radius: 8px; padding: 10px 18px; margin: 6px; font-weight: 600; color: #1a73e8; }
+      .flow-step.starter{ background: #34a853; border-color: #34a853; color: #fff; }
+      .flow-step.ai{ background: #fbbc04; border-color: #fbbc04; color: #333; }
+      .flow-step.action{ background: #4285f4; border-color: #4285f4; color: #fff; }
+      .flow-step.condition{ background: #ea4335; border-color: #ea4335; color: #fff; }
+      .flow-arrow{ display: inline-block; font-size: 24px; color: #5f6368; margin: 0 4px; vertical-align: middle; }
+      .toc{ background: #f8f9fa; border: 1px solid #dadce0; border-radius: 8px; padding: 16px 24px; margin: 20px 0; }
+      .toc ul{ list-style: none; padding-left: 0; }
+      .toc li{ padding: 4px 0; }
+      .toc li::before{ content: "📌 "; }
+      .badge{ display: inline-block; background: #34a853; color: #fff; padding: 2px 10px; border-radius: 12px; font-size: 12px; font-weight: 600; margin-left: 8px; }
+      .badge.alpha{ background: #ea4335; }
+      .badge.new{ background: #1a73e8; }
+      .badge.pending{ background: #f29900; }
+      .footer{ margin-top: 36px; font-size: 13px; color: #5f6368; border-top: 2px solid #dadce0; padding-top: 20px; }
+      .section-num{ color: #1a73e8; font-weight: 700; }
+      .demo-fig{ margin: 18px 0; text-align: center; }
+      .demo-fig img{ max-width: 100%; height: auto; border: 2px solid #dadce0; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+      .demo-fig figcaption{ font-size: 13px; color: #5f6368; margin-top: 6px; font-style: italic; }
+      /* Anh cho nguoi dung tu chup: neu file chua co -> hien khung placeholder */
+      .img-placeholder{ display:none; background: #fef7e0; border: 2px dashed #f29900; border-radius: 10px; padding: 30px 20px; text-align: center; color: #5f6368; font-size: 14px; }
+      .img-placeholder .icon{ font-size: 28px; }
+      .img-placeholder code{ color:#b06000; background:#fff; border-color:#f6d28b; }
+      .demo-fig.pending.missing img{ display:none; }
+      .demo-fig.pending.missing .img-placeholder{ display:block; }
+      .step-box{ border: 1px solid #dadce0; border-radius: 10px; padding: 4px 18px 10px; margin: 18px 0; }
+      .step-box h3{ margin-top: 14px; }
+      .video-box{ background:#202124; border-radius: 12px; padding: 12px; margin: 16px 0; }
+      .video-box video{ width: 100%; border-radius: 8px; display:block; }
+      .yes{ color:#188038; font-weight:600; }
+      .no{ color:#c5221f; font-weight:600; }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+
+      <!-- HERO -->
+      <div class="hero">
+        <h1>Dùng thử Google Pics &amp; so sánh với NanoBanana (Gemini Image)</h1>
+        <p class="subtitle">Hướng dẫn chi tiết từng bước &mdash; Google Pics làm được gì, khác gì so với dùng NanoBanana trong Gemini, demo tạo/sửa poster Scuti AI và cách áp dụng vào công việc hằng ngày</p>
+        <p style="margin:4px 0 0;font-size:13px;color:#80868b;">
+          Ngày viết: 03/10/2026 &bull; Nguồn tham khảo:
+          <a href="https://www.youtube.com/watch?v=S18L1NFTda8" target="_blank">Video chính thức</a> &bull;
+          <a href="https://workspaceupdates.googleblog.com/2026/09/google-pics-brings-pro-level-ai-image-creation-and-editing-to-Google-Workspace.html" target="_blank">Workspace Updates Blog</a> &bull;
+          <a href="https://workspace.google.com/products/pics/" target="_blank">Trang sản phẩm</a>
+        </p>
+      </div>
+
+      <!-- TOC -->
+      <div class="toc">
+        <h3 style="margin-top:0;">Mục lục</h3>
+        <ul>
+          <li><a href="#overview">Google Pics là gì?</a></li>
+          <li><a href="#features">Google Pics làm được gì &mdash; danh sách tính năng</a></li>
+          <li><a href="#vs">Google Pics vs NanoBanana: khác nhau ở đâu?</a></li>
+          <li><a href="#demo-a">Demo phần A: Khảo sát nguồn chính thức (ảnh thật)</a></li>
+          <li><a href="#demo-b">Demo phần B: Tự tạo &amp; sửa banner Scuti AI trong Pics (thao tác thật)</a></li>
+          <li><a href="#video">Video quá trình thực hiện</a></li>
+          <li><a href="#opinion">Nhận xét cá nhân</a></li>
+          <li><a href="#apply">Áp dụng Google Pics vào công việc hằng ngày</a></li>
+          <li><a href="#tips">Mẹo viết prompt cho Pics</a></li>
+          <li><a href="#conclusion">Kết luận</a></li>
+        </ul>
+      </div>
+
+      <div class="highlight">
+        <b>Phạm vi thử nghiệm:</b> toàn bộ demo dưới đây là <b>thao tác thật</b> bằng Playwright trên Chrome.
+        <ul>
+          <li><b>Hình 1&ndash;11</b>: khảo sát nguồn chính thức (video YouTube, Workspace Updates, trang sản phẩm, Help Center) &mdash; phiên chưa đăng nhập.</li>
+          <li><b>Hình 12&ndash;19</b>: dùng thật Google Pics và Gemini app với tài khoản Google Workspace của Scuti. Đăng nhập được làm <b>bằng tay một lần</b> trong profile Chrome riêng
+            (script không đọc/không lưu mật khẩu), sau đó <code>record_pics_live.py</code> tự thao tác, chụp ảnh và quay video.</li>
+        </ul>
+      </div>
+
+      <!-- 1. OVERVIEW -->
+      <h2 id="overview"><span class="section-num">1.</span> Google Pics là gì?</h2>
+
+      <p>
+        <b>Google Pics</b> là công cụ <b>tạo và chỉnh sửa ảnh bằng AI</b> mới của Google Workspace, đã
+        <b>GA (phát hành chính thức) từ 01/09/2026</b>. Theo bài
+        <a href="https://workspaceupdates.googleblog.com/2026/09/google-pics-brings-pro-level-ai-image-creation-and-editing-to-Google-Workspace.html" target="_blank">Workspace Updates</a>,
+        Pics đưa <i>&ldquo;advanced AI image generation and precise, object-based image editing directly into your Workspace creative workflow&rdquo;</i>.
+      </p>
+      <p>
+        Điểm quan trọng nhất để hiểu Pics: mô tả trên video chính thức ghi rõ Pics được
+        <b>&ldquo;Built on our Nano Banana image generation and editing model&rdquo;</b>, và Help Center viết
+        <i>&ldquo;Google Pics is an image creation and editing tool powered by Gemini (Nano Banana)&rdquo;</i>.
+        Nói cách khác: <b>NanoBanana là &ldquo;động cơ&rdquo; (model), còn Google Pics là &ldquo;chiếc xe&rdquo; (sản phẩm/canvas)</b> được Google
+        thiết kế cho công việc thiết kế hình ảnh trong Workspace.
+      </p>
+
+      <div class="info">
+        <b>Thông tin nhanh (theo nguồn chính thức):</b>
+        <ul>
+          <li><b>Truy cập:</b> <code>pics.new</code> (chuyển tới <code>docs.google.com/images/create</code>), hoặc mở từ Google Slides, Docs, Drive.</li>
+          <li><b>Thiết bị:</b> hiện chỉ có trên <b>Desktop</b> (Chrome, Firefox, Edge &mdash; 2 phiên bản mới nhất).</li>
+          <li><b>Gói hỗ trợ:</b> Business Standard/Plus, Enterprise Standard/Plus, AI Expanded Access, Google AI Pro for Education, Google AI Pro, Google AI Ultra.</li>
+          <li><b>Admin:</b> bật mặc định, có thể tắt theo domain/OU/group.</li>
+          <li><b>Ngôn ngữ prompt:</b> hỗ trợ cả <b>tiếng Việt</b> (danh sách 29 ngôn ngữ trong Help Center).</li>
+          <li><b>Hạn mức:</b> &ldquo;At least through February 28, 2027, users will have higher access&rdquo; &mdash; sau đó có thể bị giới hạn.</li>
+        </ul>
+      </div>
+
+      <!-- 2. FEATURES -->
+      <h2 id="features"><span class="section-num">2.</span> Google Pics làm được gì &mdash; danh sách tính năng</h2>
+
+      <div class="flow-diagram">
+        <span class="flow-step starter">Prompt / Upload ảnh</span>
+        <span class="flow-arrow">&rarr;</span>
+        <span class="flow-step ai">Nhiều phiên bản (variations)</span>
+        <span class="flow-arrow">&rarr;</span>
+        <span class="flow-step ai">Sửa theo phần tử / vùng / chữ</span>
+        <span class="flow-arrow">&rarr;</span>
+        <span class="flow-step action">Crop &bull; Upscale 2K/4K</span>
+        <span class="flow-arrow">&rarr;</span>
+        <span class="flow-step action">Share &bull; Slides/Docs</span>
+      </div>
+
+      <div class="table-wrap">
+      <table>
+        <thead><tr><th>Nhóm</th><th>Tính năng</th><th>Chi tiết (theo Help Center / blog)</th></tr></thead>
+        <tbody>
+          <tr><td rowspan="3"><b>Tạo ảnh</b></td><td>Text-to-image</td><td>Viết prompt ở thanh dưới cùng &rarr; Pics tạo <b>nhiều phiên bản</b>, chọn ở panel trái; bấm <b>Retry</b> để có thêm.</td></tr>
+          <tr><td>Ảnh tham chiếu</td><td>Thêm ảnh (kéo thả, copy-paste, Add images) để tái dùng phần tử/màu sắc, VD &ldquo;Use the blue in this image as the background&rdquo;.</td></tr>
+          <tr><td>Style reference</td><td>Nút <b>Style</b>: lấy phong cách từ ảnh trên máy, Drive hoặc Google Photos (hiện chỉ tiếng Anh).</td></tr>
+          <tr><td rowspan="4"><b>Sửa ảnh</b></td><td>Sửa toàn ảnh bằng prompt</td><td>VD: &ldquo;Desaturate the photo slightly and add cooler tones to shadows&rdquo;.</td></tr>
+          <tr><td>Sửa theo phần tử (object-based)</td><td>Rê chuột &rarr; click phần tử (VD &ldquo;Floor&rdquo;) &rarr; nhập prompt &rarr; <b>Add</b>; gom <b>tối đa 5 thay đổi</b> rồi bấm <b>Apply edits</b> một lần. Có thể kéo chọn một vùng.</td></tr>
+          <tr><td>Sửa / dịch chữ trong ảnh</td><td>Pics tự nhận diện chữ; click vào chữ để sửa nội dung hoặc style (&ldquo;make the text bold&rdquo;), dịch cả poster bằng một prompt.</td></tr>
+          <tr><td>Crop, xoay, tỉ lệ</td><td>Crop / rotate / aspect ratio 16:9, 1:1, 4:3&hellip; cho web, social, in ấn.</td></tr>
+          <tr><td rowspan="3"><b>Xuất &amp; cộng tác</b></td><td>Download</td><td>JPEG ở 3 cỡ: <b>Original, 2K, 4K</b> (độ phân giải cao tốn hạn mức nhanh hơn). In trực tiếp.</td></tr>
+          <tr><td>Version history</td><td>Lịch sử phiên bản bền vững, dễ quay lại.</td></tr>
+          <tr><td>Share như file Drive</td><td>Chia quyền Viewer/Editor; người được share có thể sửa và lưu.</td></tr>
+          <tr><td><b>Tích hợp</b></td><td>Slides, Docs, Drive</td><td>Trong Slides: click ảnh &rarr; <b>Edit image</b> &rarr; Pics mở ngay trong Slides &rarr; <b>Replace image</b>. Có thể thu nhỏ Pics và tiếp tục làm slide trong lúc chờ.</td></tr>
+        </tbody>
+      </table>
+      </div>
+
+      <!-- 3. VS -->
+      <h2 id="vs"><span class="section-num">3.</span> Google Pics vs NanoBanana: khác nhau ở đâu?</h2>
+
+      <p>
+        <b>NanoBanana</b> là tên gọi của dòng model ảnh của Gemini: bản đầu là <b>Gemini 2.5 Flash Image</b> (08/2025),
+        sau đó <b>Nano Banana Pro</b> (Gemini 3 Pro Image) và <b>Nano Banana 2</b> (Gemini 3.1 Flash Image).
+        Người dùng thường chạm tới NanoBanana qua <b>Gemini app</b> (chat &rarr; &ldquo;Create image&rdquo;), qua
+        <b>Gemini API / AI Studio / Vertex AI</b>, hoặc qua tính năng tạo ảnh trong Slides/Docs.
+        Google Pics <b>dùng chính NanoBanana bên dưới</b> nhưng thêm một lớp giao diện canvas chuyên cho thiết kế.
+      </p>
+
+      <div class="table-wrap">
+      <table>
+        <thead><tr><th>Tiêu chí</th><th>Google Pics</th><th>NanoBanana (qua Gemini app / API)</th></tr></thead>
+        <tbody>
+          <tr><td><b>Bản chất</b></td><td>Sản phẩm/ứng dụng trong Workspace (như Docs, Slides)</td><td>Model AI tạo &amp; sửa ảnh</td></tr>
+          <tr><td><b>Giao diện</b></td><td>Canvas + prompt bar + panel phiên bản + thanh công cụ (Crop, Zoom, Undo, Download, Share)</td><td>Khung chat (Gemini app) hoặc request API</td></tr>
+          <tr><td><b>Cách sửa ảnh</b></td><td>Click chọn <b>từng phần tử</b>, kéo chọn vùng, click vào chữ để sửa; gom tối đa 5 edit rồi Apply</td><td>Chủ yếu mô tả bằng lời trong hội thoại (&ldquo;đổi cái ghế thành màu xanh&rdquo;) &mdash; model tự đoán vùng cần sửa</td></tr>
+          <tr><td><b>Nhiều phương án</b></td><td>Mặc định sinh nhiều variations, chọn ở panel trái, Retry để thêm</td><td>Thường 1 ảnh mỗi lượt; muốn thêm thì hỏi lại</td></tr>
+          <tr><td><b>Chữ trong ảnh</b></td><td>Nhận diện text thành phần tử sửa được, dịch giữ font/bố cục</td><td>Render chữ tốt, nhưng sửa chữ bằng prompt mô tả</td></tr>
+          <tr><td><b>Hậu kỳ</b></td><td>Crop/rotate/aspect ratio, tải <b>Original / 2K / 4K</b></td><td>Tỉ lệ/độ phân giải chỉ định qua prompt hoặc tham số API</td></tr>
+          <tr><td><b>Lưu trữ &amp; version</b></td><td>Lưu như file Workspace, version history, share Viewer/Editor</td><td>Ảnh nằm trong lịch sử chat; tự tải về để quản lý</td></tr>
+          <tr><td><b>Tích hợp</b></td><td>Mở trực tiếp trong Slides/Docs/Drive, &ldquo;Replace image&rdquo;</td><td>API tích hợp vào app riêng, pipeline tự động, batch</td></tr>
+          <tr><td><b>Quản trị</b></td><td>Admin bật/tắt theo OU/group, dữ liệu theo chính sách Workspace</td><td>Gemini app theo tài khoản; API theo project Cloud/AI Studio</td></tr>
+          <tr><td><b>Chi phí / truy cập</b></td><td>Đi kèm gói Workspace Business Standard+ / AI Pro, Ultra; có hạn mức</td><td>Gemini app có hạn mức theo gói; API tính phí theo ảnh</td></tr>
+          <tr><td><b>Phù hợp</b></td><td>Nhân viên văn phòng, marketing, PM cần ảnh &ldquo;chỉnh đúng chỗ&rdquo; nhanh</td><td>Lập trình viên, tự động hóa, tạo ảnh hàng loạt, thử ý tưởng nhanh</td></tr>
+        </tbody>
+      </table>
+      </div>
+
+      <div class="highlight">
+        <b>Tóm gọn 1 câu:</b> Pics giải quyết bài toán <i>&ldquo;prompt-and-pray&rdquo;</i> (gõ prompt rồi cầu may) &mdash;
+        thay vì viết lại prompt cả chục lần, bạn <b>chỉ vào đúng chỗ cần sửa</b>. NanoBanana vẫn là bộ não; Pics là bàn làm việc.
+      </div>
+      <div class="info">
+        <b>Về phiên bản model:</b> tài liệu chính thức chỉ ghi &ldquo;Nano Banana&rdquo;; một số trang tin
+        (VD Camera Jabber) cho rằng Pics chạy Nano Banana 2. Google không công bố số phiên bản trong Help Center, nên
+        mình không khẳng định. Lưu ý thêm: trong Slides/Docs, hạn mức Pics &ldquo;follow existing usage limits for Slides and Docs for Nano Banana&rdquo;.
+      </div>
+
+      <!-- 4. DEMO A -->
+      <h2 id="demo-a"><span class="section-num">4.</span> Demo phần A: Khảo sát nguồn chính thức (ảnh thật)</h2>
+      <p>
+        Toàn bộ phần A được chạy bằng <code>trial_playwright.py</code> (Python Playwright, Chrome thật,
+        <code>channel="chrome"</code>, profile riêng, không đăng nhập) và được quay lại thành video ở Mục 6.
+      </p>
+
+      <div class="step-box">
+        <h3>Bước 1: Xem video chính thức &ldquo;Say hello to Google Pics&rdquo;</h3>
+        <p>Video 1:38 của kênh <b>Google Workspace</b> (đăng 01/09/2026). Phần mô tả khẳng định Pics &ldquo;Built on our Nano Banana image generation and editing model&rdquo;.</p>
+        <figure class="demo-fig">
+          <img src="images/step-01-youtube-video.png" alt="Video YouTube Say hello to Google Pics">
+          <figcaption>Hình 1: Trang video chính thức &mdash; tiêu đề, kênh và mô tả nhắc tới Nano Banana</figcaption>
+        </figure>
+      </div>
+
+      <div class="step-box">
+        <h3>Bước 2: Tạo ảnh &rarr; Pics trả về nhiều phiên bản</h3>
+        <p>Ở giây ~0:18, sau khi gõ prompt poster &ldquo;Oakwood Street Fair&rdquo;, Pics hiện <b>4 phiên bản</b> ở cột trái để chọn. Đây là điểm khác lớn so với chat 1 ảnh/lượt.</p>
+        <figure class="demo-fig">
+          <img src="images/step-02-yt-generate-variations.png" alt="Pics tạo nhiều phiên bản">
+          <figcaption>Hình 2: Giao diện Pics trong video &mdash; panel variations bên trái, prompt bar phía dưới (&ldquo;Edit image with Gemini or press &uarr; to use past prompts&rdquo;)</figcaption>
+        </figure>
+      </div>
+
+      <div class="step-box">
+        <h3>Bước 3: Sửa đúng một phần tử</h3>
+        <p>Click vào một ô hình trang trí &rarr; popup nhỏ &rarr; gõ <code>An illustration of a taco</code> &rarr; <b>Add</b>. Các phần còn lại của poster được giữ nguyên.</p>
+        <figure class="demo-fig">
+          <img src="images/step-03-yt-add-element.png" alt="Sửa theo phần tử">
+          <figcaption>Hình 3: Object-based editing &mdash; chỉ thay một phần tử bằng prompt ngắn</figcaption>
+        </figure>
+      </div>
+
+      <div class="step-box">
+        <h3>Bước 4: Sửa chữ ngay trong ảnh mockup</h3>
+        <p>Pics nhận diện dòng chữ &ldquo;THANKS FOR BEING A VALUED CUSTOMER&rdquo; trên tấm thiệp trong hộp quà, mở tab <b>Edit text</b> để gõ lại nội dung rồi <b>Save</b>.</p>
+        <figure class="demo-fig">
+          <img src="images/step-04-yt-edit-text.png" alt="Sửa chữ trong ảnh">
+          <figcaption>Hình 4: Edit text / Edit image &mdash; sửa chữ trên ảnh sản phẩm mà không cần Photoshop</figcaption>
+        </figure>
+      </div>
+
+      <div class="step-box">
+        <h3>Bước 5: Bản địa hóa bằng một prompt</h3>
+        <p>Prompt &ldquo;Translate the flyer into &hellip;&rdquo; biến poster thành bản tiếng Tây Ban Nha &mdash; bố cục, màu và font giữ nguyên.</p>
+        <figure class="demo-fig">
+          <img src="images/step-05-yt-translate-result.png" alt="Poster sau khi dịch">
+          <figcaption>Hình 5: &ldquo;Localize with one click&rdquo; &mdash; Feria Callejera de Oakwood</figcaption>
+        </figure>
+      </div>
+
+      <div class="step-box">
+        <h3>Bước 6: Sửa ảnh ngay trong Google Slides</h3>
+        <p>Từ một slide có ảnh máy cắt cỏ, mở <b>Edit with Google Pics</b>, gõ <i>&ldquo;Stage this lawn mower in a modern backyard with warm lighting&hellip;&rdquo;</i>, rồi <b>Replace image</b> để đưa ảnh mới về slide.</p>
+        <figure class="demo-fig">
+          <img src="images/step-06-yt-edit-in-slides.png" alt="Pics trong Slides">
+          <figcaption>Hình 6: Pics mở ngay trong Slides &mdash; không cần tải ảnh ra/vào</figcaption>
+        </figure>
+      </div>
+
+      <div class="step-box">
+        <h3>Bước 7: Đọc thông báo GA trên Workspace Updates</h3>
+        <p>Bài đăng 01/09/2026 liệt kê: nhiều variations, sửa cục bộ, sửa/định dạng/dịch chữ, crop cho web/social/in, <b>upscale 2K/4K</b>, version history, sửa trong Docs/Slides bằng 1 click. Lộ trình: Rapid Release từ 01/09, Scheduled Release từ 15/09/2026.</p>
+        <figure class="demo-fig">
+          <img src="images/step-07-workspace-updates-post.png" alt="Bài Workspace Updates">
+          <figcaption>Hình 7: Bài &ldquo;Google Pics brings pro-level AI image creation and editing to Google Workspace&rdquo;</figcaption>
+        </figure>
+      </div>
+
+      <div class="step-box">
+        <h3>Bước 8&ndash;9: Trang sản phẩm workspace.google.com/products/pics</h3>
+        <p>Thông điệp chính: <i>&ldquo;Boundless AI image generation meets precision editing&rdquo;</i> và <i>&ldquo;No more &lsquo;prompt-and-pray&rsquo;&rdquo;</i>. Banner phía trên cho biết Pics <b>vẫn đang rollout</b> &mdash; tài khoản có thể chưa thấy ngay.</p>
+        <figure class="demo-fig">
+          <img src="images/step-08-product-page-hero.png" alt="Trang sản phẩm Google Pics">
+          <figcaption>Hình 8: Hero trang sản phẩm &mdash; banner &ldquo;Google Pics is currently rolling out&rdquo;</figcaption>
+        </figure>
+        <figure class="demo-fig">
+          <img src="images/step-09-product-page-features.png" alt="Tính năng trên trang sản phẩm">
+          <figcaption>Hình 9: &ldquo;No more prompt-and-pray&rdquo; &mdash; object-based editing là điểm bán hàng chính</figcaption>
+        </figure>
+      </div>
+
+      <div class="step-box">
+        <h3>Bước 10: Help Center &mdash; cách dùng chính thức</h3>
+        <p>Trang <a href="https://support.google.com/docs/answer/17170048" target="_blank">Get started with Google Pics</a> mô tả 2 cách bắt đầu (upload ảnh / prompt), thêm ảnh tham chiếu và Style reference. Các bài liên quan: Edit images, Download/print/share, Write effective prompts, Edit in Slides/Docs/Drive.</p>
+        <figure class="demo-fig">
+          <img src="images/step-10-help-center-get-started.png" alt="Help Center Google Pics">
+          <figcaption>Hình 10: Help Center &mdash; &ldquo;powered by Gemini (Nano Banana)&rdquo;</figcaption>
+        </figure>
+      </div>
+
+      <div class="step-box">
+        <h3>Bước 11: Mở pics.new khi chưa đăng nhập &rarr; yêu cầu tài khoản</h3>
+        <p><code>pics.new</code> chuyển hướng tới <code>accounts.google.com</code> với tham số tiếp tục <code>docs.google.com/images/u/0/create</code>. Đây là lý do cần một tài khoản Workspace đủ điều kiện. Ở Phần B, mình đăng nhập bằng tay một lần trong profile Chrome riêng rồi để script tự thao tác &mdash; script <b>không bao giờ</b> tự nhập email/mật khẩu.</p>
+        <figure class="demo-fig">
+          <img src="images/step-11-pics-signin-wall.png" alt="Trang đăng nhập Google Pics">
+          <figcaption>Hình 11: Sign-in wall &mdash; &ldquo;to continue to Google Pics&rdquo;</figcaption>
+        </figure>
+      </div>
+
+      <!-- 5. DEMO B -->
+      <h2 id="demo-b"><span class="section-num">5.</span> Demo phần B: Tự tạo &amp; sửa banner Scuti AI trong Pics (thao tác thật)</h2>
+
+      <p>Kịch bản: tạo banner sự kiện nội bộ <b>&ldquo;SCUTI AI &mdash; AI QUEST 2026&rdquo;</b> có <b>linh vật rồng đỏ</b>, sửa riêng con rồng, dịch chữ sang tiếng Việt, thử đổi tỉ lệ khung, tải bản 2K; cuối cùng chạy <b>cùng prompt</b> trong Gemini app (NanoBanana) để so sánh.
+      Toàn bộ phiên (3 phút 11 giây) được quay liền mạch &mdash; xem Mục 6.</p>
+
+      <div class="flow-diagram">
+        <span class="flow-step starter">pics.new</span>
+        <span class="flow-arrow">&rarr;</span>
+        <span class="flow-step ai">Prompt banner</span>
+        <span class="flow-arrow">&rarr;</span>
+        <span class="flow-step ai">4 variations</span>
+        <span class="flow-arrow">&rarr;</span>
+        <span class="flow-step ai">Sửa con rồng</span>
+        <span class="flow-arrow">&rarr;</span>
+        <span class="flow-step ai">Dịch tiếng Việt</span>
+        <span class="flow-arrow">&rarr;</span>
+        <span class="flow-step action">Transform</span>
+        <span class="flow-arrow">&rarr;</span>
+        <span class="flow-step action">Export 2K</span>
+        <span class="flow-arrow">&rarr;</span>
+        <span class="flow-step condition">So với Gemini</span>
+      </div>
+
+      <div class="tip">
+        <b>Tái hiện:</b> đăng nhập Google một lần bằng Chrome thường với <code>--user-data-dir=D:\chrome-profiles\ai-quest</code>, đóng Chrome, rồi chạy
+        <code>python record_pics_live.py</code>. Script tự thao tác, chụp <code>images/step-12&hellip;19</code>, tải <code>images/pics-final-2k.jpg</code> và quay <code>video/google-pics-live-session.mp4</code>.
+        Lưu ý: mỗi lần mở <code>pics.new</code> sẽ tạo một file ảnh mới trong Drive.
+      </div>
+
+      <div class="step-box">
+        <h3>Bước 12: Mở pics.new &mdash; canvas trống</h3>
+        <p><code>pics.new</code> tạo ngay một file Pics mới (lưu trong Drive, URL dạng <code>docs.google.com/images/d/&hellip;</code>). Giao diện tối giản: vùng thả ảnh (Upload / Drive / Photos), prompt bar &ldquo;Bring your ideas to life with Gemini&rdquo; với nút <b>+</b> (thêm ảnh tham chiếu) và <b>Style</b>; thanh trên có Undo/Redo và tỉ lệ khung mặc định <b>16:9</b>.</p>
+        <figure class="demo-fig">
+          <img src="images/step-12-pics-home.png" alt="Màn hình chính Google Pics">
+          <figcaption>Hình 12: Google Pics &mdash; canvas trống và prompt bar</figcaption>
+        </figure>
+      </div>
+
+      <div class="step-box">
+        <h3>Bước 13: Nhập prompt banner Scuti AI</h3>
+        <p>Prompt (tiếng Anh cho ổn định khi render chữ; chữ cần xuất hiện trong ảnh đặt trong nháy kép):</p>
+        <pre>A 16:9 tech banner for "SCUTI AI - AI QUEST 2026". Bold headline "SCUTI AI", subtitle "Build. Learn. Ship with AI.". A cute red dragon mascot beside young Vietnamese engineers with laptops, glowing AI chat bubbles. Night city skyline, navy and red palette, flat vector style, footer "scuti.asia".</pre>
+        <p>Prompt đi theo khung chủ thể &rarr; bối cảnh &rarr; phong cách &rarr; màu &rarr; bố cục.</p>
+        <figure class="demo-fig">
+          <img src="images/step-13-prompt-entered.png" alt="Prompt đã nhập">
+          <figcaption>Hình 13: Prompt Scuti AI trong prompt bar</figcaption>
+        </figure>
+      </div>
+
+      <div class="step-box">
+        <h3>Bước 14: Nhận 4 phiên bản, chọn 1 và Confirm</h3>
+        <p>Bấm <b>Submit</b>: khoảng <b>15 giây</b> sau Pics trả về <b>4 phiên bản</b> ở panel trái (mỗi bản bố cục khác nhau). Click từng thumbnail để xem lớn, bấm <b>&#10003; Confirm</b> để chốt, hoặc <b>&#8635; Generate again</b> để tạo lượt mới. Ở bản được chọn, chữ &ldquo;SCUTI AI&rdquo;, &ldquo;AI QUEST 2026&rdquo;, &ldquo;scuti.asia&rdquo; đều đúng chính tả. Pics cũng tự đặt tên file: &ldquo;Scuti AI Quest Banner&rdquo;.</p>
+        <figure class="demo-fig">
+          <img src="images/step-14-generated-variations.png" alt="Các phiên bản được tạo">
+          <figcaption>Hình 14: 4 variations của banner Scuti AI (panel trái) &mdash; gợi ý &ldquo;Hover over an object or drag to select an area to edit&rdquo;</figcaption>
+        </figure>
+      </div>
+
+      <div class="step-box">
+        <h3>Bước 15: Click vào con rồng &rarr; sửa riêng phần tử đó</h3>
+        <p>Sau khi Confirm, Pics chạy <b>&ldquo;Detecting objects&hellip;&rdquo;</b> để nhận diện đối tượng. Click vào con rồng: Pics khoanh vùng và mở ô <b>&ldquo;Describe changes for the cartoon dragon&rdquo;</b> (tự gọi đúng tên đối tượng). Nhập yêu cầu &rarr; <b>Add</b> &rarr; thanh dưới hiện <b>Discard / Apply 1 edit</b> (có thể gom nhiều edit rồi Apply một lần).</p>
+        <pre>Make the dragon wave its hand and wear a small orange scarf with the text AI</pre>
+        <figure class="demo-fig">
+          <img src="images/step-15-select-element-edit.png" alt="Chọn con rồng để sửa">
+          <figcaption>Hình 15a: Pics nhận diện &ldquo;cartoon dragon&rdquo; và mở ô sửa riêng cho phần tử</figcaption>
+        </figure>
+        <figure class="demo-fig">
+          <img src="images/step-15b-element-edit-result.png" alt="Kết quả sửa con rồng">
+          <figcaption>Hình 15b: Sau Apply &mdash; rồng vẫy tay, quàng khăn cam có chữ &ldquo;AI&rdquo;; chữ, nhân vật và nền <b>giữ nguyên</b></figcaption>
+        </figure>
+      </div>
+
+      <div class="step-box">
+        <h3>Bước 16: Dịch toàn bộ chữ sang tiếng Việt bằng 1 prompt</h3>
+        <pre>Translate all text in this banner into Vietnamese. Keep "SCUTI AI" and "scuti.asia" unchanged. Keep the same fonts, colors and layout.</pre>
+        <p>Kết quả: <b>&ldquo;Xây dựng. Học hỏi. Ra mắt với AI.&rdquo;</b> &mdash; dấu tiếng Việt hiển thị đúng, cùng font và vị trí; &ldquo;SCUTI AI&rdquo; và &ldquo;scuti.asia&rdquo; được giữ nguyên như yêu cầu.
+        Điểm thú vị: Pics còn dịch luôn tên sự kiện &ldquo;AI QUEST 2026&rdquo; thành <b>&ldquo;CHINH PHỤC AI 2026&rdquo;</b> &mdash; muốn giữ tên riêng thì phải liệt kê rõ trong prompt. Lượt dịch cũng trả về 4 phiên bản để chọn.</p>
+        <figure class="demo-fig">
+          <img src="images/step-16-translate-text.png" alt="Dịch chữ sang tiếng Việt">
+          <figcaption>Hình 16: Banner sau khi bản địa hóa tiếng Việt &mdash; bố cục, nhân vật và con rồng đã sửa ở bước 15 không đổi</figcaption>
+        </figure>
+      </div>
+
+      <div class="step-box">
+        <h3>Bước 17: Transform &mdash; đổi tỉ lệ khung / xoay</h3>
+        <p>Bấm nút tỉ lệ (<b>16:9</b>) trên thanh công cụ &rarr; màn hình <b>Transform &ndash; Adjust your frame</b> với các tỉ lệ 16:9, 4:3, 3:2, 5:4, 1:1 (và &#8942; thêm tỉ lệ), thanh xoay -90&deg;&hellip;+90&deg;, zoom, <b>Reset</b> và <b>Exit</b>. Ảnh dưới là thử khung <b>1:1</b> (cho post mạng xã hội); trong demo mình chuyển lại 16:9 rồi Exit để giữ banner.</p>
+        <figure class="demo-fig">
+          <img src="images/step-17-crop-aspect-ratio.png" alt="Transform 1:1">
+          <figcaption>Hình 17: Transform &mdash; khung 1:1 trên banner 16:9</figcaption>
+        </figure>
+      </div>
+
+      <div class="step-box">
+        <h3>Bước 18: Export &mdash; Original / 2K / 4K</h3>
+        <p>Icon <b>Export</b> góc trên phải có 3 lựa chọn: <b>Original size</b> (1365&times;768), <b>2K JPEG</b> và <b>4K JPEG</b> (&ldquo;Upscale with Gemini&rdquo;). Chọn 2K: file tải về sau khoảng <b>15 giây</b>, kích thước thực tế <b>2752&times;1536</b> (~0,5 MB).</p>
+        <figure class="demo-fig">
+          <img src="images/step-18-download-menu.png" alt="Menu Export">
+          <figcaption>Hình 18: Menu Export &mdash; Original, 2K JPEG, 4K JPEG</figcaption>
+        </figure>
+        <figure class="demo-fig">
+          <img src="images/pics-final-2k.jpg" alt="Banner Scuti AI 2K tải từ Pics">
+          <figcaption>Thành phẩm: banner Scuti AI 2K tải trực tiếp từ Google Pics (<code>images/pics-final-2k.jpg</code>)</figcaption>
+        </figure>
+      </div>
+
+      <div class="step-box">
+        <h3>Bước 19: Cùng prompt trong Gemini app (NanoBanana) để so sánh</h3>
+        <p>Mở <code>gemini.google.com</code> với cùng tài khoản, gửi <code>Create an image: &lt;prompt bước 13&gt;</code>. Sau khoảng <b>25 giây</b> Gemini trả về <b>1 ảnh</b> trong khung chat. Chất lượng render chữ tương đương Pics (cùng nền tảng NanoBanana), nhưng muốn sửa con rồng thì phải mô tả lại bằng lời trong lượt chat tiếp theo &mdash; không có click-chọn phần tử, không có panel phiên bản, không có Transform/Export 2K-4K.</p>
+        <figure class="demo-fig">
+          <img src="images/step-19-nanobanana-gemini.png" alt="Cùng prompt trong Gemini">
+          <figcaption>Hình 19: NanoBanana trong Gemini app với cùng prompt &mdash; 1 ảnh / lượt, sửa bằng hội thoại</figcaption>
+        </figure>
+      </div>
+
+      <div class="highlight">
+        <b>Bảng ghi kết quả thực tế (phiên chạy 03/10/2026):</b>
+        <div class="table-wrap">
+        <table>
+          <thead><tr><th>Tiêu chí kiểm chứng</th><th>Google Pics</th><th>Gemini (NanoBanana)</th></tr></thead>
+          <tbody>
+            <tr><td>Số phương án / lượt</td><td><b>4</b> (panel trái, Confirm / Generate again)</td><td><b>1</b> ảnh trong chat</td></tr>
+            <tr><td>Chữ &ldquo;SCUTI AI&rdquo;, &ldquo;scuti.asia&rdquo; đúng chính tả?</td><td>Đúng</td><td>Đúng</td></tr>
+            <tr><td>Dấu tiếng Việt sau khi dịch</td><td>Đúng dấu, cùng font &amp; vị trí (nhưng tự dịch cả tên sự kiện)</td><td>Chưa thử trong phiên này</td></tr>
+            <tr><td>Sửa 1 phần tử có giữ nguyên phần còn lại?</td><td><b>Có</b> &mdash; chỉ con rồng thay đổi</td><td>Không có chọn phần tử; sửa bằng mô tả lời</td></tr>
+            <tr><td>Thời gian tạo (đo trong phiên)</td><td>~15 s / lượt (tạo, sửa, dịch); export 2K ~15 s</td><td>~25 s / ảnh</td></tr>
+            <tr><td>Xuất file</td><td>Original 1365&times;768, 2K (2752&times;1536), 4K</td><td>Tải ảnh từ chat</td></tr>
+          </tbody>
+        </table>
+        </div>
+      </div>
+
+      <!-- 6. VIDEO -->
+      <h2 id="video"><span class="section-num">6.</span> Video quá trình thực hiện</h2>
+      <p>Video hoàn chỉnh ghi lại toàn bộ quá trình bằng Playwright: khảo sát nguồn chính thức (YouTube, Workspace Updates, trang sản phẩm, Help Center) &rarr; <b>dùng thật Google Pics</b> (prompt &rarr; 4 variations &rarr; sửa con rồng &rarr; dịch tiếng Việt &rarr; Transform &rarr; Export 2K) &rarr; cùng prompt trong Gemini app &rarr; mở blog hoàn chỉnh và cuộn từ đầu đến cuối.</p>
+      <div class="video-box">
+        <video controls preload="metadata" src="video/google-pics-vs-nanobanana-demo.mp4"></video>
+      </div>
+      <p style="font-size:13px;color:#5f6368;">File: <code>video/google-pics-vs-nanobanana-demo.mp4</code> (video hoàn chỉnh). Riêng phần thao tác trong Pics + Gemini: <code>video/google-pics-live-session.mp4</code> (3:11).</p>
+
+      <!-- 7. OPINION -->
+      <h2 id="opinion"><span class="section-num">7.</span> Nhận xét cá nhân</h2>
+      <h3>Điều mình đánh giá cao</h3>
+      <ul>
+        <li><b>Đúng &ldquo;nỗi đau&rdquo; thật:</b> với NanoBanana trong chat, sửa một chi tiết nhỏ thường kéo theo thay đổi chỗ khác. Click-chọn phần tử và gom 5 edit rồi Apply là cách làm việc của designer, không phải của chatbot.</li>
+        <li><b>Chữ trong ảnh trở thành &ldquo;đối tượng&rdquo;:</b> sửa/dịch chữ là thứ team văn phòng cần nhiều nhất (poster, thiệp, banner đa ngôn ngữ).</li>
+        <li><b>Nằm trong Workspace:</b> file có quyền chia sẻ, version history, admin kiểm soát &mdash; dễ dùng cho công ty hơn so với ảnh rải rác trong lịch sử chat cá nhân.</li>
+        <li><b>Slides &ldquo;Replace image&rdquo;:</b> bỏ được vòng lặp tải ảnh ra &rarr; sửa &rarr; upload lại.</li>
+      </ul>
+      <h3>Điều cần lưu ý</h3>
+      <ul>
+        <li><b>Rào cản truy cập:</b> phải Business Standard trở lên hoặc AI Pro/Ultra; gói Business Starter không có. Khi chưa đăng nhập, <code>pics.new</code> chuyển thẳng tới trang Sign in.</li>
+        <li><b>Chỉ có Desktop</b>, và đang rollout dần &mdash; tài khoản đủ điều kiện có thể chưa thấy ngay.</li>
+        <li><b>Hạn mức:</b> mức &ldquo;higher access&rdquo; chỉ cam kết tới 28/02/2027; tải 2K/4K tốn hạn mức nhanh hơn.</li>
+        <li><b>Không thay thế API:</b> cần tạo hàng trăm ảnh theo dữ liệu (VD ảnh sản phẩm từ CSV) thì vẫn dùng NanoBanana qua Gemini API.</li>
+        <li><b>Video chính thức ghi &ldquo;Sequences shortened and simulated&rdquo;</b> &mdash; nhưng trong phiên thật của mình mỗi lượt chỉ ~15 giây, nhanh hơn kỳ vọng.</li>
+        <li><b>Dịch &ldquo;quá tay&rdquo;:</b> Pics dịch cả tên sự kiện &ldquo;AI QUEST&rdquo; &mdash; cần liệt kê rõ các tên riêng phải giữ nguyên trong prompt.</li>
+      </ul>
+
+      <!-- 8. APPLY -->
+      <h2 id="apply"><span class="section-num">8.</span> Áp dụng Google Pics vào công việc hằng ngày</h2>
+      <div class="table-wrap">
+      <table>
+        <thead><tr><th>Tình huống</th><th>Cách dùng Pics</th><th>Nên dùng NanoBanana API thay thế khi&hellip;</th></tr></thead>
+        <tbody>
+          <tr><td><b>Slide proposal / demo cho khách</b></td><td>Trong Slides: click ảnh &rarr; Edit image &rarr; đặt sản phẩm vào bối cảnh khách hàng &rarr; Replace image</td><td>Cần sinh ảnh tự động cho cả bộ deck từ template</td></tr>
+          <tr><td><b>Poster/sự kiện nội bộ (AI Quest, team building)</b></td><td>Prompt &rarr; chọn variation &rarr; sửa phần tử &rarr; tải 2K để in</td><td>&mdash;</td></tr>
+          <tr><td><b>Tài liệu song ngữ Việt &ndash; Nhật &ndash; Anh</b></td><td>Một prompt dịch chữ trong infographic/banner, giữ nguyên bố cục</td><td>Hàng loạt ảnh cần dịch theo pipeline</td></tr>
+          <tr><td><b>Mockup UI / ảnh minh họa cho tài liệu dự án</b></td><td>Upload ảnh chụp màn hình, dùng Style reference để thống nhất phong cách</td><td>Tạo dữ liệu ảnh test cho app</td></tr>
+          <tr><td><b>Ảnh social/tuyển dụng</b></td><td>Crop 1:1, 4:5, 16:9 từ cùng một ảnh gốc; share Editor cho team HR</td><td>Lên lịch tạo bài đăng tự động</td></tr>
+          <tr><td><b>Sản phẩm AI cho khách hàng</b></td><td>Dùng Pics để thử prompt nhanh, chốt phong cách</td><td><b>Luôn dùng API</b> khi tích hợp vào sản phẩm của Scuti</td></tr>
+        </tbody>
+      </table>
+      </div>
+      <div class="tip">
+        <b>Quy trình đề xuất cho team:</b> thử ý tưởng &amp; chốt prompt trong Pics (nhanh, trực quan) &rarr; lưu prompt chuẩn vào Docs &rarr; nếu cần quy mô lớn thì đưa prompt đó sang Gemini API (NanoBanana) trong code.
+      </div>
+
+      <!-- 9. TIPS -->
+      <h2 id="tips"><span class="section-num">9.</span> Mẹo viết prompt cho Pics</h2>
+      <ul>
+        <li><b>Cụ thể:</b> chủ thể, hành động, bối cảnh, mood. &ldquo;A cat&rdquo; &rarr; &ldquo;A fluffy ginger cat napping on a sun-drenched windowsill&rdquo;.</li>
+        <li><b>Diễn đạt khẳng định:</b> &ldquo;empty street&rdquo; thay vì &ldquo;no cars&rdquo;.</li>
+        <li><b>Chỉ định phong cách &amp; ánh sáng:</b> &ldquo;flat vector illustration&rdquo;, &ldquo;three-point softbox setup&rdquo;, &ldquo;golden hour backlighting&rdquo;.</li>
+        <li><b>Chữ cần render để trong nháy kép</b> và giữ ngắn.</li>
+        <li><b>Lặp dần:</b> prompt đơn giản trước, sau đó sửa từng phần tử thay vì viết lại toàn bộ.</li>
+        <li><b>Nhấn &uarr;</b> trong prompt bar để dùng lại prompt cũ (thấy trong video chính thức).</li>
+      </ul>
+
+      <!-- 10. CONCLUSION -->
+      <h2 id="conclusion"><span class="section-num">10.</span> Kết luận</h2>
+      <p>
+        Google Pics không phải model mới &mdash; nó là <b>NanoBanana được đóng gói thành công cụ thiết kế</b> trong Workspace:
+        nhiều phương án, sửa theo phần tử, sửa/dịch chữ, crop, upscale 2K/4K, version history, chia sẻ và tích hợp Slides/Docs/Drive.
+        Nếu bạn cần <b>chỉnh đúng chỗ</b> và làm việc cùng team trong Workspace, hãy dùng Pics. Nếu bạn cần <b>tự động hóa và quy mô</b>, hãy dùng NanoBanana qua API.
+      </p>
+      <div class="tip">
+        <b>Bắt đầu ngay:</b> mở <a href="https://pics.new" target="_blank">pics.new</a> bằng tài khoản Workspace Business Standard+ hoặc Google AI Pro,
+        hoặc chạy <code>record_pics_live.py</code> để tái hiện đúng demo trong bài.
+      </div>
+
+      <!-- FOOTER -->
+      <div class="footer">
+        <p>
+          <b>Tham khảo:</b><br>
+          &bull; <a href="https://www.youtube.com/watch?v=S18L1NFTda8" target="_blank">Video: Say hello to Google Pics from Google Workspace</a><br>
+          &bull; <a href="https://workspaceupdates.googleblog.com/2026/09/google-pics-brings-pro-level-ai-image-creation-and-editing-to-Google-Workspace.html" target="_blank">Workspace Updates: Google Pics brings pro-level AI image creation and editing</a><br>
+          &bull; <a href="https://workspace.google.com/products/pics/" target="_blank">Google Pics &mdash; trang sản phẩm</a><br>
+          &bull; <a href="https://blog.google/products-and-platforms/products/workspace/google-pics/" target="_blank">Google Blog: Try Google Pics</a><br>
+          &bull; <a href="https://support.google.com/docs/answer/17170048" target="_blank">Help: Get started with Google Pics</a> &bull;
+          <a href="https://support.google.com/docs/answer/17170454" target="_blank">Edit images</a> &bull;
+          <a href="https://support.google.com/docs/answer/17170934" target="_blank">Download/print/share</a> &bull;
+          <a href="https://support.google.com/docs/answer/17256710" target="_blank">Availability</a> &bull;
+          <a href="https://support.google.com/docs/answer/17499238" target="_blank">Write effective prompts</a> &bull;
+          <a href="https://support.google.com/docs/answer/17499039" target="_blank">Edit in Slides</a>
+        </p>
+        <p>AI Quest &bull; Scuti AI &bull; 03/10/2026</p>
+      </div>
+
+    </div>
+  </body>
+</html>

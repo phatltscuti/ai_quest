@@ -1,0 +1,379 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Company-wide AI Adoption: Roadmap, Organization and Breaking Bottlenecks (lessons from Link and Motivation &amp; SmartHR)</title>
+    <style>
+      *{box-sizing:border-box}
+      body{margin:0;font-family:'Segoe UI',Arial,sans-serif;background:#fff;color:#1a1a1a;line-height:1.7}
+      a{color:#1a73e8;text-decoration:none}a:hover{text-decoration:underline}
+      .wrap{max-width:980px;margin:0 auto;padding:24px}
+      h1{margin:0 0 10px;font-size:30px;color:#1a73e8}
+      h2{margin:36px 0 14px;font-size:24px;border-bottom:3px solid #1a73e8;padding-bottom:8px;color:#202124}
+      h3{margin:22px 0 10px;font-size:19px;color:#333}
+      h4{margin:16px 0 8px;font-size:16px;color:#444}
+      ul,ol{margin:8px 0;padding-left:22px}li{margin-bottom:4px}
+      p{margin:12px 0}
+      code{background:#e8f0fe;border:1px solid #d2e3fc;padding:2px 6px;font-size:13px;font-family:Consolas,monospace;border-radius:3px;color:#1a73e8}
+      .hero{border:2px solid #1a73e8;padding:24px 28px;margin-bottom:24px;background:linear-gradient(135deg,#e8f0fe 0%,#f8f9fa 100%);border-radius:12px}
+      .hero .subtitle{color:#5f6368;font-size:15px;margin-top:8px}
+      .tip{border-left:4px solid #34a853;padding:12px 16px;background:#e6f4ea;margin:14px 0;border-radius:0 8px 8px 0}
+      .warning{border-left:4px solid #ea4335;padding:12px 16px;background:#fce8e6;margin:14px 0;border-radius:0 8px 8px 0}
+      .info{border-left:4px solid #4285f4;padding:12px 16px;background:#e8f0fe;margin:14px 0;border-radius:0 8px 8px 0}
+      .highlight{border-left:4px solid #fbbc04;padding:12px 16px;background:#fef7e0;margin:14px 0;border-radius:0 8px 8px 0}
+      .opinion{border-left:4px solid #9334e6;padding:12px 16px;background:#f3e8fd;margin:14px 0;border-radius:0 8px 8px 0}
+      table{border-collapse:collapse;width:100%;margin:16px 0;border-radius:8px;overflow:hidden;font-size:14.5px}
+      th,td{border:1px solid #dadce0;padding:10px 12px;text-align:left;vertical-align:top}
+      th{background:#1a73e8;color:#fff;font-weight:600}
+      tr:nth-child(even){background:#f8f9fa}
+      .table-wrap{overflow-x:auto}
+      .vs{display:flex;gap:20px;margin:16px 0;flex-wrap:wrap}
+      .vs-card{flex:1;min-width:300px;border:2px solid #dadce0;border-radius:12px;padding:16px;background:#f8f9fa}
+      .vs-card.lmi{border-color:#d93025}.vs-card.shr{border-color:#00a3a3}
+      .vs-card h4{margin-top:0;text-align:center;padding:8px;border-radius:6px;color:#fff}
+      .vs-card.lmi h4{background:#d93025}.vs-card.shr h4{background:#00a3a3}
+      .toc{background:#f8f9fa;border:1px solid #dadce0;border-radius:8px;padding:16px 24px;margin:20px 0}
+      .toc ul{list-style:none;padding-left:0}.toc li{padding:4px 0}
+      .section-num{color:#1a73e8;font-weight:700}
+      .fig{margin:18px 0;text-align:center}
+      .fig img{max-width:100%;border:1px solid #dadce0;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+      .fig figcaption{font-size:13px;color:#5f6368;margin-top:6px}
+      .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+      .grid2 .fig{margin:6px 0}
+      .strategy{border:2px solid #dadce0;border-radius:12px;padding:14px 18px;margin:14px 0;background:#fff}
+      .strategy h4{margin:0 0 6px;color:#1a73e8}
+      .video-box{border:2px solid #1a73e8;border-radius:12px;padding:12px;background:#f8f9fa;margin:16px 0}
+      .video-box video{width:100%;border-radius:8px;background:#000}
+      .footer{margin-top:36px;font-size:13px;color:#5f6368;border-top:2px solid #dadce0;padding-top:20px}
+      @media(max-width:700px){.vs{flex-direction:column}.grid2{grid-template-columns:1fr}}
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+
+      <div class="hero">
+        <h1>Company-wide AI Adoption: Roadmap, Organization and Breaking Bottlenecks</h1>
+        <p class="subtitle">Lessons from two Japanese slide decks &mdash; <b>Link and Motivation</b> (1,500 non-engineers) and <b>SmartHR</b> (1,652 people, the first 6 months of its AI Operations Office) &mdash; compared with how Scuti AI works today, plus the strategies I want to try.</p>
+        <p style="margin:4px 0 0;font-size:13px;color:#80868b;">
+          Written: 2026-10-03 &bull; AI Quest &ndash; Type 1 (Investigate What) &bull;
+          Sources: <a href="https://speakerdeck.com/lmi/pek2026-link-and-motivation" target="_blank">LMI &ndash; PEK2026</a>,
+          <a href="https://speakerdeck.com/yoshikikonishi_/smarthr-no-zensha-ai-suishin-ha-dou-hajimata-ka" target="_blank">SmartHR &ndash; 全社AI推進はどう始まったか</a>
+        </p>
+      </div>
+
+      <div class="info">
+        <b>TL;DR:</b> Both companies arrived at the same lesson: <b>handing AI tools to everyone is not AI adoption</b>.
+        To turn AI into business results you have to treat it as <b>organizational change</b> &mdash; a clear destination, ownership at the top,
+        champions sitting inside each department, metrics that connect “using AI” to revenue and margin, and <b>guardrails</b> that let everyone
+        (non-engineers included) build things without causing incidents.
+      </div>
+
+      <div class="toc">
+        <h3 style="margin-top:0;">Contents</h3>
+        <ul>
+          <li><a href="#sources">1. The two sources: who, how big, where they are</a></li>
+          <li><a href="#mindset">2. Core idea: adoption is organizational change, not a tool rollout</a></li>
+          <li><a href="#roadmap">3. A 5-phase roadmap (synthesized)</a></li>
+          <li><a href="#org">4. The organization you need</a></li>
+          <li><a href="#bottlenecks">5. Five common bottlenecks and how to break them</a></li>
+          <li><a href="#learnings">6. What I learned, in my own words</a></li>
+          <li><a href="#scuti">7. Comparison with Scuti AI (author's perspective)</a></li>
+          <li><a href="#apply">8. Strategies to try at Scuti &amp; how to use them</a></li>
+          <li><a href="#video">9. Research session video</a></li>
+          <li><a href="#conclusion">10. Conclusion</a></li>
+        </ul>
+      </div>
+
+      <h2 id="sources"><span class="section-num">1.</span> The two sources: who, how big, where they are</h2>
+      <div class="vs">
+        <div class="vs-card lmi">
+          <h4>Link and Motivation (LMI)</h4>
+          <ul>
+            <li>Speaker: Tomonori Kawano &ndash; executive officer in charge of AX (AI Transformation)</li>
+            <li>Size: ~1,500 non-engineers + ~100 engineers</li>
+            <li>Published 2026-09-25, 45 slides, event “PEK2026” (per the URL; the talk closes with Platform Engineering lessons)</li>
+            <li>Focus: getting non-engineers to <b>produce results with AI</b> and <b>build tools safely</b></li>
+          </ul>
+          <p><b>Reported results (Sep 2026; each figure measured in a different unit):</b> ~1,500 people using AI daily, ~3,000 internally built AI tools,
+          revenue per person ~140% YoY (consulting), meetings per person ~1.8×, operations workload ~50% lower (outsourcing business).</p>
+        </div>
+        <div class="vs-card shr">
+          <h4>SmartHR</h4>
+          <ul>
+            <li>Speaker: Yoshiki Konishi &ndash; head of the “AI Operations Office”</li>
+            <li>Size: 1,652 people (Apr 2026), ~75% in non-development functions</li>
+            <li>Published 2026-09-28, 20 slides</li>
+            <li>Focus: the first 6 months of building the <b>machinery</b> for company-wide AI: roles, governance, measurement</li>
+          </ul>
+          <p><b>Starting point:</b> Gemini and Notion AI were already widely used, but there were no shared rules, each unit picked its own tools,
+          and cost/usage data was scattered. The office launched in Apr 2026 with <b>one part-time head who had no dedicated AI/DX experience</b>.</p>
+        </div>
+      </div>
+      <figure class="fig"><img src="images/step-02-lmi-s04-results-crop.png" alt="LMI results" /><figcaption>Image 1 &ndash; LMI slide 4: status as of Sep 2026 (the starting point was a Jan 2024 survey)</figcaption></figure>
+      <div class="highlight">
+        <b>Why pair these two decks?</b> They complement each other: LMI tells the story <b>bottom-up</b> (field habits, self-built tools, guardrails),
+        SmartHR tells it <b>top-down</b> (mission, operating model, governance, measurement). Together they form an almost complete picture.
+      </div>
+
+      <h2 id="mindset"><span class="section-num">2.</span> Core idea: adoption is organizational change, not a tool rollout</h2>
+      <p>
+        If I could keep only one sentence from both decks: <b>user count is not an outcome</b>. SmartHR writes it into its mission &mdash; the end goal is not
+        users or usage volume, but “a state where business results are created sustainably”. LMI learned it the hard way: ChatGPT for everyone plus lectures,
+        and in Jan 2024 roughly 70% still did not use it even once a day.
+      </p>
+      <p>
+        SmartHR draws the goal as a three-step staircase: individual results → organizational results → business results, and designs the whole program around McKinsey's 5As.
+      </p>
+      <figure class="fig"><img src="images/step-16-smarthr-s10-5as-crop.png" alt="SmartHR 5As" /><figcaption>Image 2 &ndash; SmartHR slide 10: AI adoption designed with McKinsey's 5As</figcaption></figure>
+      <p>As I read them, three mindset shifts run through both decks:</p>
+      <table>
+        <thead><tr><th>From (common thinking)</th><th>To (what the two companies did)</th></tr></thead>
+        <tbody>
+          <tr><td>Wide and shallow: give tools to everyone at once</td><td>Narrow and deep: one department as the “first customer”, prove value, then expand</td></tr>
+          <tr><td>Count users and prompts</td><td>Measure the chain: cost → usage → initiatives → organizational results → business results</td></tr>
+          <tr><td>The AI team as gatekeeper that allows or forbids</td><td>The AI team as enabler: platform, paved road and guardrails so others can move fast</td></tr>
+        </tbody>
+      </table>
+
+      <h2 id="roadmap"><span class="section-num">3.</span> A 5-phase roadmap (synthesized)</h2>
+      <p>
+        Neither deck presents a timeline-style roadmap. I merged the steps of both companies into 5 phases, each with an <b>exit gate</b> &mdash; borrowing the
+        “meet the completion criteria before moving on” spirit of LMI's golden path.
+      </p>
+      <figure class="fig"><img src="images/diagram-roadmap-en.png" alt="Roadmap" /><figcaption>Figure A (author's diagram) &ndash; 5-phase roadmap. Month ranges are my proposal, not from the slides.</figcaption></figure>
+
+      <h3>Phase 0 &ndash; Aspire &amp; Assess</h3>
+      <p>
+        SmartHR spent most of its first month just <b>seeing clearly</b>: interviews, an inventory of tools, costs and initiatives, a look at existing structures.
+        The problem at launch was not “too little AI” but <b>everyone doing it differently</b> &mdash; each new tool needed separate requests, nobody coordinated across units,
+        data was scattered. You cannot prioritize well without that picture.
+      </p>
+
+      <h3>Phase 1 &ndash; Narrow &amp; deep pilot</h3>
+      <p>
+        LMI's turning point: stop rolling out to the whole company and pick <b>one department as the first customer</b>, exactly like a platform team picks a pilot team.
+        The two reasons people did not use AI (Jan 2024 survey) were <i>can't think of where to use it</i> (57%) and <i>don't know how to instruct it</i> (26%).
+        Lectures fix neither; they need <b>someone who knows the work sitting next to you</b> and <b>enough time to form a habit</b>.
+        Citing Lally et al. (2010) &mdash; a median of 66 days to form a habit &mdash; LMI coaches for ~2 months with weekly reviews.
+        In short: the first reason is solved with “structure” (promoters, a review rhythm), the second with “coached practice”.
+      </p>
+
+      <h3>Phase 2 &ndash; Link to outcomes</h3>
+      <p>
+        Once people used AI regularly, LMI hit the second wall: efficiency rose but productivity stayed flat. The field quote says it all:
+        <i>“thanks to the time saved, I can now eat lunch slowly”</i>. Nobody had decided where saved time should go, and nobody checked.
+        The fix is an <b>outcome map</b> &mdash; work backwards from the desired result to AI behaviours (for sales: AI does research and decks → fewer internal meetings →
+        more customer-facing time → more appointments per person per day), then review those numbers with the department head regularly.
+        SmartHR does the same at company level with a 5-layer measurement model.
+      </p>
+      <div class="grid2">
+        <figure class="fig"><img src="images/step-08-lmi-s20-outcome-map-crop.png" alt="outcome map" /><figcaption>Image 3 &ndash; LMI slide 20: outcome map from AI use to impact</figcaption></figure>
+        <figure class="fig"><img src="images/step-19-smarthr-s14-monitoring-crop.png" alt="monitoring" /><figcaption>Image 4 &ndash; SmartHR slide 14: 5 layers plus a quality/cost guardrail</figcaption></figure>
+      </div>
+
+      <h3>Phase 3 &ndash; Guardrails &amp; golden path</h3>
+      <p>
+        As AI spreads, risk grows: unapproved tools, people approving dangerous operations because the AI asked, rogue tools everywhere.
+        LMI did not ban; it built a <b>guardrail</b> (tool access by proven level) and a <b>golden path</b> (a standard process for building internal tools). Details in section 5.
+      </p>
+
+      <h3>Phase 4 &ndash; Scale &amp; operate</h3>
+      <p>
+        Expanding to another department is not “send them the link”. LMI cites the CHAOS Report: ~80% of delivered software features go unused. So in each new department they
+        again appoint a promoter, run an “install and use it together the first time” session, and interview non-users one by one.
+        SmartHR packages scaling into an <b>operating model</b>: monthly reports to management, initiatives compiled into results reports shared company-wide.
+      </p>
+
+      <h2 id="org"><span class="section-num">4.</span> The organization you need</h2>
+      <figure class="fig"><img src="images/diagram-org-structure-en.png" alt="Org structure" /><figcaption>Figure B (author's diagram) &ndash; merged from LMI slides 14/16/32 and SmartHR slides 12/13</figcaption></figure>
+      <p>The names differ, but the skeleton is nearly identical. I summarize it as 4 layers:</p>
+      <ol>
+        <li><b>Executives own it, not just sponsor it.</b> SmartHR puts management in the PO role and AI on the management meeting agenda.
+          LMI does the same at department level: the department head must <b>commit to a target</b> before starting.</li>
+        <li><b>A small central team acting as enabler.</b> SmartHR splits AI Ops into 3 areas / 6 functions: strategy &amp; value measurement, field coaching &amp; learning,
+          tool platform &amp; governance. At LMI the development organization plays this role (platform + coaching).</li>
+        <li><b>Governance is a cross-functional group, not one person.</b> SmartHR has a Governance WG (security, legal) next to a Promotion WG (AI Ops, IT).
+          LMI has an AI security team made of development, IT and legal that collects reports and keeps rules up to date.</li>
+        <li><b>Champions sit inside each department.</b> “AX promoters” at LMI, “AI Leads” (in trial) at SmartHR: first contact for questions, requests and use cases,
+          and the channel that carries field feedback back up.</li>
+      </ol>
+      <figure class="fig"><img src="images/step-18-smarthr-s13-operating-model-crop.png" alt="SmartHR operating model" /><figcaption>Image 5 &ndash; SmartHR slide 13: PO / PM / WGs / AI Leads</figcaption></figure>
+      <div class="opinion">
+        <b>The detail I found most valuable:</b> LMI picks AX promoters <b>not by AI skill</b> but by three traits: a desire to help others, enjoying trial and error,
+        and being almost meddlesome about spreading what works. Skills can be taught; contagious enthusiasm is hard to teach.
+        Their pitch to department heads is equally practical: always pair a <b>“return” (benefit in numbers) with a “request” (specific people, time and goals)</b> &mdash;
+        e.g. put “use AI at least once a day” into everyone's objectives.
+      </div>
+
+      <h2 id="bottlenecks"><span class="section-num">5.</span> Five common bottlenecks and how to break them</h2>
+      <p>
+        LMI talks about “2 walls” (adoption, outcome), SmartHR about “3 walls” in non-development teams (build, implementation, institutionalization).
+        Placed on one road from “tools handed out” to “business results”, they turn out to be <b>5 consecutive stages</b>, not overlapping ones:
+      </p>
+      <figure class="fig"><img src="images/diagram-bottlenecks-en.png" alt="Bottleneck map" /><figcaption>Figure C (author's diagram) &ndash; bottleneck → remedy map</figcaption></figure>
+      <div class="grid2">
+        <figure class="fig"><img src="images/step-03-lmi-s09-two-walls-crop.png" alt="two walls" /><figcaption>Image 6 &ndash; LMI slide 9: the two walls</figcaption></figure>
+        <figure class="fig"><img src="images/step-20-smarthr-s18-three-walls-crop.png" alt="three walls" /><figcaption>Image 7 &ndash; SmartHR slide 18: three walls in non-development teams</figcaption></figure>
+      </div>
+
+      <h3>Tiered guardrails (LMI)</h3>
+      <p>
+        Instead of the same tool for all, LMI uses 3 levels: <b>Level 1 no-code</b> (Claude Cowork, Gemini &ndash; for everyone; runs in an isolated cloud environment, so a mistaken approval
+        cannot reach the PC or internal network), <b>Level 2 low-code</b> (self-hosted Dify / n8n, for people improving shared workflows), and
+        <b>Level 3 pro-code</b> (Claude Code, only for people who <b>already built a tool that produced results</b> and <b>answered every question of a security test correctly</b>).
+        Slide 27 (Image 8) puts non-engineers at roughly 70% / 20% / 10% across the levels, while the “AI skill map” table on slide 30 lists a “current ratio” of 85% / 10% / 5% &ndash; the same deck gives two different splits, so treat them as rough figures. All engineers get Claude Code.
+      </p>
+      <figure class="fig"><img src="images/step-09-lmi-s27-guardrail-levels-crop.png" alt="levels" /><figcaption>Image 8 &ndash; LMI slide 27: tools by “skill and track record”</figcaption></figure>
+
+      <h3>Golden path “Fit Journey” (LMI)</h3>
+      <p>Non-engineers can now <i>build</i> tools, but nobody taught them <i>how to run a product</i>. LMI applies new-product development to internal tools: 4 phases with hard exit criteria.</p>
+      <table>
+        <thead><tr><th>Phase</th><th>Meaning</th><th>Exit criteria</th></tr></thead>
+        <tbody>
+          <tr><td><b>CPF</b></td><td>Problem identification</td><td>A problem users strongly relate to; To-Be flow + expected outcome agreed with the department head</td></tr>
+          <tr><td><b>PSF/SPF</b></td><td>Value validation</td><td>2&ndash;3 trial users feel the value and the expected time saving is reached; passed security &amp; cost review before hand-over</td></tr>
+          <tr><td><b>PMF</b></td><td>Adoption</td><td>Sean Ellis test “very disappointed” ≥ 40%; WAU ≥ 70% of registered users; outcome achieved</td></tr>
+          <tr><td><b>GTM</b></td><td>Roll-out to other departments</td><td>Each new department re-meets the same 3 PMF criteria</td></tr>
+        </tbody>
+      </table>
+      <p>LMI's slide 42 sums it up: whoever built the tool, it must pass all four gates, with no skipped steps.</p>
+
+      <h2 id="learnings"><span class="section-num">6.</span> What I learned, in my own words</h2>
+      <ol>
+        <li><b>Treat AI adoption like an internal product.</b> First customer, PMF, metrics, golden path. That is why LMI ends with Platform Engineering:
+          Team Topologies, guardrails, product management, DORA/SPACE &mdash; all familiar to engineers.</li>
+        <li><b>The bottleneck moves over time.</b> First “nobody uses it”, then “used but no results”, then “tools built but unmanaged”, finally
+          “one person can, the organization can't sustain it”. The plan must shift focus by stage; there is no single fix.</li>
+        <li><b>Saved time is an asset to allocate, not a natural reward.</b> If you don't decide where it goes, it evaporates.</li>
+        <li><b>Guardrails exist to let you go faster, not to block.</b> Access by proven capability is both safer and motivating (“level up”).</li>
+        <li><b>Starting small is fine.</b> SmartHR began with one part-time person without dedicated AI/DX experience. What matters is a mandate from leadership and the right order: see first, build the machinery second.</li>
+        <li><b>Measure the chain to find the clog.</b> SmartHR's 5 layers show where value gets stuck (paying but nobody uses it? heavy use but no initiatives? initiatives but the org is not faster?).</li>
+      </ol>
+
+      <h2 id="scuti"><span class="section-num">7.</span> Comparison with Scuti AI (author's perspective)</h2>
+      <div class="warning">
+        <b>Note:</b> “Scuti today” below reflects <b>the author's own assumptions and observations</b> as an engineer, not official Scuti AI data or policy. Main assumptions:
+        <ul>
+          <li>Scuti is a Vietnamese software/AI company serving mainly Japanese clients, organized by project (PM, BrSE, comtor, dev, QA).</li>
+          <li>Engineers already use AI on their own (Claude Code, Cursor, Copilot, Gemini in Google Workspace…), with large variation per person and per project.</li>
+          <li>The company runs an <b>AI Quest</b> program for research and sharing (this post is one quest).</li>
+          <li>Contracts/NDAs with Japanese clients decide which AI may touch client code and data; this is handled project by project.</li>
+          <li>Non-development teams (HR, accounting, sales, admin) use AI less than engineering; AI results are tracked mostly as activity (quests, sharing sessions) rather than business metrics.</li>
+        </ul>
+      </div>
+      <div class="table-wrap">
+      <table>
+        <thead><tr><th style="width:15%">Aspect</th><th>LMI</th><th>SmartHR</th><th>Scuti today (assumed)</th><th>Gap / what to try</th></tr></thead>
+        <tbody>
+          <tr><td><b>Destination</b></td><td>Department productivity (revenue/person, meetings)</td><td>“Sustainable business results”, not user counts</td><td>Encourage learning and use; goal is mostly individual capability</td><td>State goals as project metrics: lead time, UAT defect leakage, margin per man-month</td></tr>
+          <tr><td><b>How to start</b></td><td>Narrow &amp; deep: one department as first customer</td><td>One month of Aspire/Assess first</td><td>Wide: everyone does quests</td><td>Keep AI Quest as the base, add one deep pilot</td></tr>
+          <tr><td><b>Champions</b></td><td>AX promoters inside units, chosen by traits</td><td>AI Lead per unit (in trial)</td><td>Volunteers, no formal role</td><td>AI Champion per project with allocated time</td></tr>
+          <tr><td><b>Leadership</b></td><td>Department head commits (return + request)</td><td>Executives as PO, monthly reports</td><td>Supportive, no regular reporting mechanism yet</td><td>One-page monthly AI report to management</td></tr>
+          <tr><td><b>Measurement</b></td><td>Outcome map, reviewed with the head</td><td>5 layers: cost → usage → initiatives → org → business</td><td>Activity metrics (quests, sessions)</td><td>A minimal 5-layer dashboard</td></tr>
+          <tr><td><b>Guardrails</b></td><td>3 tool levels by capability + security test</td><td>Governance WG reviews requests, risk tiers</td><td>Rules per project/client</td><td>A “tool level × client data sensitivity” matrix</td></tr>
+          <tr><td><b>Internal tools</b></td><td>Golden path CPF→PMF→GTM, ~3,000 tools</td><td>Monthly initiative reports via Slack</td><td>Personal scripts/tools scattered, rarely reused</td><td>A lightweight Fit Journey for AI Quest outputs</td></tr>
+          <tr><td><b>Risk</b></td><td>Cross-functional AI security team</td><td>Governance WG (security, legal)</td><td>Handled ad hoc</td><td>AI risk channel + checklist before using AI on client data</td></tr>
+        </tbody>
+      </table>
+      </div>
+      <div class="opinion">
+        <b>The key difference for an outsourcing company:</b> LMI and SmartHR sell their own products/services, so saved time turns straight into productivity.
+        Under man-month contracts, saving time can <b>reduce revenue</b> unless pricing changes. That makes LMI's lesson “decide where the saved time goes” even more important for Scuti:
+        use it to take more scope with the same team, raise quality (fewer defects, fewer Q&amp;A rounds), or gradually move toward fixed-price / lab contracts with KPIs.
+        This is my personal view and needs discussion with the sales side.
+      </div>
+
+      <h2 id="apply"><span class="section-num">8.</span> Strategies to try at Scuti &amp; how to use them</h2>
+      <p>Six strategies that can start now, ordered along the roadmap in section 3:</p>
+      <div class="strategy">
+        <h4>S1. One page: destination + current state (Phase 0, 2 weeks)</h4>
+        <ul>
+          <li>Inventory: which AI tools we pay for, who uses them, which project may use what under its contract.</li>
+          <li>Write the goal as 2&ndash;3 project metrics instead of user counts, e.g. “cut the time from receiving a Japanese spec to closing Q&amp;A by 30%”.</li>
+          <li><b>How to use:</b> run an LMI-style short survey (“why don't you use AI every day?”) to find the real bottleneck before choosing solutions.</li>
+        </ul>
+      </div>
+      <div class="strategy">
+        <h4>S2. A 66-day pilot in one group (Phase 1)</h4>
+        <ul>
+          <li>“First customer” candidates: the BrSE/comtor group (spec translation, Q&amp;A, minutes) or the QA group (test case generation, reviews).</li>
+          <li>Pitch the leader with <b>return + request</b>: “save X hours/week for the team” + “one champion at 10% time, leader joins weekly review, ‘use AI daily’ in personal goals”.</li>
+          <li><b>How to use:</b> pick the champion by LMI's three traits, fix 2&ndash;3 “AI moments” in each day, hold a 15-minute weekly review.</li>
+        </ul>
+      </div>
+      <div class="strategy">
+        <h4>S3. An outcome map for outsourcing projects (Phase 2)</h4>
+        <ul>
+          <li>Example: <i>AI translates and summarizes specs</i> → (leading) fewer Q&amp;A items sent to the client, less spec reading time → (lagging) shorter ticket lead time, fewer defects from misread specs → (impact) project margin, client satisfaction.</li>
+          <li><b>How to use:</b> pull numbers automatically from Backlog/Jira and calendars (as LMI pulls from Calendar), review with the PM every 2 weeks; if leading indicators don't move, change how AI is used rather than blaming users.</li>
+        </ul>
+      </div>
+      <div class="strategy">
+        <h4>S4. A “tool level × client data” guardrail matrix (Phase 3)</h4>
+        <ul>
+          <li>Level 1 (everyone): Gemini / chat AI inside the company Workspace &mdash; internal or anonymized data only.</li>
+          <li>Level 2 (process improvers): low-code such as Workspace Studio / n8n / Dify in a company-managed environment with logs.</li>
+          <li>Level 3 (coding agents on client repos): only when <b>the contract allows it</b> and the user passed a security test (LMI-style: every answer correct).</li>
+          <li><b>How to use:</b> each project gets one row in the matrix, approved by the PM + security at kick-off. Add a blameless “AI risk” chat channel.</li>
+        </ul>
+      </div>
+      <div class="strategy">
+        <h4>S5. A lightweight golden path for AI Quest outputs (Phase 3&ndash;4)</h4>
+        <ul>
+          <li>Quests that produce a tool/skill/prompt pass 4 gates: a real person needs it (CPF) → 2&ndash;3 trial users see value + security/cost review (PSF) → WAU and a Sean Ellis test in the team (PMF) → roll-out to other projects (GTM).</li>
+          <li><b>How to use:</b> turn AI Quest from “submit an assignment” into a pipeline that produces shared assets; only quests that reach PMF enter the shared library.</li>
+        </ul>
+      </div>
+      <div class="strategy">
+        <h4>S6. A small operating model + monthly report (Phase 4)</h4>
+        <ul>
+          <li>One executive sponsor; 2&ndash;3 part-time people as “AI Ops” (enabler); a Governance WG (security/ISMS, legal, IT); an AI Champion per project.</li>
+          <li>A one-page monthly report on SmartHR's 5 layers: tool cost → usage rate → initiatives/quests with results → project metrics → business impact.</li>
+          <li><b>How to use:</b> monthly initiatives submitted through one form/Slack channel (as SmartHR does), compiled by AI Ops into a company-wide report.</li>
+        </ul>
+      </div>
+      <div class="tip">
+        <b>Suggested 6-month plan for Scuti (personal proposal):</b>
+        Month 1: S1 &bull; Months 1&ndash;3: S2 (66-day pilot) &bull; Months 2&ndash;4: S3 &bull; Months 3&ndash;5: S4 + S5 &bull; Months 5&ndash;6: S6 and expansion to a second group.
+        Gate for expansion: the pilot group uses AI daily and at least one leading indicator has clearly moved.
+      </div>
+
+      <h2 id="video"><span class="section-num">9.</span> Research session video</h2>
+      <p>
+        The video walks through the reading and synthesis: opening both decks on Speaker Deck, flipping slide by slide and pausing on key slides,
+        reviewing the custom diagrams, and finally scrolling through the finished blog.
+      </p>
+      <div class="video-box">
+        <video controls preload="metadata" poster="images/diagram-roadmap-en.png" src="video/company-wide-ai-adoption-roadmap-demo.mp4"></video>
+        <p style="margin:6px 0 0;font-size:13px;color:#5f6368;">File: <a href="video/company-wide-ai-adoption-roadmap-demo.mp4">video/company-wide-ai-adoption-roadmap-demo.mp4</a></p>
+      </div>
+
+      <h2 id="conclusion"><span class="section-num">10.</span> Conclusion</h2>
+      <p>
+        The two decks say the same thing from two directions. LMI shows that in the field, <b>habits, results and safety</b> must be designed &mdash; they don't arrive by themselves.
+        SmartHR shows that at company level you need <b>machinery</b>: executive ownership, a small enabling team, cross-functional governance, champions in every unit and chain-based metrics.
+        Scuti's biggest advantage is that we are an engineering company: golden paths, guardrails, metrics and PMF are our native language.
+        What remains is to bring them to the teams next door &mdash; and, as LMI's last slide says, <b>“first, go and listen to one department.”</b>
+      </p>
+      <p><b>Three things I will do next week:</b></p>
+      <ol>
+        <li>Send a 3-question “why not use AI daily?” survey to one BrSE/QA group.</li>
+        <li>Sketch an outcome map for one running project and ask the PM which numbers can be collected automatically.</li>
+        <li>Propose the guardrail matrix (S4) to the security team for feedback.</li>
+      </ol>
+
+      <h2>References</h2>
+      <ul>
+        <li><a href="https://speakerdeck.com/lmi/pek2026-link-and-motivation" target="_blank">Link and Motivation &ndash; 全社員がAIを「使う」の次へ（ノンエンジニア1,500人が安全に業務を作り変えるゴールデンパスとガードレール） &ndash; Speaker Deck, 2026-09-25</a></li>
+        <li><a href="https://speakerdeck.com/yoshikikonishi_/smarthr-no-zensha-ai-suishin-ha-dou-hajimata-ka" target="_blank">SmartHR &ndash; SmartHRの全社AI推進は、どう始まったか &ndash; Speaker Deck, 2026-09-28</a></li>
+        <li>Works cited inside the slides (not read directly): McKinsey “A better way to lead large-scale change” (5As); Lally et al. (2010) on habit formation; Standish Group CHAOS Report; the article “AI利用率99.8%。SmartHRの「現在地」と「次の壁」”.</li>
+      </ul>
+
+      <div class="footer">
+        <p>File: <code>blog-html/company-wide-ai-adoption-roadmap/company-wide-ai-adoption-roadmap-blog-en.html</code> &bull; Tiếng Việt: <a href="company-wide-ai-adoption-roadmap-blog.html">company-wide-ai-adoption-roadmap-blog.html</a></p>
+        <p>Slide screenshots are © Link and Motivation Group and SmartHR, Inc., used for citation/learning only. Figures A/B/C were drawn by the author (HTML/SVG → PNG).</p>
+      </div>
+    </div>
+  </body>
+</html>

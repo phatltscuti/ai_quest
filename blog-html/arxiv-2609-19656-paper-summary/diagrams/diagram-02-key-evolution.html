@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8" />
+<title>Key evolution</title>
+<style>
+  body{margin:0;background:#fff;font-family:Arial,sans-serif;color:#222}
+  #card{width:1200px;padding:28px 32px;box-sizing:border-box}
+  h1{font-size:26px;margin:0 0 4px}
+  .sub{color:#555;margin:0 0 18px;font-size:15px}
+  .q{background:#eef6ff;border-left:4px solid #0066cc;padding:10px 14px;margin:0 0 14px;font-size:15px}
+  .row{display:flex;gap:14px;align-items:stretch}
+  .step{flex:1;border:1px solid #ddd;border-radius:10px;padding:12px 14px;background:#fafafa;position:relative}
+  .step .it{font-size:13px;color:#666}
+  .step .rank{font-size:30px;font-weight:bold;margin:4px 0 6px}
+  .bad .rank{color:#c62828}.mid .rank{color:#d98a00}.good .rank{color:#2e7d32}
+  .good{background:#e8f5e9;border-color:#2e7d32}
+  .key{font-size:13.5px;font-style:italic;line-height:1.45}
+  .tag{display:inline-block;font-size:12px;background:#fff;border:1px solid #ccc;border-radius:12px;padding:1px 8px;margin-top:8px;font-style:normal}
+  .arrow{align-self:center;font-size:28px;color:#888}
+  h2{font-size:18px;margin:22px 0 8px}
+  .note{font-size:13px;color:#666;margin-top:16px}
+</style>
+</head>
+<body>
+<div id="card">
+  <h1>Index key &ldquo;ti&#7871;n h&oacute;a&rdquo; qua t&#7915;ng v&ograve;ng nh&#432; th&#7871; n&agrave;o?</h1>
+  <p class="sub">Hai case study c&#7911;a paper (Appendix D.1, BRIGHT Biology, retriever BGE-Large) &mdash; v&#7869; l&#7841;i &#273;&#7875; d&#7877; &#273;&#7885;c</p>
+
+  <h2>Case 1 &mdash; G&acirc;n tay &rarr; &ldquo;v&igrave; sao ng&oacute;n &aacute;p &uacute;t kh&ocirc;ng c&#7917; &#273;&#7897;ng &#273;&#7897;c l&#7853;p?&rdquo;</h2>
+  <div class="q"><b>Query test:</b> Why does the ring finger not move independently? Why must the little finger move with it?</div>
+  <div class="row">
+    <div class="step bad"><div class="it">V&ograve;ng 0 (index g&#7889;c)</div><div class="rank">#63</div>
+      <div class="key">&ldquo;On the back of the hand, the tendons to the middle, ring, and little fingers are connected by two obliquely placed bands&rdquo;</div>
+      <span class="tag">v&#259;n b&#7843;n gi&#7843;i ph&#7851;u, &#273;&uacute;ng nh&#432;ng &#7849;n</span></div>
+    <div class="arrow">&rarr;</div>
+    <div class="step mid"><div class="it">V&ograve;ng 6</div><div class="rank">#40</div>
+      <div class="key">&ldquo;structural components that keep the extensor tendons centered over the metacarpal heads to ensure proper leverage&rdquo;</div>
+      <span class="tag">t&aacute;ch th&agrave;nh kh&iacute;a c&#7841;nh, v&#7851;n ng&#7847;m</span></div>
+    <div class="arrow">&rarr;</div>
+    <div class="step good"><div class="it">V&ograve;ng 10 &rarr; 20</div><div class="rank">#2</div>
+      <div class="key">&ldquo;What specific attachments in the hand create this difference in movement freedom for those outer fingers?&rdquo;</div>
+      <span class="tag">di&#7877;n &#273;&#7841;t theo nhu c&#7847;u ng&#432;&#7901;i h&#7887;i</span></div>
+  </div>
+
+  <h2>Case 2 &mdash; Ng&#7845;t x&#7881;u (reflex syncope)</h2>
+  <div class="row">
+    <div class="step bad"><div class="it">V&ograve;ng 0</div><div class="rank">#140</div>
+      <div class="key">&ldquo;Reflex syncope is a brief loss of consciousness due to a neurologically induced drop in blood pressure&hellip;&rdquo;</div></div>
+    <div class="arrow">&rarr;</div>
+    <div class="step mid"><div class="it">V&ograve;ng 2</div><div class="rank">#48</div>
+      <div class="key">&ldquo;I was standing in line at the grocery store&hellip; suddenly felt like I was going to black out&hellip;&rdquo;</div></div>
+    <div class="arrow">&rarr;</div>
+    <div class="step mid"><div class="it">V&ograve;ng 3 / 5</div><div class="rank">#12 &rarr; #9</div>
+      <div class="key">&ldquo;Why do some people suddenly pass out&hellip; heart beating too slow or blood pressure dropping?&rdquo;</div></div>
+    <div class="arrow">&rarr;</div>
+    <div class="step good"><div class="it">V&ograve;ng 6 &rarr; 20</div><div class="rank">#3</div>
+      <div class="key">&ldquo;Why does fainting occur when heart rate slows or blood pressure drops&hellip;?&rdquo;</div></div>
+  </div>
+  <p class="note"><b>B&agrave;i h&#7885;c:</b> n&#7897;i dung t&agrave;i li&#7879;u kh&ocirc;ng &#273;&#7893;i; th&#7913; thay &#273;&#7893;i l&agrave; &ldquo;c&aacute;nh c&#7917;a&rdquo; (index key) &#273;&#7875; ng&#432;&#7901;i h&#7887;i b&#7857;ng ng&ocirc;n ng&#7919; &#273;&#7901;i th&#432;&#7901;ng v&#7851;n t&igrave;m th&#7845;y. Ngu&#7891;n: arXiv:2609.19656v1, Appendix D.1.1 &amp; D.1.2 (rank theo BGE-Large, max score aggregation).</p>
+</div>
+</body>
+</html>

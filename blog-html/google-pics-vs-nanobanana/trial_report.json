@@ -1,0 +1,101 @@
+{
+  "generated_at_ms": 1790995548166,
+  "steps": [
+    {
+      "id": "s1_youtube",
+      "started_ms": 1790995314711,
+      "ended_ms": 1790995329059,
+      "action": "Open official YouTube video",
+      "ok": true,
+      "details": "{\"title\": \"Say hello to Google Pics from Google Workspace\", \"channel\": \"Google Workspace\", \"duration_s\": 98.781}"
+    },
+    {
+      "id": "s1_frame_18",
+      "started_ms": 1790995329471,
+      "ended_ms": 1790995335860,
+      "action": "Video frame at 18s",
+      "ok": true,
+      "details": "step-02-yt-generate-variations.png"
+    },
+    {
+      "id": "s1_frame_34",
+      "started_ms": 1790995335860,
+      "ended_ms": 1790995342153,
+      "action": "Video frame at 34s",
+      "ok": true,
+      "details": "step-03-yt-add-element.png"
+    },
+    {
+      "id": "s1_frame_39",
+      "started_ms": 1790995342153,
+      "ended_ms": 1790995348516,
+      "action": "Video frame at 39s",
+      "ok": true,
+      "details": "step-04-yt-edit-text.png"
+    },
+    {
+      "id": "s1_frame_50",
+      "started_ms": 1790995348516,
+      "ended_ms": 1790995354880,
+      "action": "Video frame at 50s",
+      "ok": true,
+      "details": "step-05-yt-translate-result.png"
+    },
+    {
+      "id": "s1_frame_60",
+      "started_ms": 1790995354880,
+      "ended_ms": 1790995361194,
+      "action": "Video frame at 60s",
+      "ok": true,
+      "details": "step-06-yt-edit-in-slides.png"
+    },
+    {
+      "id": "s2_blogpost",
+      "started_ms": 1790995361194,
+      "ended_ms": 1790995369936,
+      "action": "Open Workspace Updates post",
+      "ok": true,
+      "details": "step-07-workspace-updates-post.png | final url=https://workspaceupdates.googleblog.com/2026/09/google-pics-brings-pro-level-ai-image-creation-and-editing-to-Google-Workspace.html"
+    },
+    {
+      "id": "s3_product",
+      "started_ms": 1790995372204,
+      "ended_ms": 1790995381139,
+      "action": "Open product page (hero)",
+      "ok": true,
+      "details": "step-08-product-page-hero.png | final url=https://workspace.google.com/intl/en/products/pics/"
+    },
+    {
+      "id": "s3_product_features",
+      "started_ms": 1790995381139,
+      "ended_ms": 1790995387422,
+      "action": "Scroll product page features",
+      "ok": true,
+      "details": ""
+    },
+    {
+      "id": "s4_help",
+      "started_ms": 1790995387422,
+      "ended_ms": 1790995398266,
+      "action": "Open Help Center: Get started with Google Pics",
+      "ok": true,
+      "details": "step-10-help-center-get-started.png | final url=https://support.google.com/docs/answer/17170048?hl=en"
+    },
+    {
+      "id": "s5_pics",
+      "started_ms": 1790995398266,
+      "ended_ms": 1790995406415,
+      "action": "Open pics.new",
+      "ok": true,
+      "details": "final url=https://accounts.google.com/v3/signin/identifier?continue=https://docs.google.com/images/u/0/create?usp%3Ddot_new&followup=https://docs.google.com/images/u/0/create?usp%3Ddot_new&ltmpl=pix&osid=1&passive=1209600&service=wise&flowName=GlifWebSignIn&flowEntry=ServiceLogin&dsh=S506961778:1790995402431957 | sign-in required=True -> STOP (khong nhap thong tin dang nhap)"
+    },
+    {
+      "id": "s6_blog",
+      "started_ms": 1790995408928,
+      "ended_ms": 1790995476374,
+      "action": "Scroll finished blog top -> bottom",
+      "ok": true,
+      "details": ""
+    }
+  ]
+}

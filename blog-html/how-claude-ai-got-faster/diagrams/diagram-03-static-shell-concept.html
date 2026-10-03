@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<title>Diagram 03 - Static shell concept (own illustration)</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Segoe UI',Roboto,Arial,sans-serif;background:#eef1f5}
+  #canvas{width:1400px;padding:34px 40px 26px;background:#fafafa;color:#1f2933}
+  h1{font-size:27px;color:#0d47a1}
+  .sub{font-size:15px;color:#52606d;margin:4px 0 20px}
+  .warn{float:right;font-size:13px;background:#ffebee;color:#b71c1c;border:1px solid #ef9a9a;padding:5px 12px;border-radius:14px}
+  .lane{display:grid;grid-template-columns:200px 1fr;gap:16px;margin-bottom:22px;align-items:center}
+  .lane .name{font-weight:700;font-size:17px}
+  .lane .name small{display:block;font-weight:400;font-size:13px;color:#52606d}
+  .track{position:relative;height:112px;background:#fff;border:1px solid #d9e2ec;border-radius:10px}
+  .seg{position:absolute;top:14px;height:34px;border-radius:6px;color:#fff;font-size:13px;display:flex;align-items:center;padding:0 10px;white-space:nowrap}
+  .blank{background:#cfd8dc;color:#37474f}
+  .html{background:#78909c}
+  .js{background:#ef6c00}
+  .react{background:#1565c0}
+  .ready{background:#2e7d32}
+  .static{background:#00838f}
+  .mark{position:absolute;top:54px;font-size:12.5px;color:#1f2933;transform:translateX(-50%);text-align:center;line-height:1.3}
+  .mark:before{content:'';display:block;margin:0 auto 3px;width:2px;height:10px;background:#1f2933}
+  .axis{display:grid;grid-template-columns:200px 1fr;gap:16px;font-size:12.5px;color:#7b8794}
+  .axis div:last-child{display:flex;justify-content:space-between}
+  .notes{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:18px}
+  .note{background:#fff;border:1px solid #d9e2ec;border-radius:9px;padding:12px 14px;font-size:13.5px;line-height:1.45}
+  .note b{color:#0d47a1}
+</style>
+</head>
+<body>
+<div id="canvas">
+  <span class="warn" data-vi="Minh họa khái niệm TỰ VẼ – không phải số đo thật" data-en="OWN conceptual illustration – not real measurements"></span>
+  <h1 data-vi="Ý tưởng “static composer”: cho người dùng gõ trước khi framework sẵn sàng" data-en="The “static composer” idea: let users type before the framework is ready"></h1>
+  <div class="sub" data-vi="Trục thời gian tương đối sau khi mở trang (không tỷ lệ). Mục tiêu: rút ngắn khoảng từ lúc mở đến lúc <b>gõ được</b>." data-en="Relative timeline after opening the page (not to scale). Goal: shorten the time from open to <b>typeable</b>."></div>
+
+  <div class="lane">
+    <div class="name" data-vi="Trước<small>SPA thông thường</small>" data-en="Before<small>typical SPA</small>"></div>
+    <div class="track">
+      <div class="seg blank" style="left:1%;width:13%" data-vi="trang trắng" data-en="blank page"></div>
+      <div class="seg js" style="left:14.5%;width:33%" data-vi="tải + parse JS bundle" data-en="download + parse JS bundle"></div>
+      <div class="seg react" style="left:48%;width:30%" data-vi="React init + render" data-en="React init + render"></div>
+      <div class="seg ready" style="left:78.5%;width:20.5%" data-vi="gõ được ✔" data-en="typeable ✔"></div>
+      <div class="mark" style="left:78.5%" data-vi="người dùng<br>mới gõ được" data-en="user can<br>finally type"></div>
+    </div>
+  </div>
+
+  <div class="lane">
+    <div class="name" data-vi="Sau<small>HTML tĩnh + React vẽ đè</small>" data-en="After<small>static HTML + React paints over</small>"></div>
+    <div class="track">
+      <div class="seg static" style="left:1%;width:13%" data-vi="HTML tĩnh" data-en="static HTML"></div>
+      <div class="seg ready" style="left:14.5%;width:84.5%;justify-content:flex-start" data-vi="gõ được ngay ✔ &nbsp;&nbsp;&nbsp;&nbsp;(JS + React khởi tạo ở phía sau, rồi “nhận” ô nhập mà không mất phím, không xê dịch)" data-en="typeable right away ✔ &nbsp;&nbsp;&nbsp;&nbsp;(JS + React boot behind it, then take over the input with no lost keys, no shift)"></div>
+      <div class="mark" style="left:14.5%" data-vi="gõ được<br>sớm hơn nhiều" data-en="typeable<br>much earlier"></div>
+    </div>
+  </div>
+  <div class="axis"><div></div><div><span>t = 0</span><span data-vi="thời gian →" data-en="time →"></span></div></div>
+
+  <div class="notes">
+    <div class="note"><b data-vi="Điều kiện để an toàn" data-en="What makes it safe"></b><br><span data-vi="HTML tĩnh được sinh từ chính component thật (bài gốc: render React trong jsdom), có test chống “drift”." data-en="The static HTML is generated from the real component (the post: render React in jsdom), with a drift test."></span></div>
+    <div class="note"><b data-vi="Guardrail bắt buộc" data-en="Required guardrails"></b><br><span data-vi="So khớp pixel nhiều viewport (bài gốc: 14 kích thước, ≤1 px); test gõ phím xuyên qua lúc bàn giao." data-en="Pixel comparison across viewports (the post: 14 sizes, ≤1 px); a keystroke test through the handoff."></span></div>
+    <div class="note"><b data-vi="Áp dụng ở Scuti" data-en="At Scuti"></b><br><span data-vi="Màn login / tìm kiếm / form chính của web app khách Nhật: SSR hoặc prerender khung + ô nhập, hydrate sau." data-en="Login / search / main form screens of client web apps: SSR or prerender the shell + input, hydrate later."></span></div>
+  </div>
+</div>
+<script src="_common.js"></script>
+</body>
+</html>

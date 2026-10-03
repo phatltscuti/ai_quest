@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How claude.ai got 3x faster in two weeks – Techniques &amp; how to apply them</title>
+<style>
+  :root {
+    --primary: #0d47a1;
+    --primary-light: #1976d2;
+    --accent: #ff6d00;
+    --bg: #fafafa;
+    --card: #ffffff;
+    --text: #212121;
+    --text-secondary: #616161;
+    --border: #e0e0e0;
+    --code-bg: #263238;
+    --success: #2e7d32;
+    --success-bg: #e8f5e9;
+    --warning: #f57f17;
+    --warning-bg: #fff8e1;
+    --gradient-start: #0d47a1;
+    --gradient-mid: #1565c0;
+    --gradient-end: #00838f;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background: var(--bg); color: var(--text); line-height: 1.75; font-size: 16px; }
+  .hero { background: linear-gradient(135deg, var(--gradient-start), var(--gradient-mid), var(--gradient-end)); color: white; padding: 64px 20px; text-align: center; }
+  .hero h1 { font-size: 2.3em; margin-bottom: 14px; font-weight: 700; letter-spacing: -0.5px; }
+  .hero .subtitle { font-size: 1.12em; opacity: 0.93; max-width: 760px; margin: 0 auto; }
+  .hero .badge { display: inline-block; background: rgba(255,255,255,0.18); padding: 6px 20px; border-radius: 20px; font-size: 0.84em; margin-bottom: 18px; }
+  .container { max-width: 940px; margin: 0 auto; padding: 32px 20px; }
+  .toc { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 28px 32px; margin-bottom: 38px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+  .toc h2 { font-size: 1.3em; margin-bottom: 14px; color: var(--primary); border: none; padding: 0; }
+  .toc ol { padding-left: 22px; }
+  .toc li { margin-bottom: 6px; }
+  .toc a { color: var(--primary-light); text-decoration: none; }
+  .toc a:hover { text-decoration: underline; }
+  section { margin-bottom: 44px; }
+  h2 { font-size: 1.55em; color: var(--primary); border-bottom: 3px solid var(--primary); padding-bottom: 8px; margin-bottom: 22px; }
+  h3 { font-size: 1.22em; color: var(--text); margin: 22px 0 10px; }
+  p { margin-bottom: 14px; }
+  a { color: var(--primary-light); }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin-bottom: 20px; box-shadow: 0 1px 2px rgba(0,0,0,0.04); }
+  .card-accent { border-left: 4px solid var(--accent); }
+  .card-info { border-left: 4px solid var(--primary-light); }
+  .card-warning { border-left: 4px solid var(--warning); background: var(--warning-bg); }
+  .card-success { border-left: 4px solid var(--success); background: var(--success-bg); }
+  .prompt-box { background: var(--code-bg); color: #cfd8dc; border-radius: 10px; padding: 22px 24px; margin: 14px 0 22px; font-family: 'Cascadia Code', 'Fira Code', Consolas, monospace; font-size: 0.86em; line-height: 1.6; white-space: pre-wrap; position: relative; overflow-x: auto; }
+  .prompt-box .label { position: absolute; top: 8px; right: 12px; background: var(--accent); color: white; font-size: 0.75em; padding: 2px 12px; border-radius: 8px; font-family: 'Segoe UI', sans-serif; font-weight: 600; }
+  .table-wrap { overflow-x: auto; }
+  table.data-table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+  table.data-table th, table.data-table td { border: 1px solid var(--border); padding: 10px 14px; text-align: left; font-size: 0.93em; vertical-align: top; }
+  table.data-table th { background: var(--primary); color: white; font-weight: 600; }
+  table.data-table tr:nth-child(even) { background: #f5f5f5; }
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 18px 0; }
+  .stat { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 16px; text-align: center; }
+  .stat b { display: block; font-size: 1.7em; color: var(--primary); line-height: 1.2; }
+  .stat span { font-size: 0.85em; color: var(--text-secondary); }
+  @media (max-width: 700px) { .stats { grid-template-columns: 1fr 1fr; } .hero h1 { font-size: 1.7em; } }
+  .step-num { display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px; background: var(--primary); color: white; border-radius: 50%; font-weight: 700; font-size: 0.9em; margin-right: 12px; flex-shrink: 0; }
+  .step-row { display: flex; align-items: flex-start; margin-bottom: 14px; }
+  .step-row p { margin: 0; }
+  .screenshot-wrap { margin: 16px 0 22px; text-align: center; }
+  .screenshot-wrap img, .screenshot-wrap video { max-width: 100%; border: 1px solid var(--border); border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+  .screenshot-wrap .caption { margin-top: 8px; font-size: 0.85em; color: var(--text-secondary); }
+  ul, ol { margin-bottom: 14px; padding-left: 24px; }
+  li { margin-bottom: 6px; }
+  .footer { text-align: center; padding: 32px; color: var(--text-secondary); font-size: 0.85em; border-top: 1px solid var(--border); margin-top: 40px; }
+  code { background: #eceff1; padding: 2px 6px; border-radius: 4px; font-size: 0.9em; }
+  .prompt-box code { background: none; padding: 0; }
+  .tag { display: inline-block; background: #e3f2fd; color: var(--primary); padding: 2px 10px; border-radius: 12px; font-size: 0.8em; margin: 2px 4px 2px 0; }
+  .highlight-box { background: linear-gradient(135deg, #e3f2fd, #e8f5e9); border-radius: 12px; padding: 20px 24px; margin: 18px 0; border: 1px solid #bbdefb; }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="badge">AI Quest &mdash; Investigate What</div>
+  <h1>Claude.ai got 3x faster in two weeks: what did they actually do?</h1>
+  <p class="subtitle">A summary of the techniques and engineering strategies in &ldquo;How we made claude.ai 3x faster in two weeks&rdquo; (claude.dev), plus personal takeaways and how to apply them to web/app projects at Scuti AI</p>
+</div>
+
+<div class="container">
+
+<nav class="toc">
+  <h2>Contents</h2>
+  <ol>
+    <li><a href="#s1">TL;DR &amp; key numbers</a></li>
+    <li><a href="#s2">Context: one sprint, one Slack channel, Claude in every thread</a></li>
+    <li><a href="#s3">Strategy 1 &ndash; Measure first: &ldquo;anything you can count, you can climb&rdquo;</a></li>
+    <li><a href="#s4">Strategy 2 &ndash; A loop per thread</a></li>
+    <li><a href="#s5">Strategy 3 &ndash; The concrete technical optimizations</a></li>
+    <li><a href="#s6">Strategy 4 &ndash; Guardrails: moving fast without breaking things</a></li>
+    <li><a href="#s7">Strategy 5 &ndash; Human steering: ambition, taste, direction</a></li>
+    <li><a href="#s8">Case study: an 8-millisecond frame budget</a></li>
+    <li><a href="#s9">Personal takeaways</a></li>
+    <li><a href="#s10">Applying it to projects &amp; daily operations at Scuti AI</a></li>
+    <li><a href="#s11">Demo video &amp; how this blog was made</a></li>
+    <li><a href="#s12">References</a></li>
+  </ol>
+</nav>
+
+<section id="s1">
+  <h2>1. TL;DR &amp; key numbers</h2>
+  <p>In August 2026 the team behind claude.ai and the Claude desktop app ran a <strong>two-week</strong> sprint to answer a simple user complaint: &ldquo;it's slow&rdquo;. The core journeys ended up roughly <strong>3x faster</strong>. The interesting part is not a single trick but <strong>how the work was organized</strong>: Claude (via Claude Tag beta, running an internal research model roughly comparable to Opus 5.5) found bottlenecks, built benchmarks, sent PRs and watched deploys; engineers set goals, weighed tradeoffs and approved every change.</p>
+  <div class="stats">
+    <div class="stat"><b>3.1x</b><span>faster (geometric mean of 13 p75 measurements)</span></div>
+    <div class="stat"><b>3.1s &rarr; 0.55s</b><span>time to a typeable page (claude.ai, fresh load)</span></div>
+    <div class="stat"><b>3,000+</b><span>changes merged, 0 customer incidents, 0 rollbacks</span></div>
+    <div class="stat"><b>150+</b><span>optimization threads running at the same time</span></div>
+  </div>
+  <div class="screenshot-wrap">
+    <img src="images/diagram-01-optimization-map-en.png" alt="Five-layer optimization map">
+    <div class="caption">Own diagram (HTML &rarr; PNG): the big picture in 5 layers &ndash; measure, loop, techniques, guardrails, human steering</div>
+  </div>
+</section>
+
+<section id="s2">
+  <h2>2. Context: one sprint, one Slack channel, Claude in every thread</h2>
+  <p>Before the sprint the team opened a Slack channel and gave Claude a standing &ldquo;job description&rdquo;: watch deploys for performance regressions, judge whether existing telemetry is accurate and complete, keep observability dashboards curated, proactively fix low-hanging fruit, propose performance projects and talk to its human teammates. They were explicit that full autonomy was the long-term goal, but not yet possible.</p>
+  <p>Step one was <strong>choosing what to measure</strong>. Claude analysed usage data through the Datadog MCP server and identified four journeys covering about 95% of activity: launching the app, starting a conversation, loading an existing conversation and sending a message. Across web/desktop and products (Chat, Claude Code, Cowork) that gave <strong>13 measurements</strong>. The team added instrumentation until all of them were comparable: start at a user interaction, end when the result is rendered, and separate client from server work.</p>
+  <div class="screenshot-wrap">
+    <img src="images/step-02-core-journeys-chart-crop.png" alt="Core user journeys p75 chart in the original post">
+    <div class="caption">The &ldquo;Core user journeys, p75&rdquo; chart in the original post: 13 before/after measurements (Aug 13 vs. Aug 27)</div>
+  </div>
+  <p>The sprint started with about twenty hand-picked projects; Claude estimated each one's impact in milliseconds and the team summed them into targets. Then the surprise: <strong>12 of 13 targets were hit by day three</strong>. So they set new targets and asked Claude to find more things to measure &ndash; &ldquo;wacky ideas&rdquo; welcome.</p>
+  <div class="screenshot-wrap">
+    <img src="images/diagram-02-before-after-p75-en.png" alt="Before/after chart of the 13 p75 measurements">
+    <div class="caption">Own chart redrawn from the post's figures (not my measurements): grey = before, blue = after. The biggest win is sending a message in Cowork (928 &rarr; 48 ms, 19x)</div>
+  </div>
+</section>
+
+<section id="s3">
+  <h2>3. Strategy 1 &ndash; Measure first: &ldquo;anything you can count, you can climb&rdquo;</h2>
+  <p>The problem: field data only arrives after each deploy, while Claude can work for hours, even overnight. To iterate faster than the deploy cadence the team needed <strong>lab measurements</strong> that run immediately. Wall-clock time is what users feel but it is too noisy to gate CI, so they looked for <strong>deterministic</strong> quantities:</p>
+  <ul>
+    <li><strong>CPU instruction counts</strong> for pure-JavaScript hot paths: run the benchmark under Valgrind with <code>node --predictable</code> and compare to a checked-in baseline &ndash; one run, no statistics.</li>
+    <li><strong>In the browser</strong> (no instruction counting under Chromium): React commits per interaction, function call counts from V8 precise coverage, layout/style-recalc counts, DOM mutations.</li>
+  </ul>
+  <p>Each benchmark had two jobs: (1) a number Claude could push down in the lab, and (2) a <strong>CI guardrail that can only ratchet down</strong>. Flaky benchmarks, or ones that did not correlate with real latency, were thrown out so Claude would not climb the wrong hill. Claude also had to <em>prove</em> that lower counts meant lower wall-clock time.</p>
+  <div class="screenshot-wrap">
+    <img src="images/step-04-instruction-vs-wallclock-crop.png" alt="CPU instructions vs wall-clock table">
+    <div class="caption">&ldquo;Does the count track the clock?&rdquo;: 48% fewer instructions in message-tree assembly &rarr; 78% less wall-clock (4.6x); the status-line scanner &minus;31% instructions &rarr; &minus;44% time</div>
+  </div>
+  <p>Concretely: profiling the conversation message-tree assembly showed a quarter of the instructions were megamorphic dictionary lookups, resolving the same message ID <strong>three times</strong>. It now resolves it once; the status-line scanner got a cheap first-character check before the regex. Two ratchets were then checked in: any PR raising those counts fails CI, and a daily job lowers the ceiling whenever the count drops.</p>
+  <div class="card card-info">
+    <strong>The central lesson:</strong> measurement used to be &ldquo;step zero&rdquo; (add a metric, wait for data, then understand). With an AI agent it becomes &ldquo;step one of the climb&rdquo;: as soon as there is a number to beat, optimization starts. So the highest-leverage activity was <strong>finding more things to measure</strong>.
+  </div>
+</section>
+
+<section id="s4">
+  <h2>4. Strategy 2 &ndash; A loop per thread</h2>
+  <p>Everything happened in one Slack channel, with several engineers and Claude in every thread. Each thread followed the same loop:</p>
+  <div class="step-row"><span class="step-num">1</span><p>Someone opens a thread about a slow stretch, usually with a screenshot or screen recording.</p></div>
+  <div class="step-row"><span class="step-num">2</span><p>Claude traces the flow and finds or builds a benchmark that reproduces it.</p></div>
+  <div class="step-row"><span class="step-num">3</span><p>With a promising lab result it sends PRs &ndash; often several small ones sized for risk and review; anything user-visible goes behind a feature flag.</p></div>
+  <div class="step-row"><span class="step-num">4</span><p>After shipping, Claude watches the deploy and reads field data.</p></div>
+  <div class="step-row"><span class="step-num">5</span><p>Faster &rarr; lock in the win by ratcheting the benchmark down. Not faster &rarr; turn the flag off and iterate.</p></div>
+  <div class="step-row"><span class="step-num">6</span><p>Move on to the next slow spot in the same journey.</p></div>
+  <div class="screenshot-wrap">
+    <img src="images/step-05-loop-figure-crop.png" alt="One thread in the loop figure">
+    <div class="caption">&ldquo;One thread in the loop&rdquo; figure in the original post</div>
+  </div>
+  <h3>Example: sidebar jank no monitor could see</h3>
+  <p>A recording showed sidebar rows popping in after load. CLS missed it: each shift scored about 0.008, far below the 0.1 &ldquo;good&rdquo; threshold. The team went to the underlying <strong>Layout Instability API</strong>: Claude built a telemetry event mapping every shift to a <em>region</em> (sidebar, transcript&hellip;) and a <em>phase</em> (before first paint, after typeable), plus an integration test that deliberately delays sidebar data until after first paint and fails on any shift. Red 20/20 on main, green 20/20 on the fix.</p>
+  <p>Once deployed, field data showed <strong>31% of web loads</strong> moved something after the page was usable. Claude fixed the top causes in batches (a late header row, a caret sliding once the user's name loaded, a list moving when the scrollbar appeared&hellip;), then went for the next batch.</p>
+</section>
+
+<section id="s5">
+  <h2>5. Strategy 3 &ndash; The concrete technical optimizations</h2>
+  <p>Once the loop worked for one thread, scaling meant opening more threads &ndash; at times more than 150 at once, a single thread producing 50&ndash;100 PRs, and increasingly Claude itself opening threads from its own findings. Here are the specific changes named in the post, grouped by journey:</p>
+  <div class="table-wrap">
+  <table class="data-table">
+    <thead><tr><th>Area</th><th>Problem / technique</th><th>Why it matters</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Launch</strong></td><td><strong>Static composer</strong>: the input box is baked into the HTML; React boots behind it and paints on top</td><td>Users can type before the framework is ready</td></tr>
+      <tr><td><strong>Desktop launch</strong></td><td>Precompiled <strong>V8 code cache</strong> for the desktop shell's main process</td><td>No recompiling JS from scratch at every start</td></tr>
+      <tr><td><strong>Navigation</strong></td><td>Composer stays mounted between conversations; <strong>prefetch sessions on hover</strong>; sidebar re-renders cut by 90%</td><td>Switching conversations feels instant</td></tr>
+      <tr><td><strong>Typing</strong></td><td>A React &ldquo;hook census&rdquo;: 6,900 hooks and 900 store subscriptions on the composer's typing path, re-rendering per keystroke</td><td>Remove redundant subscriptions on the hot path</td></tr>
+      <tr><td><strong>CSS</strong></td><td>A single <code>:root:has()</code> selector added 24 ms of style recalculation to every DOM change</td><td>One CSS line can be a bottleneck</td></tr>
+      <tr><td><strong>Hidden reloads</strong></td><td>A leftover <code>location.reload()</code> caused about <strong>500,000 hidden reloads a day</strong>, invisible to every load metric</td><td>Trace what happens after first paint too</td></tr>
+      <tr><td><strong>Idle tabs</strong></td><td>Identical cache snapshots cloned into IndexedDB twice a minute, on the main thread</td><td>Profile tabs that are &ldquo;doing nothing&rdquo;</td></tr>
+      <tr><td><strong>Syntax highlighting</strong></td><td>One em dash or curly quote makes V8 store the whole string as UTF-16, so every highlighting regex takes the slower two-byte path. A 20-line fix copies each code block into a one-byte string first</td><td>First code block: main-thread blocking 1.0 s &rarr; 0.35 s</td></tr>
+      <tr><td><strong>Streaming</strong></td><td>Memoize finished blocks (no more O(message length) work per chunk), move code-fence tokenization to a worker, reveal tables cell by cell</td><td>Total main-thread blocking ~750 ms &rarr; ~200 ms</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <div class="screenshot-wrap">
+    <img src="images/step-07-em-dash-chart-crop.png" alt="Highlighting the first code block chart">
+    <div class="caption">Chart in the original post: main-thread blocking when highlighting the first code block, before and after the &ldquo;em dash&rdquo; fix</div>
+  </div>
+  <p>Two side effects stand out: about <strong>a third of PRs added telemetry or guardrails</strong>, and every new instrument spawned more threads; and because the work was public in one channel, other teams started bringing their own changes in for performance review.</p>
+</section>
+
+<section id="s6">
+  <h2>6. Strategy 4 &ndash; Guardrails: moving fast without breaking things</h2>
+  <p>Almost everything touched was a hot path (first paint, the composer, the transcript), so the safety mechanisms were set up <strong>before</strong> speeding up:</p>
+  <ul>
+    <li>Every PR went through automated review plus at least one human approval; <strong>unit tests always came before optimizations</strong>.</li>
+    <li>Anything that could cause a user-visible problem shipped behind a <strong>short-lived feature flag</strong>. Claude classified each flag as kill switch or ramp and retired it as soon as it was safe: nearly 200 flags, more than half already removed by the end.</li>
+    <li><strong>Ratchets</strong> lock wins into CI, because performance decays in a fast-moving codebase.</li>
+    <li><strong>Incremental rollouts</strong>: employees first, then 1% of users, then everyone.</li>
+  </ul>
+  <p>The static composer is &ldquo;brittle by design&rdquo; (off by one pixel and the illusion breaks), so it got dozens of guardrails: the static markup is generated by rendering the real React component in jsdom, with a no-drift test; an integration suite compares static and React renders at <strong>14 viewport sizes</strong> within 1 px; a keystroke test types through the handoff and fails on lost or reordered keys; in the field each handoff reports shifts to a tenth of a pixel and Claude opens a thread for any nonzero event.</p>
+  <div class="screenshot-wrap">
+    <img src="images/diagram-03-static-shell-concept-en.png" alt="Own conceptual illustration of the static composer">
+    <div class="caption">Conceptual illustration <strong>drawn by me</strong> (not measurements): a typical SPA waits for JS + React before typing; with static HTML users can type almost immediately</div>
+  </div>
+  <h3>A bug that &ldquo;wasn't ours&rdquo;: Chrome prerendering</h3>
+  <p>Four hours after the static composer went out internally, a teammate shared a recording: opening claude.ai in a new tab occasionally dropped the composer by ~10 px. Claude worked it out from the video: on organization-managed browsers Chrome's new-tab page has a 56 px footer; Chrome <strong>prerenders</strong> the page while the URL is typed, at that shorter height, and resizes ~0.1 s after first paint. The composer sits at 18% of page height, so it drops 0.18 &times; 56 &asymp; 10 px &ndash; matching the video. The bug was always latent; it only showed because the page now painted earlier. Fix: pin the layout across the resize and add a test that simulates the prerender flow.</p>
+</section>
+
+<section id="s7">
+  <h2>7. Strategy 5 &ndash; Human steering: ambition, taste, direction</h2>
+  <p>The loop was productive but <strong>not autonomous</strong>. The team describes the human role in three parts:</p>
+  <div class="table-wrap">
+  <table class="data-table">
+    <thead><tr><th>Role</th><th>In the post</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Ambition</strong></td><td>By default Claude is careful: it files tickets, hedges on feasibility, pads estimates. Trusting their guardrails, engineers kept pushing it to be bolder (&ldquo;please be braver&rdquo;) and reminding it that targets are not the stopping point.</td></tr>
+      <tr><td><strong>Taste</strong></td><td>Each thread had a named human owner. User-perceptible changes came with before/after screenshots or recordings for the owner to rule on: cell-by-cell or row-by-row tables? skeleton now or after half a second? is a word-by-word fade worth a fifth of the frame budget?</td></tr>
+      <tr><td><strong>Direction</strong></td><td>Threads were deliberately narrow: one benchmark or journey. Humans decided sequencing, merged overlapping threads and closed ones with diminishing returns. A 900-line PR was rejected because 2 ms per send was not worth maintaining a build plugin.</td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<section id="s8">
+  <h2>8. Case study: an 8-millisecond frame budget</h2>
+  <p>One sidequest shows all the pieces together. While demoing a regex optimization for live syntax highlighting, Claude attached a recording of a long reply streaming, with an FPS readout computed from animation-frame timestamps. An engineer asked: can we reach 120 fps? The browser in the measurement rig ticks at 60 Hz by default, but Claude used <strong>DevTools begin-frame control</strong> for deterministic 120 Hz frame stepping (exactly 240 frames for 240 begin-frames at 8.33 ms), turning &ldquo;did this frame fit the budget?&rdquo; into an exact read instead of a noisy one.</p>
+  <p>Claude then stepped through a long reply frame by frame: memoizing finished blocks, moving tokenization to a worker, revealing tables cell by cell. That thread alone landed nearly <strong>60 PRs</strong>. Long replies now block the main thread ~200 ms in total instead of ~750 ms, use about a third of the CPU and hold 120 fps start to finish on a 120 Hz MacBook; the 120 Hz rig became a nightly regression job.</p>
+  <p>The post ends with what's left: p95, other journeys and very long conversations; some fixes went upstream (Electron, Chromium, Node.js) and will get their own post.</p>
+</section>
+
+<section id="s9">
+  <h2>9. Personal takeaways</h2>
+  <div class="card card-accent">
+    <ol>
+      <li><strong>The real bottleneck is missing measurements, not missing ideas.</strong> Most bugs in the post (hidden reloads, the <code>:has()</code> selector, the UTF-16 em dash) nobody would have guessed; they only surfaced once there was a concrete number to look at.</li>
+      <li><strong>Deterministic metrics for CI, wall-clock for users.</strong> Counting instructions, renders or requests is far more stable than milliseconds &ndash; but prove the correlation with real time before trusting it.</li>
+      <li><strong>Ratchets are the cheapest way to keep a win.</strong> An unlocked optimization erodes within a few sprints. &ldquo;Can only go down&rdquo; thresholds make performance a protected property, not a campaign.</li>
+      <li><strong>Speed comes from safety.</strong> 3,000 changes without a rollback came from tests-first, flags and staged rollouts &ndash; guardrails do not slow you down, they let you go fast.</li>
+      <li><strong>AI agents need permission to be ambitious, and humans to keep the taste.</strong> The agent defaults to caution; people decide what is worth doing (a 900-line PR for 2 ms is not).</li>
+      <li><strong>A &ldquo;good&rdquo; CLS can still be a bad experience.</strong> Aggregate metrics have thresholds; users don't. Sometimes you need the raw API (Layout Instability) to see the problem.</li>
+    </ol>
+  </div>
+</section>
+
+<section id="s10">
+  <h2>10. Applying it to projects &amp; daily operations at Scuti AI</h2>
+  <p>Scuti AI builds outsourced web/apps for Japanese clients: no millions of users or dedicated performance team like Anthropic, but the core ideas scale down well. Here is the version I propose:</p>
+  <div class="screenshot-wrap">
+    <img src="images/diagram-04-scuti-perf-loop-en.png" alt="Proposed performance loop for Scuti">
+    <div class="caption">Own design: a 6-step &ldquo;outsourcing-sized&rdquo; loop, an AI agent (Claude Code) does the repetitive work, engineers + PM keep the decisions</div>
+  </div>
+  <h3>10.1. In client projects</h3>
+  <div class="table-wrap">
+  <table class="data-table">
+    <thead><tr><th>Technique in the post</th><th>How to apply it at Scuti</th></tr></thead>
+    <tbody>
+      <tr><td>4 journeys = 95% of activity</td><td>At proposal/kickoff, agree with the Japanese client on the 3&ndash;5 most important screens (login, list, search, sign-up&hellip;) and write p75 targets into the non-functional requirements (非機能要件).</td></tr>
+      <tr><td>Lab benchmarks + deterministic metrics</td><td>An E2E benchmark script per journey with CPU/network throttling; in CI, count stable things: requests, JS bundle size, SQL queries per API (catch N+1), re-renders (React Profiler).</td></tr>
+      <tr><td>Ratchets in CI</td><td><code>size-limit</code> / Lighthouse CI budgets / query-count tests: a PR that increases them fails; when they drop, commit the new ceiling.</td></tr>
+      <tr><td>Static composer</td><td>For first screens (login, search), SSR/prerender the shell and the input so users can act early; add screenshot-comparison and keystroke-through-hydration tests.</td></tr>
+      <tr><td>Prefetch on hover, keep components mounted</td><td>List &rarr; detail flows (Next.js <code>prefetch</code>, React Query <code>prefetchQuery</code> on hover).</td></tr>
+      <tr><td>Layout Instability by region</td><td>Send <code>layout-shift</code> entries tagged with region names to Sentry/Datadog; Japanese clients are very sensitive to &ldquo;jumpy&rdquo; UI, so this is a visible quality win.</td></tr>
+      <tr><td>Flags + staged rollout</td><td>Dev &rarr; staging &rarr; client UAT &rarr; a share of users &rarr; everyone; each flag records its type (kill switch/ramp) and removal date.</td></tr>
+      <tr><td>Before/after recordings for the people with &ldquo;taste&rdquo;</td><td>Attach before/after videos to the weekly report (週次報告): easier than tables of numbers and speeds up client approval of UI changes.</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <h3>10.2. In daily operations</h3>
+  <ul>
+    <li><strong>One shared performance channel</strong> (Slack/Teams) per project: whoever sees slowness opens a thread with a recording; one thread = one narrow problem with an owner.</li>
+    <li><strong>Give Claude Code the repetitive work</strong>: reading traces, writing benchmarks, proposing small PRs with before/after numbers. Engineers review and decide whether to merge &ndash; the AI never merges by itself.</li>
+    <li><strong>Tests before optimizations</strong> &ndash; a mandatory review rule, as in the post.</li>
+    <li><strong>Set targets as numbers</strong> instead of &ldquo;make it faster&rdquo;; once hit, ask &ldquo;what else can we measure?&rdquo;.</li>
+    <li><strong>Clean up flags regularly</strong> (e.g. at the end of every sprint) to avoid tech debt.</li>
+  </ul>
+  <h3>10.3. A minimal guardrail you can use today</h3>
+  <div class="prompt-box"><span class="label">package.json + CI</span>// 1) Bundle-size ratchet (size-limit)
+"size-limit": [
+  { "path": "dist/assets/index-*.js", "limit": "180 KB" }   // may only go down
+]
+
+// 2) Real p75 via web-vitals, tagged with the screen
+import { onLCP, onINP, onCLS } from 'web-vitals/attribution';
+const send = (m) => navigator.sendBeacon('/rum', JSON.stringify({
+  screen: location.pathname, name: m.name, value: m.value,
+  target: m.attribution?.largestShiftTarget || m.attribution?.interactionTarget
+}));
+onLCP(send); onINP(send); onCLS(send);</div>
+  <div class="prompt-box"><span class="label">Prompt for Claude Code</span>Goal: reduce the time from opening /search until the search box is typeable (p75, throttled 4G).
+1. Write a reproducible E2E benchmark that prints request count, JS KB and re-render count.
+2. Propose at most 3 small PRs, each with before/after numbers and a risk level.
+3. Put user-visible changes behind a feature flag.
+4. Unit tests before optimizing. Do not merge by yourself.</div>
+  <div class="card card-warning">
+    <strong>Reality check:</strong> the post relies on RUM from millions of users and an internal model; outsourcing projects usually have less traffic and the client owns the infrastructure. So lean more on lab benchmarks and deterministic metrics, ask the client before sending telemetry, and respect the client's release approval process.
+  </div>
+</section>
+
+<section id="s11">
+  <h2>11. Demo video &amp; how this blog was made</h2>
+  <p>The video below walks through the reading and synthesis process: opening the original post, reading through its key parts, reviewing the self-made diagrams, and ending on this blog scrolled top to bottom.</p>
+  <div class="screenshot-wrap">
+    <video src="video/how-claude-ai-got-faster-demo.mp4" controls preload="metadata" width="880"></video>
+    <div class="caption">Video: <a href="video/how-claude-ai-got-faster-demo.mp4">video/how-claude-ai-got-faster-demo.mp4</a></div>
+  </div>
+</section>
+
+<section id="s12">
+  <h2>12. References</h2>
+  <ul>
+    <li><a href="https://claude.dev/blog/how-we-made-claude-ai-faster/" target="_blank">How we made claude.ai 3x faster in two weeks &ndash; claude.dev Blog (Raymond Wang, Sam Attard, Issac G., Sep 23, 2026)</a></li>
+    <li><a href="https://developer.mozilla.org/en-US/docs/Web/API/LayoutShift" target="_blank">MDN &ndash; LayoutShift (Layout Instability API)</a></li>
+    <li><a href="https://github.com/GoogleChrome/web-vitals" target="_blank">web-vitals (GoogleChrome)</a></li>
+    <li><a href="https://github.com/ai/size-limit" target="_blank">size-limit</a></li>
+  </ul>
+  <p style="font-size:0.9em;color:var(--text-secondary)">All figures in sections 1&ndash;8 come from the original post. The diagrams and proposals in sections 9&ndash;10 are the blog author's own.</p>
+</section>
+
+</div>
+
+<div class="footer">
+  AI Quest &mdash; Investigate What &bull; How Claude.ai got faster &bull; Scuti AI &bull; 2026
+</div>
+
+</body>
+</html>

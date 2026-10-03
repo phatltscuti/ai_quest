@@ -1,0 +1,10 @@
+frame    0/540  t= 0.00s  elapsed=  1.9s
+frame   60/540  t= 2.00s  elapsed=  7.8s
+frame  120/540  t= 4.00s  elapsed= 13.6s
+frame  180/540  t= 6.00s  elapsed= 20.0s
+frame  240/540  t= 8.00s  elapsed= 26.5s
+frame  300/540  t=10.00s  elapsed= 33.0s
+frame  360/540  t=12.00s  elapsed= 39.1s
+frame  420/540  t=14.00s  elapsed= 45.0s
+frame  480/540  t=16.00s  elapsed= 51.2s
+DONE 540 frames @ 30fps -> scuti-ai-motion-graphics.mp4 in 70.6s
