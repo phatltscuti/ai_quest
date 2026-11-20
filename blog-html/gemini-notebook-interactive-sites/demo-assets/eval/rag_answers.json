@@ -1,0 +1,482 @@
+[
+  {
+    "question": "What does error code E03 mean on the AeroPure AQ-200 and how do I fix it?",
+    "answer": "Not found in the documents.",
+    "retrieved": [
+      {
+        "rank": 1,
+        "chunk": 4,
+        "source": "AQ-200_Troubleshooting_Error_Codes.pdf",
+        "page": 1,
+        "score": 0.8537
+      },
+      {
+        "rank": 2,
+        "chunk": 7,
+        "source": "AQ-200_Troubleshooting_Error_Codes.pdf",
+        "page": 1,
+        "score": 0.8084
+      },
+      {
+        "rank": 3,
+        "chunk": 8,
+        "source": "AQ-200_Troubleshooting_Error_Codes.pdf",
+        "page": 2,
+        "score": 0.7923
+      },
+      {
+        "rank": 4,
+        "chunk": 15,
+        "source": "AQ-200_User_Manual.pdf",
+        "page": 2,
+        "score": 0.7858
+      },
+      {
+        "rank": 5,
+        "chunk": 6,
+        "source": "AQ-200_Troubleshooting_Error_Codes.pdf",
+        "page": 1,
+        "score": 0.783
+      }
+    ],
+    "retrieve_s": 0.574,
+    "generate_s": 6.4,
+    "total_s": 6.974,
+    "tokens_in": 1365,
+    "tokens_out": 6,
+    "cost_usd": 0.000424,
+    "id": "Q1"
+  },
+  {
+    "question": "What is the CADR and the recommended room size of the AQ-200 Pro?",
+    "answer": "The AQ-200 Pro has a CADR (smoke) of 450 $m^3/h$ and a recommended room size of 38-55 $m^2$ [S1].",
+    "retrieved": [
+      {
+        "rank": 1,
+        "chunk": 9,
+        "source": "AQ-200_User_Manual.pdf",
+        "page": 1,
+        "score": 0.8203
+      },
+      {
+        "rank": 2,
+        "chunk": 10,
+        "source": "AQ-200_User_Manual.pdf",
+        "page": 1,
+        "score": 0.7426
+      },
+      {
+        "rank": 3,
+        "chunk": 15,
+        "source": "AQ-200_User_Manual.pdf",
+        "page": 2,
+        "score": 0.7371
+      },
+      {
+        "rank": 4,
+        "chunk": 0,
+        "source": "AQ-200_Parts_Price_List.pdf",
+        "page": 1,
+        "score": 0.7107
+      },
+      {
+        "rank": 5,
+        "chunk": 16,
+        "source": "AQ-200_User_Manual.pdf",
+        "page": 2,
+        "score": 0.7045
+      }
+    ],
+    "retrieve_s": 0.458,
+    "generate_s": 6.092,
+    "total_s": 6.551,
+    "tokens_in": 1653,
+    "tokens_out": 47,
+    "cost_usd": 0.000613,
+    "id": "Q2"
+  },
+  {
+    "question": "My AQ-200 Lite shows E02. Which part do I need, how much does it cost, and what must I do after installing it?",
+    "answer": "To resolve error code E02 on the AQ-200 Lite, you need the main filter part number FL-200H, which costs $39 [S1, S3]. After installing the new filter, hold the Filter Reset button for 3 seconds [S1].",
+    "retrieved": [
+      {
+        "rank": 1,
+        "chunk": 4,
+        "source": "AQ-200_Troubleshooting_Error_Codes.pdf",
+        "page": 1,
+        "score": 0.7761
+      },
+      {
+        "rank": 2,
+        "chunk": 6,
+        "source": "AQ-200_Troubleshooting_Error_Codes.pdf",
+        "page": 1,
+        "score": 0.7479
+      },
+      {
+        "rank": 3,
+        "chunk": 0,
+        "source": "AQ-200_Parts_Price_List.pdf",
+        "page": 1,
+        "score": 0.7393
+      },
+      {
+        "rank": 4,
+        "chunk": 7,
+        "source": "AQ-200_Troubleshooting_Error_Codes.pdf",
+        "page": 1,
+        "score": 0.7341
+      },
+      {
+        "rank": 5,
+        "chunk": 15,
+        "source": "AQ-200_User_Manual.pdf",
+        "page": 2,
+        "score": 0.7239
+      }
+    ],
+    "retrieve_s": 0.448,
+    "generate_s": 4.614,
+    "total_s": 5.062,
+    "tokens_in": 1668,
+    "tokens_out": 61,
+    "cost_usd": 0.000653,
+    "id": "Q3"
+  },
+  {
+    "question": "I use an AQ-200 Pro in a home with two cats. How often should I replace the main filter, and what is the yearly cost of main filters plus the UV-C lamp?",
+    "answer": "Not found in the documents.",
+    "retrieved": [
+      {
+        "rank": 1,
+        "chunk": 0,
+        "source": "AQ-200_Parts_Price_List.pdf",
+        "page": 1,
+        "score": 0.7649
+      },
+      {
+        "rank": 2,
+        "chunk": 14,
+        "source": "AQ-200_User_Manual.pdf",
+        "page": 2,
+        "score": 0.7627
+      },
+      {
+        "rank": 3,
+        "chunk": 9,
+        "source": "AQ-200_User_Manual.pdf",
+        "page": 1,
+        "score": 0.7405
+      },
+      {
+        "rank": 4,
+        "chunk": 10,
+        "source": "AQ-200_User_Manual.pdf",
+        "page": 1,
+        "score": 0.7404
+      },
+      {
+        "rank": 5,
+        "chunk": 16,
+        "source": "AQ-200_User_Manual.pdf",
+        "page": 2,
+        "score": 0.7344
+      }
+    ],
+    "retrieve_s": 0.429,
+    "generate_s": 5.107,
+    "total_s": 5.536,
+    "tokens_in": 1603,
+    "tokens_out": 6,
+    "cost_usd": 0.000496,
+    "id": "Q4"
+  },
+  {
+    "question": "How many units of all AQ-200 models combined were sold in Q1 2026 (January to March)?",
+    "answer": "To calculate the total units sold of all AQ-200 models combined in Q1 2026 (January to March), we sum the sales for AQ-200 Lite, AQ-200, and AQ-200 Pro for each of those months [S1]:\n\n- **January 2026:** 410 (Lite) + 620 (AQ-200) + 210 (Pro) = 1,240 [S1]\n- **February 2026:** 385 (Lite) + 590 (AQ-200) + 205 (Pro) = 1,180 [S1]\n- **March 2026:** 450 (Lite) + 680 (AQ-200) + 240 (Pro) = 1,370 [S1]\n\nTotal units sold in Q1 2026 = 1,240 + 1,180 + 1,370 = 3,790 units.",
+    "retrieved": [
+      {
+        "rank": 1,
+        "chunk": 2,
+        "source": "AQ-200_Sales_Support_Report_2026.pdf",
+        "page": 1,
+        "score": 0.7313
+      },
+      {
+        "rank": 2,
+        "chunk": 3,
+        "source": "AQ-200_Sales_Support_Report_2026.pdf",
+        "page": 1,
+        "score": 0.729
+      },
+      {
+        "rank": 3,
+        "chunk": 0,
+        "source": "AQ-200_Parts_Price_List.pdf",
+        "page": 1,
+        "score": 0.6713
+      },
+      {
+        "rank": 4,
+        "chunk": 9,
+        "source": "AQ-200_User_Manual.pdf",
+        "page": 1,
+        "score": 0.6438
+      },
+      {
+        "rank": 5,
+        "chunk": 1,
+        "source": "AQ-200_Parts_Price_List.pdf",
+        "page": 1,
+        "score": 0.6352
+      }
+    ],
+    "retrieve_s": 0.428,
+    "generate_s": 6.437,
+    "total_s": 6.865,
+    "tokens_in": 2043,
+    "tokens_out": 248,
+    "cost_usd": 0.001233,
+    "id": "Q5"
+  },
+  {
+    "question": "Which month had the most Wi-Fi/App support tickets, how many, and what was the reason?",
+    "answer": "March 2026 had the most Wi-Fi/App support tickets with a total of 47 tickets [S1, S2]. The reason was that firmware 2.3 caused Wi-Fi reconnect issues (E11) on the AQ-200 and AQ-200 Pro models, which was subsequently fixed by firmware 2.3.1 on March 28 [S1].",
+    "retrieved": [
+      {
+        "rank": 1,
+        "chunk": 3,
+        "source": "AQ-200_Sales_Support_Report_2026.pdf",
+        "page": 1,
+        "score": 0.7195
+      },
+      {
+        "rank": 2,
+        "chunk": 2,
+        "source": "AQ-200_Sales_Support_Report_2026.pdf",
+        "page": 1,
+        "score": 0.674
+      },
+      {
+        "rank": 3,
+        "chunk": 8,
+        "source": "AQ-200_Troubleshooting_Error_Codes.pdf",
+        "page": 2,
+        "score": 0.596
+      },
+      {
+        "rank": 4,
+        "chunk": 6,
+        "source": "AQ-200_Troubleshooting_Error_Codes.pdf",
+        "page": 1,
+        "score": 0.5602
+      },
+      {
+        "rank": 5,
+        "chunk": 4,
+        "source": "AQ-200_Troubleshooting_Error_Codes.pdf",
+        "page": 1,
+        "score": 0.5589
+      }
+    ],
+    "retrieve_s": 0.421,
+    "generate_s": 5.353,
+    "total_s": 5.775,
+    "tokens_in": 1727,
+    "tokens_out": 88,
+    "cost_usd": 0.000738,
+    "id": "Q6"
+  },
+  {
+    "question": "What was the total revenue at list price from AQ-200 Pro units sold from January to October 2026?",
+    "answer": "Not found in the documents.",
+    "retrieved": [
+      {
+        "rank": 1,
+        "chunk": 2,
+        "source": "AQ-200_Sales_Support_Report_2026.pdf",
+        "page": 1,
+        "score": 0.7517
+      },
+      {
+        "rank": 2,
+        "chunk": 3,
+        "source": "AQ-200_Sales_Support_Report_2026.pdf",
+        "page": 1,
+        "score": 0.7277
+      },
+      {
+        "rank": 3,
+        "chunk": 0,
+        "source": "AQ-200_Parts_Price_List.pdf",
+        "page": 1,
+        "score": 0.7199
+      },
+      {
+        "rank": 4,
+        "chunk": 1,
+        "source": "AQ-200_Parts_Price_List.pdf",
+        "page": 1,
+        "score": 0.6699
+      },
+      {
+        "rank": 5,
+        "chunk": 9,
+        "source": "AQ-200_User_Manual.pdf",
+        "page": 1,
+        "score": 0.646
+      }
+    ],
+    "retrieve_s": 0.451,
+    "generate_s": 4.647,
+    "total_s": 5.098,
+    "tokens_in": 2043,
+    "tokens_out": 6,
+    "cost_usd": 0.000628,
+    "id": "Q7"
+  },
+  {
+    "question": "Which error codes can only appear on the AQ-200 Pro?",
+    "answer": "The error codes that can only appear on the Pro model are E08 and E13 [S2].",
+    "retrieved": [
+      {
+        "rank": 1,
+        "chunk": 4,
+        "source": "AQ-200_Troubleshooting_Error_Codes.pdf",
+        "page": 1,
+        "score": 0.7729
+      },
+      {
+        "rank": 2,
+        "chunk": 6,
+        "source": "AQ-200_Troubleshooting_Error_Codes.pdf",
+        "page": 1,
+        "score": 0.7438
+      },
+      {
+        "rank": 3,
+        "chunk": 8,
+        "source": "AQ-200_Troubleshooting_Error_Codes.pdf",
+        "page": 2,
+        "score": 0.7248
+      },
+      {
+        "rank": 4,
+        "chunk": 7,
+        "source": "AQ-200_Troubleshooting_Error_Codes.pdf",
+        "page": 1,
+        "score": 0.7196
+      },
+      {
+        "rank": 5,
+        "chunk": 5,
+        "source": "AQ-200_Troubleshooting_Error_Codes.pdf",
+        "page": 1,
+        "score": 0.7125
+      }
+    ],
+    "retrieve_s": 0.392,
+    "generate_s": 4.826,
+    "total_s": 5.218,
+    "tokens_in": 1314,
+    "tokens_out": 23,
+    "cost_usd": 0.000452,
+    "id": "Q8"
+  },
+  {
+    "question": "Can I use the AQ-200 in a bathroom?",
+    "answer": "Not found in the documents.",
+    "retrieved": [
+      {
+        "rank": 1,
+        "chunk": 15,
+        "source": "AQ-200_User_Manual.pdf",
+        "page": 2,
+        "score": 0.7
+      },
+      {
+        "rank": 2,
+        "chunk": 9,
+        "source": "AQ-200_User_Manual.pdf",
+        "page": 1,
+        "score": 0.6958
+      },
+      {
+        "rank": 3,
+        "chunk": 16,
+        "source": "AQ-200_User_Manual.pdf",
+        "page": 2,
+        "score": 0.6782
+      },
+      {
+        "rank": 4,
+        "chunk": 11,
+        "source": "AQ-200_User_Manual.pdf",
+        "page": 1,
+        "score": 0.6732
+      },
+      {
+        "rank": 5,
+        "chunk": 4,
+        "source": "AQ-200_Troubleshooting_Error_Codes.pdf",
+        "page": 1,
+        "score": 0.6635
+      }
+    ],
+    "retrieve_s": 0.426,
+    "generate_s": 5.409,
+    "total_s": 5.834,
+    "tokens_in": 1472,
+    "tokens_out": 6,
+    "cost_usd": 0.000457,
+    "id": "Q9"
+  },
+  {
+    "question": "What is the price and launch date of the AeroPure AQ-300?",
+    "answer": "Not found in the documents.",
+    "retrieved": [
+      {
+        "rank": 1,
+        "chunk": 9,
+        "source": "AQ-200_User_Manual.pdf",
+        "page": 1,
+        "score": 0.7285
+      },
+      {
+        "rank": 2,
+        "chunk": 0,
+        "source": "AQ-200_Parts_Price_List.pdf",
+        "page": 1,
+        "score": 0.7101
+      },
+      {
+        "rank": 3,
+        "chunk": 11,
+        "source": "AQ-200_User_Manual.pdf",
+        "page": 1,
+        "score": 0.6866
+      },
+      {
+        "rank": 4,
+        "chunk": 1,
+        "source": "AQ-200_Parts_Price_List.pdf",
+        "page": 1,
+        "score": 0.6833
+      },
+      {
+        "rank": 5,
+        "chunk": 10,
+        "source": "AQ-200_User_Manual.pdf",
+        "page": 1,
+        "score": 0.6736
+      }
+    ],
+    "retrieve_s": 0.43,
+    "generate_s": 4.74,
+    "total_s": 5.169,
+    "tokens_in": 1665,
+    "tokens_out": 6,
+    "cost_usd": 0.000514,
+    "id": "Q10"
+  }
+]

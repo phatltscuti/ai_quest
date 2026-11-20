@@ -1,0 +1,118 @@
+{
+ "title": "Windows PowerShell",
+ "steps": [
+  {
+   "comment": "12 hard documents · threshold 0.9",
+   "show": "python route_demo.py --threshold 0.9",
+   "prompt": "(.venv) PS D:\\ai_quest\\gemini-decisions-api-classification\\demo-assets>",
+   "events": [
+    [
+     0.579,
+     "Confidence threshold: 0.9\r\n"
+    ],
+    [
+     0.579,
+     "\r\n"
+    ],
+    [
+     4.331,
+     "doc_01.png [photo  ] conf 1.00   3751 ms  🤖 AUTO → folder /resume/"
+    ],
+    [
+     4.331,
+     "\r\n"
+    ],
+    [
+     5.154,
+     "doc_02.png [lowres ] conf 0.97    824 ms  🤖 AUTO → folder /receipt/"
+    ],
+    [
+     5.154,
+     "\r\n"
+    ],
+    [
+     5.772,
+     "doc_04.pdf [lowres ] conf 1.00    617 ms  🤖 AUTO → folder /meeting_minutes/"
+    ],
+    [
+     5.772,
+     "\r\n"
+    ],
+    [
+     8.421,
+     "doc_07.png [photo  ] conf 0.99   2649 ms  🤖 AUTO → folder /quotation/"
+    ],
+    [
+     8.421,
+     "\r\n"
+    ],
+    [
+     9.191,
+     "doc_09.png [lowres ] conf 1.00    770 ms  🤖 AUTO → folder /leave_request/"
+    ],
+    [
+     9.191,
+     "\r\n"
+    ],
+    [
+     9.931,
+     "doc_10.png [lowres ] conf 1.00    739 ms  🤖 AUTO → folder /resume/"
+    ],
+    [
+     9.931,
+     "\r\n"
+    ],
+    [
+     12.429,
+     "doc_12.png [photo  ] conf 0.99   2498 ms  🤖 AUTO → folder /contract/"
+    ],
+    [
+     12.429,
+     "\r\n"
+    ],
+    [
+     15.067,
+     "doc_13.png [photo  ] conf 1.00   2638 ms  🤖 AUTO → folder /meeting_minutes/"
+    ],
+    [
+     15.067,
+     "\r\n"
+    ],
+    [
+     15.746,
+     "doc_14.png [lowres ] conf 0.99    678 ms  🤖 AUTO → folder /delivery_note/"
+    ],
+    [
+     15.746,
+     "\r\n"
+    ],
+    [
+     16.369,
+     "doc_16.pdf [lowres ] conf 1.00    623 ms  🤖 AUTO → folder /invoice/"
+    ],
+    [
+     16.369,
+     "\r\n"
+    ],
+    [
+     17.036,
+     "doc_19.png [notitle] conf 0.99    666 ms  🤖 AUTO → folder /quotation/"
+    ],
+    [
+     17.036,
+     "\r\n"
+    ],
+    [
+     17.905,
+     "doc_20.png [notitle] conf 0.94    870 ms  🤖 AUTO → folder /invoice/"
+    ],
+    [
+     17.905,
+     "\r\n\r\nAutomated: 12/12 (wrong 0) | Needs human review: 0/12\r\n"
+    ]
+   ],
+   "exit": 0,
+   "seconds": 18.11
+  }
+ ]
+}

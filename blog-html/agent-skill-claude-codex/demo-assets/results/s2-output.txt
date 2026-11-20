@@ -1,0 +1,30 @@
+I found 2 project skills in `.claude/skills`. That folder is a symlink to `.agents/skills`:
+
+- **code-review**: Reviews source code or a diff for security, correctness, error handling, maintainability and test coverage. It reports findings ranked by severity, each with a `file:line` reference and a concrete fix.
+- **requirement-definition**: Turns an informal feature request (a Slack message, email or meeting note) into a requirements document. The document has user stories, numbered functional and non-functional requirements, Given/When/Then acceptance criteria, assumptions and open questions.
+Reading additional input from stdin...
+OpenAI Codex v0.171.0
+--------
+[1mworkdir:[0m D:\code\personal\ai_quest\blog-html\agent-skill-claude-codex\demo-project
+[1mmodel:[0m gemini-3.5-flash
+[1mprovider:[0m gemini
+[1mapproval:[0m never
+[1msandbox:[0m read-only
+[1mreasoning effort:[0m none
+[1mreasoning summaries:[0m none
+[1msession id:[0m 01a1f8e9-8e39-77d1-aac5-b423b869e6e6
+--------
+[36muser[0m
+List the skills available to you from .agents/skills (name: one-line purpose). Do not run commands. Answer in English.
+[1m[33mwarning:[0m[0m Model metadata for `gemini-3.5-flash` not found. Defaulting to fallback metadata; this can degrade performance and cause issues.
+[35m[3mcodex[0m[0m
+Here are the skills available from `.agents/skills`:
+
+- `code-review`: Review source code or diffs for security, correctness, error handling, maintainability, and test coverage.
+- `requirement-definition`: Turn informal feature requests into structured requirements documents with user stories and acceptance criteria.
+[2mtokens used[0m
+10,097
+Here are the skills available from `.agents/skills`:
+
+- `code-review`: Review source code or diffs for security, correctness, error handling, maintainability, and test coverage.
+- `requirement-definition`: Turn informal feature requests into structured requirements documents with user stories and acceptance criteria.

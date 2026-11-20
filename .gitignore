@@ -1,0 +1,9 @@
+.venv/
+.chrome-demo-profile/
+.env
+*.env
+tools/codex-home/*
+!tools/codex-home/config.toml
+
+# raw recordings (may contain unmasked frames)
+*-raw.mp4

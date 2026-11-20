@@ -1,0 +1,38 @@
+{
+ "title": "Windows PowerShell",
+ "steps": [
+  {
+   "comment": "Quickstart: document type, signature?, amount level",
+   "show": "python quickstart_decision.py doc_05.png",
+   "prompt": "(.venv) PS D:\\ai_quest\\gemini-decisions-api-classification\\demo-assets>",
+   "events": [
+    [
+     0.358,
+     "GEMINI_API_KEY: AQ.****UwAw (loaded from .env)"
+    ],
+    [
+     0.358,
+     "\r\n"
+    ],
+    [
+     0.556,
+     "Document: doc_05.png\r\n"
+    ],
+    [
+     0.556,
+     "\r\n"
+    ],
+    [
+     1.373,
+     "{\r\n  \"doc_type\": {\r\n    \"choice\": \"quotation\",\r\n    \"confidence\": 0.9667485239528582,\r\n    \"probabilities\": {\r\n      \"receipt\": 0.0019157351542795728,\r\n      \"quotation\": 0.9667485239528582,\r\n      \"invoice\": 0.015644105389615578,\r\n      \"other\": 0.01508921808393272,\r\n      \"contract\": 0.0006024174193138998\r\n    },\r\n    \"type\": \"choice\"\r\n  },\r\n  \"amount_level\": {\r\n    \"confidence\": 0.974104178223328,\r\n    \"legend\": {\r\n      \"3\": \"over 50 million VND\",\r\n      \"2\": \"10–50 million VND\",\r\n      \"0\": \"no amount\",\r\n      \"1\": \"under 10,000,000 VND\"\r\n    },\r\n    \"probabilities\": {\r\n      \"3\": 0.01295211360743895,\r\n      \"0\": 0.0008602985627700262,\r\n      \"1\": 0.01208340960646316,\r\n      \"2\": 0.974104178223328\r\n    },\r\n    \"score\": 1.999148106875436,\r\n    \"type\": \"score\"\r\n  },\r\n  \"has_signature\": {\r\n    \"confidence\": 0.6006304550809846,\r\n    \"noul\": 0.6006304550809846,\r\n    \"type\": \"noul\"\r\n  }\r\n}"
+    ],
+    [
+     1.373,
+     "\r\n\r\n⏱  817 ms | input 1354 tokens | output 0 tokens | cost ≈ $0.000135\r\n"
+    ]
+   ],
+   "exit": 0,
+   "seconds": 1.49
+  }
+ ]
+}

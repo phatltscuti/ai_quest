@@ -1,0 +1,18 @@
+{
+ "title": "Windows PowerShell",
+ "steps": [
+  {
+   "comment": "Claude Code + requirement-definition skill",
+   "show": "claude -p \"/requirement-definition feature-request.txt (answer in English)\" --permission-mode acceptEdits",
+   "prompt": "PS D:\\ai_quest\\agent-skill-claude-codex\\demo-project>",
+   "events": [
+    [
+     58.136,
+     "I wrote the requirements document in English, as you asked. It's saved to `docs/requirements/self-service-leave-cancellation.md`.\n\n- **17 functional requirements, 10 non-functional requirements and 18 acceptance criteria.** Each acceptance criterion links to the requirement it checks. The non-functional requirements cover security, audit, privacy, performance and usability.\n- **10 assumptions and 10 open questions.** The open questions are addressed to HR, PM or Dev.\n- **Must-haves:** employees cancel their own pending or approved leave; once a leave has started, they can only cancel the remaining days. The manager is notified, cancelled days go back to the leave balance, and every cancellation is recorded in an audit log that can't be edited.\n\nThings I found in `leave_service.py` that affect this feature:\n- **New items the feature needs:** a `cancelled` status, an audit log table and a notification channel. None of these exist in the code yet, so the document marks them as *new*.\n- **Manager for pending requests:** `leave_requests` has no manager field. Only `approver` exists, and it is filled in when a request is approved. So the system can't yet tell who to notify when someone cancels a pending request (Q-03).\n- **Day-count bug:** `leave_days` is documented as counting both start and end dates, but it returns one day less. If it isn't fixed, the number of cancelled days will be wrong (A-07, Q-07).\n- **Unsafe SQL query:** `find_requests_by_employee` builds its SQL from a string. NFR-02 requires the new feature to use parameterized queries.\n\nThe questions blocking the work are Q-01 (exact deadline), Q-02 (whether cancelling an approved leave needs manager approval), Q-03 and Q-04 (notification channel).\n"
+    ]
+   ],
+   "exit": 0,
+   "seconds": 58.51
+  }
+ ]
+}

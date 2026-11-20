@@ -1,0 +1,12 @@
+[
+ {"id":"Q1","type":"lookup","question":"What does error code E03 mean on the AeroPure AQ-200 and how do I fix it?","truth":"Airflow blocked by packaging: plastic bag not removed from a new filter (shows in first 30 min). Unplug, remove the bag, reinstall, restart."},
+ {"id":"Q2","type":"lookup","question":"What is the CADR and the recommended room size of the AQ-200 Pro?","truth":"450 m3/h; 38-55 m2."},
+ {"id":"Q3","type":"multi-step","question":"My AQ-200 Lite shows E02. Which part do I need, how much does it cost, and what must I do after installing it?","truth":"FL-200H main filter, $39 (or 2-pack FL-200H-2 $70); hold Filter Reset 3 s."},
+ {"id":"Q4","type":"multi-step","question":"I use an AQ-200 Pro in a home with two cats. How often should I replace the main filter, and what is the yearly cost of main filters plus the UV-C lamp?","truth":"Every 4 months -> 3 x FL-200P $59 = $177 + UV-200 $35 = $212/year."},
+ {"id":"Q5","type":"aggregation","question":"How many units of all AQ-200 models combined were sold in Q1 2026 (January to March)?","truth":"3,790 units (Lite 1,245 + AQ-200 1,890 + Pro 655)."},
+ {"id":"Q6","type":"aggregation","question":"Which month had the most Wi-Fi/App support tickets, how many, and what was the reason?","truth":"March 2026, 47 tickets; firmware 2.3 Wi-Fi reconnect issue (E11), fixed by 2.3.1 on 28 March."},
+ {"id":"Q7","type":"numeric cross-doc","question":"What was the total revenue at list price from AQ-200 Pro units sold from January to October 2026?","truth":"3,285 units x $349 = $1,146,465."},
+ {"id":"Q8","type":"lookup-filter","question":"Which error codes can only appear on the AQ-200 Pro?","truth":"E08 (VOC sensor failure) and E13 (UV-C lamp fault)."},
+ {"id":"Q9","type":"faq","question":"Can I use the AQ-200 in a bathroom?","truth":"No - not where humidity is above 80% or it can be splashed."},
+ {"id":"Q10","type":"unanswerable","question":"What is the price and launch date of the AeroPure AQ-300?","truth":"Not in the documents (should refuse / say not found)."}
+]

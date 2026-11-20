@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Windows PowerShell</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@xterm/xterm@5.5.0/css/xterm.min.css">
+<script src="https://cdn.jsdelivr.net/npm/@xterm/xterm@5.5.0/lib/xterm.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@xterm/addon-fit@0.10.0/lib/addon-fit.min.js"></script>
+<style>
+  html,body{margin:0;height:100%;background:#1e1e1e;overflow:hidden;font-family:'Segoe UI',sans-serif}
+  .bar{height:38px;background:#2b2b2b;color:#ddd;display:flex;align-items:center;padding:0 14px;font-size:14px;gap:10px;border-bottom:1px solid #111}
+  .tab{background:#0c0c0c;padding:8px 18px;border-radius:8px 8px 0 0;margin-top:6px;display:flex;gap:8px;align-items:center}
+  .cap{margin-left:auto;background:#ff6d00;color:#fff;padding:3px 12px;border-radius:12px;font-size:13px;font-weight:600;max-width:60%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .xterm-viewport{overflow:hidden!important}
+  #t{position:absolute;top:39px;left:0;right:0;bottom:0;padding:10px 14px;background:#0c0c0c}
+</style></head>
+<body>
+<div class="bar"><div class="tab"><svg width="16" height="16" viewBox="0 0 16 16"><rect width="16" height="16" rx="3" fill="#012456"/><path d="M4 4l4 4-4 4" stroke="#fff" stroke-width="1.6" fill="none"/><path d="M9 12h3" stroke="#fff" stroke-width="1.6"/></svg><span id="title">Windows PowerShell</span></div><div class="cap" id="cap"></div></div>
+<div id="t"></div>
+<script>
+const term = new Terminal({fontFamily:"'Cascadia Mono','Cascadia Code',Consolas,monospace", fontSize:21, lineHeight:1.15, cursorBlink:true,
+  theme:{background:'#0c0c0c', foreground:'#cccccc', green:'#16c60c', yellow:'#f9f1a5', cyan:'#61d6d6'}, scrollback:5000, convertEol:true});
+term.open(document.getElementById('t'));
+const fa = new FitAddon.FitAddon(); term.loadAddon(fa); fa.fit(); window.addEventListener('resize', () => fa.fit());
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+window.__done = false;
+window.play = async (cast, opt = {}) => {
+  const typeMs = opt.typeMs ?? 32, maxGap = opt.maxGap ?? 2500;
+  document.getElementById('title').textContent = cast.title || 'Windows PowerShell';
+  for (const st of cast.steps) {
+    document.getElementById('cap').textContent = st.comment || '';
+    document.getElementById('cap').style.display = st.comment ? '' : 'none';
+    if (st.comment) { term.write('\x1b[32m# '); for (const c of st.comment) { term.write(c); await sleep(14); } term.write('\x1b[0m\r\n'); await sleep(400); }
+    term.write(st.prompt + ' ');
+    await sleep(500);
+    for (const c of (st.show || '')) { term.write(c); await sleep(typeMs + Math.random()*25); }
+    await sleep(350); term.write('\r\n');
+    let last = 0;
+    for (const [t, txt] of st.events) { await sleep(Math.min((t - last) * 1000, maxGap)); last = t; term.write(txt); }
+    await sleep(opt.afterStep ?? 1600);
+  }
+  term.write(cast.steps.at(-1)?.prompt + ' ');
+  await sleep(1500);
+  window.__done = true;
+};
+</script>
+</body></html>

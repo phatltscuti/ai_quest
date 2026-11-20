@@ -1,0 +1,2289 @@
+<!DOCTYPE html><html lang="en"><head>
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none';script-src 'self' 'unsafe-inline' blob: https://cdn.tailwindcss.com/3.4.17 https://unpkg.com/lucide@1.43.0/dist/umd/ https://unpkg.com/leaflet@1.9.4/dist/ https://cdn.jsdelivr.net/npm/topojson-client@3.1.0/dist/ https://cdn.jsdelivr.net/npm/chart.js@4.5.1/dist/ https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/ https://cdn.jsdelivr.net/npm/plotly.js-dist-min@2.32.0/ https://cdn.jsdelivr.net/npm/echarts@6.1.0/dist/ https://cdn.jsdelivr.net/npm/scrollama@3.2.0/build/ https://cdn.jsdelivr.net/npm/katex@0.18.2/dist/ https://cdn.jsdelivr.net/npm/mathjs@12.4.3/lib/browser/ https://cdn.jsdelivr.net/npm/three@0.160.0/build/ https://cdn.jsdelivr.net/npm/tone@14.9.17/build/ https://cdn.jsdelivr.net/npm/matter-js@0.19.0/build/ https://cdn.jsdelivr.net/npm/cannon-es@0.20.0/dist/ https://cdn.jsdelivr.net/npm/mermaid@11.17.2/dist/ https://cdn.jsdelivr.net/npm/cytoscape@3.34.3/dist/ https://unpkg.com/roughjs@4.6.6/bundled/;style-src 'self' 'unsafe-inline' https://fonts.googleapis.com/css https://fonts.googleapis.com/css2 https://cdn.jsdelivr.net/npm/katex@0.18.2/dist/ https://unpkg.com/leaflet@1.9.4/dist/ https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/ https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.46.0/dist/ https://cdn.jsdelivr.net/npm/iconoir@7.12.1/css/;img-src 'self' blob: data: https://unpkg.com/leaflet@1.9.4/dist/images/ https://cdn.jsdelivr.net/npm/heroicons@2.2.0/ https://lh3.googleusercontent.com https://contribution.usercontent.google.com https://lh3.google.com/rd-notebooklm/ https://lh3-dz.googleusercontent.com/notebooklm-qual/ https://lh3-dz.sandbox.google.com/rd-notebooklm-qual/ https://lh3-dy.googleusercontent.com/notebooklm/ https://lh3-dy.sandbox.google.com/rd-notebooklm/;font-src 'self' data: https://fonts.gstatic.com/s/ https://fonts.gstatic.com/l/ https://cdn.jsdelivr.net/npm/katex@0.18.2/dist/fonts/ https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/ https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.46.0/dist/fonts/ https://www.gstatic.com/external_hosted/katex/dist/fonts/;connect-src 'self' https://cdn.jsdelivr.net/npm/us-atlas@3.0.1/ https://cdn.jsdelivr.net/npm/world-atlas@2.0.2/ https://cdn.jsdelivr.net/npm/plotly.js@2.32.0/dist/topojson/;frame-src 'none';media-src 'self' blob: data:;object-src 'none';base-uri 'none';form-action 'none';worker-src 'self' blob:">
+  <script>document.addEventListener('securitypolicyviolation',function(e){try{var u=e.blockedURI||'',s=e.sourceFile||'';if(!/^https?:/i.test(u)||/^(chrome|moz|safari|safari-web)-extension(:|$)/i.test(s)){return;}window.parent.postMessage({version:'1.0',action:'ResourceBlocked',payload:{uri:u,directive:e.effectiveDirective||''}},'*');}catch(_){}});</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="artifact-type" content="dashboard">
+  <meta name="design-style" content="carbon">
+  <title>AeroPure AQ-200 Series — Sales &amp; Support Dashboard (Jan–Oct 2026)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,100..700;1,100..700&amp;family=IBM+Plex+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&amp;display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1/dist/chart.umd.min.js"></script>
+  <script src="https://unpkg.com/lucide@1.43.0/dist/umd/lucide.min.js"></script>
+  <style>
+    :root {
+      color-scheme: light;
+
+      /* Page and surfaces (Carbon) */
+      --background: #ffffff;
+      --surface-container-low: #f4f4f4;
+      --surface-container: #f4f4f4;
+      --surface-container-high: #e0e0e0;
+
+      /* Ink */
+      --on-surface: #161616;
+      --on-surface-variant: #525252;
+
+      /* Rules */
+      --outline: #8d8d8d;
+      --outline-variant: #e0e0e0;
+
+      /* Accents */
+      --primary: #0f62fe;
+      --on-primary: #ffffff;
+      --primary-container: #d0e2ff;
+      --on-primary-container: #161616;
+      --secondary: #6f6f6f;
+      --tertiary: #198038;
+      --error: #da1e28;
+      --on-error: #ffffff;
+
+      /* Data series */
+      --data-1: #0f62fe;
+      --data-2: #6929c4;
+      --data-3: #005d5d;
+      --data-4: #9f1853;
+      --data-context: #8d8d8d;
+
+      /* Fonts */
+      --font-headline: 'IBM Plex Sans', sans-serif;
+      --font-body: 'IBM Plex Sans', sans-serif;
+      --font-label: 'IBM Plex Mono', monospace;
+
+      /* Shape */
+      --rounded: 0.125rem;
+      --rounded-lg: 0.25rem;
+      --rounded-full: 0.75rem;
+
+      /* Style effects */
+      --shadow-1: 0 2px 6px rgb(0 0 0 / 0.1);
+      --shadow-2: 0 4px 12px rgb(0 0 0 / 0.12);
+      --rule: 1px solid var(--outline-variant);
+      --field-rule: 1px solid var(--outline);
+      --indicator: 2px solid var(--primary);
+      --callout-purple: 3px solid var(--data-2);
+      --callout-teal: 3px solid var(--data-3);
+      --callout-blue: 3px solid var(--primary);
+
+      /* Shared tokens */
+      --positive: #198038;
+      --warning: #8e6a00;
+      --warning-container: #fcf4d6;
+      --focus: #0f62fe;
+
+      /* Type scale (Dashboard) */
+      --display-size: clamp(1.75rem, 1.4rem + 1.2vw, 2.25rem);
+      --headline-size: clamp(1.25rem, 1.1rem + 0.5vw, 1.5rem);
+      --subhead-size: clamp(1.0625rem, 1rem + 0.25vw, 1.1875rem);
+      --body-size: clamp(0.9375rem, 0.9rem + 0.15vw, 1rem);
+      --label-size: 0.75rem;
+
+      /* Spacing scale (4pt base) */
+      --space-xs: 0.25rem;
+      --space-sm: 0.5rem;
+      --space-md: 1rem;
+      --space-lg: 1.5rem;
+      --space-xl: 2.5rem;
+      --space-2xl: 4rem;
+      --space-3xl: 6rem;
+
+      /* Motion */
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+      --dur-micro: 120ms;
+      --dur-short: 220ms;
+      --dur-long: 420ms;
+    }
+
+    /* Base reset */
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body {
+      overflow-x: clip;
+      margin: 0;
+      padding: 0;
+      background-color: var(--background);
+      color: var(--on-surface);
+      font-family: var(--font-body);
+      font-size: var(--body-size);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+    header { position: static !important; }
+
+    .page-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: var(--space-lg);
+      padding: var(--space-lg);
+      max-width: 1240px;
+      margin: 0 auto;
+      overflow: hidden;
+    }
+    .page-grid * { min-width: 0; }
+
+    /* Focus rings */
+    :focus-visible {
+      outline: 2px solid var(--focus);
+      outline-offset: 2px;
+    }
+
+    /* Typography */
+    .label {
+      font-family: var(--font-label);
+      font-size: var(--label-size);
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--on-surface-variant);
+      display: block;
+    }
+
+    .headline {
+      font-family: var(--font-headline);
+      font-weight: 300;
+      font-size: var(--display-size);
+      letter-spacing: 0;
+      line-height: 1.18;
+      margin: var(--space-xs) 0 var(--space-sm) 0;
+      color: var(--on-surface);
+    }
+    .headline strong { font-weight: 600; }
+
+    .section-title {
+      font-family: var(--font-headline);
+      font-weight: 300;
+      font-size: var(--headline-size);
+      line-height: 1.25;
+      margin: 0;
+      color: var(--on-surface);
+    }
+    .section-title strong { font-weight: 600; }
+
+    .panel-title {
+      font-family: var(--font-headline);
+      font-weight: 600;
+      font-size: var(--subhead-size);
+      line-height: 1.3;
+      margin: 0;
+      color: var(--on-surface);
+    }
+
+    .subtext {
+      font-size: 0.875rem;
+      color: var(--on-surface-variant);
+      margin: 0;
+      max-width: 65ch;
+    }
+
+    .mono-val {
+      font-family: var(--font-label);
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* Header */
+    .dash-header {
+      border-bottom: var(--rule);
+      padding-bottom: var(--space-md);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: var(--space-md);
+    }
+    .dash-header-meta {
+      text-align: left;
+    }
+    .header-status {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-sm);
+      background: var(--primary-container);
+      color: var(--on-primary-container);
+      border-radius: var(--rounded-full);
+      padding: 0 var(--space-md);
+      height: 24px;
+      font-family: var(--font-label);
+      font-size: var(--label-size);
+      letter-spacing: 0.04em;
+    }
+
+    /* Flat gray layers (Carbon #1 treatment) */
+    .layer {
+      background: var(--surface-container);
+      border-radius: 0;
+      padding: var(--space-md);
+    }
+    .layer .layer {
+      background: var(--surface-container-high);
+    }
+
+    /* Control Strip */
+    .controls-bar {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.3fr) auto;
+      gap: var(--space-md);
+      align-items: end;
+      border-bottom: var(--rule);
+    }
+
+    .control-group {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-xs);
+    }
+
+    .control-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-sm);
+      align-items: end;
+    }
+
+    .field-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-xs);
+      flex: 1 1 130px;
+    }
+
+    .field-label {
+      font-family: var(--font-body);
+      font-size: var(--label-size);
+      font-weight: 500;
+      color: var(--on-surface-variant);
+    }
+
+    select.carbon-select {
+      appearance: none;
+      -webkit-appearance: none;
+      width: 100%;
+      min-height: 44px;
+      background-color: var(--background);
+      color: var(--on-surface);
+      font-family: var(--font-label);
+      font-size: 0.875rem;
+      border: none;
+      border-bottom: var(--field-rule);
+      border-radius: 0;
+      padding: 0 var(--space-xl) 0 var(--space-md);
+      cursor: pointer;
+      background-image: linear-gradient(45deg, transparent 50%, var(--on-surface) 50%),
+                        linear-gradient(135deg, var(--on-surface) 50%, transparent 50%);
+      background-position: calc(100% - 18px) 19px, calc(100% - 13px) 19px;
+      background-size: 5px 5px, 5px 5px;
+      background-repeat: no-repeat;
+      transition: background-color var(--dur-micro) var(--ease-out);
+    }
+    select.carbon-select:hover {
+      background-color: var(--surface-container-high);
+    }
+
+    /* Buttons & Segmented Tabs */
+    .btn-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-sm);
+    }
+
+    .carbon-tab {
+      min-height: 44px;
+      padding: var(--space-sm) var(--space-md);
+      background: var(--background);
+      color: var(--on-surface);
+      border: 1px solid var(--outline-variant);
+      border-bottom: 2px solid transparent;
+      border-radius: 0;
+      font-family: var(--font-body);
+      font-size: 0.875rem;
+      font-weight: 400;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-xs);
+      transition: background-color var(--dur-micro) var(--ease-out), color var(--dur-micro) var(--ease-out);
+    }
+    .carbon-tab:hover {
+      background: var(--surface-container-high);
+    }
+    .carbon-tab.is-active {
+      border-bottom: var(--indicator);
+      font-weight: 600;
+      background: var(--background);
+      color: var(--primary);
+    }
+
+    .carbon-btn {
+      min-height: 44px;
+      padding: var(--space-sm) var(--space-lg) var(--space-sm) var(--space-md);
+      border-radius: 0;
+      font-family: var(--font-body);
+      font-size: 0.875rem;
+      font-weight: 400;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-sm);
+      border: 1px solid transparent;
+      transition: background-color var(--dur-micro) var(--ease-out), color var(--dur-micro) var(--ease-out);
+    }
+    .carbon-btn-primary {
+      background: var(--primary);
+      color: var(--on-primary);
+    }
+    .carbon-btn-primary:hover {
+      background: color-mix(in srgb, var(--primary), var(--on-surface) 25%);
+    }
+    .carbon-btn-secondary {
+      background: transparent;
+      color: var(--primary);
+      border: 1px solid var(--primary);
+    }
+    .carbon-btn-secondary:hover {
+      background: var(--primary-container);
+      color: var(--on-primary-container);
+    }
+    .carbon-btn-ghost {
+      background: transparent;
+      color: var(--primary);
+      padding: var(--space-sm) var(--space-md);
+    }
+    .carbon-btn-ghost:hover {
+      background: var(--surface-container-high);
+    }
+
+    .preset-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-sm);
+      margin-top: var(--space-xs);
+    }
+    .preset-chip {
+      min-height: 44px;
+      padding: 0 var(--space-md);
+      background: transparent;
+      border: 1px solid var(--outline-variant);
+      border-radius: 0;
+      font-family: var(--font-label);
+      font-size: var(--label-size);
+      color: var(--on-surface-variant);
+      cursor: pointer;
+      transition: background-color var(--dur-micro) var(--ease-out), color var(--dur-micro) var(--ease-out);
+    }
+    .preset-chip:hover {
+      background: var(--surface-container-high);
+      color: var(--on-surface);
+    }
+    .preset-chip.is-active {
+      background: var(--primary-container);
+      color: var(--on-primary-container);
+      border-color: var(--primary);
+      font-weight: 500;
+    }
+
+    /* KPI Grid */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(230px, 100%), 1fr));
+      gap: var(--space-md);
+    }
+
+    .kpi-tile {
+      background: var(--surface-container);
+      padding: var(--space-md);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: var(--space-sm);
+      border-bottom: 2px solid transparent;
+      transition: background-color var(--dur-short) var(--ease-out);
+    }
+    .kpi-tile.key-tile {
+      border-bottom: var(--indicator);
+    }
+
+    .key-value {
+      font-family: var(--font-label);
+      font-weight: 300;
+      font-size: clamp(1.75rem, 1.4rem + 1vw, 2.25rem);
+      line-height: 1.1;
+      font-variant-numeric: tabular-nums;
+      color: var(--on-surface);
+      margin: var(--space-xs) 0;
+    }
+
+    .kpi-meta {
+      font-size: 0.8125rem;
+      color: var(--on-surface-variant);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-xs);
+      border-top: var(--rule);
+      padding-top: var(--space-sm);
+    }
+
+    .kpi-delta {
+      font-family: var(--font-label);
+      font-size: var(--label-size);
+      font-weight: 500;
+    }
+    .kpi-delta.is-positive { color: var(--positive); }
+    .kpi-delta.is-negative { color: var(--error); }
+    .kpi-delta.is-neutral { color: var(--on-surface-variant); }
+
+    /* Explanatory Incident Callouts */
+    .callouts-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(340px, 100%), 1fr));
+      gap: var(--space-md);
+    }
+
+    .callout-strip {
+      background: var(--surface-container);
+      padding: var(--space-md);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: var(--space-md);
+      transition: background-color var(--dur-short) var(--ease-out);
+    }
+    .callout-strip.callout-march {
+      border-left: var(--callout-purple);
+    }
+    .callout-strip.callout-august {
+      border-left: var(--callout-teal);
+    }
+    .callout-strip.is-out-of-range {
+      opacity: 0.65;
+    }
+
+    .callout-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: var(--space-sm);
+    }
+    .callout-title-wrap {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+    }
+    .callout-icon-march { color: var(--data-2); flex-shrink: 0; }
+    .callout-icon-august { color: var(--data-3); flex-shrink: 0; }
+
+    .callout-tag {
+      font-family: var(--font-label);
+      font-size: var(--label-size);
+      padding: 0 var(--space-sm);
+      height: 24px;
+      border-radius: var(--rounded-full);
+      display: inline-flex;
+      align-items: center;
+      background: var(--surface-container-high);
+      color: var(--on-surface);
+      white-space: nowrap;
+    }
+    .callout-tag.in-view {
+      background: var(--primary-container);
+      color: var(--on-primary-container);
+    }
+
+    .callout-body {
+      font-size: 0.875rem;
+      color: var(--on-surface);
+      margin: 0;
+      line-height: 1.5;
+    }
+
+    .callout-metrics {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: var(--space-sm);
+      background: var(--surface-container-high);
+      padding: var(--space-sm) var(--space-md);
+    }
+    .callout-stat-val {
+      font-family: var(--font-label);
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--on-surface);
+    }
+
+    .callout-foot {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: var(--space-sm);
+      border-top: var(--rule);
+      padding-top: var(--space-sm);
+    }
+
+    /* Section Headers */
+    .section-head {
+      border-bottom: var(--rule);
+      padding-bottom: var(--space-sm);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: var(--space-md);
+    }
+
+    /* Charts Layout */
+    .charts-primary-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1.8fr) minmax(0, 1fr);
+      gap: var(--space-md);
+      align-items: stretch;
+    }
+
+    .charts-secondary-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+      gap: var(--space-md);
+      align-items: stretch;
+    }
+
+    .chart-panel {
+      background: var(--surface-container);
+      padding: var(--space-md);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-md);
+    }
+
+    .chart-header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: var(--space-sm);
+      border-bottom: var(--rule);
+      padding-bottom: var(--space-sm);
+    }
+
+    .legend-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-md);
+      align-items: center;
+    }
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-xs);
+      font-family: var(--font-label);
+      font-size: var(--label-size);
+      color: var(--on-surface);
+    }
+    .legend-swatch {
+      width: 10px;
+      height: 10px;
+      display: inline-block;
+      flex-shrink: 0;
+    }
+    .swatch-lite { background: var(--data-3); }
+    .swatch-std { background: var(--data-1); }
+    .swatch-pro { background: var(--data-2); }
+    .swatch-filter { background: var(--data-1); }
+    .swatch-wifi { background: var(--data-2); }
+    .swatch-sensor { background: var(--data-3); }
+    .swatch-noise { background: var(--data-4); }
+    .swatch-other { background: var(--data-context); }
+    .swatch-csat { background: var(--data-1); }
+    .swatch-res { background: var(--data-4); }
+
+    .chart-canvas-wrap {
+      position: relative;
+      min-height: 310px;
+      height: 310px;
+      width: 100%;
+    }
+
+    /* Model Breakdown Side Panel */
+    .model-mix-panel {
+      background: var(--surface-container);
+      padding: var(--space-md);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: var(--space-md);
+    }
+
+    .model-mix-list {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-md);
+    }
+
+    .model-mix-item {
+      background: var(--background);
+      padding: var(--space-md);
+      border-left: 3px solid transparent;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-xs);
+      transition: background-color var(--dur-micro) var(--ease-out);
+    }
+    .model-mix-item.mix-lite { border-left-color: var(--data-3); }
+    .model-mix-item.mix-std { border-left-color: var(--data-1); }
+    .model-mix-item.mix-pro { border-left-color: var(--data-2); }
+    .model-mix-item.is-dimmed { opacity: 0.45; }
+
+    .model-mix-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: var(--space-sm);
+    }
+
+    .progress-track {
+      width: 100%;
+      height: 6px;
+      background: var(--surface-container-high);
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      transition: width var(--dur-short) var(--ease-out);
+    }
+    .fill-lite { background: var(--data-3); }
+    .fill-std { background: var(--data-1); }
+    .fill-pro { background: var(--data-2); }
+
+    /* Ticket Category Filter Bar */
+    .cat-filter-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-sm);
+    }
+
+    .cat-pill {
+      min-height: 44px;
+      padding: 0 var(--space-sm);
+      background: var(--background);
+      border: 1px solid var(--outline-variant);
+      border-bottom: 2px solid transparent;
+      font-family: var(--font-label);
+      font-size: var(--label-size);
+      color: var(--on-surface);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-xs);
+    }
+    .cat-pill:hover { background: var(--surface-container-high); }
+    .cat-pill.is-active {
+      border-bottom: var(--indicator);
+      font-weight: 600;
+      color: var(--primary);
+    }
+
+    /* Tables */
+    .data-section-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
+      gap: var(--space-md);
+      align-items: start;
+    }
+
+    .table-scroll {
+      overflow-x: auto;
+      width: 100%;
+      border-top: var(--rule);
+      border-bottom: var(--rule);
+    }
+
+    table.carbon-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.875rem;
+      text-align: left;
+    }
+    table.carbon-table thead th {
+      background: var(--surface-container-high);
+      color: var(--on-surface);
+      font-family: var(--font-label);
+      font-size: var(--label-size);
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: var(--space-sm) var(--space-md);
+      white-space: nowrap;
+      border-bottom: var(--rule);
+    }
+    table.carbon-table thead th.num,
+    table.carbon-table tbody td.num,
+    table.carbon-table tfoot td.num {
+      text-align: right;
+    }
+
+    .sort-btn {
+      background: transparent;
+      border: none;
+      padding: 0;
+      margin: 0;
+      font: inherit;
+      color: inherit;
+      text-transform: inherit;
+      letter-spacing: inherit;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-xs);
+      min-height: 28px;
+    }
+    .sort-btn:hover { color: var(--primary); }
+
+    table.carbon-table tbody tr {
+      background: var(--background);
+      border-top: var(--rule);
+    }
+    table.carbon-table tbody tr:nth-child(even) {
+      background: var(--surface-container-low);
+    }
+    table.carbon-table tbody tr.is-highlighted {
+      background: var(--primary-container);
+    }
+    table.carbon-table tbody td {
+      padding: var(--space-sm) var(--space-md);
+      white-space: nowrap;
+      color: var(--on-surface);
+    }
+    table.carbon-table tbody td.num,
+    table.carbon-table tfoot td.num {
+      font-family: var(--font-label);
+      font-variant-numeric: tabular-nums;
+    }
+
+    table.carbon-table tfoot tr {
+      background: var(--surface-container-high);
+      border-top: 2px solid var(--on-surface);
+      font-weight: 600;
+    }
+    table.carbon-table tfoot td {
+      padding: var(--space-sm) var(--space-md);
+      white-space: nowrap;
+    }
+
+    .event-badge {
+      display: inline-flex;
+      align-items: center;
+      height: 24px;
+      padding: 0 var(--space-sm);
+      border-radius: var(--rounded-full);
+      font-family: var(--font-label);
+      font-size: var(--label-size);
+      background: var(--surface-container-high);
+      color: var(--on-surface);
+    }
+    .event-badge.is-mar {
+      background: var(--primary-container);
+      color: var(--on-primary-container);
+    }
+    .event-badge.is-aug {
+      background: var(--warning-container);
+      color: var(--on-surface);
+    }
+
+    /* Footer */
+    .dash-footer {
+      border-top: var(--rule);
+      padding-top: var(--space-md);
+      padding-bottom: var(--space-lg);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-xs);
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 1024px) {
+      .controls-bar {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .charts-primary-row,
+      .charts-secondary-row,
+      .data-section-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    @media (max-width: 640px) {
+      .page-grid {
+        padding: var(--space-md);
+        gap: var(--space-md);
+      }
+      .callout-metrics {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .chart-canvas-wrap {
+        min-height: 260px;
+        height: 260px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+  </style>
+ </head>
+ <body>
+  <main class="page-grid">
+   <!-- Header -->
+   <header class="dash-header">
+    <div class="dash-header-meta">
+     <span class="label">AeroPure AQ-200 Series · Monthly Report (Jan–Oct 2026) &amp; Price List</span>
+     <h1 class="headline">AeroPure AQ-200 <strong>Sales &amp; Support Operations</strong></h1>
+     <p class="subtext">Interactive performance explorer tracking unit sales, list-price revenue, ticket composition, and CSAT vs. resolution times across AQ-200 Lite, AQ-200, and AQ-200 Pro.</p>
+    </div>
+    <div class="header-status" id="active-scope-pill">JAN–OCT 2026 · ALL MODELS</div>
+   </header>
+   <!-- Controls Bar -->
+   <section class="layer controls-bar" aria-label="Dashboard filters">
+    <div class="control-group">
+     <span class="label">Month Range Selector</span>
+     <div class="control-row">
+      <div class="field-wrap">
+       <label class="field-label" for="month-start">From month</label> <select class="carbon-select" id="month-start" onchange="handleMonthChange('start')"><option value="0">Jan 2026</option><option value="1">Feb 2026</option><option value="2">Mar 2026</option><option value="3">Apr 2026</option><option value="4">May 2026</option><option value="5">Jun 2026</option><option value="6">Jul 2026</option><option value="7">Aug 2026</option><option value="8">Sep 2026</option><option value="9">Oct 2026</option></select>
+      </div>
+      <div class="field-wrap">
+       <label class="field-label" for="month-end">To month</label> <select class="carbon-select" id="month-end" onchange="handleMonthChange('end')"><option value="0">Jan 2026</option><option value="1">Feb 2026</option><option value="2">Mar 2026</option><option value="3">Apr 2026</option><option value="4">May 2026</option><option value="5">Jun 2026</option><option value="6">Jul 2026</option><option value="7">Aug 2026</option><option value="8">Sep 2026</option><option value="9">Oct 2026</option></select>
+      </div>
+     </div>
+     <div class="preset-row" role="group" aria-label="Quick month range presets">
+      <button type="button" class="preset-chip is-active" id="preset-all" onclick="applyMonthPreset(0, 9)">All (Jan–Oct)</button> <button type="button" class="preset-chip" id="preset-q1" onclick="applyMonthPreset(0, 2)">Q1 (Jan–Mar)</button> <button type="button" class="preset-chip" id="preset-peak" onclick="applyMonthPreset(5, 7)">Peak (Jun–Aug)</button> <button type="button" class="preset-chip" id="preset-late" onclick="applyMonthPreset(6, 9)">Jul–Oct</button>
+     </div>
+    </div>
+    <div class="control-group">
+     <span class="label">Model Filter (Sales &amp; Revenue)</span>
+     <div class="btn-group" role="group" aria-label="Filter by AQ-200 model">
+      <button type="button" class="carbon-tab is-active" id="model-btn-all" onclick="setModelFilter('all')">All Models</button> <button type="button" class="carbon-tab" id="model-btn-lite" onclick="setModelFilter('lite')">AQ-200 Lite ($149)</button> <button type="button" class="carbon-tab" id="model-btn-std" onclick="setModelFilter('std')">AQ-200 ($229)</button> <button type="button" class="carbon-tab" id="model-btn-pro" onclick="setModelFilter('pro')">AQ-200 Pro ($349)</button>
+     </div>
+     <span class="subtext">Note: Support tickets, resolution time, and CSAT are reported at the series level in AQ200-RP-04.</span>
+    </div>
+    <div class="control-group">
+     <button type="button" class="carbon-btn carbon-btn-secondary" onclick="resetFilters()"> <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="rotate-ccw" aria-hidden="true" class="lucide lucide-rotate-ccw"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path></svg> Reset view </button>
+    </div>
+   </section>
+   <!-- KPI Cards -->
+   <section class="kpi-grid" aria-label="Key performance indicators">
+    <article class="kpi-tile key-tile">
+     <div>
+      <span class="label">Total Units Sold</span>
+      <div class="key-value" id="kpi-units">17,175</div>
+     </div>
+     <div class="kpi-meta">
+      <span class="kpi-delta is-neutral" id="kpi-units-sub">Peak month: Jul 2026 (2,320 units)</span> <span id="kpi-units-detail">Lite 5,615 · AQ-200 8,275 · Pro 3,285</span>
+     </div>
+    </article>
+    <article class="kpi-tile">
+     <div>
+      <span class="label">Revenue at List Price</span>
+      <div class="key-value" id="kpi-revenue">$3,878,075</div>
+     </div>
+     <div class="kpi-meta">
+      <span class="kpi-delta is-neutral" id="kpi-revenue-sub">Blended ASP: $225.80 / unit</span> <span id="kpi-revenue-detail">List prices: $149 Lite · $229 Std · $349 Pro</span>
+     </div>
+    </article>
+    <article class="kpi-tile">
+     <div>
+      <span class="label">Total Support Tickets</span>
+      <div class="key-value" id="kpi-tickets">1,175</div>
+     </div>
+     <div class="kpi-meta">
+      <span class="kpi-delta is-neutral" id="kpi-tickets-sub">Top driver: Filter (505 · 43.0%)</span> <span id="kpi-tickets-detail">Series-wide across 10 months</span>
+     </div>
+    </article>
+    <article class="kpi-tile">
+     <div>
+      <span class="label">Average CSAT Score</span>
+      <div class="key-value" id="kpi-csat">4.27 / 5.0</div>
+     </div>
+     <div class="kpi-meta">
+      <span class="kpi-delta is-neutral" id="kpi-csat-sub">Avg resolution: 23.4 h (ticket-weighted)</span> <span id="kpi-csat-detail">Range: 3.9 (Mar) to 4.5 (Feb)</span>
+     </div>
+    </article>
+   </section>
+   <!-- Explanatory Incident Callouts -->
+   <section class="callouts-grid" aria-label="Operational anomaly callouts">
+    <article class="callout-strip callout-march" id="callout-march">
+     <div>
+      <div class="callout-head">
+       <div class="callout-title-wrap">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="wifi-off" class="lucide lucide-wifi-off callout-icon-march" aria-hidden="true"><path d="M12 20h.01"></path><path d="M8.5 16.429a5 5 0 0 1 7 0"></path><path d="M5 12.859a10 10 0 0 1 5.17-2.69"></path><path d="M19 12.859a10 10 0 0 0-2.007-1.523"></path><path d="M2 8.82a15 15 0 0 1 4.177-2.643"></path><path d="M22 8.82a15 15 0 0 0-11.288-3.764"></path><path d="m2 2 20 20"></path></svg>
+        <h2 class="panel-title">March 2026: Wi-Fi Firmware 2.3 Spike</h2>
+       </div>
+       <span class="callout-tag in-view" id="badge-march">In range</span>
+      </div>
+      <p class="callout-body" style="margin-top: var(--space-sm);">Firmware 2.3 caused Wi-Fi reconnect failures (error code E11) on <strong>AQ-200</strong> and <strong>AQ-200 Pro</strong> (AQ-200 Lite has no Wi-Fi). Wi-Fi/App tickets more than doubled from 22 in February to 47 in March (+113.6%), pushing average resolution time to a 10-month high of 31.2 h and pulling CSAT down to 3.9. Firmware 2.3.1 resolved the issue on 28 March, restoring Wi-Fi/App tickets to 30 and CSAT to 4.3 in April.</p>
+     </div>
+     <div class="callout-metrics">
+      <div>
+       <span class="label">Wi-Fi Tickets</span>
+       <div class="callout-stat-val">
+        47 <span style="font-size: 0.75rem; color: var(--on-surface-variant);">(+114% MoM)</span>
+       </div>
+      </div>
+      <div>
+       <span class="label">Avg Resolution</span>
+       <div class="callout-stat-val">
+        31.2 h <span style="font-size: 0.75rem; color: var(--error);">(Year high)</span>
+       </div>
+      </div>
+      <div>
+       <span class="label">Monthly CSAT</span>
+       <div class="callout-stat-val">
+        3.9 <span style="font-size: 0.75rem; color: var(--error);">(-0.6 vs Feb)</span>
+       </div>
+      </div>
+     </div>
+     <div class="callout-foot">
+      <span class="subtext">Report Note · AQ200-RP-04 (March 2026)</span> <button type="button" class="carbon-btn carbon-btn-ghost" onclick="focusIncident('march')"> Focus Jan–Apr <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="arrow-right" aria-hidden="true" class="lucide lucide-arrow-right"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg> </button>
+     </div>
+    </article>
+    <article class="callout-strip callout-august" id="callout-august">
+     <div>
+      <div class="callout-head">
+       <div class="callout-title-wrap">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="droplets" class="lucide lucide-droplets callout-icon-august" aria-hidden="true"><path d="M7 16.3c2.2 0 4-1.83 4-4.05 0-1.16-.57-2.26-1.71-3.19S7.29 6.75 7 5.3c-.29 1.45-1.14 2.84-2.29 3.76S3 11.1 3 12.25c0 2.22 1.8 4.05 4 4.05z"></path><path d="M12.56 6.6A10.97 10.97 0 0 0 14 3.02c.5 2.5 2 4.9 4 6.5s3 3.5 3 5.5a6.98 6.98 0 0 1-11.91 4.97"></path></svg>
+        <h2 class="panel-title">August 2026: Humidity &amp; Sensor Spike</h2>
+       </div>
+       <span class="callout-tag in-view" id="badge-august">In range</span>
+      </div>
+      <p class="callout-body" style="margin-top: var(--space-sm);">Following the June–July summer haze sales peak (2,130 and 2,320 units), high August humidity triggered a surge in E06 (“sensor dirty”) tickets. Sensor tickets climbed from 21 in July to 35 in August (+66.7%), lifting total monthly tickets to a peak of 152, slowing resolution to 26.8 h, and dipping CSAT to 4.0. Adding an in-app sensor-cleaning reminder in September cut Sensor tickets back to 19 and lifted CSAT to 4.4.</p>
+     </div>
+     <div class="callout-metrics">
+      <div>
+       <span class="label">Sensor Tickets</span>
+       <div class="callout-stat-val">
+        35 <span style="font-size: 0.75rem; color: var(--on-surface-variant);">(+67% MoM)</span>
+       </div>
+      </div>
+      <div>
+       <span class="label">Total Tickets</span>
+       <div class="callout-stat-val">
+        152 <span style="font-size: 0.75rem; color: var(--on-surface-variant);">(Year peak)</span>
+       </div>
+      </div>
+      <div>
+       <span class="label">Monthly CSAT</span>
+       <div class="callout-stat-val">
+        4.0 <span style="font-size: 0.75rem; color: var(--positive);">(4.4 in Sep)</span>
+       </div>
+      </div>
+     </div>
+     <div class="callout-foot">
+      <span class="subtext">Report Note · AQ200-RP-04 (June–September 2026)</span> <button type="button" class="carbon-btn carbon-btn-ghost" onclick="focusIncident('august')"> Focus Jul–Oct <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="arrow-right" aria-hidden="true" class="lucide lucide-arrow-right"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg> </button>
+     </div>
+    </article>
+   </section>
+   <!-- Sales Performance Section -->
+   <section aria-labelledby="sales-section-heading">
+    <div class="section-head" style="margin-bottom: var(--space-md);">
+     <div>
+      <span class="label">Section 01 · Unit Volume &amp; List-Price Revenue</span>
+      <h2 class="section-title" id="sales-section-heading">Monthly <strong>Units Sold by Model</strong></h2>
+     </div>
+     <div class="btn-group" role="group" aria-label="Units chart layout mode">
+      <button type="button" class="carbon-tab is-active" id="units-mode-stacked" onclick="setUnitsChartMode('stacked')">Stacked Bars</button> <button type="button" class="carbon-tab" id="units-mode-grouped" onclick="setUnitsChartMode('grouped')">Grouped Bars</button>
+     </div>
+    </div>
+    <div class="charts-primary-row">
+     <article class="chart-panel">
+      <div class="chart-header">
+       <div>
+        <h3 class="panel-title">Units Sold to End Customers</h3>
+        <span class="label" id="units-chart-subtitle">Jan 2026 – Oct 2026 · All Models</span>
+       </div>
+       <div class="legend-strip" aria-label="Model legend">
+        <span class="legend-item"><span class="legend-swatch swatch-lite"></span>AQ-200 Lite ($149)</span> <span class="legend-item"><span class="legend-swatch swatch-std"></span>AQ-200 ($229)</span> <span class="legend-item"><span class="legend-swatch swatch-pro"></span>AQ-200 Pro ($349)</span>
+       </div>
+      </div>
+      <div class="chart-canvas-wrap">
+       <canvas id="unitsChart" aria-label="Monthly units sold by model bar chart" role="img" width="905" height="387" style="display: block; box-sizing: border-box; height: 310px; width: 724px;"></canvas>
+      </div>
+     </article>
+     <aside class="model-mix-panel" aria-label="Model volume and revenue share">
+      <div>
+       <h3 class="panel-title">Model Mix &amp; List Revenue</h3>
+       <span class="label" id="mix-panel-subtitle">Jan 2026 – Oct 2026</span>
+      </div>
+      <div class="model-mix-list">
+       <div class="model-mix-item mix-std" id="mix-card-std">
+        <div class="model-mix-top">
+         <span class="panel-title" style="font-size: 0.9375rem;">AQ-200 (Standard)</span> <span class="mono-val" id="mix-std-share">48.2%</span>
+        </div>
+        <div class="progress-track">
+         <div class="progress-fill fill-std" id="mix-std-bar" style="width: 48.2%;"></div>
+        </div>
+        <div class="model-mix-top" style="margin-top: var(--space-xs);">
+         <span class="subtext mono-val" id="mix-std-units">8,275 units</span> <span class="mono-val" style="font-size: 0.875rem;" id="mix-std-rev">$1,894,975</span>
+        </div>
+       </div>
+       <div class="model-mix-item mix-pro" id="mix-card-pro">
+        <div class="model-mix-top">
+         <span class="panel-title" style="font-size: 0.9375rem;">AQ-200 Pro</span> <span class="mono-val" id="mix-pro-share">19.1%</span>
+        </div>
+        <div class="progress-track">
+         <div class="progress-fill fill-pro" id="mix-pro-bar" style="width: 19.1%;"></div>
+        </div>
+        <div class="model-mix-top" style="margin-top: var(--space-xs);">
+         <span class="subtext mono-val" id="mix-pro-units">3,285 units</span> <span class="mono-val" style="font-size: 0.875rem;" id="mix-pro-rev">$1,146,465</span>
+        </div>
+       </div>
+       <div class="model-mix-item mix-lite" id="mix-card-lite">
+        <div class="model-mix-top">
+         <span class="panel-title" style="font-size: 0.9375rem;">AQ-200 Lite</span> <span class="mono-val" id="mix-lite-share">32.7%</span>
+        </div>
+        <div class="progress-track">
+         <div class="progress-fill fill-lite" id="mix-lite-bar" style="width: 32.7%;"></div>
+        </div>
+        <div class="model-mix-top" style="margin-top: var(--space-xs);">
+         <span class="subtext mono-val" id="mix-lite-units">5,615 units</span> <span class="mono-val" style="font-size: 0.875rem;" id="mix-lite-rev">$836,635</span>
+        </div>
+       </div>
+      </div>
+      <p class="subtext" style="border-top: var(--rule); padding-top: var(--space-sm);">Summer haze demand drove a 96.6% volume lift from February (1,180 units) to July (2,320 units).</p>
+     </aside>
+    </div>
+   </section>
+   <!-- Support Analytics Section -->
+   <section aria-labelledby="support-section-heading">
+    <div class="section-head" style="margin-bottom: var(--space-md);">
+     <div>
+      <span class="label">Section 02 · Support Volume &amp; Service Quality (Series-Wide)</span>
+      <h2 class="section-title" id="support-section-heading">Ticket Breakdown &amp; <strong>CSAT vs. Resolution Time</strong></h2>
+     </div>
+     <div class="cat-filter-row" role="group" aria-label="Filter support ticket categories">
+      <button type="button" class="cat-pill is-active" id="cat-btn-all" onclick="setCategoryFilter('all')">All Categories</button> <button type="button" class="cat-pill" id="cat-btn-filter" onclick="setCategoryFilter('filter')"><span class="legend-swatch swatch-filter"></span>Filter</button> <button type="button" class="cat-pill" id="cat-btn-wifi" onclick="setCategoryFilter('wifi')"><span class="legend-swatch swatch-wifi"></span>Wi-Fi/App</button> <button type="button" class="cat-pill" id="cat-btn-sensor" onclick="setCategoryFilter('sensor')"><span class="legend-swatch swatch-sensor"></span>Sensor</button> <button type="button" class="cat-pill" id="cat-btn-noise" onclick="setCategoryFilter('noise')"><span class="legend-swatch swatch-noise"></span>Noise</button> <button type="button" class="cat-pill" id="cat-btn-other" onclick="setCategoryFilter('other')"><span class="legend-swatch swatch-other"></span>Other</button>
+     </div>
+    </div>
+    <div class="charts-secondary-row">
+     <article class="chart-panel">
+      <div class="chart-header">
+       <div>
+        <h3 class="panel-title">Support Tickets by Category</h3>
+        <span class="label" id="tickets-chart-subtitle">Monthly stacked ticket count · All Categories</span>
+       </div>
+       <div class="legend-strip" aria-label="Ticket categories legend">
+        <span class="legend-item"><span class="legend-swatch swatch-filter"></span>Filter</span> <span class="legend-item"><span class="legend-swatch swatch-wifi"></span>Wi-Fi/App</span> <span class="legend-item"><span class="legend-swatch swatch-sensor"></span>Sensor</span> <span class="legend-item"><span class="legend-swatch swatch-noise"></span>Noise</span> <span class="legend-item"><span class="legend-swatch swatch-other"></span>Other</span>
+       </div>
+      </div>
+      <div class="chart-canvas-wrap">
+       <canvas id="ticketsChart" aria-label="Monthly stacked support tickets by category chart" role="img" width="712" height="387" style="display: block; box-sizing: border-box; height: 310px; width: 570.3px;"></canvas>
+      </div>
+      <div class="subtext mono-val" id="tickets-breakdown-summary">Filter: 505 (43.0%) · Wi-Fi/App: 280 (23.8%) · Sensor: 174 (14.8%) · Noise: 123 (10.5%) · Other: 93 (7.9%)</div>
+     </article>
+     <article class="chart-panel">
+      <div class="chart-header">
+       <div>
+        <h3 class="panel-title">CSAT Score vs. Avg Resolution Time</h3>
+        <span class="label" id="csat-chart-subtitle">Dual-axis monthly trend (1–5 scale vs. hours)</span>
+       </div>
+       <div class="legend-strip" aria-label="CSAT and resolution legend">
+        <span class="legend-item"><span class="legend-swatch swatch-csat"></span>CSAT (1–5)</span> <span class="legend-item"><span class="legend-swatch swatch-res"></span>Avg Resolution (h)</span>
+       </div>
+      </div>
+      <div class="chart-canvas-wrap">
+       <canvas id="csatChart" aria-label="CSAT score versus average resolution time dual-axis line chart" role="img" width="677" height="387" style="display: block; box-sizing: border-box; height: 310px; width: 541.7px;"></canvas>
+      </div>
+      <div class="subtext" id="csat-insight-summary">Resolution delays directly depress satisfaction: both 2026 CSAT troughs coincide with resolution spikes in March (31.2 h → 3.9) and August (26.8 h → 4.0).</div>
+     </article>
+    </div>
+   </section>
+   <!-- Detailed Ledger & Price List Reference -->
+   <section aria-labelledby="ledger-section-heading">
+    <div class="section-head" style="margin-bottom: var(--space-md);">
+     <div>
+      <span class="label">Section 03 · Source Tables &amp; Service Economics</span>
+      <h2 class="section-title" id="ledger-section-heading">Monthly Performance Ledger &amp; <strong>2026 Price List</strong></h2>
+     </div>
+     <span class="subtext">Click any column header in the monthly ledger to sort within the active month range.</span>
+    </div>
+    <div class="data-section-grid">
+     <div class="layer" style="padding: 0;">
+      <div style="padding: var(--space-md); border-bottom: var(--rule); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: var(--space-sm);">
+       <div>
+        <h3 class="panel-title">Monthly Report Data (AQ200-RP-04)</h3>
+        <span class="label" id="table-range-label">Showing Jan 2026 – Oct 2026</span>
+       </div>
+       <span class="label" id="table-model-label">Sales/Rev: All Models</span>
+      </div>
+      <div class="table-scroll">
+       <table class="carbon-table" id="monthly-ledger-table">
+        <thead>
+         <tr>
+          <th><button type="button" class="sort-btn" onclick="sortMonthlyTable('index')">Month <span id="sort-ind-index">↑</span></button></th>
+          <th class="num"><button type="button" class="sort-btn" onclick="sortMonthlyTable('units')">Units <span id="sort-ind-units"></span></button></th>
+          <th class="num"><button type="button" class="sort-btn" onclick="sortMonthlyTable('revenue')">List Rev <span id="sort-ind-revenue"></span></button></th>
+          <th class="num"><button type="button" class="sort-btn" onclick="sortMonthlyTable('tickets')">Tickets <span id="sort-ind-tickets"></span></button></th>
+          <th class="num"><button type="button" class="sort-btn" onclick="sortMonthlyTable('resHours')">Avg Res (h) <span id="sort-ind-resHours"></span></button></th>
+          <th class="num"><button type="button" class="sort-btn" onclick="sortMonthlyTable('csat')">CSAT <span id="sort-ind-csat"></span></button></th>
+          <th>Report Note</th>
+         </tr>
+        </thead>
+        <tbody id="monthly-tbody"><tr><td><strong>Jan 2026</strong></td><td class="num">1,240</td><td class="num">$276,360</td><td class="num">91</td><td class="num">20.5</td><td class="num">4.4</td><td><span class="event-badge">Baseline</span></td></tr><tr><td><strong>Feb 2026</strong></td><td class="num">1,180</td><td class="num">$264,020</td><td class="num">81</td><td class="num">19.8</td><td class="num">4.5</td><td><span class="event-badge">Lowest ticket volume</span></td></tr><tr class="is-highlighted"><td><strong>Mar 2026</strong></td><td class="num">1,370</td><td class="num">$306,530</td><td class="num">120</td><td class="num">31.2</td><td class="num">3.9</td><td><span class="event-badge is-mar">FW 2.3 Wi-Fi E11 spike</span></td></tr><tr><td><strong>Apr 2026</strong></td><td class="num">1,570</td><td class="num">$352,730</td><td class="num">107</td><td class="num">22.4</td><td class="num">4.3</td><td><span class="event-badge">Post-2.3.1 recovery</span></td></tr><tr><td><strong>May 2026</strong></td><td class="num">1,835</td><td class="num">$412,815</td><td class="num">117</td><td class="num">21.0</td><td class="num">4.4</td><td><span class="event-badge">Pre-peak ramp</span></td></tr><tr><td><strong>Jun 2026</strong></td><td class="num">2,130</td><td class="num">$480,970</td><td class="num">130</td><td class="num">23.5</td><td class="num">4.3</td><td><span class="event-badge">Summer haze peak</span></td></tr><tr><td><strong>Jul 2026</strong></td><td class="num">2,320</td><td class="num">$525,080</td><td class="num">145</td><td class="num">24.1</td><td class="num">4.2</td><td><span class="event-badge">Annual unit peak</span></td></tr><tr class="is-highlighted"><td><strong>Aug 2026</strong></td><td class="num">2,090</td><td class="num">$473,810</td><td class="num">152</td><td class="num">26.8</td><td class="num">4.0</td><td><span class="event-badge is-aug">Humidity E06 sensor spike</span></td></tr><tr><td><strong>Sep 2026</strong></td><td class="num">1,760</td><td class="num">$401,440</td><td class="num">121</td><td class="num">21.7</td><td class="num">4.4</td><td><span class="event-badge">App sensor reminder</span></td></tr><tr><td><strong>Oct 2026</strong></td><td class="num">1,680</td><td class="num">$384,320</td><td class="num">111</td><td class="num">19.9</td><td class="num">4.5</td><td><span class="event-badge">Stabilized</span></td></tr></tbody>
+        <tfoot id="monthly-tfoot"><tr><td>Total / Weighted Avg</td><td class="num">17,175</td><td class="num">$3,878,075</td><td class="num">1,175</td><td class="num">23.4</td><td class="num">4.27</td><td class="mono-val" style="font-size: 0.75rem;">10 months</td></tr></tfoot>
+       </table>
+      </div>
+     </div>
+     <aside class="layer" style="padding: 0;">
+      <div style="padding: var(--space-md); border-bottom: var(--rule);">
+       <h3 class="panel-title">Spare Parts &amp; Service Price List</h3>
+       <span class="label">AQ200-PL-03 (Valid 2026 · USD excl. tax/shipping)</span>
+      </div>
+      <div class="table-scroll">
+       <table class="carbon-table">
+        <thead>
+         <tr>
+          <th>Part / Service</th>
+          <th>Models</th>
+          <th class="num">Price</th>
+         </tr>
+        </thead>
+        <tbody>
+         <tr>
+          <td><strong>FL-200H</strong> · Main H13 HEPA + carbon</td>
+          <td>Lite, AQ-200</td>
+          <td class="num">$39</td>
+         </tr>
+         <tr>
+          <td><strong>FL-200P</strong> · Main H13 HEPA + carbon (large)</td>
+          <td>Pro</td>
+          <td class="num">$59</td>
+         </tr>
+         <tr>
+          <td><strong>FL-200H-2</strong> · Value pack (2 × FL-200H)</td>
+          <td>Lite, AQ-200</td>
+          <td class="num">$70</td>
+         </tr>
+         <tr>
+          <td><strong>PF-200</strong> · Washable pre-filter</td>
+          <td>All models</td>
+          <td class="num">$12</td>
+         </tr>
+         <tr>
+          <td><strong>SN-PM25</strong> · Laser PM2.5 sensor module</td>
+          <td>All models</td>
+          <td class="num">$24</td>
+         </tr>
+         <tr>
+          <td><strong>SN-VOC</strong> · VOC sensor module</td>
+          <td>Pro</td>
+          <td class="num">$29</td>
+         </tr>
+         <tr>
+          <td><strong>UV-200</strong> · UV-C lamp module</td>
+          <td>Pro</td>
+          <td class="num">$35</td>
+         </tr>
+         <tr>
+          <td><strong>FM-200</strong> · Fan motor assembly</td>
+          <td>Lite, AQ-200</td>
+          <td class="num">$68</td>
+         </tr>
+         <tr>
+          <td><strong>FM-200P</strong> · Fan motor (high flow)</td>
+          <td>Pro</td>
+          <td class="num">$82</td>
+         </tr>
+         <tr>
+          <td><strong>CP-200</strong> · Control panel board</td>
+          <td>All models</td>
+          <td class="num">$45</td>
+         </tr>
+         <tr>
+          <td><strong>PSU-200</strong> · Power supply cable / adapter</td>
+          <td>All models</td>
+          <td class="num">$22</td>
+         </tr>
+         <tr>
+          <td><strong>RC-200</strong> · Infrared remote control</td>
+          <td>AQ-200, Pro</td>
+          <td class="num">$15</td>
+         </tr>
+         <tr>
+          <td><strong>Service labor (in warranty)</strong></td>
+          <td>All models</td>
+          <td class="num">$0</td>
+         </tr>
+         <tr>
+          <td><strong>Service labor (out of warranty, flat)</strong></td>
+          <td>All models</td>
+          <td class="num">$25</td>
+         </tr>
+         <tr>
+          <td><strong>Fan/duct inspection (24-mo check)</strong></td>
+          <td>All models</td>
+          <td class="num">$25</td>
+         </tr>
+        </tbody>
+       </table>
+      </div>
+      <div style="padding: var(--space-md);">
+       <p class="subtext">Consumables (main filters, pre-filters, UV-C lamps) are not covered by warranty. Parts replaced under warranty are free of charge, including labor.</p>
+      </div>
+     </aside>
+    </div>
+   </section>
+   <!-- Footer -->
+   <footer class="dash-footer">
+    <span class="label">Source Attribution &amp; Methodology</span>
+    <p class="subtext">Compiled from Nimbus Home Appliances (fictional) documents: Monthly Sales &amp; Support Report (Jan–Oct 2026, Document AQ200-RP-04), Spare Parts &amp; Service Price List 2026 (Document AQ200-PL-03), and unit list prices ($149 AQ-200 Lite, $229 AQ-200, $349 AQ-200 Pro) from the AQ-200 User Manual (Document AQ200-UM-01). Multi-month CSAT and resolution-time averages are weighted by monthly support ticket volume.</p>
+   </footer>
+  </main>
+  <script>
+    const MONTHLY_DATA = [
+      {
+        index: 0,
+        month: `Jan 2026`,
+        shortMonth: `Jan`,
+        lite: 410,
+        std: 620,
+        pro: 210,
+        filter: 38,
+        sensor: 12,
+        wifi: 25,
+        noise: 9,
+        other: 7,
+        resHours: 20.5,
+        csat: 4.4,
+        note: `Baseline`
+      },
+      {
+        index: 1,
+        month: `Feb 2026`,
+        shortMonth: `Feb`,
+        lite: 385,
+        std: 590,
+        pro: 205,
+        filter: 35,
+        sensor: 10,
+        wifi: 22,
+        noise: 8,
+        other: 6,
+        resHours: 19.8,
+        csat: 4.5,
+        note: `Lowest ticket volume`
+      },
+      {
+        index: 2,
+        month: `Mar 2026`,
+        shortMonth: `Mar`,
+        lite: 450,
+        std: 680,
+        pro: 240,
+        filter: 41,
+        sensor: 14,
+        wifi: 47,
+        noise: 10,
+        other: 8,
+        resHours: 31.2,
+        csat: 3.9,
+        note: `FW 2.3 Wi-Fi E11 spike`
+      },
+      {
+        index: 3,
+        month: `Apr 2026`,
+        shortMonth: `Apr`,
+        lite: 520,
+        std: 760,
+        pro: 290,
+        filter: 44,
+        sensor: 13,
+        wifi: 30,
+        noise: 11,
+        other: 9,
+        resHours: 22.4,
+        csat: 4.3,
+        note: `Post-2.3.1 recovery`
+      },
+      {
+        index: 4,
+        month: `May 2026`,
+        shortMonth: `May`,
+        lite: 610,
+        std: 880,
+        pro: 345,
+        filter: 52,
+        sensor: 15,
+        wifi: 28,
+        noise: 12,
+        other: 10,
+        resHours: 21.0,
+        csat: 4.4,
+        note: `Pre-peak ramp`
+      },
+      {
+        index: 5,
+        month: `Jun 2026`,
+        shortMonth: `Jun`,
+        lite: 700,
+        std: 1020,
+        pro: 410,
+        filter: 60,
+        sensor: 18,
+        wifi: 26,
+        noise: 15,
+        other: 11,
+        resHours: 23.5,
+        csat: 4.3,
+        note: `Summer haze peak`
+      },
+      {
+        index: 6,
+        month: `Jul 2026`,
+        shortMonth: `Jul`,
+        lite: 760,
+        std: 1105,
+        pro: 455,
+        filter: 66,
+        sensor: 21,
+        wifi: 29,
+        noise: 17,
+        other: 12,
+        resHours: 24.1,
+        csat: 4.2,
+        note: `Annual unit peak`
+      },
+      {
+        index: 7,
+        month: `Aug 2026`,
+        shortMonth: `Aug`,
+        lite: 690,
+        std: 980,
+        pro: 420,
+        filter: 63,
+        sensor: 35,
+        wifi: 27,
+        noise: 16,
+        other: 11,
+        resHours: 26.8,
+        csat: 4.0,
+        note: `Humidity E06 sensor spike`
+      },
+      {
+        index: 8,
+        month: `Sep 2026`,
+        shortMonth: `Sep`,
+        lite: 560,
+        std: 840,
+        pro: 360,
+        filter: 55,
+        sensor: 19,
+        wifi: 24,
+        noise: 13,
+        other: 10,
+        resHours: 21.7,
+        csat: 4.4,
+        note: `App sensor reminder`
+      },
+      {
+        index: 9,
+        month: `Oct 2026`,
+        shortMonth: `Oct`,
+        lite: 530,
+        std: 800,
+        pro: 350,
+        filter: 51,
+        sensor: 17,
+        wifi: 22,
+        noise: 12,
+        other: 9,
+        resHours: 19.9,
+        csat: 4.5,
+        note: `Stabilized`
+      }
+    ];
+
+    const LIST_PRICES = {
+      lite: 149,
+      std: 229,
+      pro: 349
+    };
+
+    const MODEL_LABELS = {
+      all: `All Models`,
+      lite: `AQ-200 Lite`,
+      std: `AQ-200`,
+      pro: `AQ-200 Pro`
+    };
+
+    const CAT_LABELS = {
+      all: `All Categories`,
+      filter: `Filter`,
+      wifi: `Wi-Fi/App`,
+      sensor: `Sensor`,
+      noise: `Noise`,
+      other: `Other`
+    };
+
+    const state = {
+      startIdx: 0,
+      endIdx: 9,
+      modelFilter: `all`,
+      unitsMode: `stacked`,
+      categoryFilter: `all`,
+      sortBy: `index`,
+      sortDir: `asc`
+    };
+
+    let unitsChartInstance = null;
+    let ticketsChartInstance = null;
+    let csatChartInstance = null;
+
+    function getCssToken(name) {
+      return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+    }
+
+    function formatNumber(n) {
+      return Number(n).toLocaleString(`en-US`);
+    }
+
+    function formatCurrency(n) {
+      return `$` + Number(n).toLocaleString(`en-US`);
+    }
+
+    function getRowUnits(row, modelKey) {
+      if (modelKey === `lite`) return row.lite;
+      if (modelKey === `std`) return row.std;
+      if (modelKey === `pro`) return row.pro;
+      return row.lite + row.std + row.pro;
+    }
+
+    function getRowRevenue(row, modelKey) {
+      if (modelKey === `lite`) return row.lite * LIST_PRICES.lite;
+      if (modelKey === `std`) return row.std * LIST_PRICES.std;
+      if (modelKey === `pro`) return row.pro * LIST_PRICES.pro;
+      return (
+        row.lite * LIST_PRICES.lite +
+        row.std * LIST_PRICES.std +
+        row.pro * LIST_PRICES.pro
+      );
+    }
+
+    function getRowTickets(row) {
+      return row.filter + row.sensor + row.wifi + row.noise + row.other;
+    }
+
+    function populateMonthSelects() {
+      const startSel = document.getElementById(`month-start`);
+      const endSel = document.getElementById(`month-end`);
+      if (!startSel || !endSel) return;
+
+      startSel.innerHTML = ``;
+      endSel.innerHTML = ``;
+
+      MONTHLY_DATA.forEach(function (d) {
+        const opt1 = document.createElement(`option`);
+        opt1.value = String(d.index);
+        opt1.textContent = d.month;
+        startSel.appendChild(opt1);
+
+        const opt2 = document.createElement(`option`);
+        opt2.value = String(d.index);
+        opt2.textContent = d.month;
+        endSel.appendChild(opt2);
+      });
+
+      startSel.value = String(state.startIdx);
+      endSel.value = String(state.endIdx);
+    }
+
+    function syncPresetChips() {
+      const presets = [
+        { id: `preset-all`, s: 0, e: 9 },
+        { id: `preset-q1`, s: 0, e: 2 },
+        { id: `preset-peak`, s: 5, e: 7 },
+        { id: `preset-late`, s: 6, e: 9 }
+      ];
+      presets.forEach(function (p) {
+        const el = document.getElementById(p.id);
+        if (!el) return;
+        if (state.startIdx === p.s && state.endIdx === p.e) {
+          el.classList.add(`is-active`);
+        } else {
+          el.classList.remove(`is-active`);
+        }
+      });
+    }
+
+    function handleMonthChange(changedEdge) {
+      const startSel = document.getElementById(`month-start`);
+      const endSel = document.getElementById(`month-end`);
+      if (!startSel || !endSel) return;
+
+      let s = parseInt(startSel.value, 10);
+      let e = parseInt(endSel.value, 10);
+
+      if (s > e) {
+        if (changedEdge === `start`) {
+          e = s;
+          endSel.value = String(e);
+        } else {
+          s = e;
+          startSel.value = String(s);
+        }
+      }
+
+      state.startIdx = s;
+      state.endIdx = e;
+      syncPresetChips();
+      updateDashboard();
+    }
+
+    function applyMonthPreset(s, e) {
+      state.startIdx = s;
+      state.endIdx = e;
+      const startSel = document.getElementById(`month-start`);
+      const endSel = document.getElementById(`month-end`);
+      if (startSel) startSel.value = String(s);
+      if (endSel) endSel.value = String(e);
+      syncPresetChips();
+      updateDashboard();
+    }
+
+    function setModelFilter(modelKey) {
+      state.modelFilter = modelKey;
+      const keys = [`all`, `lite`, `std`, `pro`];
+      keys.forEach(function (k) {
+        const btn = document.getElementById(`model-btn-` + k);
+        if (!btn) return;
+        if (k === modelKey) {
+          btn.classList.add(`is-active`);
+        } else {
+          btn.classList.remove(`is-active`);
+        }
+      });
+      updateDashboard();
+    }
+
+    function setUnitsChartMode(mode) {
+      state.unitsMode = mode;
+      const stackedBtn = document.getElementById(`units-mode-stacked`);
+      const groupedBtn = document.getElementById(`units-mode-grouped`);
+      if (stackedBtn) stackedBtn.classList.toggle(`is-active`, mode === `stacked`);
+      if (groupedBtn) groupedBtn.classList.toggle(`is-active`, mode === `grouped`);
+      updateUnitsChart(getActiveSlice());
+    }
+
+    function setCategoryFilter(catKey) {
+      state.categoryFilter = catKey;
+      const cats = [`all`, `filter`, `wifi`, `sensor`, `noise`, `other`];
+      cats.forEach(function (c) {
+        const btn = document.getElementById(`cat-btn-` + c);
+        if (!btn) return;
+        btn.classList.toggle(`is-active`, c === catKey);
+      });
+      updateTicketsChart(getActiveSlice());
+    }
+
+    function focusIncident(which) {
+      if (which === `march`) {
+        applyMonthPreset(0, 3);
+      } else if (which === `august`) {
+        applyMonthPreset(6, 9);
+      }
+      const supportEl = document.getElementById(`support-section-heading`);
+      if (supportEl) {
+        supportEl.scrollIntoView({ behavior: `smooth`, block: `start` });
+      }
+    }
+
+    function resetFilters() {
+      state.startIdx = 0;
+      state.endIdx = 9;
+      state.modelFilter = `all`;
+      state.unitsMode = `stacked`;
+      state.categoryFilter = `all`;
+      state.sortBy = `index`;
+      state.sortDir = `asc`;
+
+      const startSel = document.getElementById(`month-start`);
+      const endSel = document.getElementById(`month-end`);
+      if (startSel) startSel.value = `0`;
+      if (endSel) endSel.value = `9`;
+
+      syncPresetChips();
+      setModelFilter(`all`);
+      setUnitsChartMode(`stacked`);
+      setCategoryFilter(`all`);
+      updateDashboard();
+    }
+
+    function sortMonthlyTable(column) {
+      if (state.sortBy === column) {
+        state.sortDir = state.sortDir === `asc` ? `desc` : `asc`;
+      } else {
+        state.sortBy = column;
+        state.sortDir = column === `index` ? `asc` : `desc`;
+      }
+      renderMonthlyTable(getActiveSlice());
+    }
+
+    function getActiveSlice() {
+      return MONTHLY_DATA.slice(state.startIdx, state.endIdx + 1);
+    }
+
+    function updateKPIsAndMix(slice) {
+      let totalLite = 0;
+      let totalStd = 0;
+      let totalPro = 0;
+      let totalSelectedUnits = 0;
+      let totalSelectedRev = 0;
+
+      let peakRow = slice[0];
+      let peakUnits = -1;
+
+      let totalTickets = 0;
+      let sumFilter = 0;
+      let sumWifi = 0;
+      let sumSensor = 0;
+      let sumNoise = 0;
+      let sumOther = 0;
+
+      let weightedResSum = 0;
+      let weightedCsatSum = 0;
+
+      let minCsat = 6;
+      let maxCsat = 0;
+      let minCsatMonth = ``;
+      let maxCsatMonth = ``;
+
+      slice.forEach(function (r) {
+        totalLite += r.lite;
+        totalStd += r.std;
+        totalPro += r.pro;
+
+        const u = getRowUnits(r, state.modelFilter);
+        const rev = getRowRevenue(r, state.modelFilter);
+        totalSelectedUnits += u;
+        totalSelectedRev += rev;
+
+        if (u > peakUnits) {
+          peakUnits = u;
+          peakRow = r;
+        }
+
+        const t = getRowTickets(r);
+        totalTickets += t;
+        sumFilter += r.filter;
+        sumWifi += r.wifi;
+        sumSensor += r.sensor;
+        sumNoise += r.noise;
+        sumOther += r.other;
+
+        weightedResSum += t * r.resHours;
+        weightedCsatSum += t * r.csat;
+
+        if (r.csat < minCsat) {
+          minCsat = r.csat;
+          minCsatMonth = r.shortMonth;
+        }
+        if (r.csat > maxCsat) {
+          maxCsat = r.csat;
+          maxCsatMonth = r.shortMonth;
+        }
+      });
+
+      const allModelsUnits = totalLite + totalStd + totalPro;
+      const asp = totalSelectedUnits > 0 ? (totalSelectedRev / totalSelectedUnits) : 0;
+      const avgCsat = totalTickets > 0 ? (weightedCsatSum / totalTickets) : 0;
+      const avgRes = totalTickets > 0 ? (weightedResSum / totalTickets) : 0;
+
+      // Header scope pill
+      const scopePill = document.getElementById(`active-scope-pill`);
+      const rangeText = slice[0].shortMonth.toUpperCase() + (slice.length > 1 ? `–` + slice[slice.length - 1].shortMonth.toUpperCase() : ``) + ` 2026`;
+      if (scopePill) {
+        scopePill.textContent = rangeText + ` · ` + MODEL_LABELS[state.modelFilter].toUpperCase();
+      }
+
+      // KPI 1: Units
+      const kpiUnits = document.getElementById(`kpi-units`);
+      const kpiUnitsSub = document.getElementById(`kpi-units-sub`);
+      const kpiUnitsDetail = document.getElementById(`kpi-units-detail`);
+      if (kpiUnits) kpiUnits.textContent = formatNumber(totalSelectedUnits);
+      if (kpiUnitsSub) kpiUnitsSub.textContent = `Peak month: ` + peakRow.month + ` (` + formatNumber(peakUnits) + ` units)`;
+      if (kpiUnitsDetail) {
+        if (state.modelFilter === `all`) {
+          kpiUnitsDetail.textContent = `Lite ` + formatNumber(totalLite) + ` · AQ-200 ` + formatNumber(totalStd) + ` · Pro ` + formatNumber(totalPro);
+        } else {
+          const share = allModelsUnits > 0 ? ((totalSelectedUnits / allModelsUnits) * 100).toFixed(1) : `0.0`;
+          kpiUnitsDetail.textContent = MODEL_LABELS[state.modelFilter] + ` represents ` + share + `% of ` + formatNumber(allModelsUnits) + ` series units`;
+        }
+      }
+
+      // KPI 2: Revenue
+      const kpiRev = document.getElementById(`kpi-revenue`);
+      const kpiRevSub = document.getElementById(`kpi-revenue-sub`);
+      const kpiRevDetail = document.getElementById(`kpi-revenue-detail`);
+      if (kpiRev) kpiRev.textContent = formatCurrency(totalSelectedRev);
+      if (kpiRevSub) kpiRevSub.textContent = `Blended ASP: $` + asp.toFixed(2) + ` / unit`;
+      if (kpiRevDetail) {
+        if (state.modelFilter === `all`) {
+          kpiRevDetail.textContent = `List prices: $149 Lite · $229 Std · $349 Pro`;
+        } else {
+          kpiRevDetail.textContent = `Calculated at $` + LIST_PRICES[state.modelFilter] + ` list price per unit`;
+        }
+      }
+
+      // KPI 3: Tickets
+      const catCounts = [
+        { name: `Filter`, count: sumFilter },
+        { name: `Wi-Fi/App`, count: sumWifi },
+        { name: `Sensor`, count: sumSensor },
+        { name: `Noise`, count: sumNoise },
+        { name: `Other`, count: sumOther }
+      ];
+      catCounts.sort(function (a, b) { return b.count - a.count; });
+      const topCat = catCounts[0];
+      const topPct = totalTickets > 0 ? ((topCat.count / totalTickets) * 100).toFixed(1) : `0.0`;
+
+      const kpiTickets = document.getElementById(`kpi-tickets`);
+      const kpiTicketsSub = document.getElementById(`kpi-tickets-sub`);
+      const kpiTicketsDetail = document.getElementById(`kpi-tickets-detail`);
+      if (kpiTickets) kpiTickets.textContent = formatNumber(totalTickets);
+      if (kpiTicketsSub) kpiTicketsSub.textContent = `Top driver: ` + topCat.name + ` (` + formatNumber(topCat.count) + ` · ` + topPct + `%)`;
+      if (kpiTicketsDetail) kpiTicketsDetail.textContent = `Series-wide across ` + slice.length + (slice.length === 1 ? ` month` : ` months`);
+
+      // KPI 4: CSAT
+      const kpiCsat = document.getElementById(`kpi-csat`);
+      const kpiCsatSub = document.getElementById(`kpi-csat-sub`);
+      const kpiCsatDetail = document.getElementById(`kpi-csat-detail`);
+      if (kpiCsat) kpiCsat.textContent = avgCsat.toFixed(2) + ` / 5.0`;
+      if (kpiCsatSub) {
+        kpiCsatSub.textContent = `Avg resolution: ` + avgRes.toFixed(1) + ` h (ticket-weighted)`;
+        kpiCsatSub.className = `kpi-delta ` + (avgCsat >= 4.3 ? `is-positive` : (avgCsat < 4.1 ? `is-negative` : `is-neutral`));
+      }
+      if (kpiCsatDetail) {
+        kpiCsatDetail.textContent = slice.length === 1
+          ? `Single-month score (` + slice[0].month + `)`
+          : `Range: ` + minCsat.toFixed(1) + ` (` + minCsatMonth + `) to ` + maxCsat.toFixed(1) + ` (` + maxCsatMonth + `)`;
+      }
+
+      // Incident Callout Range Indicators
+      const marchInRange = state.startIdx <= 2 && state.endIdx >= 2;
+      const augInRange = state.startIdx <= 7 && state.endIdx >= 7;
+
+      const marchCard = document.getElementById(`callout-march`);
+      const marchBadge = document.getElementById(`badge-march`);
+      if (marchCard && marchBadge) {
+        marchCard.classList.toggle(`is-out-of-range`, !marchInRange);
+        marchBadge.classList.toggle(`in-view`, marchInRange);
+        marchBadge.textContent = marchInRange ? `In range` : `Outside range`;
+      }
+
+      const augCard = document.getElementById(`callout-august`);
+      const augBadge = document.getElementById(`badge-august`);
+      if (augCard && augBadge) {
+        augCard.classList.toggle(`is-out-of-range`, !augInRange);
+        augBadge.classList.toggle(`in-view`, augInRange);
+        augBadge.textContent = augInRange ? `In range` : `Outside range`;
+      }
+
+      // Model Mix Side Panel
+      const stdShare = allModelsUnits > 0 ? (totalStd / allModelsUnits) * 100 : 0;
+      const proShare = allModelsUnits > 0 ? (totalPro / allModelsUnits) * 100 : 0;
+      const liteShare = allModelsUnits > 0 ? (totalLite / allModelsUnits) * 100 : 0;
+
+      const stdRev = totalStd * LIST_PRICES.std;
+      const proRev = totalPro * LIST_PRICES.pro;
+      const liteRev = totalLite * LIST_PRICES.lite;
+
+      const setMix = function (key, units, rev, share) {
+        const shEl = document.getElementById(`mix-` + key + `-share`);
+        const barEl = document.getElementById(`mix-` + key + `-bar`);
+        const uEl = document.getElementById(`mix-` + key + `-units`);
+        const rEl = document.getElementById(`mix-` + key + `-rev`);
+        const cardEl = document.getElementById(`mix-card-` + key);
+
+        if (shEl) shEl.textContent = share.toFixed(1) + `%`;
+        if (barEl) barEl.style.width = share.toFixed(1) + `%`;
+        if (uEl) uEl.textContent = formatNumber(units) + ` units`;
+        if (rEl) rEl.textContent = formatCurrency(rev);
+        if (cardEl) {
+          cardEl.classList.toggle(`is-dimmed`, state.modelFilter !== `all` && state.modelFilter !== key);
+        }
+      };
+
+      setMix(`std`, totalStd, stdRev, stdShare);
+      setMix(`pro`, totalPro, proRev, proShare);
+      setMix(`lite`, totalLite, liteRev, liteShare);
+
+      const mixSub = document.getElementById(`mix-panel-subtitle`);
+      if (mixSub) {
+        mixSub.textContent = slice[0].month + (slice.length > 1 ? ` – ` + slice[slice.length - 1].month : ``);
+      }
+
+      // Tickets Breakdown Summary
+      const tSummary = document.getElementById(`tickets-breakdown-summary`);
+      if (tSummary && totalTickets > 0) {
+        const pct = function (v) { return ((v / totalTickets) * 100).toFixed(1) + `%`; };
+        tSummary.textContent =
+          `Filter: ` + formatNumber(sumFilter) + ` (` + pct(sumFilter) + `) · ` +
+          `Wi-Fi/App: ` + formatNumber(sumWifi) + ` (` + pct(sumWifi) + `) · ` +
+          `Sensor: ` + formatNumber(sumSensor) + ` (` + pct(sumSensor) + `) · ` +
+          `Noise: ` + formatNumber(sumNoise) + ` (` + pct(sumNoise) + `) · ` +
+          `Other: ` + formatNumber(sumOther) + ` (` + pct(sumOther) + `)`;
+      }
+    }
+
+    function updateUnitsChart(slice) {
+      const canvas = document.getElementById(`unitsChart`);
+      if (!canvas || typeof Chart === `undefined`) return;
+
+      const subEl = document.getElementById(`units-chart-subtitle`);
+      if (subEl) {
+        subEl.textContent = slice[0].month + (slice.length > 1 ? ` – ` + slice[slice.length - 1].month : ``) + ` · ` + MODEL_LABELS[state.modelFilter];
+      }
+
+      const labels = slice.map(function (d) { return d.shortMonth; });
+      const dataLite = slice.map(function (d) { return d.lite; });
+      const dataStd = slice.map(function (d) { return d.std; });
+      const dataPro = slice.map(function (d) { return d.pro; });
+
+      const cLite = getCssToken(`--data-3`);
+      const cStd = getCssToken(`--data-1`);
+      const cPro = getCssToken(`--data-2`);
+      const cText = getCssToken(`--on-surface-variant`);
+      const cGrid = getCssToken(`--outline-variant`);
+      const cZero = getCssToken(`--outline`);
+      const cWhite = getCssToken(`--background`);
+      const cInk = getCssToken(`--on-surface`);
+      const fontMono = getCssToken(`--font-label`);
+
+      const datasets = [];
+      if (state.modelFilter === `all` || state.modelFilter === `lite`) {
+        datasets.push({
+          label: `AQ-200 Lite ($149)`,
+          data: dataLite,
+          backgroundColor: cLite,
+          borderRadius: 0,
+          borderSkipped: false,
+          barPercentage: state.unitsMode === `stacked` ? 0.68 : 0.8,
+          categoryPercentage: 0.78
+        });
+      }
+      if (state.modelFilter === `all` || state.modelFilter === `std`) {
+        datasets.push({
+          label: `AQ-200 ($229)`,
+          data: dataStd,
+          backgroundColor: cStd,
+          borderRadius: 0,
+          borderSkipped: false,
+          barPercentage: state.unitsMode === `stacked` ? 0.68 : 0.8,
+          categoryPercentage: 0.78
+        });
+      }
+      if (state.modelFilter === `all` || state.modelFilter === `pro`) {
+        datasets.push({
+          label: `AQ-200 Pro ($349)`,
+          data: dataPro,
+          backgroundColor: cPro,
+          borderRadius: 0,
+          borderSkipped: false,
+          barPercentage: state.unitsMode === `stacked` ? 0.68 : 0.8,
+          categoryPercentage: 0.78
+        });
+      }
+
+      const isStacked = state.unitsMode === `stacked` && state.modelFilter === `all`;
+
+      if (unitsChartInstance) {
+        unitsChartInstance.data.labels = labels;
+        unitsChartInstance.data.datasets = datasets;
+        unitsChartInstance.options.scales.x.stacked = isStacked;
+        unitsChartInstance.options.scales.y.stacked = isStacked;
+        unitsChartInstance.update();
+        return;
+      }
+
+      unitsChartInstance = new Chart(canvas.getContext(`2d`), {
+        type: `bar`,
+        data: { labels: labels, datasets: datasets },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          interaction: { mode: `index`, intersect: false },
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: cWhite,
+              titleColor: cInk,
+              bodyColor: cInk,
+              borderColor: cGrid,
+              borderWidth: 1,
+              cornerRadius: 0,
+              padding: 10,
+              titleFont: { family: fontMono, size: 12, weight: `600` },
+              bodyFont: { family: fontMono, size: 12 },
+              callbacks: {
+                footer: function (items) {
+                  let sum = 0;
+                  items.forEach(function (it) { sum += it.parsed.y; });
+                  return items.length > 1 ? `Total: ` + formatNumber(sum) + ` units` : ``;
+                }
+              }
+            }
+          },
+          scales: {
+            x: {
+              stacked: isStacked,
+              grid: { display: false },
+              border: { color: cZero },
+              ticks: { color: cText, font: { family: fontMono, size: 12 } }
+            },
+            y: {
+              stacked: isStacked,
+              beginAtZero: true,
+              border: { display: false },
+              grid: { color: cGrid },
+              ticks: {
+                color: cText,
+                font: { family: fontMono, size: 12 },
+                callback: function (v) { return formatNumber(v); }
+              }
+            }
+          }
+        }
+      });
+    }
+
+    function updateTicketsChart(slice) {
+      const canvas = document.getElementById(`ticketsChart`);
+      if (!canvas || typeof Chart === `undefined`) return;
+
+      const subEl = document.getElementById(`tickets-chart-subtitle`);
+      if (subEl) {
+        subEl.textContent = `Monthly stacked ticket count · ` + CAT_LABELS[state.categoryFilter];
+      }
+
+      const labels = slice.map(function (d) { return d.shortMonth; });
+      const cFilter = getCssToken(`--data-1`);
+      const cWifi = getCssToken(`--data-2`);
+      const cSensor = getCssToken(`--data-3`);
+      const cNoise = getCssToken(`--data-4`);
+      const cOther = getCssToken(`--data-context`);
+      const cText = getCssToken(`--on-surface-variant`);
+      const cGrid = getCssToken(`--outline-variant`);
+      const cZero = getCssToken(`--outline`);
+      const cWhite = getCssToken(`--background`);
+      const cInk = getCssToken(`--on-surface`);
+      const fontMono = getCssToken(`--font-label`);
+
+      const catDefs = [
+        { key: `filter`, label: `Filter`, color: cFilter },
+        { key: `wifi`, label: `Wi-Fi/App`, color: cWifi },
+        { key: `sensor`, label: `Sensor`, color: cSensor },
+        { key: `noise`, label: `Noise`, color: cNoise },
+        { key: `other`, label: `Other`, color: cOther }
+      ];
+
+      const datasets = [];
+      catDefs.forEach(function (cd) {
+        if (state.categoryFilter === `all` || state.categoryFilter === cd.key) {
+          datasets.push({
+            label: cd.label,
+            data: slice.map(function (d) { return d[cd.key]; }),
+            backgroundColor: cd.color,
+            borderRadius: 0,
+            borderSkipped: false,
+            barPercentage: 0.68,
+            categoryPercentage: 0.78
+          });
+        }
+      });
+
+      if (ticketsChartInstance) {
+        ticketsChartInstance.data.labels = labels;
+        ticketsChartInstance.data.datasets = datasets;
+        ticketsChartInstance.update();
+        return;
+      }
+
+      ticketsChartInstance = new Chart(canvas.getContext(`2d`), {
+        type: `bar`,
+        data: { labels: labels, datasets: datasets },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          interaction: { mode: `index`, intersect: false },
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: cWhite,
+              titleColor: cInk,
+              bodyColor: cInk,
+              borderColor: cGrid,
+              borderWidth: 1,
+              cornerRadius: 0,
+              padding: 10,
+              titleFont: { family: fontMono, size: 12, weight: `600` },
+              bodyFont: { family: fontMono, size: 12 },
+              callbacks: {
+                footer: function (items) {
+                  let sum = 0;
+                  items.forEach(function (it) { sum += it.parsed.y; });
+                  return items.length > 1 ? `Total tickets: ` + formatNumber(sum) : ``;
+                }
+              }
+            }
+          },
+          scales: {
+            x: {
+              stacked: true,
+              grid: { display: false },
+              border: { color: cZero },
+              ticks: { color: cText, font: { family: fontMono, size: 12 } }
+            },
+            y: {
+              stacked: true,
+              beginAtZero: true,
+              border: { display: false },
+              grid: { color: cGrid },
+              ticks: { color: cText, font: { family: fontMono, size: 12 } }
+            }
+          }
+        }
+      });
+    }
+
+    function updateCsatChart(slice) {
+      const canvas = document.getElementById(`csatChart`);
+      if (!canvas || typeof Chart === `undefined`) return;
+
+      const labels = slice.map(function (d) { return d.shortMonth; });
+      const csatData = slice.map(function (d) { return d.csat; });
+      const resData = slice.map(function (d) { return d.resHours; });
+
+      const cCsat = getCssToken(`--data-1`);
+      const cRes = getCssToken(`--data-4`);
+      const cText = getCssToken(`--on-surface-variant`);
+      const cGrid = getCssToken(`--outline-variant`);
+      const cZero = getCssToken(`--outline`);
+      const cWhite = getCssToken(`--background`);
+      const cInk = getCssToken(`--on-surface`);
+      const fontMono = getCssToken(`--font-label`);
+
+      const datasets = [
+        {
+          label: `CSAT (1–5)`,
+          data: csatData,
+          borderColor: cCsat,
+          backgroundColor: cCsat,
+          borderWidth: 2,
+          pointRadius: 4,
+          pointHoverRadius: 6,
+          tension: 0.15,
+          yAxisID: `yCsat`
+        },
+        {
+          label: `Avg Resolution (h)`,
+          data: resData,
+          borderColor: cRes,
+          backgroundColor: cRes,
+          borderWidth: 2,
+          borderDash: [4, 3],
+          pointRadius: 4,
+          pointHoverRadius: 6,
+          tension: 0.15,
+          yAxisID: `yRes`
+        }
+      ];
+
+      if (csatChartInstance) {
+        csatChartInstance.data.labels = labels;
+        csatChartInstance.data.datasets = datasets;
+        csatChartInstance.update();
+        return;
+      }
+
+      csatChartInstance = new Chart(canvas.getContext(`2d`), {
+        type: `line`,
+        data: { labels: labels, datasets: datasets },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          interaction: { mode: `index`, intersect: false },
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: cWhite,
+              titleColor: cInk,
+              bodyColor: cInk,
+              borderColor: cGrid,
+              borderWidth: 1,
+              cornerRadius: 0,
+              padding: 10,
+              titleFont: { family: fontMono, size: 12, weight: `600` },
+              bodyFont: { family: fontMono, size: 12 }
+            }
+          },
+          scales: {
+            x: {
+              grid: { display: false },
+              border: { color: cZero },
+              ticks: { color: cText, font: { family: fontMono, size: 12 } }
+            },
+            yCsat: {
+              type: `linear`,
+              position: `left`,
+              min: 3.5,
+              max: 4.8,
+              border: { display: false },
+              grid: { color: cGrid },
+              ticks: {
+                color: cCsat,
+                font: { family: fontMono, size: 12 },
+                stepSize: 0.2
+              },
+              title: {
+                display: true,
+                text: `CSAT (1–5)`,
+                color: cCsat,
+                font: { family: fontMono, size: 11 }
+              }
+            },
+            yRes: {
+              type: `linear`,
+              position: `right`,
+              min: 15,
+              max: 35,
+              border: { display: false },
+              grid: { drawOnChartArea: false },
+              ticks: {
+                color: cRes,
+                font: { family: fontMono, size: 12 },
+                callback: function (v) { return v + `h`; }
+              },
+              title: {
+                display: true,
+                text: `RESOLUTION (H)`,
+                color: cRes,
+                font: { family: fontMono, size: 11 }
+              }
+            }
+          }
+        }
+      });
+    }
+
+    function renderMonthlyTable(slice) {
+      const tbody = document.getElementById(`monthly-tbody`);
+      const tfoot = document.getElementById(`monthly-tfoot`);
+      const rangeLbl = document.getElementById(`table-range-label`);
+      const modelLbl = document.getElementById(`table-model-label`);
+      if (!tbody || !tfoot) return;
+
+      if (rangeLbl) {
+        rangeLbl.textContent = `Showing ` + slice[0].month + (slice.length > 1 ? ` – ` + slice[slice.length - 1].month : ``);
+      }
+      if (modelLbl) {
+        modelLbl.textContent = `Sales/Rev: ` + MODEL_LABELS[state.modelFilter];
+      }
+
+      const sortCols = [`index`, `units`, `revenue`, `tickets`, `resHours`, `csat`];
+      sortCols.forEach(function (col) {
+        const ind = document.getElementById(`sort-ind-` + col);
+        if (!ind) return;
+        if (state.sortBy === col) {
+          ind.textContent = state.sortDir === `asc` ? `↑` : `↓`;
+        } else {
+          ind.textContent = ``;
+        }
+      });
+
+      const enriched = slice.map(function (r) {
+        return {
+          index: r.index,
+          month: r.month,
+          units: getRowUnits(r, state.modelFilter),
+          revenue: getRowRevenue(r, state.modelFilter),
+          tickets: getRowTickets(r),
+          resHours: r.resHours,
+          csat: r.csat,
+          note: r.note
+        };
+      });
+
+      enriched.sort(function (a, b) {
+        const valA = a[state.sortBy];
+        const valB = b[state.sortBy];
+        return state.sortDir === `asc` ? (valA - valB) : (valB - valA);
+      });
+
+      tbody.innerHTML = ``;
+      let sumUnits = 0;
+      let sumRev = 0;
+      let sumTickets = 0;
+      let weightedRes = 0;
+      let weightedCsat = 0;
+
+      enriched.forEach(function (row) {
+        sumUnits += row.units;
+        sumRev += row.revenue;
+        sumTickets += row.tickets;
+        weightedRes += row.tickets * row.resHours;
+        weightedCsat += row.tickets * row.csat;
+
+        const tr = document.createElement(`tr`);
+        if (row.index === 2 || row.index === 7) {
+          tr.classList.add(`is-highlighted`);
+        }
+
+        let badgeClass = `event-badge`;
+        if (row.index === 2) badgeClass += ` is-mar`;
+        if (row.index === 7) badgeClass += ` is-aug`;
+
+        tr.innerHTML =
+          `<td><strong>` + row.month + `</strong></td>` +
+          `<td class="num">` + formatNumber(row.units) + `</td>` +
+          `<td class="num">` + formatCurrency(row.revenue) + `</td>` +
+          `<td class="num">` + formatNumber(row.tickets) + `</td>` +
+          `<td class="num">` + row.resHours.toFixed(1) + `</td>` +
+          `<td class="num">` + row.csat.toFixed(1) + `</td>` +
+          `<td><span class="` + badgeClass + `">` + row.note + `</span></td>`;
+
+        tbody.appendChild(tr);
+      });
+
+      const avgRes = sumTickets > 0 ? (weightedRes / sumTickets).toFixed(1) : `0.0`;
+      const avgCsat = sumTickets > 0 ? (weightedCsat / sumTickets).toFixed(2) : `0.00`;
+
+      tfoot.innerHTML =
+        `<tr>` +
+          `<td>Total / Weighted Avg</td>` +
+          `<td class="num">` + formatNumber(sumUnits) + `</td>` +
+          `<td class="num">` + formatCurrency(sumRev) + `</td>` +
+          `<td class="num">` + formatNumber(sumTickets) + `</td>` +
+          `<td class="num">` + avgRes + `</td>` +
+          `<td class="num">` + avgCsat + `</td>` +
+          `<td class="mono-val" style="font-size: 0.75rem;">` + slice.length + ` months</td>` +
+        `</tr>`;
+    }
+
+    function updateDashboard() {
+      const slice = getActiveSlice();
+      updateKPIsAndMix(slice);
+      updateUnitsChart(slice);
+      updateTicketsChart(slice);
+      updateCsatChart(slice);
+      renderMonthlyTable(slice);
+    }
+
+    document.addEventListener(`DOMContentLoaded`, function () {
+      populateMonthSelects();
+      syncPresetChips();
+      updateDashboard();
+      if (window.lucide && typeof window.lucide.createIcons === `function`) {
+        window.lucide.createIcons();
+      }
+    });
+  </script>
+ 
+</body></html>

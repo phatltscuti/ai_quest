@@ -1,0 +1,167 @@
+{
+ "decision": {
+  "name": "Decisions API",
+  "model": "gemini-decision-1",
+  "n": 120,
+  "runs": 3,
+  "acc": 1,
+  "acc_min": 1,
+  "acc_max": 1,
+  "sign_acc": 0.8,
+  "by_diff": {
+   "normal": 1,
+   "notitle": 1,
+   "photo": 1,
+   "lowres": 1
+  },
+  "consistency": 1,
+  "p50": 754,
+  "p95": 1767,
+  "in_tok": 1279.5,
+  "out_tok": 0,
+  "cost_1k": 0.12794999999999998,
+  "errors": [],
+  "routing": [
+   {
+    "th": 0.5,
+    "auto": 1.0,
+    "acc_auto": 1
+   },
+   {
+    "th": 0.7,
+    "auto": 1.0,
+    "acc_auto": 1
+   },
+   {
+    "th": 0.8,
+    "auto": 1.0,
+    "acc_auto": 1
+   },
+   {
+    "th": 0.9,
+    "auto": 1.0,
+    "acc_auto": 1
+   },
+   {
+    "th": 0.95,
+    "auto": 0.975,
+    "acc_auto": 1
+   },
+   {
+    "th": 0.99,
+    "auto": 0.725,
+    "acc_auto": 1
+   }
+  ]
+ },
+ "decision-low": {
+  "name": "Decisions API (low res)",
+  "model": "gemini-decision-1",
+  "n": 120,
+  "runs": 3,
+  "acc": 1,
+  "acc_min": 1,
+  "acc_max": 1,
+  "sign_acc": 0.85,
+  "by_diff": {
+   "normal": 1,
+   "notitle": 1,
+   "photo": 1,
+   "lowres": 1
+  },
+  "consistency": 1,
+  "p50": 694,
+  "p95": 1226,
+  "in_tok": 618.6,
+  "out_tok": 0,
+  "cost_1k": 0.061860000000000005,
+  "errors": [],
+  "routing": [
+   {
+    "th": 0.5,
+    "auto": 1.0,
+    "acc_auto": 1
+   },
+   {
+    "th": 0.7,
+    "auto": 1.0,
+    "acc_auto": 1
+   },
+   {
+    "th": 0.8,
+    "auto": 1.0,
+    "acc_auto": 1
+   },
+   {
+    "th": 0.9,
+    "auto": 1.0,
+    "acc_auto": 1
+   },
+   {
+    "th": 0.95,
+    "auto": 1.0,
+    "acc_auto": 1
+   },
+   {
+    "th": 0.99,
+    "auto": 0.85,
+    "acc_auto": 1
+   }
+  ]
+ },
+ "flash-lite": {
+  "name": "3.5 Flash-Lite (JSON)",
+  "model": "gemini-3.5-flash-lite",
+  "n": 120,
+  "runs": 3,
+  "acc": 1,
+  "acc_min": 1,
+  "acc_max": 1,
+  "sign_acc": 1,
+  "by_diff": {
+   "normal": 1,
+   "notitle": 1,
+   "photo": 1,
+   "lowres": 1
+  },
+  "consistency": 1,
+  "p50": 3343,
+  "p95": 9471,
+  "in_tok": 1162.1,
+  "out_tok": 32.2,
+  "cost_1k": 0.42913,
+  "errors": [],
+  "routing": [
+   {
+    "th": 0.5,
+    "auto": 1.0,
+    "acc_auto": 1
+   },
+   {
+    "th": 0.7,
+    "auto": 1.0,
+    "acc_auto": 1
+   },
+   {
+    "th": 0.8,
+    "auto": 1.0,
+    "acc_auto": 1
+   },
+   {
+    "th": 0.9,
+    "auto": 1.0,
+    "acc_auto": 1
+   },
+   {
+    "th": 0.95,
+    "auto": 1.0,
+    "acc_auto": 1
+   },
+   {
+    "th": 0.99,
+    "auto": 0.9916666666666667,
+    "acc_auto": 1
+   }
+  ]
+ }
+}

@@ -1,0 +1,5 @@
+From: HR team (Slack message, pasted as-is)
+
+hi dev team! employees keep asking us to cancel leave they already submitted, sometimes even after it's approved :(
+can we let them cancel by themselves in the app? managers should get notified. also if the leave already started they shouldn't be able to cancel the whole thing i think?? maybe only the remaining days.
+we also want to see who cancelled what for audit. need this before the year-end holidays if possible. thanks!!

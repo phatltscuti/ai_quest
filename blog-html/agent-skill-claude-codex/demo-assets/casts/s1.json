@@ -1,0 +1,87 @@
+{
+ "title": "Windows PowerShell",
+ "steps": [
+  {
+   "comment": "One skill folder, two tools: .claude/skills is a junction to .agents/skills",
+   "show": "tree /F /A .agents",
+   "prompt": "PS D:\\ai_quest\\agent-skill-claude-codex\\demo-project>",
+   "events": [
+    [
+     0.028,
+     "Folder PATH listing for volume Data\r\n"
+    ],
+    [
+     0.028,
+     "Volume serial number is 38B1-96F5\r\nD:\\CODE\\PERSONAL\\AI_QUEST\\BLOG-HTML\\AGENT-SKILL-CLAUDE-CODEX\\DEMO-PROJECT\\.AGENTS\r\n"
+    ],
+    [
+     0.029,
+     "\\---"
+    ],
+    [
+     0.029,
+     "skills\r\n"
+    ],
+    [
+     0.029,
+     "    +---"
+    ],
+    [
+     0.029,
+     "code-review\r\n"
+    ],
+    [
+     0.029,
+     "    |   |   "
+    ],
+    [
+     0.029,
+     "SKILL.md\r\n    |   |   \r\n    |   \\---references\r\n"
+    ],
+    [
+     0.029,
+     "    |           "
+    ],
+    [
+     0.029,
+     "checklist.md\r\n    |           \r\n    \\---requirement-definition\r\n"
+    ],
+    [
+     0.029,
+     "        |   "
+    ],
+    [
+     0.029,
+     "SKILL.md\r\n        |   \r\n        \\---references\r\n"
+    ],
+    [
+     0.029,
+     "                "
+    ],
+    [
+     0.029,
+     "template.md\r\n                \r\n"
+    ]
+   ],
+   "exit": 0,
+   "seconds": 0.04
+  },
+  {
+   "comment": "Validate against the Agent Skills spec",
+   "show": "agentskills validate .agents\\skills\\code-review && agentskills validate .agents\\skills\\requirement-definition",
+   "prompt": "PS D:\\ai_quest\\agent-skill-claude-codex\\demo-project>",
+   "events": [
+    [
+     0.143,
+     "Valid skill: .agents\\skills\\code-review\r\n"
+    ],
+    [
+     0.284,
+     "Valid skill: .agents\\skills\\requirement-definition\r\n"
+    ]
+   ],
+   "exit": 0,
+   "seconds": 0.31
+  }
+ ]
+}

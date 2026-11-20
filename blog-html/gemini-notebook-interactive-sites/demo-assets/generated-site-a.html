@@ -1,0 +1,2965 @@
+<!DOCTYPE html><html lang="en"><head>
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none';script-src 'self' 'unsafe-inline' blob: https://cdn.tailwindcss.com/3.4.17 https://unpkg.com/lucide@1.43.0/dist/umd/ https://unpkg.com/leaflet@1.9.4/dist/ https://cdn.jsdelivr.net/npm/topojson-client@3.1.0/dist/ https://cdn.jsdelivr.net/npm/chart.js@4.5.1/dist/ https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/ https://cdn.jsdelivr.net/npm/plotly.js-dist-min@2.32.0/ https://cdn.jsdelivr.net/npm/echarts@6.1.0/dist/ https://cdn.jsdelivr.net/npm/scrollama@3.2.0/build/ https://cdn.jsdelivr.net/npm/katex@0.18.2/dist/ https://cdn.jsdelivr.net/npm/mathjs@12.4.3/lib/browser/ https://cdn.jsdelivr.net/npm/three@0.160.0/build/ https://cdn.jsdelivr.net/npm/tone@14.9.17/build/ https://cdn.jsdelivr.net/npm/matter-js@0.19.0/build/ https://cdn.jsdelivr.net/npm/cannon-es@0.20.0/dist/ https://cdn.jsdelivr.net/npm/mermaid@11.17.2/dist/ https://cdn.jsdelivr.net/npm/cytoscape@3.34.3/dist/ https://unpkg.com/roughjs@4.6.6/bundled/;style-src 'self' 'unsafe-inline' https://fonts.googleapis.com/css https://fonts.googleapis.com/css2 https://cdn.jsdelivr.net/npm/katex@0.18.2/dist/ https://unpkg.com/leaflet@1.9.4/dist/ https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/ https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.46.0/dist/ https://cdn.jsdelivr.net/npm/iconoir@7.12.1/css/;img-src 'self' blob: data: https://unpkg.com/leaflet@1.9.4/dist/images/ https://cdn.jsdelivr.net/npm/heroicons@2.2.0/ https://lh3.googleusercontent.com https://contribution.usercontent.google.com https://lh3.google.com/rd-notebooklm/ https://lh3-dz.googleusercontent.com/notebooklm-qual/ https://lh3-dz.sandbox.google.com/rd-notebooklm-qual/ https://lh3-dy.googleusercontent.com/notebooklm/ https://lh3-dy.sandbox.google.com/rd-notebooklm/;font-src 'self' data: https://fonts.gstatic.com/s/ https://fonts.gstatic.com/l/ https://cdn.jsdelivr.net/npm/katex@0.18.2/dist/fonts/ https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/ https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.46.0/dist/fonts/ https://www.gstatic.com/external_hosted/katex/dist/fonts/;connect-src 'self' https://cdn.jsdelivr.net/npm/us-atlas@3.0.1/ https://cdn.jsdelivr.net/npm/world-atlas@2.0.2/ https://cdn.jsdelivr.net/npm/plotly.js@2.32.0/dist/topojson/;frame-src 'none';media-src 'self' blob: data:;object-src 'none';base-uri 'none';form-action 'none';worker-src 'self' blob:">
+  <script>document.addEventListener('securitypolicyviolation',function(e){try{var u=e.blockedURI||'',s=e.sourceFile||'';if(!/^https?:/i.test(u)||/^(chrome|moz|safari|safari-web)-extension(:|$)/i.test(s)){return;}window.parent.postMessage({version:'1.0',action:'ResourceBlocked',payload:{uri:u,directive:e.effectiveDirective||''}},'*');}catch(_){}});</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="artifact-type" content="tool">
+  <meta name="design-style" content="showroom">
+  <title>AeroPure AQ-200 Series — Troubleshooting &amp; User Guide</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@100..900&amp;family=Inter:wght@100..900&amp;display=swap" rel="stylesheet">
+  <style>
+    :root {
+      color-scheme: light;
+
+      /* Page and surfaces (Showroom) */
+      --background: #fbfbfd;
+      --surface-white: #ffffff;
+      --surface-container-low: #f5f5f7;
+      --surface-container: #e8e8ed;
+      --surface-container-high: #dcdce1;
+
+      /* Ink */
+      --on-surface: #1d1d1f;
+      --on-surface-variant: #6e6e73;
+
+      /* Rules */
+      --outline: #d2d2d7;
+      --outline-variant: #e5e5ea;
+
+      /* Accents */
+      --primary: #006bd6;
+      --primary-hover: #0058b0;
+      --on-primary: #ffffff;
+      --primary-container: #e8f1fd;
+      --on-primary-container: #0058b0;
+      --secondary: #bf4800;
+      --secondary-container: #fdf0e6;
+      --tertiary: #1d1d1f;
+      --error: #d70015;
+      --error-container: #fde8ea;
+      --on-error: #ffffff;
+
+      /* Semantic */
+      --positive: #1b7331;
+      --positive-container: #e8f5ec;
+      --warning: #b34400;
+      --warning-container: #fdf0e6;
+
+      /* Focus ring */
+      --focus: #006bd6;
+
+      /* Data series */
+      --data-1: #006bd6;
+      --data-2: #bf4800;
+      --data-3: #248a3d;
+      --data-4: #8944ab;
+      --data-context: #aeaeb2;
+
+      /* Fonts */
+      --font-headline: 'Inter Tight', sans-serif;
+      --font-body: 'Inter', sans-serif;
+      --font-label: 'Inter', sans-serif;
+
+      /* Type scale (Tool) */
+      --display-size: clamp(2rem, 1.4rem + 2vw, 3rem);
+      --headline-size: clamp(1.375rem, 1.15rem + 0.7vw, 1.75rem);
+      --subhead-size: clamp(1.0625rem, 1rem + 0.25vw, 1.1875rem);
+      --body-size: clamp(0.9375rem, 0.9rem + 0.15vw, 1rem);
+      --label-size: 0.8125rem;
+
+      /* Spacing scale (4pt base) */
+      --space-xs: 0.25rem;
+      --space-sm: 0.5rem;
+      --space-md: 1rem;
+      --space-lg: 1.5rem;
+      --space-xl: 2.5rem;
+      --space-2xl: 4rem;
+      --space-3xl: 6rem;
+
+      /* Shape */
+      --rounded: 9999px;
+      --rounded-md: 0.75rem;
+      --rounded-lg: 1.25rem;
+      --rounded-full: 9999px;
+
+      /* Style effects */
+      --headline-tracking: -0.035em;
+      --section-tracking: -0.02em;
+      --figure-tracking: -0.03em;
+      --tile-shadow-hover: 0 8px 28px rgb(0 0 0 / 0.08);
+      --chevron: " \203A";
+
+      /* Motion */
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+      --dur-micro: 120ms;
+      --dur-short: 220ms;
+      --dur-long: 420ms;
+    }
+
+    /* Base reset */
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body {
+      overflow-x: clip;
+      margin: 0;
+      padding: 0;
+      background: var(--background);
+      color: var(--on-surface);
+      font-family: var(--font-body);
+      font-size: var(--body-size);
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+    }
+    header { position: static !important; }
+
+    button, input, select, textarea {
+      font-family: inherit;
+      font-size: inherit;
+      color: inherit;
+    }
+
+    :focus-visible {
+      outline: 3px solid var(--focus);
+      outline-offset: 2px;
+    }
+
+    .page-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: var(--space-2xl);
+      padding: var(--space-lg) var(--space-lg) var(--space-3xl);
+      max-width: 1200px;
+      margin: 0 auto;
+      overflow: hidden;
+    }
+    .page-grid * { min-width: 0; }
+
+    /* Centered Headline Stack */
+    .headline-stack {
+      text-align: center;
+      padding-block: var(--space-xl) var(--space-md);
+    }
+    .eyebrow {
+      display: inline-block;
+      color: var(--secondary);
+      font-family: var(--font-label);
+      font-weight: 500;
+      font-size: var(--label-size);
+      margin-bottom: var(--space-sm);
+    }
+    .headline-stack h1 {
+      font-family: var(--font-headline);
+      font-weight: 700;
+      font-size: var(--display-size);
+      letter-spacing: var(--headline-tracking);
+      line-height: 1.05;
+      color: var(--on-surface);
+      margin: 0;
+    }
+    .headline-stack .lede {
+      color: var(--on-surface-variant);
+      font-size: var(--subhead-size);
+      max-width: 52ch;
+      margin: var(--space-md) auto 0;
+      line-height: 1.45;
+    }
+
+    /* Quick navigation pill bar */
+    .quick-nav {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: var(--space-sm);
+      margin-top: var(--space-lg);
+    }
+    .nav-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-xs);
+      min-height: 2.75rem;
+      padding: var(--space-sm) var(--space-md);
+      background: var(--surface-container-low);
+      color: var(--on-surface);
+      border-radius: var(--rounded);
+      text-decoration: none;
+      font-family: var(--font-label);
+      font-weight: 500;
+      font-size: var(--label-size);
+      transition: background-color var(--dur-short) var(--ease-out), transform var(--dur-short) var(--ease-out), box-shadow var(--dur-short) var(--ease-out);
+    }
+    .nav-pill:hover {
+      background: var(--surface-container);
+      transform: translateY(-1px);
+    }
+    .nav-pill.primary-pill {
+      background: var(--primary);
+      color: var(--on-primary);
+    }
+    .nav-pill.primary-pill:hover {
+      background: var(--primary-hover);
+    }
+
+    /* Section Header */
+    .section-block {
+      display: grid;
+      gap: var(--space-lg);
+      scroll-margin-top: var(--space-lg);
+    }
+    .section-header {
+      text-align: center;
+      max-width: 56ch;
+      margin: 0 auto;
+    }
+    .section-header h2 {
+      font-family: var(--font-headline);
+      font-weight: 700;
+      font-size: var(--headline-size);
+      letter-spacing: var(--section-tracking);
+      line-height: 1.1;
+      margin: 0;
+      color: var(--on-surface);
+    }
+    .section-header p {
+      color: var(--on-surface-variant);
+      margin: var(--space-sm) 0 0;
+    }
+
+    /* Showroom Borderless Tiles */
+    .tile {
+      background: var(--surface-container-low);
+      border-radius: var(--rounded-lg);
+      padding: var(--space-lg);
+      border: 0;
+    }
+    .tile-sub {
+      background: var(--surface-white);
+      border-radius: var(--rounded-lg);
+      padding: var(--space-lg);
+      border: 0;
+    }
+
+    /* Buttons & Chips */
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-xs);
+      min-height: 2.75rem;
+      background: var(--primary);
+      color: var(--on-primary);
+      border-radius: var(--rounded);
+      font-family: var(--font-label);
+      font-weight: 500;
+      font-size: 0.875rem;
+      padding: var(--space-sm) var(--space-lg);
+      border: 0;
+      cursor: pointer;
+      transition: background-color var(--dur-short) var(--ease-out);
+    }
+    .btn-primary:hover { background: var(--primary-hover); }
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-xs);
+      min-height: 2.75rem;
+      background: var(--surface-container);
+      color: var(--on-surface);
+      border-radius: var(--rounded);
+      font-family: var(--font-label);
+      font-weight: 500;
+      font-size: 0.875rem;
+      padding: var(--space-sm) var(--space-md);
+      border: 0;
+      cursor: pointer;
+      transition: background-color var(--dur-short) var(--ease-out);
+    }
+    .btn-secondary:hover { background: var(--surface-container-high); }
+    .btn-secondary[data-armed="true"] {
+      background: var(--error);
+      color: var(--on-error);
+    }
+    .link-more {
+      display: inline-flex;
+      align-items: center;
+      color: var(--primary);
+      font-weight: 500;
+      font-size: 0.875rem;
+      background: none;
+      border: 0;
+      padding: var(--space-xs) 0;
+      cursor: pointer;
+      text-decoration: none;
+    }
+    .link-more:hover { text-decoration: underline; }
+    .link-more::after { content: var(--chevron); margin-left: var(--space-xs); }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-xs);
+      background: var(--primary-container);
+      color: var(--on-primary-container);
+      border-radius: var(--rounded);
+      padding: var(--space-xs) var(--space-sm);
+      font-family: var(--font-label);
+      font-weight: 500;
+      font-size: var(--label-size);
+      line-height: 1.25;
+    }
+    .chip.neutral {
+      background: var(--surface-container);
+      color: var(--on-surface);
+    }
+    .chip.warn {
+      background: var(--warning-container);
+      color: var(--warning);
+    }
+    .chip.positive {
+      background: var(--positive-container);
+      color: var(--positive);
+    }
+    .chip.error {
+      background: var(--error-container);
+      color: var(--error);
+    }
+
+    /* Form Controls */
+    .field-group {
+      display: grid;
+      gap: var(--space-xs);
+    }
+    .field-label {
+      font-family: var(--font-label);
+      font-weight: 500;
+      font-size: var(--label-size);
+      color: var(--on-surface);
+      display: block;
+    }
+    .input-row {
+      display: flex;
+      gap: var(--space-sm);
+      align-items: end;
+    }
+    .input-wrap {
+      position: relative;
+      flex: 1;
+      display: flex;
+      align-items: center;
+    }
+    .input-icon {
+      position: absolute;
+      left: var(--space-md);
+      color: var(--on-surface-variant);
+      pointer-events: none;
+      display: inline-flex;
+    }
+    .pill-input {
+      width: 100%;
+      min-height: 2.75rem;
+      background: var(--surface-white);
+      border: 1px solid var(--outline);
+      border-radius: var(--rounded);
+      padding: var(--space-sm) var(--space-md);
+      color: var(--on-surface);
+      transition: border-color var(--dur-micro) var(--ease-out), box-shadow var(--dur-micro) var(--ease-out);
+    }
+    .pill-input.has-icon {
+      padding-left: var(--space-xl);
+    }
+    .pill-input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px var(--primary-container);
+    }
+
+    /* Segmented control */
+    .segmented {
+      display: inline-flex;
+      flex-wrap: wrap;
+      gap: var(--space-xs);
+      background: var(--surface-container);
+      padding: var(--space-xs);
+      border-radius: var(--rounded-lg);
+      width: 100%;
+    }
+    .seg-btn {
+      flex: 1 1 auto;
+      min-height: 2.5rem;
+      border: 0;
+      border-radius: var(--rounded);
+      background: transparent;
+      color: var(--on-surface);
+      font-family: var(--font-label);
+      font-weight: 500;
+      font-size: var(--label-size);
+      padding: var(--space-xs) var(--space-md);
+      cursor: pointer;
+      transition: background-color var(--dur-micro) var(--ease-out), color var(--dur-micro) var(--ease-out);
+      white-space: nowrap;
+    }
+    .seg-btn:hover {
+      background: var(--surface-container-high);
+    }
+    .seg-btn[aria-pressed="true"] {
+      background: var(--surface-white);
+      color: var(--on-surface);
+      font-weight: 600;
+    }
+
+    /* 1. Error-Code Lookup Tool */
+    .lookup-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.35fr);
+      gap: var(--space-md);
+      align-items: start;
+    }
+    .lookup-panel {
+      display: grid;
+      gap: var(--space-md);
+    }
+    .code-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(105px, 1fr));
+      gap: var(--space-sm);
+    }
+    .code-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: var(--space-xs);
+      min-height: 3.75rem;
+      padding: var(--space-sm) var(--space-md);
+      border-radius: var(--rounded-md);
+      background: var(--surface-white);
+      border: 0;
+      text-align: left;
+      cursor: pointer;
+      transition: background-color var(--dur-short) var(--ease-out), transform var(--dur-short) var(--ease-out), box-shadow var(--dur-short) var(--ease-out);
+    }
+    .code-btn:hover {
+      box-shadow: var(--tile-shadow-hover);
+      transform: translateY(-1px);
+    }
+    .code-btn[aria-pressed="true"] {
+      background: var(--primary);
+      color: var(--on-primary);
+    }
+    .code-btn[aria-pressed="true"] .code-sub {
+      color: var(--primary-container);
+    }
+    .code-btn.dimmed {
+      opacity: 0.45;
+    }
+    .code-id {
+      font-family: var(--font-headline);
+      font-weight: 700;
+      font-size: 1rem;
+      letter-spacing: var(--figure-tracking);
+      font-variant-numeric: tabular-nums;
+    }
+    .code-sub {
+      font-size: 0.75rem;
+      color: var(--on-surface-variant);
+      line-height: 1.25;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .symptom-strip {
+      display: grid;
+      gap: var(--space-sm);
+      padding-top: var(--space-sm);
+      border-top: 1px solid var(--outline-variant);
+    }
+    .symptom-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-xs);
+    }
+    .symptom-btn {
+      min-height: 2.25rem;
+      padding: var(--space-xs) var(--space-sm);
+      border-radius: var(--rounded);
+      background: var(--surface-white);
+      border: 0;
+      font-size: var(--label-size);
+      font-weight: 500;
+      color: var(--on-surface);
+      cursor: pointer;
+      transition: background-color var(--dur-micro) var(--ease-out);
+    }
+    .symptom-btn:hover { background: var(--surface-container); }
+    .symptom-btn[aria-pressed="true"] {
+      background: var(--tertiary);
+      color: var(--background);
+    }
+
+    /* Error detail card */
+    .detail-card {
+      display: grid;
+      gap: var(--space-lg);
+    }
+    .detail-top {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: var(--space-md);
+      padding-bottom: var(--space-md);
+      border-bottom: 1px solid var(--outline-variant);
+    }
+    .detail-code-badge {
+      font-family: var(--font-headline);
+      font-weight: 700;
+      font-size: clamp(1.75rem, 1.4rem + 1vw, 2.25rem);
+      letter-spacing: var(--figure-tracking);
+      line-height: 1;
+      color: var(--primary);
+      font-variant-numeric: tabular-nums;
+    }
+    .detail-title {
+      font-family: var(--font-headline);
+      font-weight: 700;
+      font-size: var(--headline-size);
+      letter-spacing: var(--section-tracking);
+      line-height: 1.15;
+      margin: var(--space-xs) 0 0;
+    }
+    .detail-section {
+      display: grid;
+      gap: var(--space-xs);
+    }
+    .detail-label {
+      font-family: var(--font-label);
+      font-weight: 600;
+      font-size: var(--label-size);
+      color: var(--on-surface-variant);
+    }
+    .step-list {
+      margin: 0;
+      padding-left: 0;
+      list-style: none;
+      display: grid;
+      gap: var(--space-sm);
+    }
+    .step-item {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr);
+      gap: var(--space-sm);
+      align-items: start;
+      background: var(--surface-white);
+      padding: var(--space-sm) var(--space-md);
+      border-radius: var(--rounded-md);
+    }
+    .step-num {
+      width: 1.5rem;
+      height: 1.5rem;
+      border-radius: var(--rounded);
+      background: var(--primary-container);
+      color: var(--on-primary-container);
+      font-weight: 600;
+      font-size: 0.75rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 2px;
+      font-variant-numeric: tabular-nums;
+    }
+    .parts-grid {
+      display: grid;
+      gap: var(--space-sm);
+    }
+    .part-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-sm);
+      background: var(--surface-white);
+      padding: var(--space-sm) var(--space-md);
+      border-radius: var(--rounded-md);
+    }
+    .part-code {
+      font-weight: 600;
+      color: var(--on-surface);
+      font-variant-numeric: tabular-nums;
+    }
+    .part-price {
+      font-family: var(--font-headline);
+      font-weight: 700;
+      font-size: 1.0625rem;
+      font-variant-numeric: tabular-nums;
+      color: var(--on-surface);
+    }
+    .safety-note {
+      background: var(--warning-container);
+      color: var(--warning);
+      padding: var(--space-sm) var(--space-md);
+      border-radius: var(--rounded-md);
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+    .context-note {
+      background: var(--surface-white);
+      color: var(--on-surface-variant);
+      padding: var(--space-sm) var(--space-md);
+      border-radius: var(--rounded-md);
+      font-size: 0.875rem;
+    }
+
+    /* 2. Model Comparison */
+    .model-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr));
+      gap: var(--space-md);
+    }
+    .tile.figure {
+      text-align: center;
+      display: grid;
+      gap: var(--space-xs);
+      align-content: start;
+    }
+    .tile.figure .model-name {
+      font-family: var(--font-label);
+      font-weight: 600;
+      font-size: var(--subhead-size);
+      color: var(--on-surface);
+    }
+    .tile.figure .value {
+      font-family: var(--font-headline);
+      font-weight: 700;
+      font-size: clamp(2rem, 1.5rem + 1.5vw, 2.75rem);
+      letter-spacing: var(--figure-tracking);
+      line-height: 1.05;
+      color: var(--on-surface);
+      font-variant-numeric: tabular-nums;
+    }
+    .tile.figure .caption {
+      color: var(--on-surface-variant);
+      font-weight: 500;
+      font-size: var(--label-size);
+    }
+    .tile.figure .meta-row {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: var(--space-xs);
+      margin-top: var(--space-xs);
+    }
+
+    .table-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-md);
+      margin-bottom: var(--space-md);
+    }
+    .switch-label {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-sm);
+      cursor: pointer;
+      min-height: 2.75rem;
+      font-weight: 500;
+      font-size: var(--label-size);
+    }
+    .switch-input {
+      appearance: none;
+      width: 2.75rem;
+      height: 1.625rem;
+      background: var(--surface-container);
+      border-radius: var(--rounded);
+      position: relative;
+      cursor: pointer;
+      transition: background-color var(--dur-short) var(--ease-in-out);
+      flex-shrink: 0;
+    }
+    .switch-input::after {
+      content: "";
+      position: absolute;
+      top: 0.1875rem;
+      left: 0.1875rem;
+      width: 1.25rem;
+      height: 1.25rem;
+      border-radius: var(--rounded);
+      background: var(--surface-white);
+      transition: transform var(--dur-short) var(--ease-in-out);
+    }
+    .switch-input:checked {
+      background: var(--primary);
+    }
+    .switch-input:checked::after {
+      transform: translateX(1.125rem);
+    }
+
+    .table-scroll {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    .spec-table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 600px;
+      font-variant-numeric: tabular-nums;
+    }
+    .spec-table th,
+    .spec-table td {
+      padding: var(--space-md) var(--space-sm);
+      text-align: left;
+      border-bottom: 1px solid var(--outline-variant);
+      vertical-align: top;
+    }
+    .spec-table thead th {
+      font-family: var(--font-label);
+      font-weight: 500;
+      font-size: var(--label-size);
+      color: var(--on-surface-variant);
+      border-bottom: 1px solid var(--outline);
+      padding-top: 0;
+    }
+    .spec-table tbody th {
+      font-weight: 500;
+      color: var(--on-surface);
+      width: 28%;
+    }
+    .spec-table tbody tr:last-child th,
+    .spec-table tbody tr:last-child td {
+      border-bottom: 0;
+    }
+    .spec-table tr.is-same td {
+      color: var(--on-surface-variant);
+    }
+    .cadr-bar-wrap {
+      display: grid;
+      gap: var(--space-xs);
+    }
+    .cadr-track {
+      height: 6px;
+      width: 100%;
+      max-width: 120px;
+      background: var(--surface-container);
+      border-radius: var(--rounded);
+      overflow: hidden;
+    }
+    .cadr-fill {
+      height: 100%;
+      background: var(--data-1);
+      border-radius: var(--rounded);
+    }
+
+    /* Quick reference drawer/grid for Control panel & Setup */
+    .ref-details {
+      background: var(--surface-container-low);
+      border-radius: var(--rounded-lg);
+      padding: var(--space-md) var(--space-lg);
+    }
+    .ref-summary {
+      list-style: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-md);
+      min-height: 2.75rem;
+      font-family: var(--font-headline);
+      font-weight: 600;
+      font-size: var(--subhead-size);
+    }
+    .ref-summary::-webkit-details-marker { display: none; }
+    .ref-body {
+      padding-top: var(--space-md);
+      display: grid;
+      grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+      gap: var(--space-lg);
+    }
+    .safety-list {
+      margin: 0;
+      padding-left: var(--space-lg);
+      display: grid;
+      gap: var(--space-sm);
+    }
+
+    /* 3. Maintenance Checklist & Filter Calculator */
+    .maint-calc-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.95fr);
+      gap: var(--space-md);
+      align-items: start;
+    }
+    .checklist-header {
+      display: grid;
+      gap: var(--space-md);
+      margin-bottom: var(--space-md);
+    }
+    .progress-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-md);
+      flex-wrap: wrap;
+    }
+    .progress-stat {
+      font-family: var(--font-headline);
+      font-weight: 700;
+      font-size: 1.5rem;
+      letter-spacing: var(--figure-tracking);
+      font-variant-numeric: tabular-nums;
+    }
+    .progress-track {
+      width: 100%;
+      height: 8px;
+      background: var(--surface-container);
+      border-radius: var(--rounded);
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: var(--primary);
+      border-radius: var(--rounded);
+      transition: width var(--dur-short) var(--ease-out);
+      width: 0%;
+    }
+    .interval-groups {
+      display: grid;
+      gap: var(--space-md);
+    }
+    .interval-group {
+      display: grid;
+      gap: var(--space-xs);
+    }
+    .interval-heading {
+      font-family: var(--font-label);
+      font-weight: 600;
+      font-size: var(--label-size);
+      color: var(--secondary);
+      margin: 0;
+    }
+    .task-label {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr);
+      gap: var(--space-sm);
+      align-items: start;
+      background: var(--surface-white);
+      padding: var(--space-md);
+      border-radius: var(--rounded-md);
+      cursor: pointer;
+      min-height: 2.75rem;
+      transition: background-color var(--dur-micro) var(--ease-out);
+    }
+    .task-label:hover {
+      background: var(--primary-container);
+    }
+    .task-checkbox {
+      width: 1.25rem;
+      height: 1.25rem;
+      margin: 2px 0 0;
+      accent-color: var(--primary);
+      cursor: pointer;
+    }
+    .task-title {
+      font-weight: 600;
+      color: var(--on-surface);
+      display: block;
+    }
+    .task-desc {
+      font-size: 0.875rem;
+      color: var(--on-surface-variant);
+      display: block;
+      margin-top: var(--space-xs);
+    }
+    .task-label.is-checked .task-title {
+      text-decoration: line-through;
+      color: var(--on-surface-variant);
+    }
+
+    /* Cost Calculator */
+    .calc-panel {
+      display: grid;
+      gap: var(--space-lg);
+    }
+    .calc-result-tile {
+      background: var(--surface-white);
+      border-radius: var(--rounded-lg);
+      padding: var(--space-lg);
+      text-align: center;
+      display: grid;
+      gap: var(--space-xs);
+    }
+    .calc-total {
+      font-family: var(--font-headline);
+      font-weight: 700;
+      font-size: clamp(2.25rem, 1.8rem + 1.5vw, 3rem);
+      letter-spacing: var(--figure-tracking);
+      line-height: 1;
+      color: var(--on-surface);
+      font-variant-numeric: tabular-nums;
+    }
+    .calc-unit {
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--on-surface-variant);
+    }
+    .calc-kpis {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: var(--space-sm);
+      padding-top: var(--space-md);
+      margin-top: var(--space-sm);
+      border-top: 1px solid var(--outline-variant);
+    }
+    .calc-kpi-val {
+      font-family: var(--font-headline);
+      font-weight: 700;
+      font-size: 1.125rem;
+      font-variant-numeric: tabular-nums;
+    }
+    .calc-kpi-lbl {
+      font-size: 0.75rem;
+      color: var(--on-surface-variant);
+    }
+    .calc-inputs {
+      display: grid;
+      gap: var(--space-md);
+    }
+    .option-check {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      min-height: 2.75rem;
+      background: var(--surface-white);
+      padding: var(--space-sm) var(--space-md);
+      border-radius: var(--rounded-md);
+      cursor: pointer;
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+    .option-check input {
+      width: 1.125rem;
+      height: 1.125rem;
+      accent-color: var(--primary);
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+    .breakdown-list {
+      display: grid;
+      gap: var(--space-xs);
+      font-size: 0.875rem;
+      font-variant-numeric: tabular-nums;
+    }
+    .breakdown-row {
+      display: flex;
+      justify-content: space-between;
+      gap: var(--space-md);
+      padding: var(--space-xs) 0;
+      border-bottom: 1px solid var(--outline-variant);
+    }
+    .breakdown-row:last-child { border-bottom: 0; }
+
+    /* 4. Searchable FAQ */
+    .faq-controls {
+      display: grid;
+      gap: var(--space-md);
+    }
+    .faq-top-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: end;
+      justify-content: space-between;
+      gap: var(--space-md);
+    }
+    .faq-search-box {
+      flex: 1 1 280px;
+    }
+    .faq-cat-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-xs);
+      align-items: center;
+      justify-content: space-between;
+    }
+    .cat-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-xs);
+    }
+    .cat-pill {
+      min-height: 2.5rem;
+      padding: var(--space-xs) var(--space-md);
+      border-radius: var(--rounded);
+      border: 0;
+      background: var(--surface-white);
+      color: var(--on-surface);
+      font-family: var(--font-label);
+      font-weight: 500;
+      font-size: var(--label-size);
+      cursor: pointer;
+      transition: background-color var(--dur-micro) var(--ease-out), color var(--dur-micro) var(--ease-out);
+    }
+    .cat-pill:hover { background: var(--surface-container); }
+    .cat-pill[aria-pressed="true"] {
+      background: var(--primary);
+      color: var(--on-primary);
+    }
+
+    .faq-list {
+      display: grid;
+      margin-top: var(--space-md);
+    }
+    .faq-item {
+      border-bottom: 1px solid var(--outline-variant);
+    }
+    .faq-item:last-child { border-bottom: 0; }
+    .faq-trigger {
+      width: 100%;
+      min-height: 3.25rem;
+      padding: var(--space-md) 0;
+      background: none;
+      border: 0;
+      text-align: left;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-md);
+      cursor: pointer;
+    }
+    .faq-q-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: var(--space-sm);
+    }
+    .faq-q {
+      font-family: var(--font-headline);
+      font-weight: 600;
+      font-size: var(--subhead-size);
+      color: var(--on-surface);
+    }
+    .faq-chevron {
+      flex-shrink: 0;
+      color: var(--on-surface-variant);
+      transition: transform var(--dur-short) var(--ease-out);
+      display: inline-flex;
+    }
+    .faq-trigger[aria-expanded="true"] .faq-chevron {
+      transform: rotate(180deg);
+    }
+    .faq-panel {
+      padding-bottom: var(--space-md);
+      color: var(--on-surface);
+      max-width: 68ch;
+    }
+    .faq-panel[hidden] { display: none; }
+    .faq-panel p { margin: 0; }
+
+    .empty-state {
+      text-align: center;
+      padding: var(--space-xl) var(--space-md);
+      background: var(--surface-white);
+      border-radius: var(--rounded-lg);
+      display: grid;
+      gap: var(--space-sm);
+      justify-items: center;
+    }
+    .empty-state p {
+      margin: 0;
+      color: var(--on-surface-variant);
+      max-width: 44ch;
+    }
+
+    /* Footer */
+    .source-footer {
+      text-align: center;
+      color: var(--on-surface-variant);
+      font-size: var(--label-size);
+      padding-top: var(--space-lg);
+      border-top: 1px solid var(--outline-variant);
+      max-width: 72ch;
+      margin: 0 auto;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 900px) {
+      .lookup-grid,
+      .maint-calc-grid,
+      .ref-body {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+    @media (max-width: 640px) {
+      .page-grid {
+        padding: var(--space-md) var(--space-md) var(--space-2xl);
+        gap: var(--space-xl);
+      }
+      .tile, .tile-sub {
+        padding: var(--space-md);
+      }
+      .calc-kpis {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .input-row {
+        flex-direction: column;
+        align-items: stretch;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+  </style>
+ </head>
+ <body>
+  <div class="page-grid">
+   <header class="headline-stack">
+    <span class="eyebrow">AeroPure AQ-200 Series · Troubleshooting &amp; User Guide</span>
+    <h1>Keep every room breathing clearly.</h1>
+    <p class="lede">Look up error codes E01–E15, compare AQ-200 Lite, AQ-200, and AQ-200 Pro specifications, track scheduled maintenance, and estimate yearly filter replacement costs.</p>
+    <nav class="quick-nav" aria-label="Section shortcuts">
+     <a class="nav-pill primary-pill" href="#error-lookup">Error-code lookup</a> <a class="nav-pill" href="#model-comparison">Compare models</a> <a class="nav-pill" href="#maintenance-calculator">Maintenance &amp; filter cost</a> <a class="nav-pill" href="#faq-section">Searchable FAQ</a>
+    </nav>
+   </header>
+   <!-- 1. Interactive Error-Code Lookup Tool -->
+   <section id="error-lookup" class="section-block" aria-labelledby="heading-error">
+    <div class="section-header">
+     <span class="eyebrow">Diagnostics</span>
+     <h2 id="heading-error">Error-code &amp; symptom lookup</h2>
+     <p>Select or type a display code from E01 to E15—or pick a symptom with no code—to see its cause, step-by-step fix, and any replacement part pricing.</p>
+    </div>
+    <div class="lookup-grid">
+     <div class="tile lookup-panel">
+      <div class="field-group">
+       <label class="field-label" for="error-search-input">Type an error code (E01–E15) or keyword</label>
+       <div class="input-row">
+        <div class="input-wrap">
+         <span class="input-icon" aria-hidden="true"> 
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+           <circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path>
+          </svg> 
+         </span> <input id="error-search-input" class="pill-input has-icon" type="text" autocomplete="off" oninput="onErrorSearch(this.value)" style="">
+        </div>
+        <button type="button" class="btn-secondary" onclick="clearErrorSearch()">Clear</button>
+       </div>
+      </div>
+      <div class="field-group">
+       <span class="field-label">Filter by model</span>
+       <div class="segmented" role="group" aria-label="Filter error codes by model">
+        <button type="button" class="seg-btn" data-err-model="all" aria-pressed="true" onclick="setErrorModelFilter('all')">All</button> <button type="button" class="seg-btn" data-err-model="lite" aria-pressed="false" onclick="setErrorModelFilter('lite')">Lite</button> <button type="button" class="seg-btn" data-err-model="std" aria-pressed="false" onclick="setErrorModelFilter('std')">AQ-200</button> <button type="button" class="seg-btn" data-err-model="pro" aria-pressed="false" onclick="setErrorModelFilter('pro')">Pro</button>
+       </div>
+      </div>
+      <div class="field-group">
+       <span class="field-label">Error codes (E01–E15)</span>
+       <div id="code-grid" class="code-grid" role="group" aria-label="Error code selector"><button type="button" class="code-btn" aria-pressed="true" onclick="selectErrorCode('E01')">
+          <span class="code-id">E01</span>
+          <span class="code-sub">Filter not detected</span>
+        </button><button type="button" class="code-btn" aria-pressed="false" onclick="selectErrorCode('E02')">
+          <span class="code-id">E02</span>
+          <span class="code-sub">Filter life expired</span>
+        </button><button type="button" class="code-btn" aria-pressed="false" onclick="selectErrorCode('E03')">
+          <span class="code-id">E03</span>
+          <span class="code-sub">Airflow blocked (packaging)</span>
+        </button><button type="button" class="code-btn" aria-pressed="false" onclick="selectErrorCode('E04')">
+          <span class="code-id">E04</span>
+          <span class="code-sub">Fan motor stalled</span>
+        </button><button type="button" class="code-btn" aria-pressed="false" onclick="selectErrorCode('E05')">
+          <span class="code-id">E05</span>
+          <span class="code-sub">Fan speed abnormal</span>
+        </button><button type="button" class="code-btn" aria-pressed="false" onclick="selectErrorCode('E06')">
+          <span class="code-id">E06</span>
+          <span class="code-sub">PM2.5 sensor dirty</span>
+        </button><button type="button" class="code-btn" aria-pressed="false" onclick="selectErrorCode('E07')">
+          <span class="code-id">E07</span>
+          <span class="code-sub">PM2.5 sensor failure</span>
+        </button><button type="button" class="code-btn" aria-pressed="false" onclick="selectErrorCode('E08')">
+          <span class="code-id">E08</span>
+          <span class="code-sub">VOC sensor failure</span>
+        </button><button type="button" class="code-btn" aria-pressed="false" onclick="selectErrorCode('E09')">
+          <span class="code-id">E09</span>
+          <span class="code-sub">Front cover open</span>
+        </button><button type="button" class="code-btn" aria-pressed="false" onclick="selectErrorCode('E10')">
+          <span class="code-id">E10</span>
+          <span class="code-sub">Over-temperature</span>
+        </button><button type="button" class="code-btn" aria-pressed="false" onclick="selectErrorCode('E11')">
+          <span class="code-id">E11</span>
+          <span class="code-sub">Wi-Fi connection failed</span>
+        </button><button type="button" class="code-btn" aria-pressed="false" onclick="selectErrorCode('E12')">
+          <span class="code-id">E12</span>
+          <span class="code-sub">Firmware update failed</span>
+        </button><button type="button" class="code-btn" aria-pressed="false" onclick="selectErrorCode('E13')">
+          <span class="code-id">E13</span>
+          <span class="code-sub">UV-C lamp fault</span>
+        </button><button type="button" class="code-btn" aria-pressed="false" onclick="selectErrorCode('E14')">
+          <span class="code-id">E14</span>
+          <span class="code-sub">Input voltage abnormal</span>
+        </button><button type="button" class="code-btn" aria-pressed="false" onclick="selectErrorCode('E15')">
+          <span class="code-id">E15</span>
+          <span class="code-sub">Control panel not responding</span>
+        </button></div>
+      </div>
+      <div class="symptom-strip">
+       <span class="field-label">No error code on display? Check common symptoms</span>
+       <div id="symptom-list" class="symptom-list" role="group" aria-label="Symptoms without error codes"><button type="button" class="symptom-btn" aria-pressed="false" onclick="selectSymptom('sym-smell')">Unusual smell after replacing filter</button><button type="button" class="symptom-btn" aria-pressed="false" onclick="selectSymptom('sym-loud')">Unit is loud on Auto mode</button><button type="button" class="symptom-btn" aria-pressed="false" onclick="selectSymptom('sym-blue')">Ring always blue even when cooking</button><button type="button" class="symptom-btn" aria-pressed="false" onclick="selectSymptom('sym-offline')">App shows device offline</button></div>
+      </div>
+     </div>
+     <div id="error-detail-panel" class="tile detail-card" aria-live="polite">
+        <div class="detail-top">
+          <div>
+            <span class="detail-code-badge">E01</span>
+            <h3 class="detail-title">Filter not detected</h3>
+          </div>
+          <span class="chip">All models</span>
+        </div>
+        <div class="detail-section">
+          <span class="detail-label">Root cause</span>
+          <p style="margin:0;">Main filter is missing or not seated correctly.</p>
+        </div>
+        <div class="safety-note">Safety reminder: Always unplug the purifier before opening any cover.</div>
+        <div class="detail-section">
+          <span class="detail-label">Step-by-step fix</span>
+          <ol class="step-list"><li class="step-item"><span class="step-num">1</span><span>Unplug the purifier before opening any cover.</span></li><li class="step-item"><span class="step-num">2</span><span>Open the back cover and push the main filter in until it clicks into place.</span></li><li class="step-item"><span class="step-num">3</span><span>Close the back cover firmly, plug the unit back in, and restart.</span></li></ol>
+        </div>
+        <div class="detail-section">
+          <span class="detail-label">Required spare parts &amp; service pricing (2026 USD)</span>
+          <div class="parts-grid"><div class="context-note">No replacement parts required.</div></div>
+          <div class="context-note">No replacement parts required unless the filter itself is damaged.</div>
+        </div>
+      </div>
+    </div>
+   </section>
+   <!-- 2. Side-by-Side Model Comparison -->
+   <section id="model-comparison" class="section-block" aria-labelledby="heading-models">
+    <div class="section-header">
+     <span class="eyebrow">Specifications</span>
+     <h2 id="heading-models">Side-by-side model comparison</h2>
+     <p>Every model shares 100–240 V universal power, under 0.5 W standby draw, and H13 HEPA + activated carbon filtration—scaled to your room size and smart features.</p>
+    </div>
+    <div class="model-cards">
+     <div class="tile figure">
+      <span class="model-name">AQ-200 Lite</span> <span class="value">$149</span> <span class="caption">220 m³/h CADR · 15–25 m² rooms</span>
+      <div class="meta-row">
+       <span class="chip neutral">Filter FL-200H ($39)</span> <span class="chip neutral">2-year warranty</span>
+      </div>
+     </div>
+     <div class="tile figure">
+      <span class="model-name">AQ-200</span> <span class="value">$229</span> <span class="caption">320 m³/h CADR · 25–38 m² rooms</span>
+      <div class="meta-row">
+       <span class="chip">2.4 GHz Wi-Fi &amp; app</span> <span class="chip neutral">2-year warranty</span>
+      </div>
+     </div>
+     <div class="tile figure">
+      <span class="model-name">AQ-200 Pro</span> <span class="value">$349</span> <span class="caption">450 m³/h CADR · 38–55 m² rooms</span>
+      <div class="meta-row">
+       <span class="chip">UV-C + VOC sensor</span> <span class="chip positive">3-year warranty</span>
+      </div>
+     </div>
+    </div>
+    <div class="tile">
+     <div class="table-toolbar">
+      <div>
+       <strong style="font-family: var(--font-headline); font-size: var(--subhead-size);">Full technical specifications</strong>
+      </div>
+      <label class="switch-label" for="diff-only-toggle"> <input id="diff-only-toggle" class="switch-input" type="checkbox" onchange="toggleDiffOnly(this.checked)" style=""> <span>Highlight differences only</span> </label>
+     </div>
+     <div class="table-scroll">
+      <table class="spec-table">
+       <thead>
+        <tr>
+         <th scope="col">Specification</th>
+         <th scope="col">AQ-200 Lite</th>
+         <th scope="col">AQ-200</th>
+         <th scope="col">AQ-200 Pro</th>
+        </tr>
+       </thead>
+       <tbody id="comparison-tbody"><tr class="">
+          <th scope="row">List price (USD)</th>
+          <td>$149</td>
+          <td>$229</td>
+          <td>$349</td>
+        </tr><tr>
+            <th scope="row">CADR (smoke, m³/h)</th>
+            <td><div class="cadr-bar-wrap"><strong>220</strong><div class="cadr-track"><div class="cadr-fill" style="width:49%;"></div></div></div></td>
+            <td><div class="cadr-bar-wrap"><strong>320</strong><div class="cadr-track"><div class="cadr-fill" style="width:71%;"></div></div></div></td>
+            <td><div class="cadr-bar-wrap"><strong>450</strong><div class="cadr-track"><div class="cadr-fill" style="width:100%;"></div></div></div></td>
+          </tr><tr class="">
+          <th scope="row">Recommended room size</th>
+          <td>15–25 m²</td>
+          <td>25–38 m²</td>
+          <td>38–55 m²</td>
+        </tr><tr class="">
+          <th scope="row">Main filter (part no.)</th>
+          <td>H13 HEPA + carbon (FL-200H)</td>
+          <td>H13 HEPA + carbon (FL-200H)</td>
+          <td>H13 HEPA + carbon (FL-200P)</td>
+        </tr><tr class="">
+          <th scope="row">UV-C sterilization lamp</th>
+          <td>No</td>
+          <td>No</td>
+          <td>Yes (UV-200)</td>
+        </tr><tr class="">
+          <th scope="row">Sensors</th>
+          <td>Laser PM2.5</td>
+          <td>Laser PM2.5</td>
+          <td>Laser PM2.5 + VOC</td>
+        </tr><tr class="">
+          <th scope="row">Noise (sleep / max)</th>
+          <td>24 / 50 dB</td>
+          <td>22 / 52 dB</td>
+          <td>20 / 55 dB</td>
+        </tr><tr class="">
+          <th scope="row">Max power consumption</th>
+          <td>28 W</td>
+          <td>38 W</td>
+          <td>55 W</td>
+        </tr><tr class="is-same">
+          <th scope="row">Standby power</th>
+          <td>&lt; 0.5 W</td>
+          <td>&lt; 0.5 W</td>
+          <td>&lt; 0.5 W</td>
+        </tr><tr class="is-same">
+          <th scope="row">Input voltage</th>
+          <td>100–240 V AC, 50/60 Hz</td>
+          <td>100–240 V AC, 50/60 Hz</td>
+          <td>100–240 V AC, 50/60 Hz</td>
+        </tr><tr class="">
+          <th scope="row">Wi-Fi / app control</th>
+          <td>No</td>
+          <td>Yes (2.4 GHz)</td>
+          <td>Yes (2.4 GHz)</td>
+        </tr><tr class="">
+          <th scope="row">Remote control</th>
+          <td>No</td>
+          <td>Optional (RC-200, $15)</td>
+          <td>Included</td>
+        </tr><tr class="">
+          <th scope="row">Weight</th>
+          <td>4.2 kg</td>
+          <td>5.6 kg</td>
+          <td>7.8 kg</td>
+        </tr><tr class="">
+          <th scope="row">Dimensions (W × D × H)</th>
+          <td>24 × 24 × 45 cm</td>
+          <td>27 × 27 × 55 cm</td>
+          <td>32 × 32 × 66 cm</td>
+        </tr><tr class="">
+          <th scope="row">Warranty</th>
+          <td>2 years</td>
+          <td>2 years</td>
+          <td>3 years</td>
+        </tr></tbody>
+      </table>
+     </div>
+    </div>
+    <details class="ref-details">
+     <summary class="ref-summary"> <span>Control panel buttons &amp; safety requirements</span> <span class="chip neutral">Quick reference</span> </summary>
+     <div class="ref-body">
+      <div class="tile-sub">
+       <h3 style="margin: 0 0 var(--space-sm); font-family: var(--font-headline); font-size: 1.0625rem;">Control panel actions</h3>
+       <div class="table-scroll">
+        <table class="spec-table" style="min-width: 360px;">
+         <thead>
+          <tr>
+           <th scope="col">Button</th>
+           <th scope="col">Short press</th>
+           <th scope="col">Long press</th>
+          </tr>
+         </thead>
+         <tbody>
+          <tr>
+           <th scope="row">Power</th>
+           <td>—</td>
+           <td>3 s: on / off</td>
+          </tr>
+          <tr>
+           <th scope="row">Mode</th>
+           <td>Cycle Auto › Sleep › Manual</td>
+           <td>Power + Mode 10 s: firmware recovery</td>
+          </tr>
+          <tr>
+           <th scope="row">Fan</th>
+           <td>Speed 1 › 2 › 3 › 4 (Turbo)</td>
+           <td>—</td>
+          </tr>
+          <tr>
+           <th scope="row">Timer</th>
+           <td>1 h › 2 h › 4 h › 8 h › off</td>
+           <td>Wi-Fi + Timer 5 s: start app pairing</td>
+          </tr>
+          <tr>
+           <th scope="row">Lock</th>
+           <td>—</td>
+           <td>3 s: child lock on / off</td>
+          </tr>
+          <tr>
+           <th scope="row">Filter Reset</th>
+           <td>—</td>
+           <td>3 s: reset filter life counter</td>
+          </tr>
+          <tr>
+           <th scope="row">Wi-Fi (AQ-200, Pro)</th>
+           <td>Show Wi-Fi status</td>
+           <td>5 s: reset network settings</td>
+          </tr>
+         </tbody>
+        </table>
+       </div>
+      </div>
+      <div class="tile-sub">
+       <h3 style="margin: 0 0 var(--space-sm); font-family: var(--font-headline); font-size: 1.0625rem;">Placement &amp; safety notes</h3>
+       <ul class="safety-list">
+        <li>Do not use in bathrooms or where relative humidity exceeds 80%.</li>
+        <li>Keep at least 30 cm clearance on all sides and 1 m from heaters; place on a flat, hard floor (not long-pile carpet).</li>
+        <li>Unplug before opening any cover. On the Pro, the UV-C lamp switches off automatically when the front cover opens.</li>
+        <li>Remove all plastic packaging from the main filter before first use, and allow 10 minutes for initial sensor calibration (ring blinks blue).</li>
+       </ul>
+      </div>
+     </div>
+    </details>
+   </section>
+   <!-- 3. Interactive Maintenance Checklist & Yearly Filter Cost Calculator -->
+   <section id="maintenance-calculator" class="section-block" aria-labelledby="heading-maint">
+    <div class="section-header">
+     <span class="eyebrow">Care &amp; ownership cost</span>
+     <h2 id="heading-maint">Maintenance checklist &amp; filter cost calculator</h2>
+     <p>Check off routine upkeep grouped by interval—your progress saves automatically—and calculate yearly filter expenses for your model and household conditions.</p>
+    </div>
+    <div class="maint-calc-grid">
+     <!-- 3A. Checklist -->
+     <div class="tile">
+      <div class="checklist-header">
+       <div class="progress-row">
+        <div>
+         <span class="field-label" style="color: var(--on-surface-variant);">Maintenance progress</span>
+         <div id="checklist-stat" class="progress-stat">0 of 6 completed (0%)</div>
+        </div>
+        <button type="button" id="reset-checklist-btn" class="btn-secondary" onclick="resetChecklist(this)">Reset checklist</button>
+       </div>
+       <div class="progress-track" aria-hidden="true">
+        <div id="checklist-progress-fill" class="progress-fill" style="width: 0%;"></div>
+       </div>
+       <div class="field-group">
+        <span class="field-label">Show tasks for model</span>
+        <div class="segmented" role="group" aria-label="Filter maintenance tasks by model">
+         <button type="button" class="seg-btn" data-maint-model="all" aria-pressed="true" onclick="setMaintModel('all')">All models</button> <button type="button" class="seg-btn" data-maint-model="lite" aria-pressed="false" onclick="setMaintModel('lite')">Lite / AQ-200</button> <button type="button" class="seg-btn" data-maint-model="pro" aria-pressed="false" onclick="setMaintModel('pro')">AQ-200 Pro</button>
+        </div>
+       </div>
+      </div>
+      <div id="checklist-groups" class="interval-groups"><div class="interval-group">
+          <h3 class="interval-heading">Every 2 weeks</h3>
+          <label class="task-label" for="chk-maint-prefilter">
+            <input id="chk-maint-prefilter" class="task-checkbox" type="checkbox" onchange="toggleTask('maint-prefilter', this.checked)" style="">
+            <span>
+              <span class="task-title">Clean washable pre-filter (PF-200)</span>
+              <span class="task-desc">Vacuum or rinse with water; dry fully for 24 hours before reinstalling.</span>
+            </span>
+          </label>
+        </div><div class="interval-group">
+          <h3 class="interval-heading">Every month</h3>
+          <label class="task-label" for="chk-maint-exterior">
+            <input id="chk-maint-exterior" class="task-checkbox" type="checkbox" onchange="toggleTask('maint-exterior', this.checked)" style="">
+            <span>
+              <span class="task-title">Wipe exterior and air inlets</span>
+              <span class="task-desc">Wipe gently with a dry soft cloth. Do not use chemical solvents.</span>
+            </span>
+          </label>
+        </div><div class="interval-group">
+          <h3 class="interval-heading">Every 2 months</h3>
+          <label class="task-label" for="chk-maint-sensor">
+            <input id="chk-maint-sensor" class="task-checkbox" type="checkbox" onchange="toggleTask('maint-sensor', this.checked)" style="">
+            <span>
+              <span class="task-title">Clean PM2.5 sensor lens</span>
+              <span class="task-desc">Open the sensor cover on the side and clean the lens with a dry cotton swab.</span>
+            </span>
+          </label>
+        </div><div class="interval-group">
+          <h3 class="interval-heading">Every 6 months (4 months with pets, smoke, or heavy cooking)</h3>
+          <label class="task-label" for="chk-maint-mainfilter">
+            <input id="chk-maint-mainfilter" class="task-checkbox" type="checkbox" onchange="toggleTask('maint-mainfilter', this.checked)" style="">
+            <span>
+              <span class="task-title">Replace main H13 HEPA + carbon filter (FL-200H / FL-200P)</span>
+              <span class="task-desc">Remove all plastic packaging from the new filter, install until it clicks, then hold Filter Reset for 3 seconds.</span>
+            </span>
+          </label>
+        </div><div class="interval-group">
+          <h3 class="interval-heading">Every 12 months (8,000 operating hours)</h3>
+          <label class="task-label" for="chk-maint-uvc">
+            <input id="chk-maint-uvc" class="task-checkbox" type="checkbox" onchange="toggleTask('maint-uvc', this.checked)" style="">
+            <span>
+              <span class="task-title">Replace UV-C lamp module (UV-200) — AQ-200 Pro only</span>
+              <span class="task-desc">Unplug the AQ-200 Pro completely before opening the front cover and replacing the UV-200 lamp ($35).</span>
+            </span>
+          </label>
+        </div><div class="interval-group">
+          <h3 class="interval-heading">Every 24 months</h3>
+          <label class="task-label" for="chk-maint-inspection">
+            <input id="chk-maint-inspection" class="task-checkbox" type="checkbox" onchange="toggleTask('maint-inspection', this.checked)" style="">
+            <span>
+              <span class="task-title">Fan and internal duct inspection</span>
+              <span class="task-desc">Authorized service center check ($25 flat labor fee applies outside warranty; $0 in warranty).</span>
+            </span>
+          </label>
+        </div></div>
+     </div>
+     <!-- 3B. Yearly Filter Cost Calculator -->
+     <div class="tile calc-panel">
+      <div class="calc-result-tile" aria-live="polite">
+       <span class="field-label" style="color: var(--on-surface-variant);">Estimated yearly filter replacement cost</span>
+       <div>
+        <span id="calc-annual-total" class="calc-total">$70</span> <span class="calc-unit">/ year</span>
+       </div>
+       <span id="calc-subtitle" style="font-size: 0.875rem; color: var(--on-surface-variant);">Based on 2026 USD recommended retail prices, excluding tax and shipping</span>
+       <div class="calc-kpis">
+        <div>
+         <div id="calc-filters-yr" class="calc-kpi-val">2 filters</div>
+         <div class="calc-kpi-lbl">Per year</div>
+        </div>
+        <div>
+         <div id="calc-interval" class="calc-kpi-val">Every 6 mo</div>
+         <div class="calc-kpi-lbl">Replace interval</div>
+        </div>
+        <div>
+         <div id="calc-monthly" class="calc-kpi-val">$5.83 / mo</div>
+         <div class="calc-kpi-lbl">Monthly average</div>
+        </div>
+       </div>
+      </div>
+      <div class="calc-inputs">
+       <div class="field-group">
+        <span class="field-label">Purifier model</span>
+        <div class="segmented" role="group" aria-label="Select purifier model for cost calculation">
+         <button type="button" class="seg-btn" data-calc-model="lite" aria-pressed="true" onclick="setCalcModel('lite')">AQ-200 Lite</button> <button type="button" class="seg-btn" data-calc-model="std" aria-pressed="false" onclick="setCalcModel('std')">AQ-200</button> <button type="button" class="seg-btn" data-calc-model="pro" aria-pressed="false" onclick="setCalcModel('pro')">AQ-200 Pro</button>
+        </div>
+       </div>
+       <div class="field-group">
+        <span class="field-label">Household usage profile</span>
+        <div class="segmented" role="group" aria-label="Select usage profile">
+         <button type="button" class="seg-btn" data-calc-usage="normal" aria-pressed="true" onclick="setCalcUsage('normal')">Normal use (6 mo)</button> <button type="button" class="seg-btn" data-calc-usage="pets" aria-pressed="false" onclick="setCalcUsage('pets')">Pets / smoke / cooking (4 mo)</button>
+        </div>
+       </div>
+       <div id="calc-extra-options">
+            <label class="option-check" for="opt-value-pack">
+              <input id="opt-value-pack" type="checkbox" checked="" onchange="toggleValuePack(this.checked)" style="">
+              <span>Use FL-200H-2 Value Pack (2 filters for $70 instead of $39 each — saves $8)</span>
+            </label>
+          </div>
+      </div>
+      <div class="tile-sub">
+       <span class="field-label" style="margin-bottom: var(--space-xs);">Cost breakdown</span>
+       <div id="calc-breakdown" class="breakdown-list"><div class="breakdown-row">
+            <span style="color:var(--on-surface-variant);">1 × FL-200H-2 Value Pack (2 filters)</span>
+            <span style="font-weight:500;">$70.00</span>
+          </div><div class="breakdown-row">
+            <span style="color:var(--on-surface-variant);">Savings vs. buying single FL-200H ($39 × 2)</span>
+            <span style="color:var(--positive); font-weight:600;">-$8.00</span>
+          </div><div class="breakdown-row">
+            <span style="font-weight:700; color:var(--on-surface);">Total estimated annual cost</span>
+            <span style="font-weight:700; color:var(--on-surface);">$70.00</span>
+          </div></div>
+      </div>
+     </div>
+    </div>
+   </section>
+   <!-- 4. Searchable FAQ -->
+   <section id="faq-section" class="section-block" aria-labelledby="heading-faq">
+    <div class="section-header">
+     <span class="eyebrow">Questions &amp; answers</span>
+     <h2 id="heading-faq">Frequently asked questions</h2>
+     <p>Search across operation, Wi-Fi connectivity, filtration, care, and warranty coverage for the AeroPure AQ-200 series.</p>
+    </div>
+    <div class="tile">
+     <div class="faq-controls">
+      <div class="faq-top-row">
+       <div class="field-group faq-search-box">
+        <label class="field-label" for="faq-search-input">Search questions about operation, features, or care</label>
+        <div class="input-row">
+         <div class="input-wrap">
+          <span class="input-icon" aria-hidden="true"> 
+           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path>
+           </svg> 
+          </span> <input id="faq-search-input" class="pill-input has-icon" type="text" autocomplete="off" oninput="onFaqSearch(this.value)" style="">
+         </div>
+         <button type="button" class="btn-secondary" onclick="clearFaqSearch()">Clear</button>
+        </div>
+       </div>
+       <button type="button" id="faq-expand-all-btn" class="btn-secondary" onclick="toggleAllFaqs()">Expand all</button>
+      </div>
+      <div class="faq-cat-row">
+       <div id="faq-cat-pills" class="cat-pills" role="group" aria-label="Filter FAQ by category">
+        <button type="button" class="cat-pill" data-faq-cat="all" aria-pressed="true" onclick="setFaqCategory('all')">All</button> <button type="button" class="cat-pill" data-faq-cat="Operation" aria-pressed="false" onclick="setFaqCategory('Operation')">Operation</button> <button type="button" class="cat-pill" data-faq-cat="Features" aria-pressed="false" onclick="setFaqCategory('Features')">Features</button> <button type="button" class="cat-pill" data-faq-cat="Care &amp; Filters" aria-pressed="false" onclick="setFaqCategory('Care &amp; Filters')">Care &amp; Filters</button> <button type="button" class="cat-pill" data-faq-cat="Warranty &amp; Service" aria-pressed="false" onclick="setFaqCategory('Warranty &amp; Service')">Warranty &amp; Service</button>
+       </div>
+       <span id="faq-count" style="font-size: var(--label-size); color: var(--on-surface-variant);">Showing 15 of 15 questions</span>
+      </div>
+     </div>
+     <div id="faq-list" class="faq-list"><div class="faq-item">
+          <button type="button" class="faq-trigger" aria-expanded="true" aria-controls="panel-faq-1" onclick="toggleFaq('faq-1')">
+            <span class="faq-q-wrap">
+              <span class="chip neutral">Care &amp; Filters</span>
+              <span class="faq-q">Can I wash the main HEPA filter?</span>
+            </span>
+            <span class="faq-chevron" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"></path></svg>
+            </span>
+          </button>
+          <div id="panel-faq-1" class="faq-panel">
+            <p>No. Only the pre-filter (PF-200) is washable. Washing the H13 HEPA / activated carbon main filter (FL-200H or FL-200P) destroys the filter media.</p>
+          </div>
+        </div><div class="faq-item">
+          <button type="button" class="faq-trigger" aria-expanded="false" aria-controls="panel-faq-2" onclick="toggleFaq('faq-2')">
+            <span class="faq-q-wrap">
+              <span class="chip neutral">Operation</span>
+              <span class="faq-q">Can I use the purifier in a bathroom?</span>
+            </span>
+            <span class="faq-chevron" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"></path></svg>
+            </span>
+          </button>
+          <div id="panel-faq-2" class="faq-panel" hidden="">
+            <p>No. Do not use the purifier in bathrooms, where relative humidity exceeds 80%, or anywhere it could be splashed with water.</p>
+          </div>
+        </div><div class="faq-item">
+          <button type="button" class="faq-trigger" aria-expanded="false" aria-controls="panel-faq-3" onclick="toggleFaq('faq-3')">
+            <span class="faq-q-wrap">
+              <span class="chip neutral">Operation</span>
+              <span class="faq-q">Why is the air-quality ring red right after I turn it on?</span>
+            </span>
+            <span class="faq-chevron" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"></path></svg>
+            </span>
+          </button>
+          <div id="panel-faq-3" class="faq-panel" hidden="">
+            <p>During the first 10 minutes after power-on, the laser PM2.5 sensor is calibrating (the ring blinks blue during calibration). If the ring stays red for more than 1 hour in a closed room, clean the PM2.5 sensor lens with a dry cotton swab.</p>
+          </div>
+        </div><div class="faq-item">
+          <button type="button" class="faq-trigger" aria-expanded="false" aria-controls="panel-faq-4" onclick="toggleFaq('faq-4')">
+            <span class="faq-q-wrap">
+              <span class="chip neutral">Features</span>
+              <span class="faq-q">Does the purifier remove viruses?</span>
+            </span>
+            <span class="faq-chevron" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"></path></svg>
+            </span>
+          </button>
+          <div id="panel-faq-4" class="faq-panel" hidden="">
+            <p>The H13 HEPA filter captures 99.95% of particles at 0.3 microns in lab tests. AeroPure makes no medical claims.</p>
+          </div>
+        </div><div class="faq-item">
+          <button type="button" class="faq-trigger" aria-expanded="false" aria-controls="panel-faq-5" onclick="toggleFaq('faq-5')">
+            <span class="faq-q-wrap">
+              <span class="chip neutral">Features</span>
+              <span class="faq-q">Does the AQ-200 support 5 GHz Wi-Fi?</span>
+            </span>
+            <span class="faq-chevron" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"></path></svg>
+            </span>
+          </button>
+          <div id="panel-faq-5" class="faq-panel" hidden="">
+            <p>No. Only 2.4 GHz Wi-Fi is supported on the AQ-200 and AQ-200 Pro. The AQ-200 Lite does not have Wi-Fi or app control.</p>
+          </div>
+        </div><div class="faq-item">
+          <button type="button" class="faq-trigger" aria-expanded="false" aria-controls="panel-faq-6" onclick="toggleFaq('faq-6')">
+            <span class="faq-q-wrap">
+              <span class="chip neutral">Operation</span>
+              <span class="faq-q">How do I turn on child lock?</span>
+            </span>
+            <span class="faq-chevron" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"></path></svg>
+            </span>
+          </button>
+          <div id="panel-faq-6" class="faq-panel" hidden="">
+            <p>Press and hold the Lock (padlock) button for 3 seconds to turn child lock on. Hold it again for 3 seconds to unlock.</p>
+          </div>
+        </div><div class="faq-item">
+          <button type="button" class="faq-trigger" aria-expanded="false" aria-controls="panel-faq-7" onclick="toggleFaq('faq-7')">
+            <span class="faq-q-wrap">
+              <span class="chip neutral">Care &amp; Filters</span>
+              <span class="faq-q">How long does a main filter last?</span>
+            </span>
+            <span class="faq-chevron" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"></path></svg>
+            </span>
+          </button>
+          <div id="panel-faq-7" class="faq-panel" hidden="">
+            <p>About 6 months (2,160 operating hours) in normal use, or about 4 months with pets, smoking, or heavy cooking. The filter indicator turns red and displays E02 at end of life.</p>
+          </div>
+        </div><div class="faq-item">
+          <button type="button" class="faq-trigger" aria-expanded="false" aria-controls="panel-faq-8" onclick="toggleFaq('faq-8')">
+            <span class="faq-q-wrap">
+              <span class="chip neutral">Care &amp; Filters</span>
+              <span class="faq-q">Is the main filter the same for all models?</span>
+            </span>
+            <span class="faq-chevron" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"></path></svg>
+            </span>
+          </button>
+          <div id="panel-faq-8" class="faq-panel" hidden="">
+            <p>No. AQ-200 Lite and AQ-200 use the FL-200H ($39, or $70 for the 2-pack FL-200H-2). AQ-200 Pro uses the larger FL-200P ($59).</p>
+          </div>
+        </div><div class="faq-item">
+          <button type="button" class="faq-trigger" aria-expanded="false" aria-controls="panel-faq-9" onclick="toggleFaq('faq-9')">
+            <span class="faq-q-wrap">
+              <span class="chip neutral">Warranty &amp; Service</span>
+              <span class="faq-q">What does the warranty cover?</span>
+            </span>
+            <span class="faq-chevron" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"></path></svg>
+            </span>
+          </button>
+          <div id="panel-faq-9" class="faq-panel" hidden="">
+            <p>The warranty covers manufacturing defects for 2 years on AQ-200 Lite and AQ-200, or 3 years on AQ-200 Pro. Parts replaced under warranty are free of charge, including service labor ($0). Consumables—main filters, pre-filters, and UV-C lamps—are not covered.</p>
+          </div>
+        </div><div class="faq-item">
+          <button type="button" class="faq-trigger" aria-expanded="false" aria-controls="panel-faq-10" onclick="toggleFaq('faq-10')">
+            <span class="faq-q-wrap">
+              <span class="chip neutral">Operation</span>
+              <span class="faq-q">How do I pair the purifier with the AeroPure Home app?</span>
+            </span>
+            <span class="faq-chevron" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"></path></svg>
+            </span>
+          </button>
+          <div id="panel-faq-10" class="faq-panel" hidden="">
+            <p>On AQ-200 or AQ-200 Pro, install the AeroPure Home app, connect your phone to a 2.4 GHz Wi-Fi network, then press and hold Wi-Fi + Timer for 5 seconds until the Wi-Fi icon blinks and follow the in-app steps.</p>
+          </div>
+        </div><div class="faq-item">
+          <button type="button" class="faq-trigger" aria-expanded="false" aria-controls="panel-faq-11" onclick="toggleFaq('faq-11')">
+            <span class="faq-q-wrap">
+              <span class="chip neutral">Operation</span>
+              <span class="faq-q">What floor surface and clearance does the purifier require?</span>
+            </span>
+            <span class="faq-chevron" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"></path></svg>
+            </span>
+          </button>
+          <div id="panel-faq-11" class="faq-panel" hidden="">
+            <p>Place the purifier on a flat, hard floor (not long-pile carpet) with at least 30 cm clearance from walls, curtains, and furniture on all sides, and at least 1 m away from heaters.</p>
+          </div>
+        </div><div class="faq-item">
+          <button type="button" class="faq-trigger" aria-expanded="false" aria-controls="panel-faq-12" onclick="toggleFaq('faq-12')">
+            <span class="faq-q-wrap">
+              <span class="chip neutral">Care &amp; Filters</span>
+              <span class="faq-q">Why is there an unusual smell after installing a new filter?</span>
+            </span>
+            <span class="faq-chevron" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"></path></svg>
+            </span>
+          </button>
+          <div id="panel-faq-12" class="faq-panel" hidden="">
+            <p>A mild odor for 1–2 days is normal for a brand-new activated carbon layer. If the smell persists beyond 2 days, unplug the unit and double-check that the plastic shipping bag was removed from the filter.</p>
+          </div>
+        </div><div class="faq-item">
+          <button type="button" class="faq-trigger" aria-expanded="false" aria-controls="panel-faq-13" onclick="toggleFaq('faq-13')">
+            <span class="faq-q-wrap">
+              <span class="chip neutral">Care &amp; Filters</span>
+              <span class="faq-q">How do I clean the pre-filter and PM2.5 sensor lens?</span>
+            </span>
+            <span class="faq-chevron" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"></path></svg>
+            </span>
+          </button>
+          <div id="panel-faq-13" class="faq-panel" hidden="">
+            <p>Vacuum or rinse the washable pre-filter (PF-200) every 2 weeks and let it dry completely for 24 hours before reinstalling. Every 2 months, open the side sensor cover and gently wipe the PM2.5 lens with a dry cotton swab.</p>
+          </div>
+        </div><div class="faq-item">
+          <button type="button" class="faq-trigger" aria-expanded="false" aria-controls="panel-faq-14" onclick="toggleFaq('faq-14')">
+            <span class="faq-q-wrap">
+              <span class="chip neutral">Warranty &amp; Service</span>
+              <span class="faq-q">What are the service labor fees outside of warranty?</span>
+            </span>
+            <span class="faq-chevron" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"></path></svg>
+            </span>
+          </button>
+          <div id="panel-faq-14" class="faq-panel" hidden="">
+            <p>Out-of-warranty service labor is a flat $25 per visit, and the recommended 24-month fan and internal duct inspection is also $25 outside warranty ($0 if within warranty). Spare part prices exclude tax and shipping.</p>
+          </div>
+        </div><div class="faq-item">
+          <button type="button" class="faq-trigger" aria-expanded="false" aria-controls="panel-faq-15" onclick="toggleFaq('faq-15')">
+            <span class="faq-q-wrap">
+              <span class="chip neutral">Features</span>
+              <span class="faq-q">How do sleep mode, manual speeds, and the timer work?</span>
+            </span>
+            <span class="faq-chevron" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"></path></svg>
+            </span>
+          </button>
+          <div id="panel-faq-15" class="faq-panel" hidden="">
+            <p>Short-press Mode to cycle Auto › Sleep (lowest noise at 20–24 dB with display off) › Manual. Short-press Fan for speeds 1–4 (speed 4 is Turbo). Short-press Timer to set 1 h, 2 h, 4 h, 8 h, or off.</p>
+          </div>
+        </div></div>
+    </div>
+   </section>
+   <footer class="source-footer">
+    <p>Compiled from AeroPure AQ-200 Series demo documentation (Nimbus Home Appliances, fictional sample, Rev. 1.0, Nov 2026): User Manual (AQ200-UM-01), Troubleshooting &amp; Error Codes (AQ200-TS-02), Spare Parts &amp; Service Price List (AQ200-PL-03), and Monthly Sales &amp; Support Report (AQ200-RP-04). All product names, specs, and USD prices are fictional demo data.</p>
+   </footer>
+  </div>
+  <script data-api-capabilities="CgYBGQQICg4=">(function(){'use strict';/*
+
+ Copyright The Closure Library Authors.
+ SPDX-License-Identifier: Apache-2.0
+*/
+var aa=this||self;function ba(a){var b=typeof a;return b!="object"?b:a?Array.isArray(a)?"array":b:"null"}function ca(a){return a};function da(a){aa.setTimeout(()=>{throw a;},0)};var ea,fa;a:{for(var ha=["CLOSURE_FLAGS"],ia=aa,ja=0;ja<ha.length;ja++)if(ia=ia[ha[ja]],ia==null){fa=null;break a}fa=ia}var ka=fa&&fa[748402147];ea=ka!=null?ka:!0;var la=/[-_.]/g,ma={"-":"+",_:"/",".":"="};function na(a){return ma[a]||""}function oa(a){a=la.test(a)?a.replace(la,na):a;a=atob(a);var b=new Uint8Array(a.length);for(let c=0;c<a.length;c++)b[c]=a.charCodeAt(c);return b}var k={};var u=class{constructor(a,b){pa(b);this.h=a;if(a!=null&&a.length===0)throw Error("ByteString should be constructed with non-empty values");}},qa;function pa(a){if(a!==k)throw Error("illegal external caller");};function ra(a,b){a.__closure__error__context__984382||(a.__closure__error__context__984382={});a.__closure__error__context__984382.severity=b};var sa=void 0;function ta(a){a=Error(a);ra(a,"warning");return a}function ua(a,b){if(a!=null){var c=sa??={};var d=c[a]||0;d>=b||(c[a]=d+1,a=Error(),ra(a,"incident"),da(a))}};function v(a,b=!1){return b&&Symbol.for&&a?Symbol.for(a):a!=null?Symbol(a):Symbol()}var va=v(),wa=v(),xa=v(),ya=v(),za=v(),Aa=v("m_m",!0);var w=v("jas",!0),y,Ba=[];Ba[w]=7;y=Object.freeze(Ba);function z(a){a[w]|=34;return a}function Ca(a){a[w]|=8192;return a}function Da(a){a[w]|=32;return a}function Ea(a,b){2&b&&(a|=2);return a|1};var Fa={};function A(a){return a!=null&&a[Aa]===Fa}function B(a,b){return b===void 0?a.h!==E&&!!(2&(a.j[w]|0)):!!(2&b)&&a.h!==E}var E={};class Ga{constructor(a,b,c){this.h=a;this.i=b;this.l=c}next(){var a=this.h.next();a.done||(a.value=this.i.call(this.l,a.value));return a}[Symbol.iterator](){return this}}Object.freeze({});
+function Ha(a,b,c){var d=b&128?0:-1,e=a.length,f;if(f=!!e)f=a[e-1],f=f!=null&&typeof f==="object"&&f.constructor===Object;var g=e+(f?-1:0);for(b=b&128?1:0;b<g;b++)c(b-d,a[b]);if(f){a=a[e-1];for(let h in a)!isNaN(h)&&c(+h,a[h])}}var Ia={};function Ja(a){a.ba=!0;return a};var Ka=Ja(a=>typeof a==="number"),La=Ja(a=>typeof a==="string");function F(a){if(La(a)){if(!/^\s*(?:-?[1-9]\d*|0)?\s*$/.test(a))throw Error(String(a));}else if(Ka(a)&&!Number.isSafeInteger(a))throw Error(String(a));return BigInt(a)}var Oa=Ja(a=>a>=Ma&&a<=Na),Ma=BigInt(Number.MIN_SAFE_INTEGER),Na=BigInt(Number.MAX_SAFE_INTEGER);var I=0,J=0;function Pa(a){var b=a>>>0;I=b;J=(a-b)/4294967296>>>0}function Qa(a){if(a<0){Pa(0-a);a=I;var b=J;b=~b;a?a=~a+1:b+=1;let [c,d]=[a,b];I=c>>>0;J=d>>>0}else Pa(a)}function Ra(a,b){b>>>=0;a>>>=0;var c;b<=2097151?c=""+(4294967296*b+a):c=""+(BigInt(b)<<BigInt(32)|BigInt(a));return c}function Sa(){var a=I,b=J,c;b&2147483648?c=""+(BigInt(b|0)<<BigInt(32)|BigInt(a>>>0)):c=Ra(a,b);return c};var Ta=typeof BigInt==="function"?BigInt.asIntN:void 0,K=Number.isSafeInteger,Ua=Number.isFinite,Va=Math.trunc;function Wa(a){if(a==null||typeof a==="number")return a;if(a==="NaN"||a==="Infinity"||a==="-Infinity")return Number(a)}var Xa=/^-?([1-9][0-9]*|0)(\.[0-9]+)?$/;function Ya(a){switch(typeof a){case "bigint":return!0;case "number":return Ua(a);case "string":return Xa.test(a);default:return!1}}function Za(a){if(a!=null){if(!Ua(a))throw ta("enum");a|=0}return a}
+function $a(a){return a==null?a:Ua(a)?a|0:void 0}function ab(a){if(a!=null){if(typeof a!=="number")throw ta("int32");if(!Ua(a))throw ta("int32");a|=0}return a}function bb(a){if(a==null)return a;if(typeof a==="string"&&a)a=+a;else if(typeof a!=="number")return;return Ua(a)?a|0:void 0}function cb(a){a=Va(a);K(a)?a=String(a):(Qa(a),a=Sa());return a}function db(a){var b=Va(Number(a));if(K(b))return F(b);b=a.indexOf(".");b!==-1&&(a=a.substring(0,b));return F(Ta(64,BigInt(a)))}
+function eb(a){var b=typeof a;if(a==null)return a;if(b==="bigint")return F(Ta(64,a));if(Ya(a))return b==="string"?db(a):F(K(a)?a:cb(a))}function fb(a){return a==null||typeof a==="string"?a:void 0}function gb(a,b,c,d){if(A(a))return a;if(!Array.isArray(a))return c?d&2?b[va]||(b[va]=hb(b)):new b:void 0;c=a[w]|0;d=c|d&32|d&2;d!==c&&(a[w]=d);return new b(a)}function hb(a){a=new a;z(a.j);return a}function ib(a,b,c){if(b){if(typeof a!=="string")throw Error();}else a=fb(a)??(c?"":void 0);return a};function jb(a){return a};var kb={},lb=(()=>class extends Map{constructor(){super()}})();function mb(a){return a}function nb(a){if(a.v&2)throw Error("Cannot mutate an immutable Map");}
+var L=class extends lb{constructor(a,b,c=mb,d=mb){super();this.v=a[w]|0;this.u=b;this.G=c;this.R=this.u?ob:d;for(let e=0;e<a.length;e++){let f=a[e],g=c(f[0],!1,!0),h=f[1];b?h===void 0&&(h=null):h=d(f[1],!1,!0,void 0,void 0,this.v);super.set(g,h)}}L(a){return Ca(Array.from(super.entries(),a))}clear(){nb(this);super.clear()}delete(a){nb(this);return super.delete(this.G(a,!0,!1))}entries(){if(this.u){var a=super.keys();a=new Ga(a,pb,this)}else a=super.entries();return a}values(){if(this.u){var a=super.keys();
+a=new Ga(a,L.prototype.get,this)}else a=super.values();return a}forEach(a,b){this.u?super.forEach((c,d,e)=>{a.call(b,e.get(d),d,e)}):super.forEach(a,b)}set(a,b){nb(this);a=this.G(a,!0,!1);return a==null?this:b==null?(super.delete(a),this):super.set(a,this.R(b,!0,!0,this.u,!1,this.v))}has(a){return super.has(this.G(a,!1,!1))}get(a){a=this.G(a,!1,!1);var b=super.get(a);if(b!==void 0){var c=this.u;return c?(c=this.R(b,!1,!0,c,this.U,this.v),c!==b&&super.set(a,c),c):b}}[Symbol.iterator](){return this.entries()}};
+L.prototype.toJSON=void 0;function ob(a,b,c,d,e,f){a=gb(a,d,c,f);e&&(a=qb(a));return a}function pb(a){return[a,this.get(a)]}var rb;function sb(){return rb||=new L(z([]),void 0,void 0,void 0,kb)};function tb(a){var b=ca(xa);return b?a[b]:void 0}function ub(a,b){for(let c in a)!isNaN(c)&&b(a,+c,a[c])}function vb(a){var b=new wb;ub(a,(c,d,e)=>{b[d]=[...e]});b.h=a.h;return b}var wb=class{};function xb(a,b){b<100||ua(ya,1)};function yb(a,b,c,d){var e=d!==void 0;d=!!d;var f=ca(xa),g;!e&&f&&(g=a[f])&&ub(g,xb);f=[];var h=a.length;g=4294967295;var m=!1,n=!!(b&64),l=n?b&128?0:-1:void 0;if(!(b&1)){var p=h&&a[h-1];p!=null&&typeof p==="object"&&p.constructor===Object?(h--,g=h):p=void 0;!n||b&128||e||(m=!0,g=(zb??jb)(g-l,l,a,p,void 0)+l)}b=void 0;for(var r=0;r<h;r++){let q=a[r];if(q!=null&&(q=c(q,d))!=null)if(n&&r>=g){let t=r-l;(b??={})[t]=q}else f[r]=q}if(p)for(let q in p){h=p[q];if(h==null||(h=c(h,d))==null)continue;r=+q;let t;
+n&&!Number.isNaN(r)&&(t=r+l)<g?f[t]=h:(b??={})[q]=h}b&&(m?f.push(b):f[g]=b);e&&(c=ca(xa))&&(a=tb(a))&&a instanceof wb&&(f[c]=vb(a));return f}function Ab(a){a[0]=Bb(a[0]);a[1]=Bb(a[1]);return a}
+function Bb(a){switch(typeof a){case "number":return Number.isFinite(a)?a:""+a;case "bigint":return Oa(a)?Number(a):""+a;case "boolean":return a?1:0;case "object":if(Array.isArray(a)){var b=a[w]|0;return a.length===0&&b&1?void 0:yb(a,b,Bb)}if(A(a))return Cb(a);if(a instanceof u){b=a.h;if(b==null)a="";else if(typeof b==="string")a=b;else{let c="",d=0,e=b.length-10240;for(;d<e;)c+=String.fromCharCode.apply(null,b.subarray(d,d+=10240));c+=String.fromCharCode.apply(null,d?b.subarray(d):b);b=btoa(c);a=
+a.h=b}return a}if(a instanceof L)return a=a.size!==0?a.L(Ab):void 0,a;return}return a}var zb;function Cb(a){a=a.j;return yb(a,a[w]|0,Bb)};var Db,Eb;function Fb(a){switch(typeof a){case "boolean":return Db||=[0,void 0,!0];case "number":return a>0?void 0:a===0?Eb||=[0,void 0]:[-a,void 0];case "string":return[0,a];case "object":return a}}function Gb(a,b){return Hb(a,b[0],b[1])}
+function Hb(a,b,c,d=0){if(a==null){var e=32;c?(a=[c],e|=128):a=[];b&&(e=e&-16760833|(b&1023)<<14)}else{if(!Array.isArray(a))throw Error("narr");e=a[w]|0;if(ea&&1&e)throw Error("rfarr");2048&e&&!(2&e)&&Ib();if(e&256)throw Error("farr");if(e&64)return(e|d)!==e&&(a[w]=e|d),a;if(c&&(e|=128,c!==a[0]))throw Error("mid");a:{c=a;e|=64;var f=c.length;if(f){var g=f-1;let m=c[g];if(m!=null&&typeof m==="object"&&m.constructor===Object){b=e&128?0:-1;g-=b;if(g>=1024)throw Error("pvtlmt");for(var h in m)if(f=+h,
+f<g)c[f+b]=m[h],delete m[h];else break;e=e&-16760833|(g&1023)<<14;break a}}if(b){h=Math.max(b,f-(e&128?0:-1));if(h>1024)throw Error("spvt");e=e&-16760833|(h&1023)<<14}}}a[w]=e|64|d;return a}function Ib(){if(ea)throw Error("carr");ua(za,5)};function Jb(a,b){if(typeof a!=="object")return a;if(Array.isArray(a)){var c=a[w]|0;return a.length===0&&c&1?void 0:Kb(a,c,b)}if(A(a))return Lb(a);if(a instanceof L){b=a.v;if(b&2)return a;if(!a.size)return;c=z(a.L());if(a.u)for(a=0;a<c.length;a++){let d=c[a],e=d[1];e==null||typeof e!=="object"?e=void 0:A(e)?e=Lb(e):Array.isArray(e)?e=Kb(e,e[w]|0,!!(b&32)):e=void 0;d[1]=e}return c}if(a instanceof u)return a}
+function Kb(a,b,c){if(b&2)return a;!c||4096&b||16&b?a=Mb(a,b,!1,c&&!(b&16)):(a[w]|=34,b&4&&Object.freeze(a));return a}function Nb(a,b,c){a=new a.constructor(b);c&&(a.h=E);a.l=E;return a}function Lb(a){var b=a.j,c=b[w]|0;return B(a,c)?a:Ob(a,b,c)?Nb(a,b):Mb(b,c)}function Mb(a,b,c,d){d??=!!(34&b);a=yb(a,b,Jb,d);d=32;c&&(d|=2);b=b&16769217|d;a[w]=b;return a}function qb(a){var b=a.j,c=b[w]|0;if(B(a,c)){var d;Ob(a,b,c)?d=Nb(a,b,!0):d=new a.constructor(Mb(b,c,!1));a=d}return a}
+function Pb(a){if(a.h!==E)return!1;var b=a.j;b=Mb(b,b[w]|0);b[w]|=2048;a.j=b;a.h=void 0;a.l=void 0;return!0}function Qb(a){if(!Pb(a)&&B(a,a.j[w]|0))throw Error();}function M(a,b){b===void 0&&(b=a[w]|0);b&32&&!(b&4096)&&(a[w]=b|4096)}function Ob(a,b,c){return c&2?!0:c&32&&!(c&4096)?(b[w]=c|2,a.h=E,!0):!1};function N(a,b,c,d){a=O(a.j,b,c,d);if(a!==null)return a}function Rb(a,b,c){return O(a,b,void 0,c)}function O(a,b,c,d){if(b===-1)return null;var e=b+(c?0:-1),f=a.length-1;if(!(f<1+(c?0:-1))){if(e>=f){var g=a[f];if(g!=null&&typeof g==="object"&&g.constructor===Object){c=g[b];var h=!0}else if(e===f)c=g;else return}else c=a[e];if(d&&c!=null){d=d(c);if(d==null)return d;if(!Object.is(d,c))return h?g[b]=d:a[e]=d,d}return c}}function Sb(a,b,c){Qb(a);a=a.j;P(a,a[w]|0,b,c)}
+function P(a,b,c,d,e){var f=c+(e?0:-1),g=a.length-1;if(g>=1+(e?0:-1)&&f>=g){let h=a[g];if(h!=null&&typeof h==="object"&&h.constructor===Object)return h[c]=d,b}if(f<=g)return a[f]=d,b;d!==void 0&&(g=(b??=a[w]|0)>>14&1023||536870912,c>=g?d!=null&&(a[g+(e?0:-1)]={[c]:d}):a[f]=d);return b}function Tb(a){a=O(a.j,2);return A(a)||Array.isArray(a)}
+function Ub(a,b,c,d,e,f,g,h){var m=b,n=Vb(b);n&&f===2&&(a=[...a],m=0,b=Wb(b,d),d=P(c,d,e,a),n=!1);n||(f===1||(f!==4?0:2&b||!(16&b)&&32&d)?(b|=!a.length||g&&!(4096&b)||32&d&&!(4096&b||16&b)?2:256,b!==m&&(a[w]=b),Object.freeze(a)):(h||(b|=16),b!==m&&(a[w]=b)));2&b||!(4096&b||16&b)||M(c,d);return a}function Xb(a,b,c){a=O(a,b,c);return Array.isArray(a)?a:y}function Vb(a){return!!(2&a)&&!!(4&a)||!!(256&a)}
+function Yb(a){var b=Zb;var c=a.j;var d=c[w]|0;var e=B(a,d);a:{!e&&Pb(a)&&(c=a.j,d=c[w]|0);var f=O(c,1);a=!1;if(f==null){if(e){c=sb();break a}f=[]}else if(f.constructor===L)if(f.v&2&&!e)f=f.L();else{c=f;break a}else Array.isArray(f)?a=!!((f[w]|0)&2):f=[];if(e){if(!f.length){c=sb();break a}a||(a=!0,z(f))}else if(a){a=!1;Ca(f);f=[...f];for(let g=0;g<f.length;g++){let h=f[g]=[...f[g]];Array.isArray(h[1])&&(h[1]=z(h[1]))}f=Ca(f)}!a&&d&32&&Da(f);f=new L(f,b,ib,void 0);d=P(c,d,1,f);a||M(c,d);c=f}!e&&b&&
+(c.U=!0);return c}function Q(a,b,c,d){Qb(a);var e=a.j;P(e,e[w]|0,b,(d==="0"?Number(c)===0:c===d)?void 0:c);return a}function $b(a,b,c,d){Qb(a);var e=a.j,f=e[w]|0;if(d==null){var g=ac(e);if(bc(g,e,f,c)===b)g.set(c,0);else return a}else{g=ac(e);let h=bc(g,e,f,c);h!==b&&(h&&(f=P(e,f,h)),g.set(c,b))}P(e,f,b,d);return a}function R(a,b,c){return cc(a.j,b)===c?c:-1}function cc(a,b){return bc(ac(a),a,void 0,b)}function ac(a){return a[wa]??(a[wa]=new Map)}
+function bc(a,b,c,d){var e=a.get(d);if(e!=null)return e;e=0;for(let f=0;f<d.length;f++){let g=d[f];O(b,g)!=null&&(e!==0&&(c=P(b,c,e)),e=g)}a.set(d,e);return e}function dc(a,b,c){var d=a[w]|0,e=d&128?Ia:void 0,f=O(a,c,e);if(A(f)){if(!B(f))return Pb(f),f.j;var g=f.j}else Array.isArray(f)&&(g=f,d&2&&z(g));if(g){let h=g[w]|0;h&2&&(g=Mb(g,h))}g=Gb(g,b);g!==f&&P(a,d,c,g,e);return g}
+function ec(a,b,c,d){var e=!1;d=Rb(a,d,f=>{var g=gb(f,c,!1,b);e=g!==f&&g!=null;return g});if(d!=null)return e&&!B(d)&&M(a,b),d}function fc(a){var b=hc;a=a.j;return ec(a,a[w]|0,b,2)||b[va]||(b[va]=hb(b))}function ic(a,b,c){var d=a.j,e=d[w]|0;b=ec(d,e,b,c);if(b==null)return b;e=d[w]|0;if(!B(a,e)){let f=qb(b);f!==b&&(Pb(a)&&(d=a.j,e=d[w]|0),b=f,e=P(d,e,c,b),M(d,e))}return b}
+function jc(a,b,c,d,e,f,g,h){f=f&&f!==4?f!==1&&(a?B(a,c):2&c)?1:f:4;g=!!g||f===3;var m=!!h&&!(a?B(a,c):2&c);(f===2||m)&&a&&Pb(a)&&(b=a.j,c=b[w]|0);a=Xb(b,e);var n=a===y?7:a[w]|0,l=Ea(n,c);if(h=!(4&l)){var p=a,r=c;let q=!!(2&l);q&&(r|=2);let t=!q,G=!0,C=0,D=0;for(;C<p.length;C++){let H=gb(p[C],d,!1,r);if(H instanceof d){if(!q){let x=B(H);t&&=!x;G&&=x}p[D++]=H}}D<C&&(p.length=D);l|=4;l=G?l&-4097:l|4096;l=t?l|8:l&-9}l!==n&&(a[w]=l,2&l&&Object.freeze(a));if(m&&!(8&l||!a.length&&(f===1||(f!==4?0:2&l||
+!(16&l)&&32&c)))){Vb(l)&&(a=[...a],l=Wb(l,c),c=P(b,c,e,a));d=a;m=l;for(n=0;n<d.length;n++)p=d[n],l=qb(p),p!==l&&(d[n]=l);m|=8;l=m=d.length?m|4096:m&-4097;a[w]=l}return a=Ub(a,l,b,c,e,f,h,g)}function kc(a,b,c){var d=a.j;return jc(a,d,d[w]|0,b,c,void 0,!1,!0)}function lc(a){a==null&&(a=void 0);return a}function mc(a,b,c){c=lc(c);Sb(a,b,c);c&&!B(c)&&M(a.j);return a}function nc(a,b,c){var d=S;c=lc(c);$b(a,b,d,c);c&&!B(c)&&M(a.j);return a}function Wb(a,b){return a=(2&b?a|2:a&-3)&-273}
+function oc(a,b,c,d,e,f){Qb(a);var g=a.j;a=jc(a,g,g[w]|0,c,b,2,!0);if(f){if(typeof e!=="number"||e<0||e>a.length)throw Error();}else d=d!=null?d:new c;e!=void 0?a.splice(e,f,d):a.push(d);e=c=a===y?7:a[w]|0;(d=B(d))?(c&=-9,a.length===1&&(c&=-4097)):c|=4096;c!==e&&(a[w]=c);d||M(g)};var T=class{constructor(a,b,c){this.buffer=a;if(c&&!b)throw Error();this.h=b}};
+function pc(a,b){if(typeof a==="string")return new T(oa(a),b);if(Array.isArray(a))return new T(new Uint8Array(a),b);if(a.constructor===Uint8Array)return new T(a,!1);if(a.constructor===ArrayBuffer)return a=new Uint8Array(a),new T(a,!1);if(a.constructor===u)return pa(k),b=a.h,b=b==null||b!=null&&b instanceof Uint8Array?b:typeof b==="string"?oa(b):null,b=(b==null?b:a.h=b)||new Uint8Array(0),new T(b,!0,a);if(a instanceof Uint8Array)return a=a.constructor===Uint8Array?a:new Uint8Array(a.buffer,a.byteOffset,
+a.byteLength),new T(a,!1);throw Error();};function U(a){var b=a.l,c=a.h,d=b[c++],e=d&127;if(d&128&&(d=b[c++],e|=(d&127)<<7,d&128&&(d=b[c++],e|=(d&127)<<14,d&128&&(d=b[c++],e|=(d&127)<<21,d&128&&(d=b[c++],e|=d<<28,d&128&&b[c++]&128&&b[c++]&128&&b[c++]&128&&b[c++]&128&&b[c++]&128)))))throw Error();qc(a,c);return e}function qc(a,b){a.h=b;if(b>a.i)throw Error();}
+var rc=class{constructor(a,b,c,d){this.l=null;this.o=!1;this.h=this.i=this.m=0;this.init(a,b,c,d)}init(a,b,c,{J:d=!1,M:e=!1}={}){this.J=d;this.M=e;a&&(a=pc(a,this.M),this.l=a.buffer,this.o=a.h,this.m=b||0,this.i=c!==void 0?this.m+c:this.l.length,this.h=this.m)}clear(){this.l=null;this.o=!1;this.h=this.i=this.m=0;this.J=!1}},sc=[];var V=0;function tc(a,b,c,d){if(uc.length){let e=uc.pop();vc(e,d);e.h.init(a,b,c,d);return e}return new wc(a,b,c,d)}function vc(a,{N:b=!1}={}){a.N=b}function xc(a){a.h.clear();a.l=-1;a.i=-1;uc.length<100&&uc.push(a)}function yc(a){var b=a.h;if(b.h==b.i)return!1;a.m=a.h.h;var c=U(a.h)>>>0;b=c>>>3;c&=7;if(!(c>=0&&c<=5))throw Error();if(b<1)throw Error();a.l=b;a.i=c;return!0}
+function zc(a){try{switch(a.i){case 0:if(a.i!=0)zc(a);else a:{var b=a.h;let h=b.h;a=h+10;let m=b.l;for(;h<a;)if((m[h++]&128)===0){qc(b,h);break a}throw Error();}break;case 1:var c=a.h;qc(c,c.h+8);break;case 2:if(a.i!=2)zc(a);else{var d=U(a.h)>>>0,e=a.h;qc(e,e.h+d)}break;case 5:var f=a.h;qc(f,f.h+4);break;case 3:Ac();let g=a.l;try{do{if(!yc(a))throw Error();if(a.i==4){if(a.l!=g)throw Error();break}zc(a)}while(1)}catch(h){if(h instanceof RangeError)throw new SyntaxError;throw h;}finally{V>0&&V--}break;
+default:throw Error();}}catch(g){if(g instanceof RangeError)throw new SyntaxError;throw g;}}function Ac(){if(V>=100)throw new SyntaxError;V++}function Bc(a,b,c){var d=a.h.i,e=U(a.h)>>>0;e=a.h.h+e;var f=e-d;f<=0&&(a.h.i=e,c(b,a,void 0,void 0,void 0),f=e-a.h.h);if(f)throw Error();a.h.h=e;a.h.i=d}var wc=class{constructor(a,b,c,d){if(sc.length){let e=sc.pop();e.init(a,b,c,d);a=e}else a=new rc(a,b,c,d);this.h=a;this.m=this.h.h;this.i=this.l=-1;vc(this,d)}},uc=[];function Cc(){var a=class{constructor(){throw Error();}};Object.setPrototypeOf(a,a.prototype);return a}var Dc=Cc(),Ec=Cc();function Fc(a){return JSON.stringify(Cb(a))}var W=class{constructor(a){this.j=Hb(a,void 0,void 0,2048)}toJSON(){return Cb(this)}};W.prototype[Aa]=Fa;W.prototype.toString=function(){return this.j.toString()};var Gc=class{constructor(a,b){this.h=a;a=ca(Dc);this.i=!!a&&b===a||!1}},Hc=new Gc(function(a,b,c,d,e){if(a.i!==2)return!1;Bc(a,dc(b,d,c),e);return!0},Dc),Ic=new Gc(function(a,b,c,d,e){if(a.i!==2)return!1;Bc(a,dc(b,d,c),e);return!0},Dc),Jc=Symbol(),Kc=Symbol(),Lc=Symbol(),Mc,Nc;
+function Oc(a){var b=Pc,c=Qc,d=a[Jc];if(d)return d;d={};d.T=a;d.K=Fb(a[0]);var e=a[1],f=1;e&&e.constructor===Object&&(d.extensions=e,e=a[++f],typeof e==="function"&&e.length>0&&(d.Y=!0,Mc??=e,Nc??=a[f+1],e=a[f+=2]));for(var g={};e&&Array.isArray(e)&&e.length&&typeof e[0]==="number"&&e[0]>0;){for(var h=0;h<e.length;h++)g[e[h]]=e;e=a[++f]}for(h=1;e!==void 0;){typeof e==="number"&&(h+=e,e=a[++f]);let l;var m=void 0;e instanceof Gc?l=e:(l=Hc,f--);if(l?.i){e=a[++f];m=a;var n=f;typeof e==="function"&&(e=
+e(),m[n]=e);m=e}e=a[++f];n=h+1;typeof e==="number"&&e<0&&(n-=e,e=a[++f]);for(;h<n;h++){let p=g[h];m?c(d,h,l,m,p):b(d,h,l,p)}}return a[Jc]=d};function Pc(a,b,c,d){var e=c.h;a[b]=d?(f,g,h)=>e(f,g,h,d):e}function Qc(a,b,c,d,e){var f=c.h,g,h;a[b]=(m,n,l)=>f(m,n,l,h||=Oc(d).K,g||=Rc(d),e)}
+function Rc(a){var b=a[Kc];if(b!=null)return b;var c=Oc(a);b=c.Y?(d,e)=>Mc(d,e,c):(d,e)=>{a:{Ac();try{for(;yc(e)&&e.i!=4;){let G=e.l,C=c[G];if(C==null){let D=c.extensions;if(D){let H=D[G];if(H){let x=Sc(H);x!=null&&(C=c[G]=x)}}}if(C==null||!C(e,d,G)){var f=e;let D=f.m;zc(f);if(f.N)var g=void 0;else{let H=f.h.h-D;f.h.h=D;c:{var h=f.h;f=H;if(f==0){g=qa||=new u(null,k);break c}if(f<0)throw Error();let x=h.h;var m=x+f;if(m>h.i)throw Error();h.h=m;if(h.J&&h.o)var n=h.l.subarray(x,x+f);else{var l=h.l;m=
+x;f=x+f;n=m===f?new Uint8Array(0):l.slice(m,f)}f=n;g=f.length==0?qa||=new u(null,k):new u(f,k)}}f=void 0;m=d;var p=G,r=g;r&&((f=m[xa]??(m[xa]=new wb))[p]??(f[p]=[])).push(r)}}let t=tb(d);t&&(t.h=c.T[Lc]);var q=!0;break a}catch(t){if(t instanceof RangeError)throw new SyntaxError;throw t;}finally{V>0&&V--}q=void 0}return q};a[Kc]=b;a[Lc]=Tc.bind(a);return b}
+function Tc(a,b,c,d){var e=this[Jc],f=this[Kc],g=Gb(void 0,e.K),h=tb(a);if(h){var m=!1,n=e.extensions;if(n){e=(l,p,r)=>{if(r.length!==0)if(n[p])for(let q of r){l=tc(q);try{m=!0,f(g,l)}finally{xc(l)}}else d?.(a,p,r)};if(b==null)ub(h,e);else if(h!=null){let l=h[b];l&&e(h,b,l)}if(m){let l=a[w]|0;if(l&2&&l&2048&&!c?.da)throw Error();let p=l&128?Ia:void 0,r=(q,t)=>{if(O(a,q,p)!=null)switch(c?.ca){case 1:return;default:throw Error();}t!=null&&(l=P(a,l,q,t,p));delete h[q]};b==null?Ha(g,g[w]|0,(q,t)=>{r(q,
+t)}):r(b,O(g,b,p))}}}}function Sc(a){a=Array.isArray(a)?a[0]instanceof Gc?a:[Ic,a]:[a,void 0];var b=a[0].h;if(a=a[1]){let c=Rc(a),d=Oc(a).K;return(e,f,g)=>b(e,f,g,d,c)}return b};function Uc(a){return b=>{if(b==null||b=="")b=new a;else{b=JSON.parse(b);if(!Array.isArray(b))throw Error("dnarr");b=new a(Da(b))}return b}};function Vc(a){var b=new Wc,c=Yb(b);for(let d in a){let e=a[d];e!==void 0&&c.set(d,Xc(e))}return b}function Yc(a){var b={};Yb(a).forEach(function(c,d){b[d]=Zc(c)});return b}var Wc=class extends W{},$c=Uc(Wc);
+function Xc(a){var b=new Zb;switch(ba(a)){case "string":if(a!=null&&typeof a!=="string")throw Error();return $b(b,3,S,a);case "number":if(a!=null&&typeof a!=="number")throw Error(`Value of float/double field must be a number, found ${typeof a}: ${a}`);return $b(b,2,S,a);case "boolean":if(a!=null&&typeof a!=="boolean")throw Error(`Expected boolean but got ${ba(a)}: ${a}`);return $b(b,4,S,a);case "null":return $b(b,1,S,Za(0));case "array":let e=new ad;for(let f=0;f<a.length;f++){var c=e,d=Xc(a[f]);
+oc(c,1,Zb,d)}return nc(b,6,e);case "object":return a=Vc(a),nc(b,5,a);default:throw Error("Unexpected struct type.");}}
+function Zc(a){switch(cc(a.j,S)){case 1:return null;case 2:var b=R(a,S,2);return N(a,b,void 0,Wa)??0;case 3:return b=R(a,S,3),fb(N(a,b))??"";case 4:return b=R(a,S,4),a=N(a,b),(a==null||typeof a==="boolean"?a:typeof a==="number"?!!a:void 0)??!1;case 5:return Yc(ic(a,Wc,R(a,S,5)));case 6:b=ic(a,ad,R(a,S,6));a=[];b=kc(b,Zb,1);for(let c=0;c<b.length;c++)a[c]=Zc(b[c]);return a;default:throw Error("Unexpected struct type");}}var Zb=class extends W{},ad=class extends W{},S=[1,2,3,4,5,6];var bd=class extends W{getAppState(){return ic(this,Wc,1)}setAppState(a){return mc(this,1,a)}};function cd(a){var b=Number;var c=N(a,1,void 0,eb),d=typeof c;if(c!=null)if(d==="bigint")c=String(Ta(64,c));else if(Ya(c))if(d==="string")d=Va(Number(c)),K(d)?c=String(d):(d=c.indexOf("."),d!==-1&&(c=c.substring(0,d)),d=c.length,(c[0]==="-"?d<20||d===20&&c<="-9223372036854775808":d<19||d===19&&c<="9223372036854775807")||(c.length<16?Qa(Number(c)):(c=BigInt(c),I=Number(c&BigInt(4294967295))>>>0,J=Number(c>>BigInt(32)&BigInt(4294967295))),c=Sa()));else{if(c=Va(c),!K(c)){Qa(c);d=I;var e=J;if(c=e&2147483648)d=
+~d+1>>>0,e=~e>>>0,d==0&&(e=e+1>>>0);let f=e*4294967296+(d>>>0);d=Number.isSafeInteger(f)?f:Ra(d,e);c=typeof d==="number"?c?-d:d:c?"-"+d:d}}else c=void 0;b=b(c??"0");a=bb(N(a,2))??0;return new Date(b*1E3+a/1E6)}function dd(a,b){Number.isFinite(b)||(b=0);var c=Math.floor(b/1E3);if(c!=null)a:{if(!Ya(c))throw ta("int64");switch(typeof c){case "string":c=db(c);break a;case "bigint":c=F(Ta(64,c));break a;default:c=F(K(c)?c:cb(c))}}a=Q(a,1,c,"0");Q(a,2,ab((b%1E3+1E3)%1E3*1E6),0)}var hc=class extends W{};var ed=class extends W{i(){return $a(N(this,1))??0}};var fd=class extends W{};function gd(a){return kc(a,fd,4)}function hd(a){var b=new id;Qb(b);var c=b.j,d=c[w]|0;if(a==null)P(c,d,4);else{var e=a===y?7:a[w]|0,f=e,g=Vb(e),h=g||Object.isFrozen(a),m=!0,n=!0;for(let p=0;p<a.length;p++){var l=a[p];g||(l=B(l),m&&=!l,n&&=l)}g||(e=m?13:5,e=n?e&-4097:e|4096);h&&e===f||(a=[...a],f=0,e=Wb(e,d));e!==f&&(a[w]=e);d=P(c,d,4,a);2&e||!(4096&e||16&e)||M(c,d)}return b}var id=class extends W{setScheduledNotificationConfigs(a,b){oc(this,4,fd,b,a,1);return this}},jd=Uc(id),kd=[1,2,3,6];function ld(a){a=a.j;var b=a[w]|0,c=Xb(a,1),d=c===y?7:c[w]|0,e=Ea(d,b),f=!(4&e);if(f){let g=0,h=0;for(;g<c.length;g++){let m=$a(c[g]);m!=null&&(c[h++]=m)}h<g&&(c.length=h);e=(e|4)&-513;e&=-1025;e&=-4097}e!==d&&(c[w]=e,2&e&&Object.freeze(c));return c=Ub(c,e,a,b,1,4,f,!1)}var md=class extends W{};var nd=function(a,b){return(c,d)=>{a:{let f={M:!0};d&&Object.assign(f,d);c=tc(c,void 0,void 0,f);try{let g=new a,h=g.j;Rc(b)(h,c);var e=g;break a}catch(g){if(g instanceof RangeError)throw new SyntaxError;throw g;}finally{xc(c)}e=void 0}return e}}(md,[0,new Gc(function(a,b,c){if(a.i!==0&&a.i!==2)return!1;var d=b[w]|0;if(d&2)throw Error();var e=d&128?Ia:void 0,f=Xb(b,c,e),g=f===y?7:f[w]|0,h=Ea(g,d);if(2&h||Vb(h)||16&h)h===g||Vb(h)||(f[w]=h),f=[...f],g=0,h=Wb(h,d),P(b,d,c,f,e);h&=-13;h!==g&&(f[w]=h);
+b=f;if(a.i==2)for(c=U(a.h)>>>0,c=a.h.h+c;a.h.h<c;)b.push(U(a.h));else b.push(U(a.h));return!0},Ec)]);/*
+
+
+ Copyright (c) 2015-2018 Google, Inc., Netflix, Inc., Microsoft Corp. and contributors
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+     http://www.apache.org/licenses/LICENSE-2.0
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+*/
+var od=class extends Error{constructor(a){super(a?`${a.length} errors occurred during unsubscription:
+${a.map((b,c)=>`${c+1}) ${b.toString()}`).join("\n  ")}`:"");this.h=a;Object.setPrototypeOf(this,new.target.prototype);this.name="UnsubscriptionError"}};function pd(a,b){a&&(b=a.indexOf(b),0<=b&&a.splice(b,1))};function X(a){return typeof a==="function"};var Y=class{constructor(a){this.D=a;this.closed=!1;this.l=this.i=null}unsubscribe(){if(!this.closed){this.closed=!0;let c=this.i;if(Array.isArray(c))for(var a of c)a.remove(this);else c?.remove(this);a=this.D;if(X(a))try{a()}catch(e){var b=e instanceof od?e.h:[e]}let d=this.l;if(d){this.l=null;for(let e of d)try{X(e)?e():e.unsubscribe()}catch(f){b=b??[],f instanceof od?b=[...b,...f.h]:b.push(f)}}if(b)throw new od(b);}}add(a){if(a&&a!==this)if(this.closed)X(a)?a():a.unsubscribe();else{if(a instanceof
+Y){if(a.closed||a.H(this))return;a.m(this)}(this.l=this.l??[]).push(a)}}H(a){var b=this.i;return b===a||Array.isArray(b)&&b.includes(a)}m(a){var b=this.i;this.i=Array.isArray(b)?(b.push(a),b):b?[b,a]:a}C(a){var b=this.i;b===a?this.i=null:Array.isArray(b)&&pd(b,a)}remove(a){var b=this.l;b&&pd(b,a);a instanceof Y&&a.C(this)}},qd=Y,rd=new Y;rd.closed=!0;qd.h=rd;function sd(a){return a instanceof Y||a&&"closed"in a&&X(a.remove)&&X(a.add)&&X(a.unsubscribe)};function td(a){setTimeout(()=>{throw a;})};var wd=class extends Y{static create(a,b,c){return new ud(a,b,c)}constructor(){super();this.h=!1;this.destination=new vd({next:void 0});sd()&&(void 0).add(this)}next(a){this.h||this.I(a)}error(a){this.h||(this.h=!0,this.B(a))}complete(){this.h||(this.h=!0,this.o())}unsubscribe(){this.closed||(this.h=!0,super.unsubscribe())}I(a){this.destination.next(a)}B(a){this.destination.error(a);this.unsubscribe()}o(){this.destination.complete();this.unsubscribe()}};
+class vd{constructor(a){this.h=a}next(a){var b=this.h;if(b.next)try{b.next(a)}catch(c){td(c)}}error(a){var b=this.h;if(b.error)try{b.error(a)}catch(c){td(c)}else td(a)}complete(){var a=this.h;if(a.complete)try{a.complete()}catch(b){td(b)}}}var ud=class extends wd{constructor(a,b,c){super();var d;X(a)||!a?d={next:a??void 0,error:b??void 0,complete:c??void 0}:d=a;this.destination=new vd(d)}};var xd=typeof Symbol==="function"&&Symbol.observable||"@@observable";var yd=class{constructor(a){a&&(this.i=a)}subscribe(a,b,c){a=a&&a instanceof wd||a&&X(a.next)&&X(a.error)&&X(a.complete)&&sd(a)?a:new ud(a,b,c);b=this.aa;c=this.source;a.add(b?b.call(a,c):c?this.i(a):this.o(a));return a}o(a){try{return this.i(a)}catch(b){a.error(b)}}forEach(a,b){b=b??void 0??Promise;return new b((c,d)=>{var e=this.subscribe(f=>{try{a(f)}catch(g){d(g),e?.unsubscribe()}},d,c)})}i(a){return this.source?.subscribe(a)}[xd](){return this}};yd.create=a=>new yd(a);var zd=class extends Error{constructor(){super("object unsubscribed");Object.setPrototypeOf(this,new.target.prototype);this.name="ObjectUnsubscribedError"}};var Ad=class extends yd{constructor(){super();this.m=[];this.B=this.h=this.closed=!1;this.D=null}l(){if(this.closed)throw new zd;}next(a){this.l();if(!this.h){let b=this.m.slice();for(let c of b)c.next(a)}}error(a){this.l();if(!this.h){this.B=this.h=!0;this.D=a;let b=this.m;for(;b.length;)b.shift().error(a)}}complete(){this.l();if(!this.h){this.h=!0;let a=this.m;for(;a.length;)a.shift().complete()}}unsubscribe(){this.h=this.closed=!0;this.m=null}o(a){this.l();return super.o(a)}i(a){this.l();this.I(a);
+return this.C(a)}C(a){var b=this.h,c=this.m;return this.B||b?Y.h:(c.push(a),new Y(()=>pd(this.m,a)))}I(a){var b=this.D,c=this.h;this.B?a.error(b):c&&a.complete()}};Ad.create=(a,b)=>new Bd(a,b);var Bd=class extends Ad{constructor(a,b){super();this.destination=a;this.source=b}next(a){this.destination?.next?.(a)}error(a){this.destination?.error?.(a)}complete(){this.destination?.complete?.()}i(a){return this.source?.subscribe(a)??Y.h}};function Cd(a){var b=a.H;a=a.buffer;b<Infinity&&b<a.length&&a.splice(0,a.length-b)}var Dd=class extends Ad{constructor(){super();this.H=1;this.buffer=[];this.H=1}next(a){var b=this.buffer;this.h||b.push(a);Cd(this);super.next(a)}i(a){this.l();Cd(this);var b=this.C(a),c=this.buffer.slice();for(let d=0;d<c.length&&!a.closed;d+=1)a.next(c[d]);this.I(a);return b}};function Ed(a,b,c,d){var e=setTimeout(()=>{d(Error(`callModel timed out after 60000ms for request ID: ${b}`));a.F.delete(b)},6E4);a.F.set(b,{V:c,Z:e})}
+function Fd(a){window.addEventListener("message",b=>{if(b.source===window.parent){var c=b.data;b=c.action;c=c.payload;if(b==="ThemeChange"&&c&&(c==="light"||c==="dark"))a.P.next(c);else if(b==="AppDataChange"&&c)a.S?.next(c);else if(b==="RenderingModeChange"&&c&&(c==="embedded"||c==="standalone"))a.O.next(c);else if(b==="CallModelResponse"&&c){a:{try{var d=JSON.parse(c);if(!d||typeof d!=="object"){var e=null;break a}let f=d.requestId,g=d.text,h=d.isFinal;e=f&&typeof f==="string"&&g&&typeof g==="string"&&
+typeof h==="boolean"?{requestId:f,text:g,isFinal:h}:null;break a}catch(f){e=null;break a}e=void 0}if(e){if(d=a.F.get(e.requestId))d.V(e.text,e.isFinal),e.isFinal&&(clearTimeout(d.Z),a.F.delete(e.requestId))}else console.error("Failed to parse call model response: ",c)}}})}
+function Z(a,b,c,d,e,f){return new Promise((g,h)=>{var m=setTimeout(()=>{window.removeEventListener("message",n);h(Error(e))},d),n=l=>{l.source===window.parent&&l.data.action===c&&(clearTimeout(m),window.removeEventListener("message",n),g(l.data.payload||null))};window.addEventListener("message",n);a.sendMessage(b,f)})}
+function Gd(a){var b=jd(a);a={};var c=ic(b,bd,R(b,kd,3))?.getAppState();c&&(a.appState=Yc(c));(b=gd(b))&&b.length>0&&(a.scheduledNotificationConfigs=b.map(d=>{var e={type:Hd($a(N(d,3))??0)};bb(N(d,1))!=null&&(e.intervalMinutes=bb(N(d,1))??0);Tb(d)&&(e.createTime=cd(fc(d)));return e}));return a}
+function Id(a){return(a=gd(jd(a)))&&a.length!==0?{scheduledNotificationConfigs:a.map(b=>{var c={type:Hd($a(N(b,3))??0)};bb(N(b,1))!=null&&(c.intervalMinutes=bb(N(b,1))??0);Tb(b)&&(c.createTime=cd(fc(b)));c.schedulingStatus=Jd(ic(b,ed,4)?.i());return c})}:{scheduledNotificationConfigs:[]}}
+class Kd{constructor(){this.A=Ld();this.API_VERSION="1.0";this.P=new Ad;this.O=new Dd;this.F=new Map;this.X=(b,c,d,e,f)=>{this.notifyAppError(typeof b==="string"?b:f?.message||"Script execution error");return!0};this.W=b=>{b=b.reason;this.notifyAppError(typeof b==="string"?b:b?.message||"Unhandled promise rejection")};this.clientType="notebooklm-web";Fd(this);var a=ld(this.A);a.includes(10)&&(window.onerror=this.X,window.addEventListener("unhandledrejection",this.W));a.includes(6)&&a.includes(2)&&
+(this.openArtifactCustomizationDialogWithInitialPrompt=b=>{b=JSON.stringify(b);this.sendMessage("OpenArtifactCustomizationDialogWithInitialPrompt",b)});a.includes(7)&&(this.updateAppData=async(b,c)=>{try{this.sendMessage("UpdateAppData",JSON.stringify({appData:b,etag:c}))}catch(d){throw Error(`Failed to update app data: ${d}`);}});if(a.includes(8)){let b=new Ad;this.addAppDataListener=c=>{b.subscribe(c)};this.S=b}a.includes(3)&&(this.askQuestion=b=>{this.sendMessage("AskQuestion",b)});a.includes(25)&&
+(this.dispatchStreamzEvent=b=>{this.sendMessage("DispatchStreamzEvent",JSON.stringify(b))});a.includes(9)&&(this.setScheduledNotificationConfigs=async b=>{try{let c=b.map(e=>{var f=new fd;f=Q(f,3,Za(Md(e.type)),0);e.intervalMinutes!=null&&Sb(f,1,ab(e.intervalMinutes));if(e.schedulingStatus!=null){var g=new ed;g=Q(g,1,Za(Nd(e.schedulingStatus)),0);mc(f,4,g)}e.createTime!=null&&(g=new hc,dd(g,e.createTime.getTime()),mc(f,2,g));return f}),d=Fc(hd(c));this.sendMessage("SetScheduledNotificationConfigs",
+d)}catch(c){throw c instanceof Error?c:Error(`Error serializing configs: ${c}`);}},this.getArtifactUserState=async()=>{var b=await Z(this,"GetArtifactUserState","GetArtifactUserStateResponse",5E3,"getArtifactUserState timed out after 5000ms");if(b)try{return Gd(b)}catch(c){throw c instanceof Error?c:Error(String(c));}return null});a.includes(11)&&(this.updateScheduledNotificationConfig=async b=>{try{var c=new fd;var d=Q(c,3,Za(Md(b.type)),0);b.intervalMinutes!=null&&Sb(d,1,ab(b.intervalMinutes));
+if(b.schedulingStatus!=null){var e=new ed;var f=Q(e,1,Za(Nd(b.schedulingStatus)),0);mc(d,4,f)}if(b.createTime!=null){let h=new hc;dd(h,b.createTime.getTime());mc(d,2,h)}let g=Fc(d);this.sendMessage("UpdateScheduledNotificationConfig",g)}catch(g){throw g instanceof Error?g:Error(`Error serializing config: ${g}`);}},this.listScheduledNotificationConfigs=async b=>{if(b=await Z(this,"ListScheduledNotificationConfigs","ListScheduledNotificationConfigsResponse",5E3,"listScheduledNotificationConfigs timed out after 5000ms",
+b))try{return Id(b).scheduledNotificationConfigs??[]}catch(c){throw c instanceof Error?c:Error(String(c));}return[]});a.includes(12)&&(this.getSessionIntent=()=>Z(this,"GetSessionIntent","GetSessionIntentResponse",5E3,"getSessionIntent timed out after 5000ms"));a.includes(13)&&(this.checkNotificationPreference=async b=>{if(b==="unspecified")throw Error("Cannot check notification preference for UNKNOWN notification type.");return await Z(this,"CheckNotificationPreference","CheckNotificationPreferenceResponse",
+15E3,"checkNotificationPreference timed out after 15000ms",b)==="NOTIFICATION_ENABLED"},this.getNotificationPreferenceStatus=async b=>{if(b==="unspecified")throw Error("Cannot get notification preference status for UNKNOWN notification type.");return await Z(this,"GetNotificationPreferenceStatus","GetNotificationPreferenceStatusResponse",15E3,"getNotificationPreferenceStatus timed out after 15000ms",b)==="NOTIFICATION_ENABLED"});a.includes(14)&&(this.callModel=async(b,c)=>new Promise((d,e)=>{var f=
+crypto?.randomUUID?.()||Math.random().toString(36).substring(2),g=0;Ed(this,f,(h,m)=>{if(c&&h){let n=h.slice(g);g=h.length;n&&c(n)}m&&d(h||"")},e);this.sendMessage("CallModel",JSON.stringify({prompt:b,requestId:f}))}))}sendMessage(a,b){window.parent.postMessage({version:this.API_VERSION,action:a,payload:b??""},"*")}hasCapability(a){return a!==0&&ld(this.A).includes(a)}addThemeChangeListener(a,b){this.P.subscribe(a);b&&this.sendMessage("GetTheme","")}addRenderingModeChangeListener(a){this.O.subscribe(a)}notifyAppReady(){ld(this.A).includes(4)&&
+this.sendMessage("AppReady")}notifyAppError(a){ld(this.A).includes(10)&&this.sendMessage("AppError",a)}setAppState(a){try{let b=Vc(a);if(!b)return Promise.reject(Error("Failed to convert state to Struct"));let c=Fc(b);this.sendMessage("SetAppState",c);return Promise.resolve()}catch(b){return Promise.reject(b instanceof Error?b:Error(`Error serializing app state: ${b}`))}}async getAppState(){var a=await Z(this,"GetAppState","GetAppStateResponse",5E3,"getAppState timed out after 5000ms");if(a)try{return Yc($c(a))}catch(b){throw b instanceof
+Error?b:Error(String(b));}return null}triggerFileDownload(a){a=JSON.stringify(a);this.sendMessage("TriggerFileDownload",a)}dispatchLogEvent(a){ld(this.A).includes(1)&&this.sendMessage("DispatchLogEvent",a)}}function Md(a){switch(a){case "study_reminder":return 1;case "fsrs_review_reminder":return 2;default:return 0}}function Hd(a){switch(a){case 1:return"study_reminder";case 2:return"fsrs_review_reminder";default:return"unspecified"}}
+function Jd(a){switch(a){case 1:return"pending";case 2:return"scheduled";case 3:return"failed";case 4:return"disabled";default:return"unspecified"}}function Nd(a){switch(a){case "pending":return 1;case "scheduled":return 2;case "failed":return 3;case "disabled":return 4;default:return 0}}
+function Ld(){var a=document.querySelector("script[data-api-capabilities]")?.getAttribute("data-api-capabilities");if(!a)return new md;try{let b=atob(a),c=new Uint8Array(b.length);for(a=0;a<b.length;a++)c[a]=b.charCodeAt(a);if(c)return nd(c)}catch(b){console.error("Failed to decode client capabilities:",b)}return new md};window.notebookAppApi=new class extends Kd{};}).call(this);</script>
+  <script>
+    const PARTS_CATALOG = {
+      'FL-200H': { code: `FL-200H`, name: `Main filter H13 HEPA + activated carbon`, models: `AQ-200 Lite, AQ-200`, price: 39, consumable: true },
+      'FL-200H-2': { code: `FL-200H-2`, name: `Value pack: 2 × FL-200H`, models: `AQ-200 Lite, AQ-200`, price: 70, consumable: true },
+      'FL-200P': { code: `FL-200P`, name: `Main filter H13 HEPA + activated carbon (large)`, models: `AQ-200 Pro`, price: 59, consumable: true },
+      'PF-200': { code: `PF-200`, name: `Washable pre-filter`, models: `All models`, price: 12, consumable: true },
+      'SN-PM25': { code: `SN-PM25`, name: `Laser PM2.5 sensor module`, models: `All models`, price: 24, consumable: false },
+      'SN-VOC': { code: `SN-VOC`, name: `VOC sensor module`, models: `AQ-200 Pro`, price: 29, consumable: false },
+      'UV-200': { code: `UV-200`, name: `UV-C lamp module`, models: `AQ-200 Pro`, price: 35, consumable: true },
+      'FM-200': { code: `FM-200`, name: `Fan motor assembly`, models: `AQ-200 Lite, AQ-200`, price: 68, consumable: false },
+      'FM-200P': { code: `FM-200P`, name: `Fan motor assembly (high flow)`, models: `AQ-200 Pro`, price: 82, consumable: false },
+      'CP-200': { code: `CP-200`, name: `Control panel board`, models: `All models`, price: 45, consumable: false },
+      'PSU-200': { code: `PSU-200`, name: `Power supply cable / adapter`, models: `All models`, price: 22, consumable: false },
+      'RC-200': { code: `RC-200`, name: `Infrared remote control`, models: `AQ-200, AQ-200 Pro`, price: 15, consumable: false }
+    };
+
+    const ERROR_CODES = [
+      {
+        code: `E01`,
+        meaning: `Filter not detected`,
+        cause: `Main filter is missing or not seated correctly.`,
+        steps: [
+          `Unplug the purifier before opening any cover.`,
+          `Open the back cover and push the main filter in until it clicks into place.`,
+          `Close the back cover firmly, plug the unit back in, and restart.`
+        ],
+        models: `All models`,
+        modelKeys: [`lite`, `std`, `pro`],
+        parts: [],
+        serviceNote: `No replacement parts required unless the filter itself is damaged.`,
+        safety: `Safety reminder: Always unplug the purifier before opening any cover.`
+      },
+      {
+        code: `E02`,
+        meaning: `Filter life expired`,
+        cause: `Main filter has reached its rated service life (about 2,160 operating hours).`,
+        steps: [
+          `Unplug the purifier and open the filter compartment.`,
+          `Install a new main filter (FL-200H for Lite/AQ-200, FL-200P for Pro) with all plastic packaging removed.`,
+          `Close the cover, plug the unit in, and press and hold Filter Reset for 3 seconds to reset the filter life counter.`
+        ],
+        models: `All models`,
+        modelKeys: [`lite`, `std`, `pro`],
+        parts: [`FL-200H`, `FL-200H-2`, `FL-200P`],
+        serviceNote: `Consumable item: main filters are not covered by the warranty.`,
+        safety: ``
+      },
+      {
+        code: `E03`,
+        meaning: `Airflow blocked (packaging)`,
+        cause: `The plastic shipping bag was not removed from a new filter. This code appears within the first 30 minutes of use.`,
+        steps: [
+          `Unplug the purifier immediately.`,
+          `Open the back cover, remove the main filter, and take off all plastic packaging.`,
+          `Reinstall the filter until it clicks, close the cover, and restart.`
+        ],
+        models: `All models`,
+        modelKeys: [`lite`, `std`, `pro`],
+        parts: [],
+        serviceNote: `No parts required.`,
+        safety: `Unplug before opening any cover.`
+      },
+      {
+        code: `E04`,
+        meaning: `Fan motor stalled`,
+        cause: `A foreign object is obstructing the fan, or the fan motor has failed.`,
+        steps: [
+          `Unplug the purifier from the wall outlet.`,
+          `Inspect the outlet grille and remove any foreign object safely.`,
+          `Restart the unit. If E04 returns, contact an authorized service center to replace the fan motor assembly.`
+        ],
+        models: `All models`,
+        modelKeys: [`lite`, `std`, `pro`],
+        parts: [`FM-200`, `FM-200P`],
+        serviceNote: `Warranty covers motor replacement and labor ($0 in warranty). Out-of-warranty service labor is $25 flat per visit.`,
+        safety: `Never insert fingers or tools into the grille while plugged in.`
+      },
+      {
+        code: `E05`,
+        meaning: `Fan speed abnormal`,
+        cause: `Dust build-up on the fan or unstable incoming electrical power.`,
+        steps: [
+          `Unplug the unit and remove the washable pre-filter (PF-200).`,
+          `Vacuum or rinse the pre-filter (let dry 24 h before reinstalling) and wipe exterior air inlets with a dry soft cloth.`,
+          `Plug the unit directly into a grounded wall outlet (avoid shared extension cords). If E05 persists, contact service.`
+        ],
+        models: `All models`,
+        modelKeys: [`lite`, `std`, `pro`],
+        parts: [`PF-200`, `PSU-200`, `FM-200`, `FM-200P`],
+        serviceNote: `If a non-consumable motor or power adapter fails under warranty, parts and labor are $0. Out-of-warranty service labor is $25 flat per visit; pre-filter PF-200 ($12) is a consumable.`,
+        safety: `Make sure the washed pre-filter is completely dry (24 hours) before reinstalling.`
+      },
+      {
+        code: `E06`,
+        meaning: `PM2.5 sensor dirty`,
+        cause: `Dust or humidity residue on the laser PM2.5 sensor lens, often causing readings to stay stuck high.`,
+        steps: [
+          `Unplug the purifier and locate the PM2.5 sensor cover on the side of the unit.`,
+          `Open the sensor cover and gently clean the lens with a dry cotton swab (do not use solvents).`,
+          `Close the cover, plug the unit in, and allow 10 minutes for sensor recalibration.`
+        ],
+        models: `All models`,
+        modelKeys: [`lite`, `std`, `pro`],
+        parts: [],
+        serviceNote: `No parts required. Note: High humidity seasons increase E06 occurrences; cleaning the lens every 2 months prevents buildup.`,
+        safety: `Use only a dry cotton swab—do not apply water or cleaning solvents to the sensor lens.`
+      },
+      {
+        code: `E07`,
+        meaning: `PM2.5 sensor failure`,
+        cause: `Laser PM2.5 sensor module is not responding.`,
+        steps: [
+          `Restart the purifier (hold Power for 3 seconds to turn off, unplug briefly, then restart).`,
+          `If E07 persists after restarting, contact an authorized service center to replace the laser PM2.5 sensor module (SN-PM25).`
+        ],
+        models: `All models`,
+        modelKeys: [`lite`, `std`, `pro`],
+        parts: [`SN-PM25`],
+        serviceNote: `Parts and labor are $0 if covered under warranty (2 years Lite/AQ-200, 3 years Pro). Out-of-warranty labor is $25 flat per visit.`,
+        safety: ``
+      },
+      {
+        code: `E08`,
+        meaning: `VOC sensor failure`,
+        cause: `VOC gas sensor module is not responding.`,
+        steps: [
+          `Restart the AQ-200 Pro unit.`,
+          `If E08 persists, contact an authorized service center to replace the VOC sensor module (SN-VOC).`
+        ],
+        models: `AQ-200 Pro only`,
+        modelKeys: [`pro`],
+        parts: [`SN-VOC`],
+        serviceNote: `Parts and labor are $0 within the 3-year AQ-200 Pro warranty. Out-of-warranty labor is $25 flat per visit.`,
+        safety: ``
+      },
+      {
+        code: `E09`,
+        meaning: `Front cover open`,
+        cause: `The safety interlock switch detects that the front cover is not fully latched.`,
+        steps: [
+          `Push the front cover firmly closed until it clicks into place.`,
+          `Note that the fan will not run—and on Pro models the UV-C lamp stays off—while the front cover is open.`
+        ],
+        models: `All models`,
+        modelKeys: [`lite`, `std`, `pro`],
+        parts: [],
+        serviceNote: `No parts required.`,
+        safety: `Safety interlock prevents fan and UV-C operation when open.`
+      },
+      {
+        code: `E10`,
+        meaning: `Over-temperature`,
+        cause: `Internal temperature exceeded 60 °C, usually due to a blocked air inlet or a nearby heat source.`,
+        steps: [
+          `The purifier shuts down automatically for protection. Unplug or verify it is off.`,
+          `Move the unit at least 1 m away from heaters and keep at least 30 cm clearance on all sides.`,
+          `Clear any dust or obstructions from the air inlets, wait 30 minutes for it to cool, and restart.`
+        ],
+        models: `All models`,
+        modelKeys: [`lite`, `std`, `pro`],
+        parts: [],
+        serviceNote: `No parts required.`,
+        safety: `Maintain 30 cm clearance on all sides and at least 1 m distance from heaters.`
+      },
+      {
+        code: `E11`,
+        meaning: `Wi-Fi connection failed`,
+        cause: `Incorrect Wi-Fi password, attempting to connect to a 5 GHz-only network, or router is out of range.`,
+        steps: [
+          `Confirm your phone and router are using a 2.4 GHz Wi-Fi network (5 GHz is not supported).`,
+          `Hold the Wi-Fi button for 5 seconds to reset network settings.`,
+          `Press and hold Wi-Fi + Timer for 5 seconds until the Wi-Fi icon blinks, then pair again in the AeroPure Home app.`
+        ],
+        models: `AQ-200 & AQ-200 Pro`,
+        modelKeys: [`std`, `pro`],
+        parts: [],
+        serviceNote: `No parts required. Note: Firmware 2.3.1 (released 28 March 2026) resolved Wi-Fi reconnect issues introduced in firmware 2.3—ensure your app updates firmware once connected.`,
+        safety: ``
+      },
+      {
+        code: `E12`,
+        meaning: `Firmware update failed`,
+        cause: `Power or network connection was interrupted during a firmware update.`,
+        steps: [
+          `Keep the purifier plugged in and retry the firmware update from the AeroPure Home app.`,
+          `If the unit remains unresponsive, press and hold Power + Mode together for 10 seconds to trigger firmware recovery.`
+        ],
+        models: `AQ-200 & AQ-200 Pro`,
+        modelKeys: [`std`, `pro`],
+        parts: [],
+        serviceNote: `No parts required.`,
+        safety: `Do not unplug during an active firmware recovery.`
+      },
+      {
+        code: `E13`,
+        meaning: `UV-C lamp fault`,
+        cause: `The UV-C lamp module has reached end of life (rated 8,000 operating hours / 12 months) or is disconnected.`,
+        steps: [
+          `Unplug the AQ-200 Pro before opening the front cover.`,
+          `Check the UV-200 module connection or replace it with a new UV-200 lamp module.`,
+          `Note: The purifier continues normal HEPA/carbon air filtration even while the UV-C lamp is inactive.`
+        ],
+        models: `AQ-200 Pro only`,
+        modelKeys: [`pro`],
+        parts: [`UV-200`],
+        serviceNote: `UV-C lamps are consumables and are not covered by the warranty.`,
+        safety: `Always unplug before opening the cover to service the UV-200 module.`
+      },
+      {
+        code: `E14`,
+        meaning: `Input voltage abnormal`,
+        cause: `Incoming voltage is outside the 100–240 V AC (50/60 Hz) range, or power is supplied through an unstable extension cord.`,
+        steps: [
+          `Unplug the purifier from extension cords, multi-plug strips, or voltage converters.`,
+          `Plug the power cable directly into a grounded 100–240 V wall outlet.`,
+          `If the fault continues with a known-good wall outlet, test or replace the power supply cable / adapter (PSU-200).`
+        ],
+        models: `All models`,
+        modelKeys: [`lite`, `std`, `pro`],
+        parts: [`PSU-200`],
+        serviceNote: `Do not use voltage converters. Power supply adapter replacement is $0 under warranty ($25 flat labor out of warranty).`,
+        safety: `Plug directly into a grounded wall outlet; do not use voltage converters.`
+      },
+      {
+        code: `E15`,
+        meaning: `Control panel not responding`,
+        cause: `Moisture or dirt on the touch panel, or an internal control panel board fault.`,
+        steps: [
+          `Wipe the control panel dry with a soft, dry cloth (no solvents).`,
+          `Unplug the purifier for 1 minute, then plug it back in and restart.`,
+          `If the panel still does not respond, contact an authorized service center to replace the control panel board (CP-200).`
+        ],
+        models: `All models`,
+        modelKeys: [`lite`, `std`, `pro`],
+        parts: [`CP-200`],
+        serviceNote: `Parts and labor are $0 in warranty; out-of-warranty service labor is $25 flat per visit.`,
+        safety: `Ensure the unit is not placed in bathrooms or rooms above 80% relative humidity.`
+      }
+    ];
+
+    const SYMPTOMS = [
+      {
+        id: `sym-smell`,
+        label: `Unusual smell after replacing filter`,
+        meaning: `New activated carbon break-in (or unremoved plastic bag)`,
+        cause: `A fresh activated carbon layer normally emits a mild scent for the first 1–2 days. If a chemical or stale smell persists beyond 2 days, packaging may still be on the filter.`,
+        steps: [
+          `Allow 1–2 days of normal operation for the new activated carbon layer to air out.`,
+          `If the smell persists after 2 days, unplug the purifier, open the back cover, and verify that all plastic bags were completely removed from the filter.`
+        ],
+        models: `All models`,
+        parts: []
+      },
+      {
+        id: `sym-loud`,
+        label: `Unit is loud on Auto mode`,
+        meaning: `High fan speed due to poor air quality or clogged pre-filter`,
+        cause: `Auto mode ramps up fan speed (up to 50–55 dB max) when the PM2.5 sensor detects elevated particles, or airflow restriction from a dirty pre-filter makes the fan work harder.`,
+        steps: [
+          `Check the air-quality ring color or app readout—if air quality is poor, high speed is normal until air clears.`,
+          `Unplug the unit and inspect the washable pre-filter (PF-200). Vacuum or rinse it with water and dry completely (24 h) before reinstalling.`
+        ],
+        models: `All models`,
+        parts: [`PF-200`]
+      },
+      {
+        id: `sym-blue`,
+        label: `Ring always blue even when cooking`,
+        meaning: `Dirty or obstructed PM2.5 sensor lens`,
+        cause: `Dust buildup on the side PM2.5 sensor lens or blocked sensor air intake prevents accurate particle detection.`,
+        steps: [
+          `Unplug the purifier and ensure nothing is covering the side sensor vent.`,
+          `Open the sensor cover on the side and clean the lens gently with a dry cotton swab.`
+        ],
+        models: `All models`,
+        parts: []
+      },
+      {
+        id: `sym-offline`,
+        label: `App shows device offline`,
+        meaning: `Router changed, out of range, or 5 GHz-only network`,
+        cause: `The AeroPure AQ-200 and AQ-200 Pro only support 2.4 GHz Wi-Fi networks and will disconnect if router settings changed.`,
+        steps: [
+          `Follow the E11 recovery procedure: confirm a 2.4 GHz Wi-Fi network is active.`,
+          `Hold the Wi-Fi button for 5 seconds to reset networking, then hold Wi-Fi + Timer for 5 seconds to pair again in the AeroPure Home app.`
+        ],
+        models: `AQ-200 & AQ-200 Pro`,
+        parts: []
+      }
+    ];
+
+    const COMPARISON_ROWS = [
+      { label: `List price (USD)`, lite: `$149`, std: `$229`, pro: `$349`, diff: true },
+      { label: `CADR (smoke, m³/h)`, lite: `220`, std: `320`, pro: `450`, diff: true, cadrMax: 450 },
+      { label: `Recommended room size`, lite: `15–25 m²`, std: `25–38 m²`, pro: `38–55 m²`, diff: true },
+      { label: `Main filter (part no.)`, lite: `H13 HEPA + carbon (FL-200H)`, std: `H13 HEPA + carbon (FL-200H)`, pro: `H13 HEPA + carbon (FL-200P)`, diff: true },
+      { label: `UV-C sterilization lamp`, lite: `No`, std: `No`, pro: `Yes (UV-200)`, diff: true },
+      { label: `Sensors`, lite: `Laser PM2.5`, std: `Laser PM2.5`, pro: `Laser PM2.5 + VOC`, diff: true },
+      { label: `Noise (sleep / max)`, lite: `24 / 50 dB`, std: `22 / 52 dB`, pro: `20 / 55 dB`, diff: true },
+      { label: `Max power consumption`, lite: `28 W`, std: `38 W`, pro: `55 W`, diff: true },
+      { label: `Standby power`, lite: `< 0.5 W`, std: `< 0.5 W`, pro: `< 0.5 W`, diff: false },
+      { label: `Input voltage`, lite: `100–240 V AC, 50/60 Hz`, std: `100–240 V AC, 50/60 Hz`, pro: `100–240 V AC, 50/60 Hz`, diff: false },
+      { label: `Wi-Fi / app control`, lite: `No`, std: `Yes (2.4 GHz)`, pro: `Yes (2.4 GHz)`, diff: true },
+      { label: `Remote control`, lite: `No`, std: `Optional (RC-200, $15)`, pro: `Included`, diff: true },
+      { label: `Weight`, lite: `4.2 kg`, std: `5.6 kg`, pro: `7.8 kg`, diff: true },
+      { label: `Dimensions (W × D × H)`, lite: `24 × 24 × 45 cm`, std: `27 × 27 × 55 cm`, pro: `32 × 32 × 66 cm`, diff: true },
+      { label: `Warranty`, lite: `2 years`, std: `2 years`, pro: `3 years`, diff: true }
+    ];
+
+    const MAINTENANCE_TASKS = [
+      {
+        id: `maint-prefilter`,
+        interval: `Every 2 weeks`,
+        title: `Clean washable pre-filter (PF-200)`,
+        desc: `Vacuum or rinse with water; dry fully for 24 hours before reinstalling.`,
+        models: [`all`, `lite`, `pro`]
+      },
+      {
+        id: `maint-exterior`,
+        interval: `Every month`,
+        title: `Wipe exterior and air inlets`,
+        desc: `Wipe gently with a dry soft cloth. Do not use chemical solvents.`,
+        models: [`all`, `lite`, `pro`]
+      },
+      {
+        id: `maint-sensor`,
+        interval: `Every 2 months`,
+        title: `Clean PM2.5 sensor lens`,
+        desc: `Open the sensor cover on the side and clean the lens with a dry cotton swab.`,
+        models: [`all`, `lite`, `pro`]
+      },
+      {
+        id: `maint-mainfilter`,
+        interval: `Every 6 months (4 months with pets, smoke, or heavy cooking)`,
+        title: `Replace main H13 HEPA + carbon filter (FL-200H / FL-200P)`,
+        desc: `Remove all plastic packaging from the new filter, install until it clicks, then hold Filter Reset for 3 seconds.`,
+        models: [`all`, `lite`, `pro`]
+      },
+      {
+        id: `maint-uvc`,
+        interval: `Every 12 months (8,000 operating hours)`,
+        title: `Replace UV-C lamp module (UV-200) — AQ-200 Pro only`,
+        desc: `Unplug the AQ-200 Pro completely before opening the front cover and replacing the UV-200 lamp ($35).`,
+        models: [`all`, `pro`]
+      },
+      {
+        id: `maint-inspection`,
+        interval: `Every 24 months`,
+        title: `Fan and internal duct inspection`,
+        desc: `Authorized service center check ($25 flat labor fee applies outside warranty; $0 in warranty).`,
+        models: [`all`, `lite`, `pro`]
+      }
+    ];
+
+    const FAQS = [
+      {
+        id: `faq-1`,
+        category: `Care & Filters`,
+        q: `Can I wash the main HEPA filter?`,
+        a: `No. Only the pre-filter (PF-200) is washable. Washing the H13 HEPA / activated carbon main filter (FL-200H or FL-200P) destroys the filter media.`
+      },
+      {
+        id: `faq-2`,
+        category: `Operation`,
+        q: `Can I use the purifier in a bathroom?`,
+        a: `No. Do not use the purifier in bathrooms, where relative humidity exceeds 80%, or anywhere it could be splashed with water.`
+      },
+      {
+        id: `faq-3`,
+        category: `Operation`,
+        q: `Why is the air-quality ring red right after I turn it on?`,
+        a: `During the first 10 minutes after power-on, the laser PM2.5 sensor is calibrating (the ring blinks blue during calibration). If the ring stays red for more than 1 hour in a closed room, clean the PM2.5 sensor lens with a dry cotton swab.`
+      },
+      {
+        id: `faq-4`,
+        category: `Features`,
+        q: `Does the purifier remove viruses?`,
+        a: `The H13 HEPA filter captures 99.95% of particles at 0.3 microns in lab tests. AeroPure makes no medical claims.`
+      },
+      {
+        id: `faq-5`,
+        category: `Features`,
+        q: `Does the AQ-200 support 5 GHz Wi-Fi?`,
+        a: `No. Only 2.4 GHz Wi-Fi is supported on the AQ-200 and AQ-200 Pro. The AQ-200 Lite does not have Wi-Fi or app control.`
+      },
+      {
+        id: `faq-6`,
+        category: `Operation`,
+        q: `How do I turn on child lock?`,
+        a: `Press and hold the Lock (padlock) button for 3 seconds to turn child lock on. Hold it again for 3 seconds to unlock.`
+      },
+      {
+        id: `faq-7`,
+        category: `Care & Filters`,
+        q: `How long does a main filter last?`,
+        a: `About 6 months (2,160 operating hours) in normal use, or about 4 months with pets, smoking, or heavy cooking. The filter indicator turns red and displays E02 at end of life.`
+      },
+      {
+        id: `faq-8`,
+        category: `Care & Filters`,
+        q: `Is the main filter the same for all models?`,
+        a: `No. AQ-200 Lite and AQ-200 use the FL-200H ($39, or $70 for the 2-pack FL-200H-2). AQ-200 Pro uses the larger FL-200P ($59).`
+      },
+      {
+        id: `faq-9`,
+        category: `Warranty & Service`,
+        q: `What does the warranty cover?`,
+        a: `The warranty covers manufacturing defects for 2 years on AQ-200 Lite and AQ-200, or 3 years on AQ-200 Pro. Parts replaced under warranty are free of charge, including service labor ($0). Consumables—main filters, pre-filters, and UV-C lamps—are not covered.`
+      },
+      {
+        id: `faq-10`,
+        category: `Operation`,
+        q: `How do I pair the purifier with the AeroPure Home app?`,
+        a: `On AQ-200 or AQ-200 Pro, install the AeroPure Home app, connect your phone to a 2.4 GHz Wi-Fi network, then press and hold Wi-Fi + Timer for 5 seconds until the Wi-Fi icon blinks and follow the in-app steps.`
+      },
+      {
+        id: `faq-11`,
+        category: `Operation`,
+        q: `What floor surface and clearance does the purifier require?`,
+        a: `Place the purifier on a flat, hard floor (not long-pile carpet) with at least 30 cm clearance from walls, curtains, and furniture on all sides, and at least 1 m away from heaters.`
+      },
+      {
+        id: `faq-12`,
+        category: `Care & Filters`,
+        q: `Why is there an unusual smell after installing a new filter?`,
+        a: `A mild odor for 1–2 days is normal for a brand-new activated carbon layer. If the smell persists beyond 2 days, unplug the unit and double-check that the plastic shipping bag was removed from the filter.`
+      },
+      {
+        id: `faq-13`,
+        category: `Care & Filters`,
+        q: `How do I clean the pre-filter and PM2.5 sensor lens?`,
+        a: `Vacuum or rinse the washable pre-filter (PF-200) every 2 weeks and let it dry completely for 24 hours before reinstalling. Every 2 months, open the side sensor cover and gently wipe the PM2.5 lens with a dry cotton swab.`
+      },
+      {
+        id: `faq-14`,
+        category: `Warranty & Service`,
+        q: `What are the service labor fees outside of warranty?`,
+        a: `Out-of-warranty service labor is a flat $25 per visit, and the recommended 24-month fan and internal duct inspection is also $25 outside warranty ($0 if within warranty). Spare part prices exclude tax and shipping.`
+      },
+      {
+        id: `faq-15`,
+        category: `Features`,
+        q: `How do sleep mode, manual speeds, and the timer work?`,
+        a: `Short-press Mode to cycle Auto › Sleep (lowest noise at 20–24 dB with display off) › Manual. Short-press Fan for speeds 1–4 (speed 4 is Turbo). Short-press Timer to set 1 h, 2 h, 4 h, 8 h, or off.`
+      }
+    ];
+
+    const appState = {
+      selectedError: `E01`,
+      selectedSymptom: null,
+      errorQuery: ``,
+      errorModelFilter: `all`,
+      diffOnly: false,
+      maintModel: `all`,
+      checkedTasks: {},
+      calcModel: `lite`,
+      calcUsage: `normal`,
+      calcValuePack: true,
+      calcIncludeUvc: false,
+      faqQuery: ``,
+      faqCategory: `all`,
+      expandedFaqs: { 'faq-1': true }
+    };
+
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, `&amp;`)
+        .replace(/</g, `&lt;`)
+        .replace(/>/g, `&gt;`)
+        .replace(/"/g, `&quot;`)
+        .replace(/'/g, `&#39;`);
+    }
+
+    async function persistState() {
+      if (window.notebookAppApi && typeof window.notebookAppApi.setAppState === `function`) {
+        try {
+          await window.notebookAppApi.setAppState({
+            selectedError: appState.selectedError,
+            selectedSymptom: appState.selectedSymptom,
+            errorModelFilter: appState.errorModelFilter,
+            diffOnly: appState.diffOnly,
+            maintModel: appState.maintModel,
+            checkedTasks: appState.checkedTasks,
+            calcModel: appState.calcModel,
+            calcUsage: appState.calcUsage,
+            calcValuePack: appState.calcValuePack,
+            calcIncludeUvc: appState.calcIncludeUvc,
+            faqCategory: appState.faqCategory
+          });
+        } catch (err) {
+          // Safe fallback if host rejects state
+        }
+      }
+    }
+
+    /* ---------------- 1. ERROR LOOKUP ---------------- */
+    function renderCodeGrid() {
+      const grid = document.getElementById(`code-grid`);
+      if (!grid) return;
+
+      const query = appState.errorQuery.trim().toLowerCase();
+      const modelFilter = appState.errorModelFilter;
+
+      const html = ERROR_CODES.map(function (item) {
+        const matchesModel = modelFilter === `all` || item.modelKeys.indexOf(modelFilter) !== -1;
+        const haystack = (item.code + ` ` + item.meaning + ` ` + item.cause + ` ` + item.parts.join(` `)).toLowerCase();
+        const matchesQuery = !query || haystack.indexOf(query) !== -1;
+        const active = !appState.selectedSymptom && appState.selectedError === item.code;
+        const dimmed = (!matchesModel || !matchesQuery) ? ` dimmed` : ``;
+
+        return `<button type="button" class="code-btn${dimmed}" aria-pressed="${active ? `true` : `false`}" onclick="selectErrorCode('${item.code}')">
+          <span class="code-id">${escapeHtml(item.code)}</span>
+          <span class="code-sub">${escapeHtml(item.meaning)}</span>
+        </button>`;
+      }).join(``);
+
+      grid.innerHTML = html;
+    }
+
+    function renderSymptoms() {
+      const list = document.getElementById(`symptom-list`);
+      if (!list) return;
+      list.innerHTML = SYMPTOMS.map(function (sym) {
+        const active = appState.selectedSymptom === sym.id;
+        return `<button type="button" class="symptom-btn" aria-pressed="${active ? `true` : `false`}" onclick="selectSymptom('${sym.id}')">${escapeHtml(sym.label)}</button>`;
+      }).join(``);
+    }
+
+    function renderErrorDetail() {
+      const panel = document.getElementById(`error-detail-panel`);
+      if (!panel) return;
+
+      if (appState.selectedSymptom) {
+        const sym = SYMPTOMS.find(function (s) { return s.id === appState.selectedSymptom; });
+        if (sym) {
+          const stepsHtml = sym.steps.map(function (st, idx) {
+            return `<li class="step-item"><span class="step-num">${idx + 1}</span><span>${escapeHtml(st)}</span></li>`;
+          }).join(``);
+          const partsHtml = sym.parts.length
+            ? sym.parts.map(function (pCode) {
+                const p = PARTS_CATALOG[pCode];
+                if (!p) return ``;
+                return `<div class="part-row">
+                  <div><span class="part-code">${escapeHtml(p.code)}</span> · ${escapeHtml(p.name)} <span style="color:var(--on-surface-variant); font-size:0.875rem;">(${escapeHtml(p.models)})</span></div>
+                  <span class="part-price">$${p.price}</span>
+                </div>`;
+              }).join(``)
+            : `<div class="context-note">No replacement parts required for this symptom.</div>`;
+
+          panel.innerHTML = `
+            <div class="detail-top">
+              <div>
+                <span class="detail-code-badge">Symptom</span>
+                <h3 class="detail-title">${escapeHtml(sym.label)}</h3>
+              </div>
+              <span class="chip">${escapeHtml(sym.models)}</span>
+            </div>
+            <div class="detail-section">
+              <span class="detail-label">Likely meaning &amp; cause</span>
+              <p style="margin:0;"><strong>${escapeHtml(sym.meaning)}:</strong> ${escapeHtml(sym.cause)}</p>
+            </div>
+            <div class="detail-section">
+              <span class="detail-label">Step-by-step check &amp; fix</span>
+              <ol class="step-list">${stepsHtml}</ol>
+            </div>
+            <div class="detail-section">
+              <span class="detail-label">Related spare parts (2026 USD)</span>
+              <div class="parts-grid">${partsHtml}</div>
+            </div>
+          `;
+          return;
+        }
+      }
+
+      const query = appState.errorQuery.trim().toUpperCase();
+      if (query && /^E\d{1,2}$/.test(query)) {
+        const exact = ERROR_CODES.find(function (e) { return e.code === query; });
+        if (!exact) {
+          panel.innerHTML = `
+            <div class="empty-state">
+              <h3 style="margin:0; font-family:var(--font-headline);">Code ${escapeHtml(query)} not found</h3>
+              <p>AeroPure AQ-200 display codes run from E01 through E15. Check the display again or choose a code from the grid.</p>
+              <button type="button" class="btn-primary" onclick="clearErrorSearch()">Show E01–E15</button>
+            </div>
+          `;
+          return;
+        }
+      }
+
+      const item = ERROR_CODES.find(function (e) { return e.code === appState.selectedError; }) || ERROR_CODES[0];
+      const stepsHtml = item.steps.map(function (st, idx) {
+        return `<li class="step-item"><span class="step-num">${idx + 1}</span><span>${escapeHtml(st)}</span></li>`;
+      }).join(``);
+
+      let partsHtml = `<div class="context-note">No replacement parts required.</div>`;
+      if (item.parts.length > 0) {
+        partsHtml = item.parts.map(function (pCode) {
+          const p = PARTS_CATALOG[pCode];
+          if (!p) return ``;
+          const badge = p.consumable ? `<span class="chip warn">Consumable</span>` : `<span class="chip positive">Warranty eligible</span>`;
+          return `<div class="part-row">
+            <div>
+              <div><span class="part-code">${escapeHtml(p.code)}</span> · ${escapeHtml(p.name)}</div>
+              <div style="font-size:0.8125rem; color:var(--on-surface-variant); margin-top:2px;">Compatible: ${escapeHtml(p.models)}</div>
+            </div>
+            <div style="display:flex; align-items:center; gap:var(--space-sm);">
+              ${badge}
+              <span class="part-price">$${p.price}</span>
+            </div>
+          </div>`;
+        }).join(``);
+      }
+
+      const modelBadgeClass = item.modelKeys.length === 1 ? `chip warn` : `chip`;
+      const safetyBlock = item.safety ? `<div class="safety-note">${escapeHtml(item.safety)}</div>` : ``;
+      const serviceBlock = item.serviceNote ? `<div class="context-note">${escapeHtml(item.serviceNote)}</div>` : ``;
+
+      panel.innerHTML = `
+        <div class="detail-top">
+          <div>
+            <span class="detail-code-badge">${escapeHtml(item.code)}</span>
+            <h3 class="detail-title">${escapeHtml(item.meaning)}</h3>
+          </div>
+          <span class="${modelBadgeClass}">${escapeHtml(item.models)}</span>
+        </div>
+        <div class="detail-section">
+          <span class="detail-label">Root cause</span>
+          <p style="margin:0;">${escapeHtml(item.cause)}</p>
+        </div>
+        ${safetyBlock}
+        <div class="detail-section">
+          <span class="detail-label">Step-by-step fix</span>
+          <ol class="step-list">${stepsHtml}</ol>
+        </div>
+        <div class="detail-section">
+          <span class="detail-label">Required spare parts &amp; service pricing (2026 USD)</span>
+          <div class="parts-grid">${partsHtml}</div>
+          ${serviceBlock}
+        </div>
+      `;
+    }
+
+    function selectErrorCode(code) {
+      appState.selectedError = code;
+      appState.selectedSymptom = null;
+      renderCodeGrid();
+      renderSymptoms();
+      renderErrorDetail();
+      persistState();
+    }
+
+    function selectSymptom(id) {
+      appState.selectedSymptom = id;
+      renderCodeGrid();
+      renderSymptoms();
+      renderErrorDetail();
+      persistState();
+    }
+
+    function onErrorSearch(val) {
+      appState.errorQuery = val;
+      const normalized = val.trim().toUpperCase();
+      const exactMatch = ERROR_CODES.find(function (e) { return e.code === normalized; });
+      if (exactMatch) {
+        appState.selectedError = exactMatch.code;
+        appState.selectedSymptom = null;
+      } else if (val.trim()) {
+        const lower = val.trim().toLowerCase();
+        const firstMatch = ERROR_CODES.find(function (e) {
+          return (e.code + ` ` + e.meaning + ` ` + e.cause + ` ` + e.parts.join(` `)).toLowerCase().indexOf(lower) !== -1;
+        });
+        if (firstMatch) {
+          appState.selectedError = firstMatch.code;
+          appState.selectedSymptom = null;
+        }
+      }
+      renderCodeGrid();
+      renderSymptoms();
+      renderErrorDetail();
+    }
+
+    function clearErrorSearch() {
+      const inp = document.getElementById(`error-search-input`);
+      if (inp) inp.value = ``;
+      appState.errorQuery = ``;
+      appState.selectedSymptom = null;
+      if (!appState.selectedError) appState.selectedError = `E01`;
+      renderCodeGrid();
+      renderSymptoms();
+      renderErrorDetail();
+      persistState();
+    }
+
+    function setErrorModelFilter(modelKey) {
+      appState.errorModelFilter = modelKey;
+      document.querySelectorAll(`[data-err-model]`).forEach(function (btn) {
+        btn.setAttribute(`aria-pressed`, btn.dataset.errModel === modelKey ? `true` : `false`);
+      });
+      renderCodeGrid();
+      persistState();
+    }
+
+    /* ---------------- 2. MODEL COMPARISON ---------------- */
+    function renderComparisonTable() {
+      const tbody = document.getElementById(`comparison-tbody`);
+      if (!tbody) return;
+
+      const rowsToShow = appState.diffOnly
+        ? COMPARISON_ROWS.filter(function (r) { return r.diff; })
+        : COMPARISON_ROWS;
+
+      tbody.innerHTML = rowsToShow.map(function (row) {
+        if (row.cadrMax) {
+          const pctLite = Math.round((Number(row.lite) / row.cadrMax) * 100);
+          const pctStd = Math.round((Number(row.std) / row.cadrMax) * 100);
+          const pctPro = 100;
+          return `<tr>
+            <th scope="row">${escapeHtml(row.label)}</th>
+            <td><div class="cadr-bar-wrap"><strong>${escapeHtml(row.lite)}</strong><div class="cadr-track"><div class="cadr-fill" style="width:${pctLite}%;"></div></div></div></td>
+            <td><div class="cadr-bar-wrap"><strong>${escapeHtml(row.std)}</strong><div class="cadr-track"><div class="cadr-fill" style="width:${pctStd}%;"></div></div></div></td>
+            <td><div class="cadr-bar-wrap"><strong>${escapeHtml(row.pro)}</strong><div class="cadr-track"><div class="cadr-fill" style="width:${pctPro}%;"></div></div></div></td>
+          </tr>`;
+        }
+        return `<tr class="${row.diff ? `` : `is-same`}">
+          <th scope="row">${escapeHtml(row.label)}</th>
+          <td>${escapeHtml(row.lite)}</td>
+          <td>${escapeHtml(row.std)}</td>
+          <td>${escapeHtml(row.pro)}</td>
+        </tr>`;
+      }).join(``);
+    }
+
+    function toggleDiffOnly(checked) {
+      appState.diffOnly = Boolean(checked);
+      renderComparisonTable();
+      persistState();
+    }
+
+    /* ---------------- 3A. MAINTENANCE CHECKLIST ---------------- */
+    function renderChecklist() {
+      const container = document.getElementById(`checklist-groups`);
+      const statEl = document.getElementById(`checklist-stat`);
+      const fillEl = document.getElementById(`checklist-progress-fill`);
+      if (!container) return;
+
+      const visibleTasks = MAINTENANCE_TASKS.filter(function (t) {
+        return appState.maintModel === `all` || t.models.indexOf(appState.maintModel) !== -1;
+      });
+
+      const completedCount = visibleTasks.filter(function (t) {
+        return Boolean(appState.checkedTasks[t.id]);
+      }).length;
+      const totalCount = visibleTasks.length;
+      const pct = totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0;
+
+      if (statEl) statEl.textContent = `${completedCount} of ${totalCount} completed (${pct}%)`;
+      if (fillEl) fillEl.style.width = `${pct}%`;
+
+      container.innerHTML = visibleTasks.map(function (task) {
+        const checked = Boolean(appState.checkedTasks[task.id]);
+        return `<div class="interval-group">
+          <h3 class="interval-heading">${escapeHtml(task.interval)}</h3>
+          <label class="task-label${checked ? ` is-checked` : ``}" for="chk-${task.id}">
+            <input id="chk-${task.id}" class="task-checkbox" type="checkbox" ${checked ? `checked` : ``} onchange="toggleTask('${task.id}', this.checked)">
+            <span>
+              <span class="task-title">${escapeHtml(task.title)}</span>
+              <span class="task-desc">${escapeHtml(task.desc)}</span>
+            </span>
+          </label>
+        </div>`;
+      }).join(``);
+    }
+
+    function toggleTask(taskId, checked) {
+      appState.checkedTasks[taskId] = Boolean(checked);
+      const resetBtn = document.getElementById(`reset-checklist-btn`);
+      if (resetBtn) {
+        resetBtn.dataset.armed = `false`;
+        resetBtn.textContent = `Reset checklist`;
+      }
+      renderChecklist();
+      persistState();
+    }
+
+    function setMaintModel(modelKey) {
+      appState.maintModel = modelKey;
+      document.querySelectorAll(`[data-maint-model]`).forEach(function (btn) {
+        btn.setAttribute(`aria-pressed`, btn.dataset.maintModel === modelKey ? `true` : `false`);
+      });
+      renderChecklist();
+      persistState();
+    }
+
+    function resetChecklist(btn) {
+      if (!btn) return;
+      if (btn.dataset.armed !== `true`) {
+        btn.dataset.armed = `true`;
+        btn.textContent = `Click again to reset`;
+        return;
+      }
+      btn.dataset.armed = `false`;
+      btn.textContent = `Reset checklist`;
+      appState.checkedTasks = {};
+      renderChecklist();
+      persistState();
+    }
+
+    /* ---------------- 3B. YEARLY FILTER COST CALCULATOR ---------------- */
+    function renderCalculator() {
+      const isPro = appState.calcModel === `pro`;
+      const isPets = appState.calcUsage === `pets`;
+      const filtersPerYear = isPets ? 3 : 2;
+      const intervalLabel = isPets ? `Every 4 mo` : `Every 6 mo`;
+
+      const extraWrap = document.getElementById(`calc-extra-options`);
+      if (extraWrap) {
+        if (!isPro) {
+          extraWrap.innerHTML = `
+            <label class="option-check" for="opt-value-pack">
+              <input id="opt-value-pack" type="checkbox" ${appState.calcValuePack ? `checked` : ``} onchange="toggleValuePack(this.checked)">
+              <span>Use FL-200H-2 Value Pack (2 filters for $70 instead of $39 each — saves $8)</span>
+            </label>
+          `;
+        } else {
+          extraWrap.innerHTML = `
+            <label class="option-check" for="opt-uvc">
+              <input id="opt-uvc" type="checkbox" ${appState.calcIncludeUvc ? `checked` : ``} onchange="toggleIncludeUvc(this.checked)">
+              <span>Include annual UV-C lamp replacement (UV-200, $35 every 12 months)</span>
+            </label>
+          `;
+        }
+      }
+
+      let mainFilterCost = 0;
+      const breakdownRows = [];
+
+      if (!isPro) {
+        const singlePrice = 39;
+        const packPrice = 70;
+        if (appState.calcValuePack) {
+          if (filtersPerYear === 2) {
+            mainFilterCost = packPrice;
+            breakdownRows.push({ label: `1 × FL-200H-2 Value Pack (2 filters)`, value: `$70.00` });
+            breakdownRows.push({ label: `Savings vs. buying single FL-200H ($39 × 2)`, value: `-$8.00`, positive: true });
+          } else {
+            mainFilterCost = packPrice + singlePrice;
+            breakdownRows.push({ label: `1 × FL-200H-2 Value Pack (2 filters)`, value: `$70.00` });
+            breakdownRows.push({ label: `1 × FL-200H single main filter`, value: `$39.00` });
+            breakdownRows.push({ label: `Savings vs. 3 single FL-200H ($117)`, value: `-$8.00`, positive: true });
+          }
+        } else {
+          mainFilterCost = filtersPerYear * singlePrice;
+          breakdownRows.push({ label: `${filtersPerYear} × FL-200H single main filter ($39 each)`, value: `$${mainFilterCost.toFixed(2)}` });
+        }
+      } else {
+        const proPrice = 59;
+        mainFilterCost = filtersPerYear * proPrice;
+        breakdownRows.push({ label: `${filtersPerYear} × FL-200P large main filter ($59 each)`, value: `$${mainFilterCost.toFixed(2)}` });
+      }
+
+      let totalCost = mainFilterCost;
+      if (isPro && appState.calcIncludeUvc) {
+        totalCost += 35;
+        breakdownRows.push({ label: `1 × UV-200 UV-C lamp module (12-month cycle)`, value: `$35.00` });
+      }
+
+      const monthlyAvg = totalCost / 12;
+
+      const totalEl = document.getElementById(`calc-annual-total`);
+      const filtersEl = document.getElementById(`calc-filters-yr`);
+      const intervalEl = document.getElementById(`calc-interval`);
+      const monthlyEl = document.getElementById(`calc-monthly`);
+      const breakdownEl = document.getElementById(`calc-breakdown`);
+
+      if (totalEl) totalEl.textContent = `$${totalCost}`;
+      if (filtersEl) filtersEl.textContent = `${filtersPerYear} filters`;
+      if (intervalEl) intervalEl.textContent = intervalLabel;
+      if (monthlyEl) monthlyEl.textContent = `$${monthlyAvg.toFixed(2)} / mo`;
+
+      if (breakdownEl) {
+        breakdownRows.push({ label: `Total estimated annual cost`, value: `$${totalCost.toFixed(2)}`, bold: true });
+        breakdownEl.innerHTML = breakdownRows.map(function (r) {
+          const valStyle = r.positive
+            ? `color:var(--positive); font-weight:600;`
+            : (r.bold ? `font-weight:700; color:var(--on-surface);` : `font-weight:500;`);
+          const lblStyle = r.bold ? `font-weight:700; color:var(--on-surface);` : `color:var(--on-surface-variant);`;
+          return `<div class="breakdown-row">
+            <span style="${lblStyle}">${escapeHtml(r.label)}</span>
+            <span style="${valStyle}">${escapeHtml(r.value)}</span>
+          </div>`;
+        }).join(``);
+      }
+    }
+
+    function setCalcModel(modelKey) {
+      appState.calcModel = modelKey;
+      document.querySelectorAll(`[data-calc-model]`).forEach(function (btn) {
+        btn.setAttribute(`aria-pressed`, btn.dataset.calcModel === modelKey ? `true` : `false`);
+      });
+      renderCalculator();
+      persistState();
+    }
+
+    function setCalcUsage(usageKey) {
+      appState.calcUsage = usageKey;
+      document.querySelectorAll(`[data-calc-usage]`).forEach(function (btn) {
+        btn.setAttribute(`aria-pressed`, btn.dataset.calcUsage === usageKey ? `true` : `false`);
+      });
+      renderCalculator();
+      persistState();
+    }
+
+    function toggleValuePack(checked) {
+      appState.calcValuePack = Boolean(checked);
+      renderCalculator();
+      persistState();
+    }
+
+    function toggleIncludeUvc(checked) {
+      appState.calcIncludeUvc = Boolean(checked);
+      renderCalculator();
+      persistState();
+    }
+
+    /* ---------------- 4. SEARCHABLE FAQ ---------------- */
+    function getFilteredFaqs() {
+      const q = appState.faqQuery.trim().toLowerCase();
+      return FAQS.filter(function (item) {
+        const catOk = appState.faqCategory === `all` || item.category === appState.faqCategory;
+        const textOk = !q || (item.q + ` ` + item.a + ` ` + item.category).toLowerCase().indexOf(q) !== -1;
+        return catOk && textOk;
+      });
+    }
+
+    function renderFaqs() {
+      const list = document.getElementById(`faq-list`);
+      const countEl = document.getElementById(`faq-count`);
+      const expandBtn = document.getElementById(`faq-expand-all-btn`);
+      if (!list) return;
+
+      const filtered = getFilteredFaqs();
+      if (countEl) countEl.textContent = `Showing ${filtered.length} of ${FAQS.length} questions`;
+
+      const allExpanded = filtered.length > 0 && filtered.every(function (f) { return Boolean(appState.expandedFaqs[f.id]); });
+      if (expandBtn) expandBtn.textContent = allExpanded ? `Collapse all` : `Expand all`;
+
+      if (filtered.length === 0) {
+        list.innerHTML = `
+          <div class="empty-state">
+            <h3 style="margin:0; font-family:var(--font-headline);">No matching questions</h3>
+            <p>No FAQ entries matched “${escapeHtml(appState.faqQuery)}”. Try searching for HEPA, Wi-Fi, sensor, or warranty.</p>
+            <button type="button" class="btn-primary" onclick="clearFaqSearch()">Reset search &amp; filters</button>
+          </div>
+        `;
+        return;
+      }
+
+      list.innerHTML = filtered.map(function (item) {
+        const expanded = Boolean(appState.expandedFaqs[item.id]);
+        return `<div class="faq-item">
+          <button type="button" class="faq-trigger" aria-expanded="${expanded ? `true` : `false`}" aria-controls="panel-${item.id}" onclick="toggleFaq('${item.id}')">
+            <span class="faq-q-wrap">
+              <span class="chip neutral">${escapeHtml(item.category)}</span>
+              <span class="faq-q">${escapeHtml(item.q)}</span>
+            </span>
+            <span class="faq-chevron" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+            </span>
+          </button>
+          <div id="panel-${item.id}" class="faq-panel" ${expanded ? `` : `hidden`}>
+            <p>${escapeHtml(item.a)}</p>
+          </div>
+        </div>`;
+      }).join(``);
+    }
+
+    function toggleFaq(id) {
+      appState.expandedFaqs[id] = !appState.expandedFaqs[id];
+      renderFaqs();
+    }
+
+    function toggleAllFaqs() {
+      const filtered = getFilteredFaqs();
+      const allExpanded = filtered.length > 0 && filtered.every(function (f) { return Boolean(appState.expandedFaqs[f.id]); });
+      filtered.forEach(function (f) {
+        appState.expandedFaqs[f.id] = !allExpanded;
+      });
+      renderFaqs();
+    }
+
+    function onFaqSearch(val) {
+      appState.faqQuery = val;
+      if (val.trim().length > 0) {
+        getFilteredFaqs().forEach(function (f) {
+          appState.expandedFaqs[f.id] = true;
+        });
+      }
+      renderFaqs();
+    }
+
+    function setFaqCategory(cat) {
+      appState.faqCategory = cat;
+      document.querySelectorAll(`[data-faq-cat]`).forEach(function (btn) {
+        btn.setAttribute(`aria-pressed`, btn.dataset.faqCat === cat ? `true` : `false`);
+      });
+      renderFaqs();
+      persistState();
+    }
+
+    function clearFaqSearch() {
+      const inp = document.getElementById(`faq-search-input`);
+      if (inp) inp.value = ``;
+      appState.faqQuery = ``;
+      appState.faqCategory = `all`;
+      document.querySelectorAll(`[data-faq-cat]`).forEach(function (btn) {
+        btn.setAttribute(`aria-pressed`, btn.dataset.faqCat === `all` ? `true` : `false`);
+      });
+      renderFaqs();
+      persistState();
+    }
+
+    /* ---------------- INIT & RESTORE ---------------- */
+    function applyRestoredState(saved) {
+      if (!saved || typeof saved !== `object`) return;
+      if (typeof saved.selectedError === `string`) appState.selectedError = saved.selectedError;
+      if (typeof saved.selectedSymptom === `string` || saved.selectedSymptom === null) appState.selectedSymptom = saved.selectedSymptom;
+      if (typeof saved.errorModelFilter === `string`) appState.errorModelFilter = saved.errorModelFilter;
+      if (typeof saved.diffOnly === `boolean`) appState.diffOnly = saved.diffOnly;
+      if (typeof saved.maintModel === `string`) appState.maintModel = saved.maintModel;
+      if (saved.checkedTasks && typeof saved.checkedTasks === `object`) appState.checkedTasks = saved.checkedTasks;
+      if (typeof saved.calcModel === `string`) appState.calcModel = saved.calcModel;
+      if (typeof saved.calcUsage === `string`) appState.calcUsage = saved.calcUsage;
+      if (typeof saved.calcValuePack === `boolean`) appState.calcValuePack = saved.calcValuePack;
+      if (typeof saved.calcIncludeUvc === `boolean`) appState.calcIncludeUvc = saved.calcIncludeUvc;
+      if (typeof saved.faqCategory === `string`) appState.faqCategory = saved.faqCategory;
+
+      const diffToggle = document.getElementById(`diff-only-toggle`);
+      if (diffToggle) diffToggle.checked = appState.diffOnly;
+
+      document.querySelectorAll(`[data-err-model]`).forEach(function (btn) {
+        btn.setAttribute(`aria-pressed`, btn.dataset.errModel === appState.errorModelFilter ? `true` : `false`);
+      });
+      document.querySelectorAll(`[data-maint-model]`).forEach(function (btn) {
+        btn.setAttribute(`aria-pressed`, btn.dataset.maintModel === appState.maintModel ? `true` : `false`);
+      });
+      document.querySelectorAll(`[data-calc-model]`).forEach(function (btn) {
+        btn.setAttribute(`aria-pressed`, btn.dataset.calcModel === appState.calcModel ? `true` : `false`);
+      });
+      document.querySelectorAll(`[data-calc-usage]`).forEach(function (btn) {
+        btn.setAttribute(`aria-pressed`, btn.dataset.calcUsage === appState.calcUsage ? `true` : `false`);
+      });
+      document.querySelectorAll(`[data-faq-cat]`).forEach(function (btn) {
+        btn.setAttribute(`aria-pressed`, btn.dataset.faqCat === appState.faqCategory ? `true` : `false`);
+      });
+    }
+
+    async function initApp() {
+      if (window.notebookAppApi && typeof window.notebookAppApi.getAppState === `function`) {
+        try {
+          const saved = await window.notebookAppApi.getAppState();
+          applyRestoredState(saved);
+        } catch (err) {
+          // Proceed with defaults
+        }
+      }
+
+      renderCodeGrid();
+      renderSymptoms();
+      renderErrorDetail();
+      renderComparisonTable();
+      renderChecklist();
+      renderCalculator();
+      renderFaqs();
+
+      if (window.notebookAppApi && typeof window.notebookAppApi.notifyAppReady === `function`) {
+        window.notebookAppApi.notifyAppReady();
+      }
+    }
+
+    document.addEventListener(`DOMContentLoaded`, initApp);
+  </script>
+ 
+</body></html>

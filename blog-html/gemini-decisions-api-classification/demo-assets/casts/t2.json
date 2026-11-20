@@ -1,0 +1,56 @@
+{
+ "title": "Windows PowerShell",
+ "steps": [
+  {
+   "comment": "Generate 40 fictional documents + ground-truth labels",
+   "show": "python make_dataset.py",
+   "prompt": "(.venv) PS D:\\ai_quest\\gemini-decisions-api-classification\\demo-assets>",
+   "events": [
+    [
+     1.809,
+     "Created 40 documents in D:\\code\\personal\\ai_quest\\blog-html\\gemini-decisions-api-classification\\demo-assets\\dataset"
+    ],
+    [
+     1.809,
+     "\r\nDifficulty: {'photo': 8, 'lowres': 8, 'normal': 16, 'notitle': 8}\r\nLanguage: {'vi': 16, 'ja': 8, 'en': 16} | PDF: 8\r\n"
+    ]
+   ],
+   "exit": 0,
+   "seconds": 1.82
+  },
+  {
+   "comment": null,
+   "show": "python gallery.py",
+   "prompt": "(.venv) PS D:\\ai_quest\\gemini-decisions-api-classification\\demo-assets>",
+   "events": [
+    [
+     0.053,
+     "→"
+    ],
+    [
+     0.053,
+     " D:\\code\\personal\\ai_quest\\blog-html\\gemini-decisions-api-classification\\demo-assets\\dataset\\gallery.html\r\n"
+    ]
+   ],
+   "exit": 0,
+   "seconds": 0.06
+  },
+  {
+   "comment": null,
+   "show": "Get-Content dataset\\labels.csv -TotalCount 8",
+   "prompt": "(.venv) PS D:\\ai_quest\\gemini-decisions-api-classification\\demo-assets>",
+   "events": [
+    [
+     0.042,
+     "file,doc_type,has_signature,lang,difficulty\r\ndoc_01.png,resume,1,vi,photo\r\ndoc_02.png,receipt,0,vi,lowres\r\ndoc_03.png,leave_request,1,ja,normal\r\ndoc_04.pdf,meeting_minutes,0,en,lowres\r\ndoc_05.png,quotation,1,vi,normal\r\ndoc_06.pdf,contract,1,en,normal\r\ndoc_07.png,quotation,0,ja,photo\r\n"
+    ],
+    [
+     0.042,
+     "\r\n"
+    ]
+   ],
+   "exit": 0,
+   "seconds": 0.05
+  }
+ ]
+}

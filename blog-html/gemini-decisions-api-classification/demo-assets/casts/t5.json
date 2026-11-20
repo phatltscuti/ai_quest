@@ -1,0 +1,30 @@
+{
+ "title": "Windows PowerShell",
+ "steps": [
+  {
+   "comment": "Aggregate results → tables, charts, report.html",
+   "show": "python report.py",
+   "prompt": "(.venv) PS D:\\ai_quest\\gemini-decisions-api-classification\\demo-assets>",
+   "events": [
+    [
+     0.411,
+     "\r\nMethod                      Accuracy    (min–max)   Sign.   Stable  p50 ms  p95 ms  tok in tok out  USD/1k"
+    ],
+    [
+     0.411,
+     "\r\nDecisions API                 100.0%    100%–100%     80%     100%     754    1767    1280       0   0.128\r\nDecisions API (low res)       100.0%    100%–100%     85%     100%     694    1226     619       0   0.062\r\n3.5 Flash-Lite (JSON)         100.0%    100%–100%    100%     100%    3343    9471    1162      32   0.429\r\n\r\nAccuracy by difficulty:\r\n  Decisions API             normal: 100%  notitle: 100%  photo: 100%  lowres: 100%\r\n  Decisions API (low res)   normal: 100%  notitle: 100%  photo: 100%  lowres: 100%\r\n  3.5 Flash-Lite (JSON)     normal: 100%  notitle: 100%  photo: 100%  lowres: 100%\r\n"
+    ],
+    [
+     0.661,
+     "\r\n→ D:\\code\\personal\\ai_quest\\blog-html\\gemini-decisions-api-classification\\demo-assets\\results\\report.html"
+    ],
+    [
+     0.661,
+     "\r\n"
+    ]
+   ],
+   "exit": 0,
+   "seconds": 0.71
+  }
+ ]
+}

@@ -1,0 +1,241 @@
+──────────────────────────────────────────────── Q1 - lookup ─────────────────────────────────────────────────
+┌───────────────────────────────────────────────── Question ─────────────────────────────────────────────────┐
+│ What does error code E03 mean on the AeroPure AQ-200 and how do I fix it?                                  │
+└────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+                                  Top-5 retrieved chunks (cosine similarity)                                  
+┌──────┬───────┬────────────────────────────────────────┬──────┬─────────────────────────────────────────────┐
+│ rank │ score │ source                                 │ page │ chunk preview                               │
+├──────┼───────┼────────────────────────────────────────┼──────┼─────────────────────────────────────────────┤
+│ S1   │ 0.854 │ AQ-200_Troubleshooting_Error_Codes.pdf │ 1    │ AeroPure AQ-200 Series - Troubleshooting &  │
+│      │       │                                        │      │ Err...                                      │
+│ S2   │ 0.808 │ AQ-200_Troubleshooting_Error_Codes.pdf │ 1    │ Voltage outside 100-240 V or unstable       │
+│      │       │                                        │      │ extensio...                                 │
+│ S3   │ 0.792 │ AQ-200_Troubleshooting_Error_Codes.pdf │ 2    │ Symptom What to check App shows device      │
+│      │       │                                        │      │ offline...                                  │
+│ S4   │ 0.786 │ AQ-200_User_Manual.pdf                 │ 2    │ room, clean the PM2.5 sensor lens. Q: Does  │
+│      │       │                                        │      │ the...                                      │
+│ S5   │ 0.783 │ AQ-200_Troubleshooting_Error_Codes.pdf │ 1    │ Safety interlock switch detects an open     │
+│      │       │                                        │      │ cover ...                                   │
+└──────┴───────┴────────────────────────────────────────┴──────┴─────────────────────────────────────────────┘
+┌────────────────────────────────────── Answer (gemini-3.5-flash-lite) ──────────────────────────────────────┐
+│ Not found in the documents.                                                                                │
+└────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+retrieve 0.574 s | generate 6.4 s | total 6.974 s | tokens in 1365 / out 6 | cost $0.000424
+
+──────────────────────────────────────────────── Q2 - lookup ─────────────────────────────────────────────────
+┌───────────────────────────────────────────────── Question ─────────────────────────────────────────────────┐
+│ What is the CADR and the recommended room size of the AQ-200 Pro?                                          │
+└────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+                               Top-5 retrieved chunks (cosine similarity)                                
+┌──────┬───────┬─────────────────────────────┬──────┬───────────────────────────────────────────────────┐
+│ rank │ score │ source                      │ page │ chunk preview                                     │
+├──────┼───────┼─────────────────────────────┼──────┼───────────────────────────────────────────────────┤
+│ S1   │ 0.820 │ AQ-200_User_Manual.pdf      │ 1    │ AeroPure AQ-200 Series Air Purifier - User Man... │
+│ S2   │ 0.743 │ AQ-200_User_Manual.pdf      │ 1    │ Standby power < 0.5 W < 0.5 W < 0.5 W Input vo... │
+│ S3   │ 0.737 │ AQ-200_User_Manual.pdf      │ 2    │ room, clean the PM2.5 sensor lens. Q: Does the... │
+│ S4   │ 0.711 │ AQ-200_Parts_Price_List.pdf │ 1    │ AeroPure AQ-200 Series - Spare Parts & Service... │
+│ S5   │ 0.705 │ AQ-200_User_Manual.pdf      │ 2    │ A: Manufacturing defects for 2 years (Lite, AQ... │
+└──────┴───────┴─────────────────────────────┴──────┴───────────────────────────────────────────────────┘
+┌────────────────────────────────────── Answer (gemini-3.5-flash-lite) ──────────────────────────────────────┐
+│ The AQ-200 Pro has a CADR (smoke) of 450 $m^3/h$ and a recommended room size of 38-55 $m^2$ [S1].          │
+└────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+retrieve 0.458 s | generate 6.092 s | total 6.551 s | tokens in 1653 / out 47 | cost $0.000613
+
+────────────────────────────────────────────── Q3 - multi-step ───────────────────────────────────────────────
+┌───────────────────────────────────────────────── Question ─────────────────────────────────────────────────┐
+│ My AQ-200 Lite shows E02. Which part do I need, how much does it cost, and what must I do after installing │
+│ it?                                                                                                        │
+└────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+                                  Top-5 retrieved chunks (cosine similarity)                                  
+┌──────┬───────┬────────────────────────────────────────┬──────┬─────────────────────────────────────────────┐
+│ rank │ score │ source                                 │ page │ chunk preview                               │
+├──────┼───────┼────────────────────────────────────────┼──────┼─────────────────────────────────────────────┤
+│ S1   │ 0.776 │ AQ-200_Troubleshooting_Error_Codes.pdf │ 1    │ AeroPure AQ-200 Series - Troubleshooting &  │
+│      │       │                                        │      │ Err...                                      │
+│ S2   │ 0.748 │ AQ-200_Troubleshooting_Error_Codes.pdf │ 1    │ Safety interlock switch detects an open     │
+│      │       │                                        │      │ cover ...                                   │
+│ S3   │ 0.739 │ AQ-200_Parts_Price_List.pdf            │ 1    │ AeroPure AQ-200 Series - Spare Parts &      │
+│      │       │                                        │      │ Service...                                  │
+│ S4   │ 0.734 │ AQ-200_Troubleshooting_Error_Codes.pdf │ 1    │ Voltage outside 100-240 V or unstable       │
+│      │       │                                        │      │ extensio...                                 │
+│ S5   │ 0.724 │ AQ-200_User_Manual.pdf                 │ 2    │ room, clean the PM2.5 sensor lens. Q: Does  │
+│      │       │                                        │      │ the...                                      │
+└──────┴───────┴────────────────────────────────────────┴──────┴─────────────────────────────────────────────┘
+┌────────────────────────────────────── Answer (gemini-3.5-flash-lite) ──────────────────────────────────────┐
+│ To resolve error code E02 on the AQ-200 Lite, you need the main filter part number FL-200H, which costs    │
+│ $39 [S1, S3]. After installing the new filter, hold the Filter Reset button for 3 seconds [S1].            │
+└────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+retrieve 0.448 s | generate 4.614 s | total 5.062 s | tokens in 1668 / out 61 | cost $0.000653
+
+────────────────────────────────────────────── Q4 - multi-step ───────────────────────────────────────────────
+┌───────────────────────────────────────────────── Question ─────────────────────────────────────────────────┐
+│ I use an AQ-200 Pro in a home with two cats. How often should I replace the main filter, and what is the   │
+│ yearly cost of main filters plus the UV-C lamp?                                                            │
+└────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+                               Top-5 retrieved chunks (cosine similarity)                                
+┌──────┬───────┬─────────────────────────────┬──────┬───────────────────────────────────────────────────┐
+│ rank │ score │ source                      │ page │ chunk preview                                     │
+├──────┼───────┼─────────────────────────────┼──────┼───────────────────────────────────────────────────┤
+│ S1   │ 0.765 │ AQ-200_Parts_Price_List.pdf │ 1    │ AeroPure AQ-200 Series - Spare Parts & Service... │
+│ S2   │ 0.763 │ AQ-200_User_Manual.pdf      │ 2    │ Replace the filter, then hold Filter Reset for... │
+│ S3   │ 0.741 │ AQ-200_User_Manual.pdf      │ 1    │ AeroPure AQ-200 Series Air Purifier - User Man... │
+│ S4   │ 0.740 │ AQ-200_User_Manual.pdf      │ 1    │ Standby power < 0.5 W < 0.5 W < 0.5 W Input vo... │
+│ S5   │ 0.734 │ AQ-200_User_Manual.pdf      │ 2    │ A: Manufacturing defects for 2 years (Lite, AQ... │
+└──────┴───────┴─────────────────────────────┴──────┴───────────────────────────────────────────────────┘
+┌────────────────────────────────────── Answer (gemini-3.5-flash-lite) ──────────────────────────────────────┐
+│ Not found in the documents.                                                                                │
+└────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+retrieve 0.429 s | generate 5.107 s | total 5.536 s | tokens in 1603 / out 6 | cost $0.000496
+
+────────────────────────────────────────────── Q5 - aggregation ──────────────────────────────────────────────
+┌───────────────────────────────────────────────── Question ─────────────────────────────────────────────────┐
+│ How many units of all AQ-200 models combined were sold in Q1 2026 (January to March)?                      │
+└────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+                                  Top-5 retrieved chunks (cosine similarity)                                  
+┌──────┬───────┬──────────────────────────────────────┬──────┬───────────────────────────────────────────────┐
+│ rank │ score │ source                               │ page │ chunk preview                                 │
+├──────┼───────┼──────────────────────────────────────┼──────┼───────────────────────────────────────────────┤
+│ S1   │ 0.731 │ AQ-200_Sales_Support_Report_2026.pdf │ 1    │ AeroPure AQ-200 Series - Monthly Sales &      │
+│      │       │                                      │      │ Suppo...                                      │
+│ S2   │ 0.729 │ AQ-200_Sales_Support_Report_2026.pdf │ 1    │ Mar 2026 41 14 47 10 8 31.2 3.9 Apr 2026 44   │
+│      │       │                                      │      │ 13...                                         │
+│ S3   │ 0.671 │ AQ-200_Parts_Price_List.pdf          │ 1    │ AeroPure AQ-200 Series - Spare Parts &        │
+│      │       │                                      │      │ Service...                                    │
+│ S4   │ 0.644 │ AQ-200_User_Manual.pdf               │ 1    │ AeroPure AQ-200 Series Air Purifier - User    │
+│      │       │                                      │      │ Man...                                        │
+│ S5   │ 0.635 │ AQ-200_Parts_Price_List.pdf          │ 1    │ CP-200 Control panel board All models $45     │
+│      │       │                                      │      │ PSU-...                                       │
+└──────┴───────┴──────────────────────────────────────┴──────┴───────────────────────────────────────────────┘
+┌────────────────────────────────────── Answer (gemini-3.5-flash-lite) ──────────────────────────────────────┐
+│ To calculate the total units sold of all AQ-200 models combined in Q1 2026 (January to March), we sum the  │
+│ sales for AQ-200 Lite, AQ-200, and AQ-200 Pro for each of those months [S1]:                               │
+│                                                                                                            │
+│ - **January 2026:** 410 (Lite) + 620 (AQ-200) + 210 (Pro) = 1,240 [S1]                                     │
+│ - **February 2026:** 385 (Lite) + 590 (AQ-200) + 205 (Pro) = 1,180 [S1]                                    │
+│ - **March 2026:** 450 (Lite) + 680 (AQ-200) + 240 (Pro) = 1,370 [S1]                                       │
+│                                                                                                            │
+│ Total units sold in Q1 2026 = 1,240 + 1,180 + 1,370 = 3,790 units.                                         │
+└────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+retrieve 0.428 s | generate 6.437 s | total 6.865 s | tokens in 2043 / out 248 | cost $0.001233
+
+────────────────────────────────────────────── Q6 - aggregation ──────────────────────────────────────────────
+┌───────────────────────────────────────────────── Question ─────────────────────────────────────────────────┐
+│ Which month had the most Wi-Fi/App support tickets, how many, and what was the reason?                     │
+└────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+                                  Top-5 retrieved chunks (cosine similarity)                                  
+┌──────┬───────┬────────────────────────────────────────┬──────┬─────────────────────────────────────────────┐
+│ rank │ score │ source                                 │ page │ chunk preview                               │
+├──────┼───────┼────────────────────────────────────────┼──────┼─────────────────────────────────────────────┤
+│ S1   │ 0.720 │ AQ-200_Sales_Support_Report_2026.pdf   │ 1    │ Mar 2026 41 14 47 10 8 31.2 3.9 Apr 2026 44 │
+│      │       │                                        │      │ 13...                                       │
+│ S2   │ 0.674 │ AQ-200_Sales_Support_Report_2026.pdf   │ 1    │ AeroPure AQ-200 Series - Monthly Sales &    │
+│      │       │                                        │      │ Suppo...                                    │
+│ S3   │ 0.596 │ AQ-200_Troubleshooting_Error_Codes.pdf │ 2    │ Symptom What to check App shows device      │
+│      │       │                                        │      │ offline...                                  │
+│ S4   │ 0.560 │ AQ-200_Troubleshooting_Error_Codes.pdf │ 1    │ Safety interlock switch detects an open     │
+│      │       │                                        │      │ cover ...                                   │
+│ S5   │ 0.559 │ AQ-200_Troubleshooting_Error_Codes.pdf │ 1    │ AeroPure AQ-200 Series - Troubleshooting &  │
+│      │       │                                        │      │ Err...                                      │
+└──────┴───────┴────────────────────────────────────────┴──────┴─────────────────────────────────────────────┘
+┌────────────────────────────────────── Answer (gemini-3.5-flash-lite) ──────────────────────────────────────┐
+│ March 2026 had the most Wi-Fi/App support tickets with a total of 47 tickets [S1, S2]. The reason was that │
+│ firmware 2.3 caused Wi-Fi reconnect issues (E11) on the AQ-200 and AQ-200 Pro models, which was            │
+│ subsequently fixed by firmware 2.3.1 on March 28 [S1].                                                     │
+└────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+retrieve 0.421 s | generate 5.353 s | total 5.775 s | tokens in 1727 / out 88 | cost $0.000738
+
+─────────────────────────────────────────── Q7 - numeric cross-doc ───────────────────────────────────────────
+┌───────────────────────────────────────────────── Question ─────────────────────────────────────────────────┐
+│ What was the total revenue at list price from AQ-200 Pro units sold from January to October 2026?          │
+└────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+                                  Top-5 retrieved chunks (cosine similarity)                                  
+┌──────┬───────┬──────────────────────────────────────┬──────┬───────────────────────────────────────────────┐
+│ rank │ score │ source                               │ page │ chunk preview                                 │
+├──────┼───────┼──────────────────────────────────────┼──────┼───────────────────────────────────────────────┤
+│ S1   │ 0.752 │ AQ-200_Sales_Support_Report_2026.pdf │ 1    │ AeroPure AQ-200 Series - Monthly Sales &      │
+│      │       │                                      │      │ Suppo...                                      │
+│ S2   │ 0.728 │ AQ-200_Sales_Support_Report_2026.pdf │ 1    │ Mar 2026 41 14 47 10 8 31.2 3.9 Apr 2026 44   │
+│      │       │                                      │      │ 13...                                         │
+│ S3   │ 0.720 │ AQ-200_Parts_Price_List.pdf          │ 1    │ AeroPure AQ-200 Series - Spare Parts &        │
+│      │       │                                      │      │ Service...                                    │
+│ S4   │ 0.670 │ AQ-200_Parts_Price_List.pdf          │ 1    │ CP-200 Control panel board All models $45     │
+│      │       │                                      │      │ PSU-...                                       │
+│ S5   │ 0.646 │ AQ-200_User_Manual.pdf               │ 1    │ AeroPure AQ-200 Series Air Purifier - User    │
+│      │       │                                      │      │ Man...                                        │
+└──────┴───────┴──────────────────────────────────────┴──────┴───────────────────────────────────────────────┘
+┌────────────────────────────────────── Answer (gemini-3.5-flash-lite) ──────────────────────────────────────┐
+│ Not found in the documents.                                                                                │
+└────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+retrieve 0.451 s | generate 4.647 s | total 5.098 s | tokens in 2043 / out 6 | cost $0.000628
+
+───────────────────────────────────────────── Q8 - lookup-filter ─────────────────────────────────────────────
+┌───────────────────────────────────────────────── Question ─────────────────────────────────────────────────┐
+│ Which error codes can only appear on the AQ-200 Pro?                                                       │
+└────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+                                  Top-5 retrieved chunks (cosine similarity)                                  
+┌──────┬───────┬────────────────────────────────────────┬──────┬─────────────────────────────────────────────┐
+│ rank │ score │ source                                 │ page │ chunk preview                               │
+├──────┼───────┼────────────────────────────────────────┼──────┼─────────────────────────────────────────────┤
+│ S1   │ 0.773 │ AQ-200_Troubleshooting_Error_Codes.pdf │ 1    │ AeroPure AQ-200 Series - Troubleshooting &  │
+│      │       │                                        │      │ Err...                                      │
+│ S2   │ 0.744 │ AQ-200_Troubleshooting_Error_Codes.pdf │ 1    │ Safety interlock switch detects an open     │
+│      │       │                                        │      │ cover ...                                   │
+│ S3   │ 0.725 │ AQ-200_Troubleshooting_Error_Codes.pdf │ 2    │ Symptom What to check App shows device      │
+│      │       │                                        │      │ offline...                                  │
+│ S4   │ 0.720 │ AQ-200_Troubleshooting_Error_Codes.pdf │ 1    │ Voltage outside 100-240 V or unstable       │
+│      │       │                                        │      │ extensio...                                 │
+│ S5   │ 0.713 │ AQ-200_Troubleshooting_Error_Codes.pdf │ 1    │ new filter; shows within the first 30       │
+│      │       │                                        │      │ minutes ...                                 │
+└──────┴───────┴────────────────────────────────────────┴──────┴─────────────────────────────────────────────┘
+┌────────────────────────────────────── Answer (gemini-3.5-flash-lite) ──────────────────────────────────────┐
+│ The error codes that can only appear on the Pro model are E08 and E13 [S2].                                │
+└────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+retrieve 0.392 s | generate 4.826 s | total 5.218 s | tokens in 1314 / out 23 | cost $0.000452
+
+────────────────────────────────────────────────── Q9 - faq ──────────────────────────────────────────────────
+┌───────────────────────────────────────────────── Question ─────────────────────────────────────────────────┐
+│ Can I use the AQ-200 in a bathroom?                                                                        │
+└────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+                                  Top-5 retrieved chunks (cosine similarity)                                  
+┌──────┬───────┬────────────────────────────────────────┬──────┬─────────────────────────────────────────────┐
+│ rank │ score │ source                                 │ page │ chunk preview                               │
+├──────┼───────┼────────────────────────────────────────┼──────┼─────────────────────────────────────────────┤
+│ S1   │ 0.700 │ AQ-200_User_Manual.pdf                 │ 2    │ room, clean the PM2.5 sensor lens. Q: Does  │
+│      │       │                                        │      │ the...                                      │
+│ S2   │ 0.696 │ AQ-200_User_Manual.pdf                 │ 1    │ AeroPure AQ-200 Series Air Purifier - User  │
+│      │       │                                        │      │ Man...                                      │
+│ S3   │ 0.678 │ AQ-200_User_Manual.pdf                 │ 2    │ A: Manufacturing defects for 2 years (Lite, │
+│      │       │                                        │      │ AQ...                                       │
+│ S4   │ 0.673 │ AQ-200_User_Manual.pdf                 │ 1    │ 1. Unbox the purifier and remove ALL        │
+│      │       │                                        │      │ plastic p...                                │
+│ S5   │ 0.663 │ AQ-200_Troubleshooting_Error_Codes.pdf │ 1    │ AeroPure AQ-200 Series - Troubleshooting &  │
+│      │       │                                        │      │ Err...                                      │
+└──────┴───────┴────────────────────────────────────────┴──────┴─────────────────────────────────────────────┘
+┌────────────────────────────────────── Answer (gemini-3.5-flash-lite) ──────────────────────────────────────┐
+│ Not found in the documents.                                                                                │
+└────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+retrieve 0.426 s | generate 5.409 s | total 5.834 s | tokens in 1472 / out 6 | cost $0.000457
+
+───────────────────────────────────────────── Q10 - unanswerable ─────────────────────────────────────────────
+┌───────────────────────────────────────────────── Question ─────────────────────────────────────────────────┐
+│ What is the price and launch date of the AeroPure AQ-300?                                                  │
+└────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+                               Top-5 retrieved chunks (cosine similarity)                                
+┌──────┬───────┬─────────────────────────────┬──────┬───────────────────────────────────────────────────┐
+│ rank │ score │ source                      │ page │ chunk preview                                     │
+├──────┼───────┼─────────────────────────────┼──────┼───────────────────────────────────────────────────┤
+│ S1   │ 0.729 │ AQ-200_User_Manual.pdf      │ 1    │ AeroPure AQ-200 Series Air Purifier - User Man... │
+│ S2   │ 0.710 │ AQ-200_Parts_Price_List.pdf │ 1    │ AeroPure AQ-200 Series - Spare Parts & Service... │
+│ S3   │ 0.687 │ AQ-200_User_Manual.pdf      │ 1    │ 1. Unbox the purifier and remove ALL plastic p... │
+│ S4   │ 0.683 │ AQ-200_Parts_Price_List.pdf │ 1    │ CP-200 Control panel board All models $45 PSU-... │
+│ S5   │ 0.674 │ AQ-200_User_Manual.pdf      │ 1    │ Standby power < 0.5 W < 0.5 W < 0.5 W Input vo... │
+└──────┴───────┴─────────────────────────────┴──────┴───────────────────────────────────────────────────┘
+┌────────────────────────────────────── Answer (gemini-3.5-flash-lite) ──────────────────────────────────────┐
+│ Not found in the documents.                                                                                │
+└────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+retrieve 0.43 s | generate 4.74 s | total 5.169 s | tokens in 1665 / out 6 | cost $0.000514
+
+┌──────────────────────────────────────────────── eval done ─────────────────────────────────────────────────┐
+│ 10 questions | median latency 5.78 s | max 6.97 s | tokens in 16,553 / out 497 | total cost $0.00621       │
+│ saved -> ..\eval\rag_answers.json                                                                          │
+└────────────────────────────────────────────────────────────────────────────────────────────────────────────┘

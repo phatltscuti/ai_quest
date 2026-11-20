@@ -1,0 +1,252 @@
+{
+  "summary": {
+    "rag": {
+      "correct": 6,
+      "wrong": 4,
+      "hallucinated_facts": 0,
+      "false_refusals": 4,
+      "median_latency_s": 5.775,
+      "total_cost_usd": 0.00621
+    },
+    "notebook": {
+      "correct": 9,
+      "wrong": 1,
+      "hallucinated_facts": 1,
+      "false_refusals": 0,
+      "median_latency_s": 10.7
+    },
+    "notes": "Scored by hand against product_data.py. Notebook latency = time until the response copy button appears (includes streaming). RAG cost uses gemini-3.5-flash-lite $0.30/$2.50 per 1M; embedding cost not included (4,430 tokens to index)."
+  },
+  "rows": [
+    {
+      "id": "Q1",
+      "type": "lookup",
+      "question": "What does error code E03 mean on the AeroPure AQ-200 and how do I fix it?",
+      "ground_truth": "Airflow blocked by packaging: plastic bag not removed from a new filter (shows in first 30 min). Unplug, remove the bag, reinstall, restart.",
+      "rag": {
+        "score": "wrong",
+        "note": "False refusal: E03 row is split across chunks by PDF table extraction; top-1 chunk had the code but not the fix",
+        "citations": false,
+        "latency_s": 6.974,
+        "tokens_in": 1365,
+        "tokens_out": 6,
+        "cost_usd": 0.000424,
+        "answer": "Not found in the documents."
+      },
+      "notebook": {
+        "score": "correct",
+        "note": "",
+        "citations": true,
+        "latency_s": 11.7,
+        "answer": "Thoughts\nexpand_more\nOn the AeroPure AQ-200 series, error code E03 indicates that airflow is blocked due to packaging\n1\n.\nLikely Cause: The protective plastic shipping bag was not removed from the new main filter prior to operation\n1\n2\n. This code typically triggers within the first 30 minutes of use\n1\n.\nApplicable Models: All models (AQ-200 Lite, AQ-200, and AQ-200 Pro)\n1\n3\n.\nHow to Fix:\nUnplug the unit from the power outlet\n1\n2\n.\nOpen the filter cover and remove the filter\n1\n2\n.\nTake off and discard the plastic bag sealed around the filter\n1\n2\n.\nReinstall the filter until it clicks into place, close the cover firmly, plug the unit back in, and restart\n1\n.\nParts Needed: None\n1\n.\n💡 If you ever need to inspect the sensor or reset the filter timer afterwards, let me know and I can walk you through the control panel shortcuts.\nkeep_pin"
+      }
+    },
+    {
+      "id": "Q2",
+      "type": "lookup",
+      "question": "What is the CADR and the recommended room size of the AQ-200 Pro?",
+      "ground_truth": "450 m3/h; 38-55 m2.",
+      "rag": {
+        "score": "correct",
+        "note": "",
+        "citations": true,
+        "latency_s": 6.551,
+        "tokens_in": 1653,
+        "tokens_out": 47,
+        "cost_usd": 0.000613,
+        "answer": "The AQ-200 Pro has a CADR (smoke) of 450 $m^3/h$ and a recommended room size of 38-55 $m^2$ [S1]."
+      },
+      "notebook": {
+        "score": "correct",
+        "note": "",
+        "citations": true,
+        "latency_s": 12.7,
+        "answer": "For the AeroPure AQ-200 Pro:\nCADR (Smoke): 450 m³/h\n1\nRecommended Room Size: 38–55 m²\n1\n📊 I can put together a side-by-side spec comparison chart across the Lite, standard, and Pro models if you'd like to see how their airflow and noise levels stack up.\nkeep_pin"
+      }
+    },
+    {
+      "id": "Q3",
+      "type": "multi-step",
+      "question": "My AQ-200 Lite shows E02. Which part do I need, how much does it cost, and what must I do after installing it?",
+      "ground_truth": "FL-200H main filter, $39 (or 2-pack FL-200H-2 $70); hold Filter Reset 3 s.",
+      "rag": {
+        "score": "correct",
+        "note": "Did not mention the 2-pack",
+        "citations": true,
+        "latency_s": 5.062,
+        "tokens_in": 1668,
+        "tokens_out": 61,
+        "cost_usd": 0.000653,
+        "answer": "To resolve error code E02 on the AQ-200 Lite, you need the main filter part number FL-200H, which costs $39 [S1, S3]. After installing the new filter, hold the Filter Reset button for 3 seconds [S1]."
+      },
+      "notebook": {
+        "score": "correct",
+        "note": "Also offered the FL-200H-2 2-pack",
+        "citations": true,
+        "latency_s": 9.7,
+        "answer": "Error code E02 indicates that the main filter has reached its rated operational life (approximately 2,160 hours) and needs to be replaced\n1\n.\nPart Needed: FL-200H (H13 HEPA + activated carbon filter)\n1\nmore_horiz\n.\nCost: $39 USD for a single filter (or $70 USD for the FL-200H-2 2-pack value pack)\n2\n.\nWhat to do after installing it: Make sure all plastic packaging is removed from the new filter, seat it properly inside the unit, close the cover firmly, and then press and hold the Filter Reset button for 3 seconds to reset the filter life counter\n1\nmore_horiz\n.\n💡 If you ever want tips on cleaning the washable pre-filter to help extend the life of your new HEPA filter, feel free to ask!\nkeep_pin"
+      }
+    },
+    {
+      "id": "Q4",
+      "type": "multi-step",
+      "question": "I use an AQ-200 Pro in a home with two cats. How often should I replace the main filter, and what is the yearly cost of main filters plus the UV-C lamp?",
+      "ground_truth": "Every 4 months -> 3 x FL-200P $59 = $177 + UV-200 $35 = $212/year.",
+      "rag": {
+        "score": "wrong",
+        "note": "False refusal: maintenance (4 months) and price chunks not both in top-5",
+        "citations": false,
+        "latency_s": 5.536,
+        "tokens_in": 1603,
+        "tokens_out": 6,
+        "cost_usd": 0.000496,
+        "answer": "Not found in the documents."
+      },
+      "notebook": {
+        "score": "correct",
+        "note": "3 x $59 + $35 = $212",
+        "citations": true,
+        "latency_s": 10.7,
+        "answer": "Replacement Schedule\nIn a home with pets, you should replace the main filter every 4 months (compared to every 6 months under normal use)\n1\n2\n.\nComponent Details & Unit Pricing\nMain Filter: The AQ-200 Pro requires the FL-200P (large H13 HEPA + activated carbon filter), which costs $59 each\n3\nmore_horiz\n.\nUV-C Lamp Module: The AQ-200 Pro uses the UV-200 lamp module, which needs replacement every 12 months (approx. 8,000 operating hours) and costs $35\n1\n3\n.\nYearly Cost Breakdown\nMain Filters (3 per year): 3×$59=$177\nUV-C Lamp Module (1 per year): 1×$35=$35\nTotal Annual Consumable Cost: $212 USD (excluding tax and shipping)\n3\n.\n🐱 Since cat hair can rapidly build up on the intake, vacuuming or rinsing the washable pre-filter every 2 weeks will help prevent premature clogging of your main filter\n1\n.\nkeep_pin"
+      }
+    },
+    {
+      "id": "Q5",
+      "type": "aggregation",
+      "question": "How many units of all AQ-200 models combined were sold in Q1 2026 (January to March)?",
+      "ground_truth": "3,790 units (Lite 1,245 + AQ-200 1,890 + Pro 655).",
+      "rag": {
+        "score": "correct",
+        "note": "3,790 with per-month sums",
+        "citations": true,
+        "latency_s": 6.865,
+        "tokens_in": 2043,
+        "tokens_out": 248,
+        "cost_usd": 0.001233,
+        "answer": "To calculate the total units sold of all AQ-200 models combined in Q1 2026 (January to March), we sum the sales for AQ-200 Lite, AQ-200, and AQ-200 Pro for each of those months [S1]:\n\n- **January 2026:** 410 (Lite) + 620 (AQ-200) + 210 (Pro) = 1,240 [S1]\n- **February 2026:** 385 (Lite) + 590 (AQ-200) + 205 (Pro) = 1,180 [S1]\n- **March 2026:** 450 (Lite) + 680 (AQ-200) + 240 (Pro) = 1,370 [S1]\n\nTotal units sold in Q1 2026 = 1,240 + 1,180 + 1,370 = 3,790 units."
+      },
+      "notebook": {
+        "score": "wrong",
+        "note": "Monthly totals correct (1,240/1,180/1,370) but stated grand total 3,490 instead of 3,790 - arithmetic error",
+        "citations": true,
+        "latency_s": 9.6,
+        "answer": "In Q1 2026 (January through March), a combined total of 3,490 units were sold across all three AQ-200 models\n1\n.\nHere is the monthly breakdown by model\n1\n:\nMonth\n\t\nAQ-200 Lite\n\t\nAQ-200 (Standard)\n\t\nAQ-200 Pro\n\t\nMonthly Total\n\n\nJanuary 2026\n1\n\t\n410\n1\n\t\n620\n1\n\t\n210\n1\n\t\n1,240\n\n\nFebruary 2026\n1\n\t\n385\n1\n\t\n590\n1\n\t\n205\n1\n\t\n1,180\n\n\nMarch 2026\n1\n\t\n450\n1\n\t\n680\n1\n\t\n240\n1\n\t\n1,370\n\n\nQ1 Total\n\t\n1,245\n\t\n1,890\n\t\n655\n\t\n3,490\n📊 I can also calculate the estimated list-price revenue generated across these models for Q1 if you'd like to look at the financial performance.\nkeep_pin"
+      }
+    },
+    {
+      "id": "Q6",
+      "type": "aggregation",
+      "question": "Which month had the most Wi-Fi/App support tickets, how many, and what was the reason?",
+      "ground_truth": "March 2026, 47 tickets; firmware 2.3 Wi-Fi reconnect issue (E11), fixed by 2.3.1 on 28 March.",
+      "rag": {
+        "score": "correct",
+        "note": "",
+        "citations": true,
+        "latency_s": 5.775,
+        "tokens_in": 1727,
+        "tokens_out": 88,
+        "cost_usd": 0.000738,
+        "answer": "March 2026 had the most Wi-Fi/App support tickets with a total of 47 tickets [S1, S2]. The reason was that firmware 2.3 caused Wi-Fi reconnect issues (E11) on the AQ-200 and AQ-200 Pro models, which was subsequently fixed by firmware 2.3.1 on March 28 [S1]."
+      },
+      "notebook": {
+        "score": "correct",
+        "note": "",
+        "citations": true,
+        "latency_s": 13.8,
+        "answer": "Thoughts\nexpand_more\nMarch 2026 had the highest number of Wi-Fi/App support tickets, totaling 47 tickets\n1\n.\nReason for the Spike\nThe spike was caused by firmware version 2.3, which introduced Wi-Fi reconnect issues (triggering error code E11) on the AQ-200 and AQ-200 Pro models\n2\n. The issue was resolved with the release of firmware patch 2.3.1 on March 28, 2026\n2\n.\n📈 Would you like to look at the August sensor ticket spike and see what caused that second operational anomaly?\nkeep_pin"
+      }
+    },
+    {
+      "id": "Q7",
+      "type": "numeric cross-doc",
+      "question": "What was the total revenue at list price from AQ-200 Pro units sold from January to October 2026?",
+      "ground_truth": "3,285 units x $349 = $1,146,465.",
+      "rag": {
+        "score": "wrong",
+        "note": "False refusal: price list chunk not retrieved together with sales table",
+        "citations": false,
+        "latency_s": 5.098,
+        "tokens_in": 2043,
+        "tokens_out": 6,
+        "cost_usd": 0.000628,
+        "answer": "Not found in the documents."
+      },
+      "notebook": {
+        "score": "correct",
+        "note": "$1,146,465 with breakdown",
+        "citations": true,
+        "latency_s": 9.7,
+        "answer": "The total revenue at list price from AQ-200 Pro units sold from January to October 2026 was $1,146,465 USD\n1\n2\n.\nCalculation Breakdown\nAQ-200 Pro List Price: $349 USD\n2\nMonthly Units Sold (AQ-200 Pro)\n1\n:\nJan 2026: 210\nFeb 2026: 205\nMar 2026: 240\nApr 2026: 290\nMay 2026: 345\nJun 2026: 410\nJul 2026: 455\nAug 2026: 420\nSep 2026: 360\nOct 2026: 350\nTotal Units Sold: 3,285 units\n1\nTotal Revenue=3,285 units×$349=$1,146,465\n1\n2\n📊 Would you like to see a full comparison table showing total units and list-price revenue across all three models (Lite, Standard, and Pro) for the same 10-month period?\nkeep_pin"
+      }
+    },
+    {
+      "id": "Q8",
+      "type": "lookup-filter",
+      "question": "Which error codes can only appear on the AQ-200 Pro?",
+      "ground_truth": "E08 (VOC sensor failure) and E13 (UV-C lamp fault).",
+      "rag": {
+        "score": "correct",
+        "note": "",
+        "citations": true,
+        "latency_s": 5.218,
+        "tokens_in": 1314,
+        "tokens_out": 23,
+        "cost_usd": 0.000452,
+        "answer": "The error codes that can only appear on the Pro model are E08 and E13 [S2]."
+      },
+      "notebook": {
+        "score": "correct",
+        "note": "",
+        "citations": true,
+        "latency_s": 10.7,
+        "answer": "There are two error codes that can only appear on the AQ-200 Pro\n1\n:\nE08 – VOC sensor failure: Indicates that the VOC sensor is not responding\n1\n. The fix is to restart the unit; if the code persists, the VOC sensor module (SN-VOC, $29 USD) must be replaced\n1\n2\n. (The AQ-200 Pro is the only model equipped with a VOC sensor\n3\n.)\nE13 – UV-C lamp fault: Indicates that the UV-C lamp module has reached the end of its life or is disconnected\n1\n. The fix is to replace the UV-C lamp module (UV-200, $35 USD)\n1\n2\n. The purifier continues filtering air even while the UV-C lamp is inactive\n1\n. (The Pro is the only model that features UV-C sterilization\n3\n.)\n(Note: While E11 for Wi-Fi connection failure and E12 for firmware update failure do not appear on the Lite, they apply to both the standard AQ-200 and the AQ-200 Pro\n1\n.)\n💡 I can also provide the step-by-step instructions for safely swapping out either the UV-C module or the VOC sensor if you're planning any maintenance on a Pro unit.\nkeep_pin"
+      }
+    },
+    {
+      "id": "Q9",
+      "type": "faq",
+      "question": "Can I use the AQ-200 in a bathroom?",
+      "ground_truth": "No - not where humidity is above 80% or it can be splashed.",
+      "rag": {
+        "score": "wrong",
+        "note": "False refusal: safety-note chunk not in top-5",
+        "citations": false,
+        "latency_s": 5.834,
+        "tokens_in": 1472,
+        "tokens_out": 6,
+        "cost_usd": 0.000457,
+        "answer": "Not found in the documents."
+      },
+      "notebook": {
+        "score": "correct",
+        "note": "",
+        "citations": true,
+        "latency_s": 10.7,
+        "answer": "No, you cannot use the AQ-200 in a bathroom\n1\n2\n.\nAccording to the safety instructions and user guidelines:\nDo not operate the purifier in bathrooms or anywhere relative humidity exceeds 80%\n1\n2\n.\nDo not place the unit where it can be splashed with water\n2\n.\nHigh moisture levels can also interfere with the touch panel (triggering error E15)\n3\n and affect the optical readings of the PM2.5 sensor\n3\n4\n.\n📍 The manual recommends placing the unit on a flat, hard floor with at least 30 cm clearance from walls and furniture and 1 m away from heaters\n1\n. Would you like recommendations on ideal room placement for living areas or bedrooms?\nkeep_pin"
+      }
+    },
+    {
+      "id": "Q10",
+      "type": "unanswerable",
+      "question": "What is the price and launch date of the AeroPure AQ-300?",
+      "ground_truth": "Not in the documents (should refuse / say not found).",
+      "rag": {
+        "score": "correct",
+        "note": "Refused correctly",
+        "citations": false,
+        "latency_s": 5.169,
+        "tokens_in": 1665,
+        "tokens_out": 6,
+        "cost_usd": 0.000514,
+        "answer": "Not found in the documents."
+      },
+      "notebook": {
+        "score": "correct",
+        "note": "Said sources do not contain AQ-300; offered web research",
+        "citations": true,
+        "latency_s": 8.7,
+        "answer": "Your sources do not contain any information about an AeroPure AQ-300, including its price or launch date.\nThe documents exclusively cover the AeroPure AQ-200 series, which consists of three models\n1\n:\nAQ-200 Lite: $149 USD\n1\nAQ-200 (Standard): $229 USD\n1\nAQ-200 Pro: $349 USD\n1\n🔍 If you'd like, I can conduct web research to see if there is any public information or announcement regarding an AQ-300 model.\nkeep_pin"
+      }
+    }
+  ]
+}

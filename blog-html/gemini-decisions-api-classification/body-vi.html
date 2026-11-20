@@ -1,0 +1,214 @@
+<div class="hero">
+  <div class="badge">AI Quest &mdash; Investigate How</div>
+  <h1>Gemini Decisions API so với Text Generation truyền thống: Phân loại 40 tài liệu doanh nghiệp về độ chính xác, tốc độ và chi phí</h1>
+  <p class="subtitle">Một benchmark thực hành giữa gemini-decision-1 và Gemini 3.5 Flash-Lite trên hóa đơn, báo giá, hợp đồng, CV và nhiều loại khác, bằng tiếng Việt, tiếng Anh và tiếng Nhật, với từng request đều được đo thời gian và tính giá.</p>
+</div>
+
+<div class="container">
+
+<nav class="toc">
+  <h2>Mục lục</h2>
+  <ol>
+    <li><a href="#s1">Vì sao phân loại cần một API khác</a></li>
+    <li><a href="#s2">Decisions API thực sự trả về gì</a></li>
+    <li><a href="#s3">Thiết kế thử nghiệm: dataset, phương pháp, metric</a></li>
+    <li><a href="#s4">Triển khai từng bước</a></li>
+    <li><a href="#s5">Video demo</a></li>
+    <li><a href="#s6">Kết quả: độ chính xác, tốc độ, chi phí</a></li>
+    <li><a href="#s7">Điểm yếu: câu hỏi về chữ ký</a></li>
+    <li><a href="#s8">Góc nhìn của tôi: khi nào nên dùng, khi nào không</a></li>
+    <li><a href="#s9">Tôi sẽ dùng nó trong công việc hằng ngày như thế nào</a></li>
+    <li><a href="#s10">Kết luận</a></li>
+  </ol>
+</nav>
+
+<section id="s1">
+  <h2>1. Vì sao phân loại cần một API khác</h2>
+  <p>Hầu hết code "AI classification" mà tôi từng viết hoặc review đều giống nhau. Ta gửi tài liệu cho một chat model, yêu cầu "trả về JSON với một category", parse đoạn text, rồi hy vọng model không thêm field thừa, không đổi cách viết của label, hay không suy nghĩ tám giây trước khi trả lời. Model viết ra text chỉ để code của ta lại biến text đó thành một quyết định.</p>
+  <p><strong>Gemini Decisions API</strong> mới của Google (model <code>gemini-decision-1</code>, công bố ngày 11 tháng 11 năm 2026) loại bỏ vòng đi vòng lại đó. Bạn gửi một input và một tập các câu hỏi có kiểu. Model <em>chấm điểm</em> các đáp án ứng viên trong một lượt duy nhất và trả về xác suất, với zero output token. Tôi muốn biết đây là một cải tiến thực sự hay chỉ là một lớp wrapper mới, nên đã xây dựng một benchmark nhỏ nhưng thực tế và chạy từ đầu đến cuối.</p>
+  <div class="card card-info">
+    <p><strong>Bài viết này kiểm tra:</strong> cùng 40 tài liệu, cùng 8 label và cùng cách diễn đạt câu hỏi, được gửi tới (A) Decisions API, (B) Decisions API với <code>resolution: "low"</code>, và (C) cách tiếp cận "truyền thống", Gemini 3.5 Flash-Lite với JSON response schema. Mỗi phương pháp chạy 3 lần. Toàn bộ dữ liệu là dữ liệu giả lập, hư cấu, không dùng tài liệu của khách hàng hay tài liệu nội bộ nào.</p>
+  </div>
+</section>
+
+<section id="s2">
+  <h2>2. Decisions API thực sự trả về gì</h2>
+  <p>Không có prompt template và không có "trả lời bằng JSON". Một request gồm hai phần: một <code>input</code> dùng chung (text, hình ảnh, PDF, audio hoặc video, tối đa khoảng 256K token) và một map các <code>questions</code>. Mỗi câu hỏi thuộc một trong ba kiểu:</p>
+  <table class="data-table">
+    <thead><tr><th>Kiểu</th><th>Dùng cho</th><th>Kết quả trả về</th></tr></thead>
+    <tbody>
+      <tr><td><strong>choice</strong></td><td>Chọn một label trong 2–255 (8 loại tài liệu của tôi)</td><td>Key thắng cuộc + xác suất của mọi lựa chọn + confidence</td></tr>
+      <tr><td><strong>noul</strong> (yes/no)</td><td>Kiểm tra nhị phân ("có chữ ký không?")</td><td>Xác suất của "yes" (0.01–0.99) + confidence</td></tr>
+      <tr><td><strong>score</strong></td><td>Thang chấm có thứ tự ("mức số tiền 0–3")</td><td>Điểm có trọng số theo xác suất + xác suất của từng mức</td></tr>
+    </tbody>
+  </table>
+  <p>Giá là nửa còn lại của câu chuyện. Chi phí là <strong>$0.10 cho mỗi 1M input token và $0 cho output</strong>, và input dùng chung chỉ bị tính một lần dù bạn hỏi bao nhiêu câu. Để so sánh, Gemini 3.5 Flash-Lite có giá $0.30 cho mỗi 1M input token và $2.50 cho mỗi 1M output token (bao gồm cả thinking). Giá lấy từ trang pricing của AI Studio, kiểm tra ngày 20 tháng 11 năm 2026.</p>
+  <div class="card card-warning">
+    <p><strong>Lưu ý thực tế:</strong> bản thân API hoạt động được với key <strong>free-tier</strong> của tôi. Tuy nhiên, ứng dụng "Decisions API Playground" trong AI Studio yêu cầu liên kết một key đã bật billing, nên tôi chỉ test qua Python SDK (<code>google-genai</code> 3.6.1, <code>api_version="v1beta"</code>).</p>
+  </div>
+</section>
+
+<section id="s3">
+  <h2>3. Thiết kế thử nghiệm: dataset, phương pháp, metric</h2>
+  <h3>Dataset</h3>
+  <p>Một script sinh ra <strong>40 tài liệu doanh nghiệp hư cấu</strong>: 8 loại × 5 mẫu, bằng tiếng Việt, tiếng Anh và tiếng Nhật. Mỗi tài liệu đi kèm một ground-truth label và một cờ "có chữ ký". Để bài test không quá dễ, 24 trong 40 tài liệu được cố ý làm khó:</p>
+  <table class="data-table">
+    <thead><tr><th>Độ khó</th><th>Số lượng</th><th>Đã làm gì</th></tr></thead>
+    <tbody>
+      <tr><td>normal</td><td>16</td><td>Render sạch, có tiêu đề</td></tr>
+      <tr><td>notitle</td><td>8</td><td>Bỏ tiêu đề, nên phải suy ra loại từ nội dung (invoice vs quotation vs receipt là cái bẫy kinh điển)</td></tr>
+      <tr><td>photo</td><td>8</td><td>Xoay 4–7°, thêm Gaussian blur và nhiễu, giống ảnh chụp bằng điện thoại</td></tr>
+      <tr><td>lowres</td><td>8</td><td>Thu nhỏ còn 1/3 rồi phóng to lại</td></tr>
+    </tbody>
+  </table>
+  <p>Các label: <code>invoice, quotation, receipt, contract, leave_request, resume, meeting_minutes, delivery_note</code>. 8 file là PDF và 32 file là PNG.</p>
+  <figure class="screenshot-wrap"><img src="images/q3-dataset-gallery.png" alt="Gallery of the 40 synthetic documents"><figcaption>40 tài liệu giả lập cùng label, độ khó và ngôn ngữ của chúng</figcaption></figure>
+  <h3>Phương pháp</h3>
+  <ul>
+    <li><strong>A. Decisions API</strong>: một request cho mỗi tài liệu với hai câu hỏi, <code>doc_type</code> (choice, 8 lựa chọn kèm mô tả một dòng) và <code>has_signature</code> (noul).</li>
+    <li><strong>B. Decisions API, low resolution</strong>: giống A, với <code>"resolution": "low"</code> trên image block.</li>
+    <li><strong>C. Text generation (baseline)</strong>: <code>gemini-3.5-flash-lite</code> với cùng các mô tả trong prompt, <code>response_mime_type="application/json"</code>, một enum schema và <code>temperature=0</code>. Tôi cũng yêu cầu nó tự báo cáo confidence.</li>
+  </ul>
+  <p>Tôi cũng đã thử <code>gemini-3.8-flash</code> và <code>gemini-3.6-flash</code> làm baseline text-generation mạnh hơn. Với input là hình ảnh, các lần gọi đơn lẻ không trả về trong vòng 60 giây trong môi trường của tôi, nên tôi loại chúng ra thay vì báo cáo số liệu không đầy đủ.</p>
+  <h3>Metric</h3>
+  <ul>
+    <li><strong>Accuracy</strong> của <code>doc_type</code> so với ground truth (trung bình của 3 lần chạy), cộng với độ chính xác của chữ ký.</li>
+    <li><strong>Stability</strong>: tỷ lệ tài liệu nhận cùng một label trong cả 3 lần chạy.</li>
+    <li><strong>Latency</strong>: thời gian wall-clock cho mỗi request từ laptop của tôi ở Việt Nam (p50/p95), gọi tuần tự. Các lần retry sau khi bị rate limit không được tính.</li>
+    <li><strong>Cost</strong>: tính từ <em>lượng token sử dụng thực tế</em> do mỗi API trả về, theo giá niêm yết.</li>
+  </ul>
+</section>
+
+<section id="s4">
+  <h2>4. Triển khai từng bước</h2>
+  <h3>Bước 1: Môi trường</h3>
+  <pre>python -m venv .venv; .\.venv\Scripts\Activate.ps1
+pip install google-genai pillow matplotlib python-dotenv
+# .env (never committed, never printed):  GEMINI_API_KEY=...</pre>
+  <h3>Bước 2: Sinh dataset</h3>
+  <p>Một script Pillow ngắn render từng tài liệu từ các template hư cấu (công ty, nhân vật, các dòng hàng, tổng tiền), tùy chọn vẽ một nét nguệch ngoạc lên dòng chữ ký, rồi áp dụng các biến đổi "khó" (bỏ tiêu đề, xoay + blur + nhiễu, thu nhỏ). Nó ghi ground truth ra một file CSV: <code>file, doc_type, has_signature, lang, difficulty</code>. Bất kỳ bộ mẫu không bí mật nào của riêng bạn cũng dùng được theo cách tương tự.</p>
+  <h3>Bước 3: Lệnh gọi Decisions API</h3>
+  <p>Toàn bộ classifier chỉ là một lệnh gọi. Lưu ý rằng <code>instructions</code> là bắt buộc với các câu hỏi <code>choice</code>; SDK sẽ từ chối request trước khi gửi nếu thiếu nó.</p>
+  <pre>client = genai.Client(api_key=key, http_options={"api_version": "v1beta"})
+r = client.decisions.create(
+    model="gemini-decision-1",
+    input=[{"type": "image", "data": b64, "mime_type": "image/png"}],   # "document" for PDFs
+    questions={
+        "doc_type": {"type": "choice", "instructions": Q_TYPE, "criteria": CLASSES},
+        "has_signature": {"type": "noul", "instructions": Q_SIGN},
+    })
+label = r.answers["doc_type"].choice          # e.g. "quotation"
+conf  = r.answers["doc_type"].confidence      # e.g. 0.97
+probs = r.answers["doc_type"].probabilities   # all 8 options
+tokens = r.usage.total_input_tokens           # output is always 0</pre>
+  <h3>Bước 4: Baseline truyền thống</h3>
+  <pre>r = client.models.generate_content(
+    model="gemini-3.5-flash-lite",
+    contents=[types.Part.from_bytes(data=img, mime_type="image/png"), PROMPT],
+    config=types.GenerateContentConfig(
+        response_mime_type="application/json", response_schema=SCHEMA, temperature=0))
+j = json.loads(r.text)    # {"doc_type": "...", "has_signature": true, "confidence": 0.99}</pre>
+  <h3>Bước 5: Một request, ba kiểu câu hỏi</h3>
+  <p>Một request hỏi một câu choice, một câu yes/no và một câu score về một bản báo giá. Nó tốn 1,354 input token và mất khoảng 1 giây.</p>
+  <figure class="screenshot-wrap"><img src="images/q3-quickstart.png" alt="Quickstart output"><figcaption>choice + noul + score trong một lệnh gọi: "quotation" với 0.97, mức số tiền "10–50 million VND" với 0.97, và một câu trả lời lưỡng lự về chữ ký (0.60)</figcaption></figure>
+  <h3>Bước 6: Chạy benchmark và tạo báo cáo</h3>
+  <p>Benchmark lặp qua 40 tài liệu cho từng phương pháp, gửi tuần tự một request cho mỗi tài liệu, đo thời gian wall-clock quanh lệnh gọi, đọc lượng token sử dụng từ response (<code>usage.total_input_tokens</code> với Decisions; <code>usage_metadata.prompt_token_count</code>, <code>candidates_token_count</code> và <code>thoughts_token_count</code> với Flash-Lite), rồi nhân với giá niêm yết. Khi gặp lỗi 429, nó chờ rồi retry, và thời gian chờ không được tính vào latency. Mỗi phương pháp chạy 3 lần, sau đó kết quả được tổng hợp thành các bảng và biểu đồ bên dưới.</p>
+  <figure class="screenshot-wrap"><img src="images/q3-benchmark-terminal.png" alt="Benchmark run in terminal"><figcaption>Cùng 10 tài liệu chạy qua Decisions API và Flash-Lite. Cột ms là thời gian wall-clock thực. Lưu ý lỗi 429 ở Flash-Lite: quota free-tier của nó đã hết khi một lần chạy benchmark khác đang diễn ra. Decisions API (200 RPM trên free tier) không chạm giới hạn nào trong lần ghi hình này.</figcaption></figure>
+</section>
+
+<section id="s5">
+  <h2>5. Video demo</h2>
+  <p>Toàn bộ quá trình chạy được ghi lại trong video bên dưới: đọc tài liệu và bảng giá, thiết lập, sinh dataset, lệnh gọi quickstart, benchmark song song, báo cáo, và confidence routing. Output terminal và thời gian đều là thật, và API key không bao giờ được hiển thị.</p>
+  <!-- VIDEO -->
+</section>
+
+<section id="s6">
+  <h2>6. Kết quả: độ chính xác, tốc độ, chi phí</h2>
+  <p>40 tài liệu × 3 lần chạy × 3 phương pháp = 360 request.</p>
+  <table class="data-table">
+    <thead><tr><th>Phương pháp</th><th>Độ chính xác loại tài liệu</th><th>Độ chính xác chữ ký</th><th>Ổn định giữa các lần chạy</th><th>Latency p50</th><th>Latency p95</th><th>Token vào / ra</th><th>Chi phí cho 1,000 tài liệu</th></tr></thead>
+    <tbody>
+      <tr><td><strong>A. Decisions API</strong></td><td>%%decision.acc%%</td><td>%%decision.sign%%</td><td>%%decision.stab%%</td><td>%%decision.p50%%</td><td>%%decision.p95%%</td><td>%%decision.tok%%</td><td>%%decision.cost%%</td></tr>
+      <tr><td><strong>B. Decisions API (low res)</strong></td><td>%%decision-low.acc%%</td><td>%%decision-low.sign%%</td><td>%%decision-low.stab%%</td><td>%%decision-low.p50%%</td><td>%%decision-low.p95%%</td><td>%%decision-low.tok%%</td><td>%%decision-low.cost%%</td></tr>
+      <tr><td><strong>C. 3.5 Flash-Lite + JSON</strong></td><td>%%flash-lite.acc%%</td><td>%%flash-lite.sign%%</td><td>%%flash-lite.stab%%</td><td>%%flash-lite.p50%%</td><td>%%flash-lite.p95%%</td><td>%%flash-lite.tok%%</td><td>%%flash-lite.cost%%</td></tr>
+    </tbody>
+  </table>
+  <figure class="screenshot-wrap"><img src="images/chart-accuracy.png" alt="Accuracy chart"><figcaption>Độ chính xác phân loại tài liệu</figcaption></figure>
+  <figure class="screenshot-wrap"><img src="images/chart-latency.png" alt="Latency chart"><figcaption>Latency trung vị cho mỗi tài liệu</figcaption></figure>
+  <figure class="screenshot-wrap"><img src="images/chart-cost.png" alt="Cost chart"><figcaption>Chi phí cho 1,000 tài liệu tính từ lượng token thực tế</figcaption></figure>
+  <h3>Các con số cho thấy điều gì</h3>
+  <ul>
+    <li><strong>Độ chính xác hòa nhau ở phần loại tài liệu.</strong> Trên dataset này, cả hai cách tiếp cận đều phân loại đúng 8 loại, kể cả khi không có tiêu đề, trên ảnh chụp xoay và mờ, và bằng tiếng Nhật. Task chưa đủ khó để phân biệt chúng chỉ bằng độ chính xác, và đó cũng là một phát hiện: với tập loại tài liệu back-office thông thường, bạn không cần một generative model để gán đúng label.</li>
+    <li><strong>Tốc độ mới là chỗ tạo ra khoảng cách.</strong> Decisions trả về trong khoảng %%decision.p50%% ở mức trung vị, so với %%flash-lite.p50%% của Flash-Lite, nhanh hơn khoảng <strong>%%speedup%%×</strong>. Flash-Lite tốn thêm thời gian để sinh khoảng 32 output token JSON, và latency của nó dao động nhiều hơn (p95 %%flash-lite.p95%%).</li>
+    <li><strong>Chi phí: rẻ hơn %%costx%%×</strong> ở độ phân giải mặc định và <strong>rẻ hơn %%costx_low%%×</strong> với <code>resolution: "low"</code>, vốn giảm một nửa số image token mà không ảnh hưởng đến độ chính xác loại tài liệu ở đây. Số input token của hai API tương đương nhau; khoản tiết kiệm đến từ giá input thấp hơn và việc không phải trả tiền cho output.</li>
+    <li><strong>Confidence hữu ích, không chỉ để trang trí.</strong> Confidence do Flash-Lite tự báo cáo là 0.99–1.00 trên hầu hết mọi tài liệu, nên nó không cho bạn biết câu trả lời nào cần kiểm tra lại. Xác suất của Decisions API giảm xuống đúng ở những chỗ model không chắc chắn (xem mục 7), đó chính là thứ bạn cần cho routing.</li>
+  </ul>
+  <figure class="screenshot-wrap"><img src="images/chart-routing.png" alt="Routing chart"><figcaption>Có thể tự động hóa được bao nhiêu ở mỗi ngưỡng confidence, và phần được tự động hóa chính xác đến đâu</figcaption></figure>
+</section>
+
+<section id="s7">
+  <h2>7. Điểm yếu: câu hỏi về chữ ký</h2>
+  <p>Kết quả thú vị nhất không phải là con số nổi bật. Ở câu hỏi yes/no <em>"Có chữ ký viết tay trên dòng chữ ký không?"</em>, Decisions API chỉ đạt <strong>%%decision.sign%%</strong>, trong khi Flash-Lite đạt <strong>%%flash-lite.sign%%</strong>.</p>
+  <p>Nhìn vào cả 3 lần chạy, mọi lần sai (24 lần ở độ phân giải mặc định, 18 lần ở low) đều là một tài liệu <em>có ký</em> mà API cho là chưa ký, với confidence nằm giữa <strong>0.52 và 0.65</strong>. API không sai một cách tự tin; nó gần như tung đồng xu và đã nói rõ như vậy. Nhìn chung nó lưỡng lự ở câu hỏi này: ngay cả trong số các câu trả lời chữ ký <em>đúng</em>, 81% có confidence dưới 0.9. "Chữ ký" giả lập của tôi là một nét nguệch ngoạc mảnh màu xanh chiếm một diện tích rất nhỏ trên trang, một chi tiết thị giác nhỏ mà độ phân giải ảnh mặc định có thể làm mờ đi. Hai bài học:</p>
+  <ol>
+    <li><strong>Luôn route theo confidence.</strong> Với ngưỡng 0.9, không lỗi chữ ký nào được tự động hóa. Nhưng phần lớn các lần kiểm tra chữ ký cũng sẽ phải chuyển cho con người, nên với câu hỏi này API chỉ là một bộ lọc an toàn, không phải tự động hóa. Text generation ở đây trả lời đúng, nhưng không cho tín hiệu nào về những trường hợp nó sẽ sai.</li>
+    <li><strong>Các chi tiết thị giác nhỏ cần được xử lý cẩn thận.</strong> Với các kiểm tra như con dấu, chữ ký hay dấu tick nhỏ, hãy thử các giá trị <code>resolution</code> cao hơn hoặc crop vùng đó trước. Đừng cho rằng độ chính xác ở cấp độ loại tài liệu sẽ áp dụng cho chúng.</li>
+  </ol>
+</section>
+
+<section id="s8">
+  <h2>8. Góc nhìn của tôi: khi nào nên dùng, khi nào không</h2>
+  <h3>Dùng Decisions API khi</h3>
+  <ul>
+    <li>Câu trả lời là một <strong>tập đóng</strong> mà bạn có thể viết ra trước: loại tài liệu, danh mục ticket, sentiment, policy pass/fail, "agent nên gọi tool nào", "model nào nên xử lý request này".</li>
+    <li>Bạn cần nó <strong>nằm trong hot path</strong>: routing một tin nhắn chat trước khi model đắt tiền chạy, chặn cửa một lần upload, gán nhãn trước cho các item trong queue. Khoảng 1 giây và một phần nhỏ của một cent cho mỗi tài liệu là đủ rẻ để chạy trên mọi thứ.</li>
+    <li>Bạn muốn <strong>nhiều đánh giá trên cùng một input</strong>. Hai mươi câu kiểm tra yes/no trên một hợp đồng tốn gần như bằng một câu, vì input chỉ bị tính một lần.</li>
+    <li>Bạn cần một <strong>"tôi không chắc" đã được hiệu chuẩn</strong> để quyết định thứ gì cần con người xem xét.</li>
+  </ul>
+  <h3>Ở lại với text generation khi</h3>
+  <ul>
+    <li>Bạn cần <strong>trích xuất giá trị</strong> (số hóa đơn, số tiền, ngày tháng) hoặc giải thích <em>vì sao</em>. Decisions API hoàn toàn không trả về text.</li>
+    <li>Tập label là <strong>mở</strong> hoặc thay đổi theo từng request theo những cách bạn không thể liệt kê.</li>
+    <li>Quyết định phụ thuộc vào một <strong>chi tiết thị giác rất nhỏ</strong> và bạn chưa kiểm chứng resolution hay cropping (xem mục 7).</li>
+  </ul>
+  <p>Mô hình mà tôi thực sự sẽ đưa vào production là một <strong>pipeline hai giai đoạn</strong>: Decisions API phân loại và chấm điểm mọi thứ với chi phí thấp, các item có confidence cao đi thẳng qua, và chỉ những item có confidence thấp hoặc cần trích xuất mới chuyển sang generative model hoặc con người. Nó vẫn đang ở <code>v1beta</code>, hỗ trợ Vertex AI mới ở mức "coming soon", và Playground cần billing, nên với production tôi sẽ chờ GA hoặc giữ một đường fallback.</p>
+  <h3>Về việc chuẩn hóa</h3>
+  <p>Câu hỏi có kiểu → xác suất là một contract sạch hơn so với "prompt → text → regex", và tôi kỳ vọng các nhà cung cấp khác sẽ hội tụ về hướng này. Hiện tại nó chỉ dành riêng cho Gemini, nên tôi giữ các định nghĩa câu hỏi (label + mô tả) trong một file config duy nhất mà cả lệnh gọi Decisions lẫn đường fallback text-generation đều đọc. Khi đó, đổi nhà cung cấp chỉ là đổi lệnh gọi, không phải đổi taxonomy.</p>
+</section>
+
+<section id="s9">
+  <h2>9. Tôi sẽ dùng nó trong công việc hằng ngày như thế nào</h2>
+  <p>Tôi làm việc tại một công ty phát triển phần mềm, viết nội dung kỹ thuật, chuẩn bị demo và hỗ trợ các nhóm dự án. Cụ thể:</p>
+  <table class="data-table">
+    <thead><tr><th>Công việc hằng ngày hiện nay</th><th>Với Decisions API</th></tr></thead>
+    <tbody>
+      <tr><td>Sắp xếp thủ công các file khách hàng gửi đến (spec, báo giá, hợp đồng, ảnh chụp màn hình lỗi) vào thư mục dự án</td><td>Một câu hỏi choice khi upload sẽ chuyển mỗi file vào đúng thư mục; mọi thứ dưới 0.9 sẽ rơi vào thư mục "check me"</td></tr>
+      <tr><td>Phân loại bug report và email hỗ trợ (bug / feature request / question / urgent)</td><td>Choice + score (mức nghiêm trọng 0–3) trong một lệnh gọi, dùng để tự động đặt label và độ ưu tiên</td></tr>
+      <tr><td>Rà soát bản nháp blog của chính mình theo checklist của quest</td><td>Một request với 6–8 câu hỏi yes/no ("có nêu quan điểm riêng không?", "có phần ứng dụng trong công việc hằng ngày không?", "không có dữ liệu bí mật?") trên bản nháp trước khi tôi nộp</td></tr>
+      <tr><td>Chọn LLM nào để gọi trong các công cụ nội bộ</td><td>Một câu hỏi routing rẻ tiền ("FAQ đơn giản / cần suy luận / cần code") để các model đắt tiền chỉ chạy khi cần</td></tr>
+      <tr><td>Kiểm tra ảnh chụp màn hình trước khi xuất bản</td><td>Một câu kiểm tra yes/no cho "có chứa địa chỉ email, API key hoặc tên cá nhân" như một lớp bảo vệ, với con người xem xét mọi thứ không chắc chắn</td></tr>
+    </tbody>
+  </table>
+  <p>Không việc nào trong số này cần text được sinh ra, tất cả đều chạy nhiều lần mỗi ngày, và tất cả đều hưởng lợi từ việc biết khi nào model không chắc chắn. Đó chính xác là dạng bài toán mà API này được tạo ra để giải quyết.</p>
+</section>
+
+<section id="s10">
+  <h2>10. Kết luận</h2>
+  <ul>
+    <li>Trên 40 tài liệu doanh nghiệp đa ngôn ngữ, một phần bị làm suy giảm chất lượng, Decisions API ngang bằng baseline text-generation ở chế độ JSON về độ chính xác loại tài liệu, trong khi nhanh hơn khoảng <strong>%%speedup%%×</strong> và <strong>rẻ hơn %%costx%%–%%costx_low%%×</strong>.</li>
+    <li>Lợi thế thực sự của nó là <strong>đầu ra dạng xác suất</strong>: nó cho phép bạn tự động hóa các trường hợp chắc chắn và route phần còn lại, điều mà một field "confidence" do generative model tự báo cáo không làm được.</li>
+    <li>Nó <strong>không phải phép màu với các chi tiết thị giác nhỏ</strong>. Việc kiểm tra chữ ký cho ra các câu trả lời lưỡng lự, buộc phải chuyển đi review, hoặc được khắc phục bằng resolution hoặc cropping.</li>
+    <li>Hãy coi nó là <strong>giai đoạn đầu tiên</strong> của một pipeline: phân loại, chấm điểm và route, đồng thời giữ text generation cho việc trích xuất và giải thích.</li>
+  </ul>
+  <p><em>Toàn bộ tài liệu, tên, công ty và số tiền trong bài test này đều là hư cấu. Giá là giá niêm yết từ trang pricing của AI Studio tính đến ngày 20 tháng 11 năm 2026; latency được đo từ mạng gia đình và sẽ khác trong môi trường của bạn.</em></p>
+</section>
+
+<section>
+  <h2>Tài liệu tham khảo</h2>
+  <ul>
+    <li><a href="https://blog.google/innovation-and-ai/technology/developers-tools/gemini-decisions-api/" target="_blank">Google Blog – Gemini Decisions API</a></li>
+  </ul>
+</section>
+
+</div>
+<div class="footer">AI Quest &mdash; Investigate How &bull; Gemini Decisions API &bull; 2026</div>

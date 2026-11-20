@@ -1,0 +1,32 @@
+<style>
+.art{position:absolute;z-index:5;right:24px;top:44px;width:470px;height:550px;font-family:'Cascadia Code',Consolas,monospace}
+.art .glow{position:absolute;left:60px;top:120px;width:360px;height:360px;border-radius:50%;background:radial-gradient(circle,rgba(255,170,90,.35),rgba(255,170,90,0) 70%)}
+.art .file{position:absolute;left:105px;top:140px;width:260px;padding:18px 20px;border-radius:16px;background:#0f172a;border:1px solid rgba(255,255,255,.18);box-shadow:0 24px 50px rgba(0,0,0,.45);color:#cbd5e1;font-size:15px;line-height:1.55}
+.art .file .hd{display:flex;gap:8px;align-items:center;margin-bottom:10px;color:#fff;font-family:'Segoe UI',sans-serif;font-weight:700;font-size:18px}
+.art .file .hd i{width:12px;height:12px;border-radius:50%;background:#ff6d00;display:inline-block}
+.art .ky{color:#f9a8d4}.art .vl{color:#86efac}.art .cm{color:#64748b}
+.art .chip{position:absolute;padding:12px 18px;border-radius:14px;font-family:'Segoe UI',sans-serif;font-weight:700;font-size:20px;color:#fff;box-shadow:0 14px 30px rgba(0,0,0,.35);display:flex;gap:10px;align-items:center}
+.art .chip small{display:block;font-weight:500;font-size:13px;opacity:.85}
+.art .a{left:0;top:10px;background:linear-gradient(135deg,#d97757,#b4532f)}
+.art .b{right:0;top:10px;background:linear-gradient(135deg,#10a37f,#0b6e57)}
+.art .ok{position:absolute;left:70px;bottom:0;white-space:nowrap;padding:10px 18px;border-radius:12px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.3);color:#fff;font-family:'Segoe UI',sans-serif;font-size:17px}
+.art svg{position:absolute;left:0;top:0}
+</style>
+<div class="art">
+  <div class="glow"></div>
+  <svg width="470" height="550"><path d="M95 72 C 120 120, 160 130, 190 152" stroke="#fdba74" stroke-width="3" fill="none" stroke-dasharray="7 7"/><path d="M375 72 C 350 120, 310 130, 280 152" stroke="#6ee7b7" stroke-width="3" fill="none" stroke-dasharray="7 7"/></svg>
+  <div class="chip a"><div>Claude Code<small>.claude/skills/</small></div></div>
+  <div class="chip b"><div>Codex CLI<small>.agents/skills/</small></div></div>
+  <div class="file">
+    <div class="hd"><i></i>SKILL.md</div>
+    <span class="cm">---</span><br>
+    <span class="ky">name</span>: <span class="vl">code-review</span><br>
+    <span class="ky">description</span>: <span class="vl">Review code…</span><br>
+    <span class="ky">license</span>: <span class="vl">MIT</span><br>
+    <span class="cm">---</span><br>
+    <span class="cm"># Procedure</span><br>
+    1. Scope · 2. Checklist<br>
+    3. Severity · 4. Report
+  </div>
+  <div class="ok">✔ one folder · two agents · same procedure</div>
+</div>

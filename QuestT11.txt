@@ -1,0 +1,70 @@
+@channel AI Quest Type 1 (Investigate What)
+
+Compare the capabilities of GPT-6.2, Claude Fable 5.2, and Gemini 4 on the same development task by measuring quality, required time, and API costs
+https://openai.com/index/introducing-gpt-6-2-astra-sol/
+
+Requirements:
+
+Write the article in English or Vietnamese. It is strictly prohibited to simply summarize or translate the reference article.
+Test GPT-6.2, Claude Fable 5.2, and Gemini 4 on the exact same development task, and objectively document the comparison results regarding output quality, processing time, and API costs.
+Include your own analysis of which model is most appropriate for which specific use cases based on your comparison results.
+Consider and explicitly state how you can apply these specific AI models to improve your own daily work processes.
+
+@channel AI Quest Type 2 (Investigate How)
+
+Create a common Agent Skill for both Claude Code and Codex, and verify if requirement definition and code review procedures can be reused.
+
+https://www.anthropic.com/news/donating-agent-skills-to-the-agentic-ai-foundation
+https://agentskills.io/specification
+https://code.claude.com/docs/en/skills
+https://docs.github.com/en/copilot/concepts/customizations/agent-skills
+
+
+Requirements:
+
+Actually create a common Agent Skill based on the provided specifications that functions in both Claude Code and Codex.
+Test the created skill with requirement definition and code review tasks, and objectively document the results to show whether the procedures can be successfully reused across both platforms.
+Include your own opinions on the standardization of these skills, and explicitly state how you can apply these Agent Skills to improve and streamline your own daily work processes.
+
+@channel AI Quest Type 2 (Investigate How)
+
+Evaluate the Gemini Decisions API by classifying images or documents and comparing its accuracy, speed, and cost against traditional text-based generative AI methods.
+
+https://blog.google/innovation-and-ai/technology/developers-tools/gemini-decisions-api/
+
+
+Requirements:
+
+Actually implement and test the Gemini Decisions API to classify sample images or documents, and objectively document the comparison results regarding accuracy, processing speed, and API costs.
+Analyze and explicitly state your own opinion on what specific use cases this API would be most convenient and effective for.
+Consider and explicitly state how you can apply this specific API to improve and streamline your own daily work processes.
+
+@channel AI Quest Type 1 (Investigate What)
+
+Investigate the capabilities of ChatGPT for Sales, including prospect research, meeting preparation, follow-ups, and HubSpot integration, to evaluate what percentage of sales activities can be automated.
+
+https://openai.com/index/introducing-chatgpt-for-sales/
+
+
+Requirements:
+
+Write the article in Vietnamese (or English). It is strictly prohibited to submit a simple translation or summarization of the reference article.
+Objectively summarize how ChatGPT for Sales can automate specific tasks such as prospect research, meeting preparation, and follow-ups from meeting notes.
+Clarify what specific workflows and capabilities become possible when integrating ChatGPT for Sales with HubSpot.
+Include your own opinions on how our business can utilize the HubSpot integration, and explicitly state how you can apply these specific AI features to improve and streamline your own daily work processes.
+
+@channel AI Quest Type 2 (Investigate How)
+
+Generate an interactive website or dashboard using Gemini Notebook and verify its differences from traditional RAG
+
+https://blog.google/innovation-and-ai/products/gemini-notebook/interactive-sites/
+
+
+Requirements:
+
+Actually create a sample interactive website or dashboard using the method introduced in Gemini Notebook based on non-sensitive manuals or product materials.
+Strictly ensure that absolutely no internal or customer confidential information is included in your demo or testing process.
+Objectively document the results of your implementation and explicitly clarify the differences between this method and traditional RAG.
+Include your own opinions on this technology, and explicitly state how you can apply these interactive site generation features to improve and streamline your own daily work processes.
+
+

@@ -1,0 +1,328 @@
+{
+ "title": "Windows PowerShell",
+ "steps": [
+  {
+   "comment": "A. Decisions API (gemini-decision-1)",
+   "show": "python run_benchmark.py --method decision --limit 10 --run 0",
+   "prompt": "(.venv) PS D:\\ai_quest\\gemini-decisions-api-classification\\demo-assets>",
+   "events": [
+    [
+     0.542,
+     "\r\n▶ decision  (gemini-decision-1)  — 10 documents\r\n"
+    ],
+    [
+     0.542,
+     "\r\nfile       truth           predicted         conf  sig     ms  tok in/out\r\n"
+    ],
+    [
+     2.458,
+     "doc_01.png resume          ✅ resume         1.00    1   1915   1393/0   "
+    ],
+    [
+     2.458,
+     "\r\n"
+    ],
+    [
+     3.536,
+     "doc_02.png receipt         ✅ receipt        0.97    0   1078   1383/0   "
+    ],
+    [
+     3.536,
+     "\r\n"
+    ],
+    [
+     4.163,
+     "doc_03.png leave_request   ✅ leave_request  1.00    1    627   1383/0   "
+    ],
+    [
+     4.163,
+     "\r\n"
+    ],
+    [
+     4.729,
+     "doc_04.pdf meeting_minutes ✅ meeting_minutes  1.00    0    566    865/0   "
+    ],
+    [
+     4.729,
+     "\r\n"
+    ],
+    [
+     5.625,
+     "doc_05.png quotation       ✅ quotation      1.00    0    895   1383/0   "
+    ],
+    [
+     5.625,
+     "\r\n"
+    ],
+    [
+     6.209,
+     "doc_06.pdf contract        ✅ contract       0.99    1    585    865/0   "
+    ],
+    [
+     6.209,
+     "\r\n"
+    ],
+    [
+     7.307,
+     "doc_07.png quotation       ✅ quotation      0.99    0   1098   1393/0   "
+    ],
+    [
+     7.307,
+     "\r\n"
+    ],
+    [
+     7.894,
+     "doc_08.png resume          ✅ resume         1.00    0    586   1383/0   "
+    ],
+    [
+     7.894,
+     "\r\n"
+    ],
+    [
+     8.62,
+     "doc_09.png leave_request   ✅ leave_request  1.00    1    727   1383/0   "
+    ],
+    [
+     8.62,
+     "\r\n"
+    ],
+    [
+     9.081,
+     "doc_10.png resume          ✅ resume         1.00    0    460   1383/0   "
+    ],
+    [
+     9.081,
+     "\r\n"
+    ],
+    [
+     9.081,
+     "\r\nAccuracy doc_type: 10/10 = 100.0% | p50 727 ms | cost 0.00128 USD → 0.128 USD per 1,000 docs\r\n→ D:\\code\\personal\\ai_quest\\blog-html\\gemini-decisions-api-classification\\demo-assets\\results\\decision_run0.jsonl"
+    ],
+    [
+     9.081,
+     "\r\n"
+    ]
+   ],
+   "exit": 0,
+   "seconds": 9.19
+  },
+  {
+   "comment": "B. Decisions API, resolution=low (fewer tokens)",
+   "show": "python run_benchmark.py --method decision-low --limit 10 --run 0",
+   "prompt": "(.venv) PS D:\\ai_quest\\gemini-decisions-api-classification\\demo-assets>",
+   "events": [
+    [
+     0.542,
+     "\r\n▶ decision-low  (gemini-decision-1)  — 10 documents\r\n"
+    ],
+    [
+     0.543,
+     "\r\nfile       truth           predicted         conf  sig     ms  tok in/out\r\n"
+    ],
+    [
+     2.31,
+     "doc_01.png resume          ✅ resume         1.00    1   1768    557/0   "
+    ],
+    [
+     2.31,
+     "\r\n"
+    ],
+    [
+     2.894,
+     "doc_02.png receipt         ✅ receipt        0.98    0    583    557/0   "
+    ],
+    [
+     2.894,
+     "\r\n"
+    ],
+    [
+     3.465,
+     "doc_03.png leave_request   ✅ leave_request  1.00    1    571    557/0   "
+    ],
+    [
+     3.465,
+     "\r\n"
+    ],
+    [
+     4.109,
+     "doc_04.pdf meeting_minutes ✅ meeting_minutes  1.00    0    644    865/0   "
+    ],
+    [
+     4.109,
+     "\r\n"
+    ],
+    [
+     4.738,
+     "doc_05.png quotation       ✅ quotation      0.99    1    629    557/0   "
+    ],
+    [
+     4.738,
+     "\r\n"
+    ],
+    [
+     5.458,
+     "doc_06.pdf contract        ✅ contract       0.99    1    718    865/0   "
+    ],
+    [
+     5.458,
+     "\r\n"
+    ],
+    [
+     6.579,
+     "doc_07.png quotation       ✅ quotation      0.99    0   1122    557/0   "
+    ],
+    [
+     6.579,
+     "\r\n"
+    ],
+    [
+     7.298,
+     "doc_08.png resume          ✅ resume         1.00    0    718    557/0   "
+    ],
+    [
+     7.298,
+     "\r\n"
+    ],
+    [
+     7.891,
+     "doc_09.png leave_request   ✅ leave_request  1.00    1    594    557/0   "
+    ],
+    [
+     7.891,
+     "\r\n"
+    ],
+    [
+     8.621,
+     "doc_10.png resume          ✅ resume         1.00    0    731    557/0   "
+    ],
+    [
+     8.621,
+     "\r\n"
+    ],
+    [
+     8.623,
+     "\r\nAccuracy doc_type: 10/10 = 100.0% | p50 718 ms | cost 0.00062 USD → 0.062 USD per 1,000 docs\r\n→ D:\\code\\personal\\ai_quest\\blog-html\\gemini-decisions-api-classification\\demo-assets\\results\\decision-low_run0.jsonl"
+    ],
+    [
+     8.623,
+     "\r\n"
+    ]
+   ],
+   "exit": 0,
+   "seconds": 8.81
+  },
+  {
+   "comment": "C. Traditional text generation: 3.5 Flash-Lite + JSON schema",
+   "show": "python run_benchmark.py --method flash-lite --limit 10 --run 0",
+   "prompt": "(.venv) PS D:\\ai_quest\\gemini-decisions-api-classification\\demo-assets>",
+   "events": [
+    [
+     0.539,
+     "\r\n▶ flash-lite  (gemini-3.5-flash-lite)  — 10 documents\r\n"
+    ],
+    [
+     0.539,
+     "\r\nfile       truth           predicted         conf  sig     ms  tok in/out\r\n"
+    ],
+    [
+     4.06,
+     "doc_01.png resume          ✅ resume         0.99    1   3521   1284/32  "
+    ],
+    [
+     4.06,
+     "\r\n"
+    ],
+    [
+     4.443,
+     "   ! doc_02.png: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quot → retry in 5s"
+    ],
+    [
+     4.443,
+     "\r\n"
+    ],
+    [
+     11.297,
+     "doc_02.png receipt         ✅ receipt        0.99    0   1855   1274/32  "
+    ],
+    [
+     11.297,
+     "\r\n"
+    ],
+    [
+     12.646,
+     "doc_03.png leave_request   ✅ leave_request  1.00    1   1348   1274/33  "
+    ],
+    [
+     12.646,
+     "\r\n"
+    ],
+    [
+     13.749,
+     "doc_04.pdf meeting_minutes ✅ meeting_minutes  1.00    0   1104    714/33  "
+    ],
+    [
+     13.749,
+     "\r\n"
+    ],
+    [
+     15.539,
+     "doc_05.png quotation       ✅ quotation      1.00    1   1788   1274/32  "
+    ],
+    [
+     15.539,
+     "\r\n"
+    ],
+    [
+     17.449,
+     "doc_06.pdf contract        ✅ contract       1.00    1   1910    714/31  "
+    ],
+    [
+     17.449,
+     "\r\n"
+    ],
+    [
+     22.12,
+     "doc_07.png quotation       ✅ quotation      0.99    0   4671   1284/33  "
+    ],
+    [
+     22.12,
+     "\r\n"
+    ],
+    [
+     29.643,
+     "doc_08.png resume          ✅ resume         1.00    0   7523   1274/31  "
+    ],
+    [
+     29.643,
+     "\r\n"
+    ],
+    [
+     30.905,
+     "doc_09.png leave_request   ✅ leave_request  1.00    1   1263   1274/33  "
+    ],
+    [
+     30.905,
+     "\r\n"
+    ],
+    [
+     38.183,
+     "doc_10.png resume          ✅ resume         0.99    0   7277   1274/32  "
+    ],
+    [
+     38.183,
+     "\r\n"
+    ],
+    [
+     38.183,
+     "\r\nAccuracy doc_type: 10/10 = 100.0% | p50 1910 ms | cost 0.00430 USD → 0.430 USD per 1,000 docs\r\n→ D:\\code\\personal\\ai_quest\\blog-html\\gemini-decisions-api-classification\\demo-assets\\results\\flash-lite_run0.jsonl"
+    ],
+    [
+     38.183,
+     "\r\n"
+    ]
+   ],
+   "exit": 0,
+   "seconds": 38.29
+  }
+ ]
+}

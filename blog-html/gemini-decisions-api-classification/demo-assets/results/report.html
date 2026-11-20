@@ -1,0 +1,8 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Benchmark Decisions API</title>
+<style>body{font-family:Segoe UI,sans-serif;max-width:980px;margin:32px auto;padding:0 16px;color:#0b0b0b;background:#fcfcfb}
+table{border-collapse:collapse;width:100%}td,th{border:1px solid #e4e3df;padding:8px 10px;text-align:right}td:first-child,th:first-child{text-align:left}
+th{background:#0d47a1;color:#fff}img{max-width:100%;margin:12px 0}</style></head><body>
+<h1>Classification benchmark: 40 documents × 3 runs</h1>
+<table><tr><th>Method</th><th>Type accuracy</th><th>Signature accuracy</th><th>Stability</th><th>p50 ms</th><th>p95 ms</th><th>Token in/out</th><th>USD / 1,000 docs</th></tr><tr><td>Decisions API<br><small>gemini-decision-1</small></td><td>100.0%</td><td>80%</td><td>100%</td><td>754</td><td>1,767</td><td>1280 / 0</td><td>$0.128</td></tr><tr><td>Decisions API (low res)<br><small>gemini-decision-1</small></td><td>100.0%</td><td>85%</td><td>100%</td><td>694</td><td>1,226</td><td>619 / 0</td><td>$0.062</td></tr><tr><td>3.5 Flash-Lite (JSON)<br><small>gemini-3.5-flash-lite</small></td><td>100.0%</td><td>100%</td><td>100%</td><td>3,343</td><td>9,471</td><td>1162 / 32</td><td>$0.429</td></tr></table>
+<img src="../../images/chart-accuracy.png"><img src="../../images/chart-latency.png"><img src="../../images/chart-cost.png"><img src="../../images/chart-routing.png">
+</body></html>

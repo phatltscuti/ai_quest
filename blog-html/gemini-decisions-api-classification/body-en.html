@@ -1,0 +1,214 @@
+<div class="hero">
+  <div class="badge">AI Quest &mdash; Investigate How</div>
+  <h1>Gemini Decisions API vs Traditional Text Generation: Classifying 40 Business Documents for Accuracy, Speed and Cost</h1>
+  <p class="subtitle">A hands-on benchmark of gemini-decision-1 against Gemini 3.5 Flash-Lite on invoices, quotations, contracts, CVs and more, in Vietnamese, English and Japanese, with every request timed and priced.</p>
+</div>
+
+<div class="container">
+
+<nav class="toc">
+  <h2>Contents</h2>
+  <ol>
+    <li><a href="#s1">Why classification needs a different API</a></li>
+    <li><a href="#s2">What the Decisions API actually returns</a></li>
+    <li><a href="#s3">Test design: dataset, methods, metrics</a></li>
+    <li><a href="#s4">Step-by-step implementation</a></li>
+    <li><a href="#s5">Demo video</a></li>
+    <li><a href="#s6">Results: accuracy, speed, cost</a></li>
+    <li><a href="#s7">Where it breaks: the signature question</a></li>
+    <li><a href="#s8">My take: when to use it, and when not to</a></li>
+    <li><a href="#s9">How I will use it in my daily work</a></li>
+    <li><a href="#s10">Conclusion</a></li>
+  </ol>
+</nav>
+
+<section id="s1">
+  <h2>1. Why classification needs a different API</h2>
+  <p>Most "AI classification" code I have written or reviewed looks the same. We send a document to a chat model, ask it to "return JSON with a category", parse the text, and hope the model did not add an extra field, change a label's spelling, or think for eight seconds before answering. The model writes text so that our code can turn the text back into a decision.</p>
+  <p>Google's new <strong>Gemini Decisions API</strong> (model <code>gemini-decision-1</code>, announced 11 November 2026) removes that round-trip. You send an input and a set of typed questions. The model <em>scores</em> the candidate answers in a single pass and returns probabilities, with zero output tokens. I wanted to know whether this is a real improvement or just a new wrapper, so I built a small but realistic benchmark and ran it end-to-end.</p>
+  <div class="card card-info">
+    <p><strong>What this post tests:</strong> the same 40 documents, the same 8 labels and the same wording of the question, sent to (A) the Decisions API, (B) the Decisions API with <code>resolution: "low"</code>, and (C) the "traditional" approach, Gemini 3.5 Flash-Lite with a JSON response schema. Each method ran 3 times. All data is synthetic and fictional, and no customer or internal documents were used.</p>
+  </div>
+</section>
+
+<section id="s2">
+  <h2>2. What the Decisions API actually returns</h2>
+  <p>There is no prompt template and no "answer in JSON". A request has two parts: a shared <code>input</code> (text, images, PDFs, audio or video, up to about 256K tokens) and a map of <code>questions</code>. Each question has one of three types:</p>
+  <table class="data-table">
+    <thead><tr><th>Type</th><th>Use it for</th><th>What comes back</th></tr></thead>
+    <tbody>
+      <tr><td><strong>choice</strong></td><td>Pick one label out of 2–255 (my 8 document types)</td><td>Winning key + probability for every option + confidence</td></tr>
+      <tr><td><strong>noul</strong> (yes/no)</td><td>Binary checks ("is there a signature?")</td><td>Probability of "yes" (0.01–0.99) + confidence</td></tr>
+      <tr><td><strong>score</strong></td><td>Ordered rubric ("amount level 0–3")</td><td>Probability-weighted score + per-level probabilities</td></tr>
+    </tbody>
+  </table>
+  <p>Pricing is the second half of the story. It costs <strong>$0.10 per 1M input tokens and $0 for output</strong>, and the shared input is billed once no matter how many questions you ask. For comparison, Gemini 3.5 Flash-Lite costs $0.30 per 1M input tokens and $2.50 per 1M output tokens (including thinking). Prices come from the AI Studio pricing page, checked 20 November 2026.</p>
+  <div class="card card-warning">
+    <p><strong>Practical note:</strong> the API itself worked on my <strong>free-tier</strong> key. The "Decisions API Playground" app in AI Studio, however, asked me to link a key with billing enabled, so I tested only through the Python SDK (<code>google-genai</code> 3.6.1, <code>api_version="v1beta"</code>).</p>
+  </div>
+</section>
+
+<section id="s3">
+  <h2>3. Test design: dataset, methods, metrics</h2>
+  <h3>Dataset</h3>
+  <p>A script generates <strong>40 fictional business documents</strong>: 8 types × 5 samples, in Vietnamese, English and Japanese. Each comes with a ground-truth label and a "has signature" flag. To keep it from being too easy, 24 of the 40 are deliberately hard:</p>
+  <table class="data-table">
+    <thead><tr><th>Difficulty</th><th>Count</th><th>What was done</th></tr></thead>
+    <tbody>
+      <tr><td>normal</td><td>16</td><td>Clean rendering with a title</td></tr>
+      <tr><td>notitle</td><td>8</td><td>Title removed, so the type must be inferred from content (invoice vs quotation vs receipt is the classic trap)</td></tr>
+      <tr><td>photo</td><td>8</td><td>Rotated 4–7°, Gaussian blur and noise, like a phone photo</td></tr>
+      <tr><td>lowres</td><td>8</td><td>Downscaled to 1/3 and upscaled back</td></tr>
+    </tbody>
+  </table>
+  <p>Labels: <code>invoice, quotation, receipt, contract, leave_request, resume, meeting_minutes, delivery_note</code>. 8 files are PDFs and 32 are PNGs.</p>
+  <figure class="screenshot-wrap"><img src="images/q3-dataset-gallery.png" alt="Gallery of the 40 synthetic documents"><figcaption>The 40 synthetic documents with their labels, difficulty and language</figcaption></figure>
+  <h3>Methods</h3>
+  <ul>
+    <li><strong>A. Decisions API</strong>: one request per document with two questions, <code>doc_type</code> (choice, 8 options with one-line descriptions) and <code>has_signature</code> (noul).</li>
+    <li><strong>B. Decisions API, low resolution</strong>: same as A, with <code>"resolution": "low"</code> on the image block.</li>
+    <li><strong>C. Text generation (baseline)</strong>: <code>gemini-3.5-flash-lite</code> with the same descriptions in the prompt, <code>response_mime_type="application/json"</code>, an enum schema and <code>temperature=0</code>. I also asked it for a self-reported confidence.</li>
+  </ul>
+  <p>I also tried <code>gemini-3.8-flash</code> and <code>gemini-3.6-flash</code> as a stronger text-generation baseline. On image inputs, single calls did not return within 60 seconds in my environment, so I excluded them rather than report partial numbers.</p>
+  <h3>Metrics</h3>
+  <ul>
+    <li><strong>Accuracy</strong> of <code>doc_type</code> against ground truth (mean of 3 runs), plus signature accuracy.</li>
+    <li><strong>Stability</strong>: share of documents that got the same label in all 3 runs.</li>
+    <li><strong>Latency</strong>: wall-clock time per request from my laptop in Vietnam (p50/p95), sequential calls. Retries after rate limits are not counted.</li>
+    <li><strong>Cost</strong>: computed from the <em>actual token usage</em> returned by each API, at list price.</li>
+  </ul>
+</section>
+
+<section id="s4">
+  <h2>4. Step-by-step implementation</h2>
+  <h3>Step 1: Environment</h3>
+  <pre>python -m venv .venv; .\.venv\Scripts\Activate.ps1
+pip install google-genai pillow matplotlib python-dotenv
+# .env (never committed, never printed):  GEMINI_API_KEY=...</pre>
+  <h3>Step 2: Generate the dataset</h3>
+  <p>A short Pillow script renders each document from fictional templates (company, people, line items, totals), optionally draws a scribble on the signature line, then applies the "hard" transformations (remove title, rotate + blur + noise, downscale). It writes the ground truth to a CSV: <code>file, doc_type, has_signature, lang, difficulty</code>. Any similar set of your own non-confidential samples works the same way.</p>
+  <h3>Step 3: The Decisions API call</h3>
+  <p>The whole classifier is one call. Note that <code>instructions</code> is required for <code>choice</code> questions; the SDK rejects the request before sending if it is missing.</p>
+  <pre>client = genai.Client(api_key=key, http_options={"api_version": "v1beta"})
+r = client.decisions.create(
+    model="gemini-decision-1",
+    input=[{"type": "image", "data": b64, "mime_type": "image/png"}],   # "document" for PDFs
+    questions={
+        "doc_type": {"type": "choice", "instructions": Q_TYPE, "criteria": CLASSES},
+        "has_signature": {"type": "noul", "instructions": Q_SIGN},
+    })
+label = r.answers["doc_type"].choice          # e.g. "quotation"
+conf  = r.answers["doc_type"].confidence      # e.g. 0.97
+probs = r.answers["doc_type"].probabilities   # all 8 options
+tokens = r.usage.total_input_tokens           # output is always 0</pre>
+  <h3>Step 4: The traditional baseline</h3>
+  <pre>r = client.models.generate_content(
+    model="gemini-3.5-flash-lite",
+    contents=[types.Part.from_bytes(data=img, mime_type="image/png"), PROMPT],
+    config=types.GenerateContentConfig(
+        response_mime_type="application/json", response_schema=SCHEMA, temperature=0))
+j = json.loads(r.text)    # {"doc_type": "...", "has_signature": true, "confidence": 0.99}</pre>
+  <h3>Step 5: One request, three question types</h3>
+  <p>One request asks a choice, a yes/no and a score question about one quotation. It cost 1,354 input tokens and took about 1 second.</p>
+  <figure class="screenshot-wrap"><img src="images/q3-quickstart.png" alt="Quickstart output"><figcaption>choice + noul + score in one call: "quotation" at 0.97, amount level "10–50 million VND" at 0.97, and a hesitant signature answer (0.60)</figcaption></figure>
+  <h3>Step 6: Run the benchmark and build the report</h3>
+  <p>The benchmark loops over the 40 documents for each method, sends one request per document sequentially, measures wall-clock time around the call, reads token usage from the response (<code>usage.total_input_tokens</code> for Decisions; <code>usage_metadata.prompt_token_count</code>, <code>candidates_token_count</code> and <code>thoughts_token_count</code> for Flash-Lite), and multiplies by list prices. On a 429 it waits and retries, and the waiting time is not counted as latency. Each method ran 3 times, then the results were aggregated into the tables and charts below.</p>
+  <figure class="screenshot-wrap"><img src="images/q3-benchmark-terminal.png" alt="Benchmark run in terminal"><figcaption>The same 10 documents through the Decisions API and Flash-Lite. The ms column is real wall-clock time. Note the 429 on Flash-Lite: its free-tier quota ran out while another benchmark run was in progress. The Decisions API (200 RPM on the free tier) did not hit a limit in this recording.</figcaption></figure>
+</section>
+
+<section id="s5">
+  <h2>5. Demo video</h2>
+  <p>The full run is recorded in the video below: reading the docs and pricing, setting up, generating the dataset, the quickstart call, the side-by-side benchmark, the report, and confidence routing. Terminal output and timings are real, and the API key is never shown.</p>
+  <!-- VIDEO -->
+</section>
+
+<section id="s6">
+  <h2>6. Results: accuracy, speed, cost</h2>
+  <p>40 documents × 3 runs × 3 methods = 360 requests.</p>
+  <table class="data-table">
+    <thead><tr><th>Method</th><th>Type accuracy</th><th>Signature accuracy</th><th>Stable across runs</th><th>p50 latency</th><th>p95 latency</th><th>Tokens in / out</th><th>Cost per 1,000 docs</th></tr></thead>
+    <tbody>
+      <tr><td><strong>A. Decisions API</strong></td><td>%%decision.acc%%</td><td>%%decision.sign%%</td><td>%%decision.stab%%</td><td>%%decision.p50%%</td><td>%%decision.p95%%</td><td>%%decision.tok%%</td><td>%%decision.cost%%</td></tr>
+      <tr><td><strong>B. Decisions API (low res)</strong></td><td>%%decision-low.acc%%</td><td>%%decision-low.sign%%</td><td>%%decision-low.stab%%</td><td>%%decision-low.p50%%</td><td>%%decision-low.p95%%</td><td>%%decision-low.tok%%</td><td>%%decision-low.cost%%</td></tr>
+      <tr><td><strong>C. 3.5 Flash-Lite + JSON</strong></td><td>%%flash-lite.acc%%</td><td>%%flash-lite.sign%%</td><td>%%flash-lite.stab%%</td><td>%%flash-lite.p50%%</td><td>%%flash-lite.p95%%</td><td>%%flash-lite.tok%%</td><td>%%flash-lite.cost%%</td></tr>
+    </tbody>
+  </table>
+  <figure class="screenshot-wrap"><img src="images/chart-accuracy.png" alt="Accuracy chart"><figcaption>Document-type accuracy</figcaption></figure>
+  <figure class="screenshot-wrap"><img src="images/chart-latency.png" alt="Latency chart"><figcaption>Median latency per document</figcaption></figure>
+  <figure class="screenshot-wrap"><img src="images/chart-cost.png" alt="Cost chart"><figcaption>Cost per 1,000 documents from real token usage</figcaption></figure>
+  <h3>What the numbers say</h3>
+  <ul>
+    <li><strong>Accuracy is a tie on document type.</strong> On this dataset both approaches classified the 8 types correctly, even without titles, on rotated blurry photos and in Japanese. The task is not hard enough to separate them on accuracy alone, and that is a finding too: for a typical back-office set of document types, you do not need a generative model to get the label right.</li>
+    <li><strong>Speed is where the gap is.</strong> Decisions returns in about %%decision.p50%% at the median, against %%flash-lite.p50%% for Flash-Lite, roughly <strong>%%speedup%%× faster</strong>. Flash-Lite spends the extra time producing about 32 output tokens of JSON, and the latency varies more (p95 %%flash-lite.p95%%).</li>
+    <li><strong>Cost: %%costx%%× cheaper</strong> at the default resolution and <strong>%%costx_low%%× cheaper</strong> with <code>resolution: "low"</code>, which halved the image tokens without hurting type accuracy here. Input token counts are similar for both APIs; the saving comes from the lower input price and from paying nothing for output.</li>
+    <li><strong>Confidence is useful, not decorative.</strong> Flash-Lite's self-reported confidence was 0.99–1.00 on almost every document, so it tells you nothing about which answers to double-check. The Decisions API's probabilities dropped exactly where the model was unsure (see section 7), which is what you need for routing.</li>
+  </ul>
+  <figure class="screenshot-wrap"><img src="images/chart-routing.png" alt="Routing chart"><figcaption>How much can be automated at each confidence threshold, and how accurate the automated part is</figcaption></figure>
+</section>
+
+<section id="s7">
+  <h2>7. Where it breaks: the signature question</h2>
+  <p>The most interesting result was not the headline number. On the yes/no question <em>"Is there a handwritten signature on the signature line?"</em>, the Decisions API reached only <strong>%%decision.sign%%</strong>, while Flash-Lite reached <strong>%%flash-lite.sign%%</strong>.</p>
+  <p>Looking at all 3 runs, every miss (24 at default resolution, 18 at low) was a <em>signed</em> document that the API called unsigned, with confidence between <strong>0.52 and 0.65</strong>. The API was not confidently wrong; it was close to a coin flip and said so. It was hesitant on this question in general: even among its <em>correct</em> signature answers, 81% had confidence below 0.9. My synthetic "signature" is a thin blue scribble that takes up a tiny area of the page, a small visual detail that the default image resolution may blur away. Two lessons:</p>
+  <ol>
+    <li><strong>Always route on confidence.</strong> With a 0.9 threshold, none of the signature errors would have been automated. But most signature checks would also have gone to a person, so for this question the API is a safe filter, not an automation. Text generation got it right here, but gives no signal for the cases where it would not.</li>
+    <li><strong>Small visual details need care.</strong> For checks like stamps, signatures or tiny check marks, test higher <code>resolution</code> values or crop the region first. Do not assume the type-level accuracy carries over.</li>
+  </ol>
+</section>
+
+<section id="s8">
+  <h2>8. My take: when to use it, and when not to</h2>
+  <h3>Use the Decisions API when</h3>
+  <ul>
+    <li>The answer is a <strong>closed set</strong> you can write down in advance: document type, ticket category, sentiment, policy pass/fail, "which tool should the agent call", "which model should handle this request".</li>
+    <li>You need it <strong>inside a hot path</strong>: routing a chat message before the expensive model runs, gating an upload, pre-labelling items in a queue. About 1 second and a fraction of a cent per document is cheap enough to run on everything.</li>
+    <li>You want <strong>several judgements over the same input</strong>. Twenty yes/no checks on one contract cost almost the same as one, because the input is billed once.</li>
+    <li>You need a <strong>calibrated "I'm not sure"</strong> to decide what a human should look at.</li>
+  </ul>
+  <h3>Stay with text generation when</h3>
+  <ul>
+    <li>You need to <strong>extract values</strong> (invoice number, amount, dates) or explain <em>why</em>. The Decisions API returns no text at all.</li>
+    <li>The label set is <strong>open-ended</strong> or changes per request in ways you cannot enumerate.</li>
+    <li>The decision depends on a <strong>tiny visual detail</strong> and you have not validated resolution or cropping yet (see section 7).</li>
+  </ul>
+  <p>The pattern I would actually ship is a <strong>two-stage pipeline</strong>: the Decisions API classifies and scores everything cheaply, high-confidence items go straight through, and only low-confidence items or ones needing extraction go to a generative model or a human. It is still <code>v1beta</code>, Vertex AI support is "coming soon", and the Playground needs billing, so for production I would wait for GA or keep a fallback path.</p>
+  <h3>On standardisation</h3>
+  <p>Typed question → probabilities is a cleaner contract than "prompt → text → regex", and I expect other providers to converge on it. Today it is Gemini-specific, so I keep the question definitions (labels + descriptions) in one config file that both the Decisions call and the text-generation fallback read. Switching providers then means changing the call, not the taxonomy.</p>
+</section>
+
+<section id="s9">
+  <h2>9. How I will use it in my daily work</h2>
+  <p>I work at a software development company, writing technical content, preparing demos and supporting project teams. Concretely:</p>
+  <table class="data-table">
+    <thead><tr><th>Daily task today</th><th>With the Decisions API</th></tr></thead>
+    <tbody>
+      <tr><td>Sorting inbound files from customers (specs, quotations, contracts, screenshots of bugs) into project folders by hand</td><td>A choice question on upload routes each file to the right folder; anything below 0.9 lands in a "check me" folder</td></tr>
+      <tr><td>Triaging bug reports and support emails (bug / feature request / question / urgent)</td><td>Choice + score (severity 0–3) in one call, used to set labels and priority automatically</td></tr>
+      <tr><td>Reviewing my own blog drafts against our quest checklist</td><td>One request with 6–8 yes/no questions ("states own opinion?", "includes daily-work application?", "no confidential data?") over the draft before I submit</td></tr>
+      <tr><td>Choosing which LLM to call in internal tools</td><td>A cheap routing question ("simple FAQ / needs reasoning / needs code") so expensive models only run when needed</td></tr>
+      <tr><td>Checking screenshots before publishing</td><td>A yes/no check for "contains an email address, API key or personal name" as a safety net, with a human looking at anything uncertain</td></tr>
+    </tbody>
+  </table>
+  <p>None of these need generated text, all of them run many times a day, and all of them benefit from knowing when the model is unsure. That is exactly the shape of problem this API is built for.</p>
+</section>
+
+<section id="s10">
+  <h2>10. Conclusion</h2>
+  <ul>
+    <li>On 40 multilingual, partly degraded business documents, the Decisions API matched a JSON-mode text-generation baseline on document-type accuracy while being about <strong>%%speedup%%× faster</strong> and <strong>%%costx%%–%%costx_low%%× cheaper</strong>.</li>
+    <li>Its real advantage is the <strong>probability output</strong>: it lets you automate the confident cases and route the rest, which a self-reported "confidence" field from a generative model does not.</li>
+    <li>It is <strong>not magic for small visual details</strong>. The signature check showed hesitant answers that must go to review, or be fixed with resolution or cropping.</li>
+    <li>Treat it as the <strong>first stage</strong> of a pipeline: classify, score and route, and keep text generation for extraction and explanation.</li>
+  </ul>
+  <p><em>All documents, names, companies and amounts in this test are fictional. Prices are list prices from the AI Studio pricing page as of 20 November 2026; latency was measured from a home network and will differ in your environment.</em></p>
+</section>
+
+<section>
+  <h2>References</h2>
+  <ul>
+    <li><a href="https://blog.google/innovation-and-ai/technology/developers-tools/gemini-decisions-api/" target="_blank">Google Blog – Gemini Decisions API</a></li>
+  </ul>
+</section>
+
+</div>
+<div class="footer">AI Quest &mdash; Investigate How &bull; Gemini Decisions API &bull; 2026</div>

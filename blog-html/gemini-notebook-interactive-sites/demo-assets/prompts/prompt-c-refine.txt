@@ -1,0 +1,1 @@
+Update the troubleshooting site: add a Vietnamese/English language toggle, and on each error code card add a "Still not fixed?" button that shows the service fee ($0 in warranty, $25 out of warranty) and the warranty length for the selected model.

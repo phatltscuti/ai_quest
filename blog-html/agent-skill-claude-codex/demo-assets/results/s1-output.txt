@@ -1,0 +1,18 @@
+Folder PATH listing for volume Data
+Volume serial number is 38B1-96F5
+D:\CODE\PERSONAL\AI_QUEST\BLOG-HTML\AGENT-SKILL-CLAUDE-CODEX\DEMO-PROJECT\.AGENTS
+\---skills
+    +---code-review
+    |   |   SKILL.md
+    |   |   
+    |   \---references
+    |           checklist.md
+    |           
+    \---requirement-definition
+        |   SKILL.md
+        |   
+        \---references
+                template.md
+                
+Valid skill: .agents\skills\code-review
+Valid skill: .agents\skills\requirement-definition

@@ -1,0 +1,326 @@
+<div class="hero">
+  <div class="badge">AI Quest &mdash; Investigate How</div>
+  <h1>Creating a Common Agent Skill for Claude Code and Codex: Can Requirement Definition and Code Review Be Reused?</h1>
+  <p class="subtitle">I wrote two Agent Skills once, put them in a single folder, and ran the same tasks through Claude Code and OpenAI Codex CLI. Here is what transferred, what did not, and the full skills so you can try them yourself.</p>
+</div>
+
+<div class="container">
+
+<nav class="toc">
+  <h2>Contents</h2>
+  <ol>
+    <li><a href="#s1">Why a common skill matters</a></li>
+    <li><a href="#s2">The Agent Skills format in five minutes</a></li>
+    <li><a href="#s3">One folder for two agents</a></li>
+    <li><a href="#s4">The two skills (full source)</a></li>
+    <li><a href="#s5">Test setup</a></li>
+    <li><a href="#s6">Demo video</a></li>
+    <li><a href="#s7">Results: discovery, requirement definition, code review</a></li>
+    <li><a href="#s8">What I learned (including the Windows surprises)</a></li>
+    <li><a href="#s9">My opinion on skill standardisation</a></li>
+    <li><a href="#s10">How I will use Agent Skills in my daily work</a></li>
+  </ol>
+</nav>
+
+<section id="s1">
+  <h2>1. Why a common skill matters</h2>
+  <p><strong>Agent Skills</strong> are folders of instructions (a <code>SKILL.md</code> plus optional references and scripts) that a coding agent loads only when a task needs them. Our team, like many, does not use a single agent: some people prefer Claude Code, others Codex, and reviewers use GitHub Copilot. If every tool needs its own prompt files, our review checklist and our requirements template slowly drift apart.</p>
+  <p>Anthropic donated the Agent Skills specification to the Agentic AI Foundation in October 2026, and Codex and GitHub Copilot both read the same format. The question for this quest is practical: <strong>can I write a requirement-definition procedure and a code-review procedure once, and get the same behaviour from Claude Code and Codex?</strong></p>
+</section>
+
+<section id="s2">
+  <h2>2. The Agent Skills format in five minutes</h2>
+  <p>The open specification at agentskills.io is deliberately small:</p>
+  <table class="data-table">
+    <thead><tr><th>Part</th><th>Rule</th></tr></thead>
+    <tbody>
+      <tr><td><code>SKILL.md</code></td><td>YAML frontmatter between <code>---</code> lines, then Markdown instructions. Keep it under about 500 lines.</td></tr>
+      <tr><td><code>name</code> (required)</td><td>1–64 characters, lowercase letters, digits and hyphens. It must match the folder name.</td></tr>
+      <tr><td><code>description</code> (required)</td><td>Up to 1,024 characters: what the skill does and <em>when to use it</em>. Agents match tasks to skills with this text.</td></tr>
+      <tr><td>Optional fields</td><td><code>license</code>, <code>compatibility</code>, <code>metadata</code>, <code>allowed-tools</code> (experimental)</td></tr>
+      <tr><td>Optional folders</td><td><code>references/</code>, <code>scripts/</code>, <code>assets/</code>, loaded only when the instructions point to them (progressive disclosure)</td></tr>
+    </tbody>
+  </table>
+  <p>Where each tool looks for project skills:</p>
+  <table class="data-table">
+    <thead><tr><th>Tool</th><th>Project skill folder</th><th>Explicit invocation</th></tr></thead>
+    <tbody>
+      <tr><td>Claude Code</td><td><code>.claude/skills/&lt;name&gt;/SKILL.md</code></td><td><code>/skill-name</code></td></tr>
+      <tr><td>Codex CLI</td><td><code>.agents/skills/&lt;name&gt;/SKILL.md</code></td><td><code>$skill-name</code></td></tr>
+      <tr><td>GitHub Copilot</td><td><code>.github/skills</code>, <code>.claude/skills</code> or <code>.agents/skills</code></td><td>automatic by description</td></tr>
+    </tbody>
+  </table>
+  <p>All three also pick a skill automatically when the request matches its <code>description</code>.</p>
+</section>
+
+<section id="s3">
+  <h2>3. One folder for two agents</h2>
+  <p>To avoid two copies drifting apart, I keep the real files in <code>.agents/skills/</code> (read by Codex and Copilot) and make <code>.claude/skills</code> a directory junction pointing to it (a symlink works the same on macOS/Linux):</p>
+  <pre>demo-project/
+├── .agents/skills/
+│   ├── requirement-definition/
+│   │   ├── SKILL.md
+│   │   └── references/template.md
+│   └── code-review/
+│       ├── SKILL.md
+│       └── references/checklist.md
+├── .claude/skills  →  junction to .agents/skills
+├── feature-request.txt
+└── leave_service.py
+
+# Windows (no admin needed for a junction)
+mklink /J .claude\skills .agents\skills
+# macOS / Linux
+ln -s ../.agents/skills .claude/skills</pre>
+  <p>I used only fields from the open spec (<code>name</code>, <code>description</code>, <code>license</code>, <code>compatibility</code>, <code>metadata</code>) and no tool-specific extensions, then validated both skills with the reference validator:</p>
+  <pre>pip install skills-ref
+agentskills validate .agents/skills/code-review              # Valid skill
+agentskills validate .agents/skills/requirement-definition   # Valid skill</pre>
+  <figure class="screenshot-wrap"><img src="images/q2-s1.png" alt="Agent Skills folder and validation"><figcaption>One skill folder, two tools, and both skills pass the spec validator</figcaption></figure>
+</section>
+
+<section id="s4">
+  <h2>4. The two skills (full source)</h2>
+  <p>Copy these four files into <code>.agents/skills/</code> in your repository (and link <code>.claude/skills</code> to it) to try them yourself. They are MIT-licensed.</p>
+
+  <h3>4.1 <code>requirement-definition/SKILL.md</code></h3>
+  <pre>---
+name: requirement-definition
+description: Turn an informal feature request (Slack message, email, meeting note) into a structured requirements document with user stories, numbered functional and non-functional requirements, Given/When/Then acceptance criteria, assumptions and open questions. Use when the user asks to define, clarify, write or review requirements, a spec, or acceptance criteria for a feature.
+license: MIT
+compatibility: Agent Skills standard (agentskills.io). Tested with Claude Code and OpenAI Codex CLI. Needs read/write access to the repository.
+metadata:
+  author: phatlt
+  version: "1.0"
+---
+
+# Requirement definition
+
+Produce a requirements document that a developer, a tester and the requester can all agree on.
+
+## Procedure
+
+1. **Read the request and the code it touches.** Find the related modules (search for nouns from the request) so requirements match the real data model. Never invent tables or fields that do not exist without marking them as *new*.
+2. **Separate facts from guesses.** Anything the requester did not state explicitly goes to *Assumptions* (A-xx). Anything that blocks implementation goes to *Open questions* (Q-xx) addressed to a named role.
+3. **Write the document** using exactly the template in [references/template.md](references/template.md). Keep every heading, in the same order, even if a section is "None".
+4. **Number everything**: FR-01, NFR-01, AC-01, A-01, Q-01. Each acceptance criterion references the FR it verifies.
+5. **Acceptance criteria** use Given / When / Then and must be testable (concrete values, no "should work well").
+6. **Save** the document to `docs/requirements/&lt;kebab-case-feature-name&gt;.md` and print a 3-line summary: number of FRs, NFRs, ACs and open questions.
+
+## Rules
+
+- Write in the language of the request unless the user asks otherwise.
+- Prefer short sentences; one requirement per line.
+- Flag security, privacy and audit needs explicitly as NFRs.
+- Do not write implementation code in this skill.</pre>
+
+  <h3>4.2 <code>requirement-definition/references/template.md</code></h3>
+  <pre># &lt;Feature name&gt; — Requirements
+
+| Item | Value |
+|---|---|
+| Source | &lt;where the request came from&gt; |
+| Requester | &lt;role&gt; |
+| Target date | &lt;date or "not stated"&gt; |
+| Related code | &lt;files/modules&gt; |
+
+## 1. Background
+## 2. Goals / Non-goals
+## 3. User stories            (US-01: As a &lt;role&gt;, I want ... so that ...)
+## 4. Functional requirements (| ID | Requirement | Priority (Must/Should/Could) |)
+## 5. Non-functional requirements (| ID | Category | Requirement |)
+## 6. Acceptance criteria     (| ID | Verifies | Given | When | Then |)
+## 7. Assumptions             (A-01: ...)
+## 8. Open questions          (| ID | Question | To |)
+## 9. Out of scope</pre>
+
+  <h3>4.3 <code>code-review/SKILL.md</code></h3>
+  <pre>---
+name: code-review
+description: Review source code or a diff for security, correctness, error handling, maintainability and test coverage, and report findings in a fixed severity-ranked format with file:line references and concrete fixes. Use when the user asks for a code review, PR review, bug hunt, security check or "look over this code".
+license: MIT
+compatibility: Agent Skills standard (agentskills.io). Tested with Claude Code and OpenAI Codex CLI. Read-only; does not modify code.
+metadata:
+  author: phatlt
+  version: "1.0"
+---
+
+# Code review
+
+Review like a senior engineer who must sign off the change. Be specific, cite lines, propose fixes. Do not edit the code.
+
+## Procedure
+
+1. **Scope**: review the files or diff the user names. If none are named, review files changed in the working tree (`git diff --name-only`), otherwise all source files in the current directory.
+2. **Read every line** of the in-scope files. Check each item of [references/checklist.md](references/checklist.md).
+3. **Classify** every finding with exactly one severity:
+   - **Critical**: security hole, data loss, secret exposure. Must fix before merge.
+   - **Major**: wrong behaviour, broken business rule, crash risk.
+   - **Minor**: error handling, robustness, maintainability.
+   - **Nit**: style, naming, comments.
+4. **Report** using the output format below, sorted Critical → Nit. One finding per row. Merge duplicates.
+5. Finish with a one-line **verdict**: `APPROVE`, `APPROVE WITH COMMENTS` or `REQUEST CHANGES` (any Critical or Major → REQUEST CHANGES).
+
+## Output format
+
+## Code review: &lt;scope&gt;
+
+| # | Severity | Location | Finding | Suggested fix |
+|---|----------|----------|---------|---------------|
+| 1 | Critical | file.py:12 | ... | ... |
+
+**Summary:** &lt;n&gt; Critical, &lt;n&gt; Major, &lt;n&gt; Minor, &lt;n&gt; Nit
+**Verdict:** REQUEST CHANGES
+
+## Rules
+
+- Location must be `path:line` (or `path:start-end`).
+- Never report something you did not verify in the code.
+- If tests are missing for changed logic, report it as Minor.</pre>
+
+  <h3>4.4 <code>code-review/references/checklist.md</code></h3>
+  <pre># Review checklist
+
+## Security
+- [ ] No secrets, tokens or passwords in source code or logs
+- [ ] All SQL uses parameter binding (no string formatting / f-strings)
+- [ ] Authorization: the caller is allowed to perform the action (e.g. no self-approval)
+- [ ] Input validation for user-supplied values
+
+## Correctness
+- [ ] Logic matches docstrings, comments and business rules (inclusive/exclusive ranges, off-by-one)
+- [ ] State transitions are checked (e.g. cannot approve something already approved or cancelled)
+- [ ] No mutable default arguments or shared global state
+
+## Error handling &amp; resources
+- [ ] No silent `except: pass` / swallowed exceptions
+- [ ] Connections, files and cursors are closed (context managers)
+
+## Maintainability &amp; tests
+- [ ] Functions are small and named for what they do
+- [ ] Changed logic has tests</pre>
+</section>
+
+<section id="s5">
+  <h2>5. Test setup</h2>
+  <h3>Inputs (identical for both tools)</h3>
+  <ul>
+    <li><strong>Requirement definition</strong>: a real-style, messy Slack message from HR asking for "self-service leave cancellation", with partial cancellation, manager notification and audit hints buried in casual text.</li>
+    <li><strong>Code review</strong>: a 50-line Python module for leave requests (fictional) with <strong>6 seeded issues</strong>: a hard-coded admin token, SQL injection through an f-string, an off-by-one day count that contradicts its docstring, a mutable default argument, a missing authorization and state check in <code>approve_request</code>, and a silent <code>except Exception: pass</code>.</li>
+  </ul>
+  <h3>Commands (exactly what was run)</h3>
+  <pre># Claude Code
+claude -p "/requirement-definition feature-request.txt (answer in English)" --permission-mode acceptEdits
+claude -p "/code-review leave_service.py (answer in English)" --allowedTools Read,Grep,Glob
+
+# Codex CLI
+codex exec --skip-git-repo-check --dangerously-bypass-approvals-and-sandbox "$requirement-definition feature-request.txt (answer in English)"
+codex exec --skip-git-repo-check --dangerously-bypass-approvals-and-sandbox "$code-review leave_service.py (answer in English)"</pre>
+  <div class="card card-warning">
+    <p><strong>Environment, stated plainly:</strong> Windows 11, Claude Code 2.1.329 (its default model) and Codex CLI 0.171.0. I did not have a ChatGPT/OpenAI subscription for Codex, so I configured Codex with a custom model provider: <strong>Gemini 3.5 Flash-Lite</strong>, reached through a small local bridge that exposes the OpenAI Responses API. Skill discovery, loading, tool calls and file edits are all done by Codex itself; only the model behind it differs. That matters for the results: differences in <em>depth</em> below are mostly model differences, while differences in <em>procedure</em> are what the skill controls.</p>
+  </div>
+</section>
+
+<section id="s6">
+  <h2>6. Demo video</h2>
+  <p>Every command below is real and shown with its real output and timing: the folder and validation, skill discovery in both tools, both requirement runs and both code reviews.</p>
+  <!-- VIDEO -->
+</section>
+
+<section id="s7">
+  <h2>7. Results</h2>
+  <h3>7.1 Discovery: both agents found the same skills</h3>
+  <p>Asked "which skills can you use?", Claude Code listed <code>code-review</code> and <code>requirement-definition</code> from <code>.claude/skills</code> (through the junction). Codex listed the same two from <code>.agents/skills</code>, next to its four built-in system skills. Neither tool needed any change to the files.</p>
+  <figure class="screenshot-wrap"><img src="images/q2-s2a.png" alt="Claude Code lists the Agent Skills"><figcaption>Claude Code discovers both skills</figcaption></figure>
+  <figure class="screenshot-wrap"><img src="images/q2-s2c.png" alt="Codex CLI lists the Agent Skills"><figcaption>Codex CLI discovers the same two skills plus its built-in ones</figcaption></figure>
+
+  <h3>7.2 Requirement definition</h3>
+  <figure class="screenshot-wrap"><img src="images/q2-s3.png" alt="Claude Code requirement-definition run"><figcaption>Claude Code: the document is saved to docs/requirements/ and summarised</figcaption></figure>
+  <figure class="screenshot-wrap"><img src="images/q2-s4.png" alt="Codex requirement-definition run"><figcaption>Codex: reads the request, writes the document with the same template</figcaption></figure>
+  <table class="data-table">
+    <thead><tr><th>Check (from the skill)</th><th>Claude Code</th><th>Codex CLI</th></tr></thead>
+    <tbody>
+      <tr><td>All 9 template sections, same order</td><td>✅ 9/9</td><td>✅ 9/9</td></tr>
+      <tr><td>Numbered IDs (US, FR, NFR, AC, A, Q)</td><td>✅</td><td>✅</td></tr>
+      <tr><td>Each AC references an FR</td><td>✅</td><td>✅</td></tr>
+      <tr><td>Saved under <code>docs/requirements/</code></td><td>✅</td><td>✅</td></tr>
+      <tr><td>Read the code and used real fields (<code>leave_requests</code>, <code>status</code>, <code>approver</code>)</td><td>✅ and marked new fields as <em>new</em></td><td>✅ (<code>leave_requests</code>, <code>status</code>, <code>approver</code>), with less detail</td></tr>
+      <tr><td>Counts: user stories / FR / NFR / AC / assumptions / open questions</td><td>4 / 17 / 10 / 18 / 10 / 10</td><td>4 / 6 / 2 / 5 / 2 / 2</td></tr>
+      <tr><td>Testable ACs with concrete values</td><td>✅ dates, IDs, balances, exact error messages</td><td>✅ but fewer and less specific</td></tr>
+      <tr><td>Wall-clock time</td><td>58 s</td><td>163 s (incl. a failed <code>mkdir</code> it recovered from)</td></tr>
+    </tbody>
+  </table>
+  <p>The <strong>procedure</strong> transferred completely: same headings, same numbering scheme, same file location. The <strong>depth</strong> did not: Claude Code's document read like a spec I could hand to a tester (for example "Today is 2026-12-23; #11 is approved 2026-12-22 to 2026-12-26; cancel from 2026-12-24 → end = 2026-12-23, days = 2"), while the Codex run with a Flash-Lite model produced a correct but thin skeleton.</p>
+
+  <h3>7.3 Code review</h3>
+  <figure class="screenshot-wrap"><img src="images/q2-s5.png" alt="Claude Code code-review output"><figcaption>Claude Code: 13 findings, verdict REQUEST CHANGES</figcaption></figure>
+  <figure class="screenshot-wrap"><img src="images/q2-s6.png" alt="Codex code-review output"><figcaption>Codex: 8 findings in the identical table format, verdict REQUEST CHANGES</figcaption></figure>
+  <table class="data-table">
+    <thead><tr><th>Seeded issue</th><th>Claude Code</th><th>Codex CLI</th></tr></thead>
+    <tbody>
+      <tr><td>Hard-coded admin token</td><td>✅ Critical</td><td>✅ Critical</td></tr>
+      <tr><td>SQL injection (f-string)</td><td>✅ Critical</td><td>✅ Critical</td></tr>
+      <tr><td>Off-by-one vs docstring</td><td>✅ Major</td><td>✅ Minor (under-rated)</td></tr>
+      <tr><td>Mutable default argument</td><td>✅ Major</td><td>✅ Major</td></tr>
+      <tr><td>Missing authorization / state check</td><td>✅ Critical + Major (split)</td><td>✅ Major</td></tr>
+      <tr><td>Silent <code>except: pass</code></td><td>✅ Minor</td><td>✅ Minor</td></tr>
+      <tr><td><strong>Seeded issues found</strong></td><td><strong>6 / 6</strong></td><td><strong>6 / 6</strong></td></tr>
+      <tr><td>Extra valid findings</td><td>7 (input validation, unclosed connections, TOCTOU race, no tests, nits)</td><td>2 (unclosed connections, no tests)</td></tr>
+      <tr><td>Output format and verdict as specified</td><td>✅</td><td>✅</td></tr>
+      <tr><td>Line references exact</td><td>✅</td><td>Mostly (several off by 1)</td></tr>
+      <tr><td>Wall-clock time</td><td>30 s</td><td>32 s</td></tr>
+    </tbody>
+  </table>
+  <p>Both reviews are directly comparable because the skill fixes the shape: severity scale, columns, sort order and verdict rule. A reviewer can diff two reports from two tools line by line, which is impossible with free-form "please review this" prompts.</p>
+</section>
+
+<section id="s8">
+  <h2>8. What I learned (including the Windows surprises)</h2>
+  <ul>
+    <li><strong>Portability is real at the procedure level.</strong> One <code>SKILL.md</code>, unchanged, produced the same structure in both agents for both tasks. The skill reliably transfers the <em>what</em> and the <em>format</em>; the model decides the <em>depth</em>.</li>
+    <li><strong>Write descriptions for matching, not for humans.</strong> Both agents chose the right skill from the description alone. Including trigger phrases ("PR review", "acceptance criteria") matters more than a nice summary.</li>
+    <li><strong>Put the checklist in <code>references/</code>.</strong> Both agents opened <code>checklist.md</code> and <code>template.md</code> only when the procedure told them to, which keeps the always-loaded part small.</li>
+    <li><strong>Codex on Windows: the default sandbox blocked every shell command</strong>, including reading a file, so the first runs only produced "please paste the file" answers. Options are Codex's Windows sandbox setup (machine-wide sandbox accounts, admin) or running without the sandbox. I chose the latter, <em>only inside a throwaway demo folder</em>.</li>
+    <li><strong>Without a sandbox, agents do more than you asked.</strong> In one run Codex also executed <code>git add</code> on the generated document. Harmless here, but a good reminder: a skill describes a procedure, it does not restrict tools. Keep review skills on read-only permissions (Claude Code: <code>--allowedTools Read,Grep,Glob</code>).</li>
+    <li><strong>Language settings leak in.</strong> My personal Claude Code settings ask for Vietnamese answers; the skill's "write in the language of the request" did not override that, so I added "answer in English" to both prompts for a fair comparison.</li>
+  </ul>
+</section>
+
+<section id="s9">
+  <h2>9. My opinion on skill standardisation</h2>
+  <p>I think the Agent Skills standard is the right size: it standardises <em>where</em> instructions live and <em>how</em> they are discovered, and leaves everything else to plain Markdown. That is why one file worked unchanged across two very different agents.</p>
+  <p>What is still missing for teams:</p>
+  <ul>
+    <li><strong>One project folder.</strong> Codex reads <code>.agents/skills</code>, Claude Code reads <code>.claude/skills</code>. A junction or symlink works, but it is a trap on Windows and in some CI checkouts. Claude Code reading <code>.agents/skills</code> too would remove the last friction.</li>
+    <li><strong>Permissions in the standard.</strong> <code>allowed-tools</code> is still experimental and interpreted differently. A review skill should be able to declare "read-only" portably.</li>
+    <li><strong>Versioning and testing.</strong> Skills are code for agents. They need version pins and small regression tests (like the 6 seeded bugs here), otherwise a "small wording change" silently changes team behaviour.</li>
+  </ul>
+  <p>Even so, I would standardise on it now: the cost is one folder in the repository, and the benefit is that our team process survives a change of tools.</p>
+</section>
+
+<section id="s10">
+  <h2>10. How I will use Agent Skills in my daily work</h2>
+  <table class="data-table">
+    <thead><tr><th>Today</th><th>With shared Agent Skills</th></tr></thead>
+    <tbody>
+      <tr><td>Customer requests arrive as chat messages; I rewrite them into specs by hand, each time a bit differently</td><td><code>/requirement-definition</code> (or <code>$requirement-definition</code>) turns the message into our template, with open questions ready to send back to the customer</td></tr>
+      <tr><td>Code review comments vary by reviewer and by tool</td><td>The same <code>code-review</code> skill in every repo, so reports from Claude Code, Codex and Copilot have the same severity scale and verdict rule</td></tr>
+      <tr><td>Our quest checklist (own opinion, daily-work application, no confidential data) lives in my head</td><td>A <code>blog-review</code> skill that checks a draft against the checklist before I submit</td></tr>
+      <tr><td>New team members learn conventions by asking</td><td>Conventions live in <code>.agents/skills</code> in the repository and are applied by whatever agent the person prefers</td></tr>
+    </tbody>
+  </table>
+  <p>The first step is cheap: add <code>.agents/skills/</code> with these two skills to one active project, link <code>.claude/skills</code> to it, and compare a week of reviews before and after.</p>
+</section>
+
+<section>
+  <h2>References</h2>
+  <ul>
+    <li><a href="https://www.anthropic.com/news/donating-agent-skills-to-the-agentic-ai-foundation" target="_blank">Anthropic – Donating Agent Skills to the Agentic AI Foundation</a></li>
+    <li><a href="https://agentskills.io/specification" target="_blank">Agent Skills specification</a></li>
+    <li><a href="https://code.claude.com/docs/en/skills" target="_blank">Claude Code – Skills</a></li>
+    <li><a href="https://docs.github.com/en/copilot/concepts/customizations/agent-skills" target="_blank">GitHub Docs – Agent Skills</a></li>
+  </ul>
+</section>
+
+</div>
+<div class="footer">AI Quest &mdash; Investigate How &bull; Agent Skills for Claude Code and Codex &bull; 2026</div>

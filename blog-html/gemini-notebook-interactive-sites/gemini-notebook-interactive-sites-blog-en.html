@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gemini Notebook Interactive Site vs RAG</title>
+<style>
+  :root {
+    --primary: #0d47a1;
+    --primary-light: #1976d2;
+    --accent: #ff6d00;
+    --accent-light: #ff9e40;
+    --bg: #fafafa;
+    --card: #ffffff;
+    --text: #212121;
+    --text-secondary: #616161;
+    --border: #e0e0e0;
+    --code-bg: #263238;
+    --success: #2e7d32;
+    --success-bg: #e8f5e9;
+    --warning: #f57f17;
+    --warning-bg: #fff8e1;
+    --error: #c62828;
+    --gradient-start: #0d47a1;
+    --gradient-mid: #1565c0;
+    --gradient-end: #00838f;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.75;
+    font-size: 16px;
+  }
+  .hero {
+    background: linear-gradient(135deg, var(--gradient-start), var(--gradient-mid), var(--gradient-end));
+    color: white;
+    padding: 64px 20px;
+    text-align: center;
+  }
+  .hero h1 { font-size: 2.3em; margin-bottom: 14px; font-weight: 700; letter-spacing: -0.5px; }
+  .hero .subtitle { font-size: 1.12em; opacity: 0.93; max-width: 720px; margin: 0 auto; }
+  .hero .badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.18);
+    padding: 6px 20px;
+    border-radius: 20px;
+    font-size: 0.84em;
+    margin-bottom: 18px;
+    backdrop-filter: blur(4px);
+  }
+  .container { max-width: 940px; margin: 0 auto; padding: 32px 20px; }
+
+  .toc {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px 32px;
+    margin-bottom: 38px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  }
+  .toc h2 { font-size: 1.3em; margin-bottom: 14px; color: var(--primary); }
+  .toc ol { padding-left: 22px; }
+  .toc li { margin-bottom: 6px; }
+  .toc a { color: var(--primary-light); text-decoration: none; }
+  .toc a:hover { text-decoration: underline; }
+
+  section { margin-bottom: 44px; }
+  h2 {
+    font-size: 1.55em;
+    color: var(--primary);
+    border-bottom: 3px solid var(--primary);
+    padding-bottom: 8px;
+    margin-bottom: 22px;
+  }
+  h3 { font-size: 1.22em; color: var(--text); margin: 22px 0 10px; }
+  h4 { font-size: 1.05em; color: var(--text-secondary); margin: 16px 0 8px; }
+  p { margin-bottom: 14px; }
+  a { color: var(--primary-light); }
+
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+  }
+  .card-accent { border-left: 4px solid var(--accent); }
+  .card-info { border-left: 4px solid var(--primary-light); }
+  .card-warning { border-left: 4px solid var(--warning); background: var(--warning-bg); }
+  .card-success { border-left: 4px solid var(--success); background: var(--success-bg); }
+
+  .prompt-box {
+    background: var(--code-bg);
+    color: #cfd8dc;
+    border-radius: 10px;
+    padding: 22px 24px;
+    margin: 14px 0 22px;
+    font-family: 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+    font-size: 0.9em;
+    line-height: 1.65;
+    white-space: pre-wrap;
+    position: relative;
+    overflow-x: auto;
+  }
+  .prompt-box .label {
+    position: absolute;
+    top: 8px;
+    right: 12px;
+    background: var(--accent);
+    color: white;
+    font-size: 0.7em;
+    padding: 2px 12px;
+    border-radius: 8px;
+    font-family: 'Segoe UI', sans-serif;
+    font-weight: 600;
+  }
+
+  table.data-table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+  table.data-table th, table.data-table td {
+    border: 1px solid var(--border);
+    padding: 10px 14px;
+    text-align: left;
+    font-size: 0.93em;
+  }
+  table.data-table th {
+    background: var(--primary);
+    color: white;
+    font-weight: 600;
+  }
+  table.data-table tr:nth-child(even) { background: #f5f5f5; }
+  table.data-table tr:hover { background: #e3f2fd; }
+
+  table.rubric-table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+  table.rubric-table th, table.rubric-table td {
+    border: 1px solid var(--border);
+    padding: 10px 14px;
+    text-align: center;
+    font-size: 0.93em;
+  }
+  table.rubric-table th { background: var(--primary); color: white; }
+  table.rubric-table td:first-child { text-align: left; font-weight: 600; }
+  table.rubric-table tr:nth-child(even) { background: #f5f5f5; }
+
+  .v-badge {
+    display: inline-block;
+    padding: 3px 14px;
+    border-radius: 16px;
+    font-size: 0.8em;
+    font-weight: 700;
+    margin-right: 8px;
+    color: white;
+  }
+  .v-badge.v1 { background: var(--accent); }
+  .v-badge.v2 { background: var(--success); }
+
+  .compare-grid img{max-width:100%}
+  .compare-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin: 18px 0;
+  }
+  @media (max-width: 700px) { .compare-grid img{max-width:100%}
+  .compare-grid { grid-template-columns: 1fr; } }
+
+  .step-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    background: var(--primary);
+    color: white;
+    border-radius: 50%;
+    font-weight: 700;
+    font-size: 0.9em;
+    margin-right: 12px;
+    flex-shrink: 0;
+  }
+  .step-row { display: flex; align-items: flex-start; margin-bottom: 14px; }
+  .step-row p { margin: 0; }
+
+  .img-placeholder {
+    background: #eceff1;
+    border: 2px dashed #b0bec5;
+    border-radius: 10px;
+    padding: 36px 20px;
+    text-align: center;
+    color: var(--text-secondary);
+    font-size: 0.9em;
+    margin: 14px 0;
+  }
+  .img-placeholder .icon { font-size: 2em; margin-bottom: 8px; }
+
+  .screenshot-wrap {
+    margin: 16px 0;
+    text-align: center;
+  }
+  .screenshot-wrap img {
+    max-width: 100%;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+  .screenshot-wrap .caption {
+    margin-top: 8px;
+    font-size: 0.85em;
+    color: var(--text-secondary);
+  }
+
+  ul, ol { margin-bottom: 14px; padding-left: 24px; }
+  li { margin-bottom: 6px; }
+
+  .flow-diagram {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 22px 0;
+    font-size: 0.92em;
+  }
+  .flow-step {
+    background: var(--primary);
+    color: white;
+    padding: 10px 18px;
+    border-radius: 10px;
+    font-weight: 600;
+  }
+  .flow-arrow { color: var(--text-secondary); font-size: 1.4em; }
+
+  .score-bar {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin: 4px 0;
+  }
+  .score-bar .bar {
+    height: 10px;
+    border-radius: 5px;
+    background: var(--primary-light);
+  }
+  .score-bar .bar.v2 { background: var(--success); }
+
+  .footer {
+    text-align: center;
+    padding: 32px;
+    color: var(--text-secondary);
+    font-size: 0.85em;
+    border-top: 1px solid var(--border);
+    margin-top: 40px;
+  }
+  code {
+    background: #eceff1;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.9em;
+  }
+  .tag {
+    display: inline-block;
+    background: #e3f2fd;
+    color: var(--primary);
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 0.8em;
+    margin: 2px 4px 2px 0;
+  }
+  .highlight-box {
+    background: linear-gradient(135deg, #e3f2fd, #e8f5e9);
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin: 18px 0;
+    border: 1px solid #bbdefb;
+  }
+  figure.screenshot-wrap { margin: 16px 0; text-align: center; }
+  figure.screenshot-wrap figcaption { margin-top: 8px; font-size: 0.85em; color: var(--text-secondary); }
+  pre { background: var(--code-bg); color: #cfd8dc; border-radius: 10px; padding: 18px 22px; margin: 14px 0 22px; font-family: Consolas, monospace; font-size: 0.9em; white-space: pre-wrap; }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="badge">AI Quest Type 2 &mdash; Investigate How</div>
+  <h1>Turning a Product Manual into an Interactive Site with Gemini Notebook &mdash; and How It Compares to Traditional RAG</h1>
+  <p class="subtitle">A hands-on test with four fictional PDF manuals for the AeroPure AQ-200 air purifier: two generated sites (troubleshooting guide and dashboard), ten scored questions, and a criterion-by-criterion comparison against a Python RAG pipeline built on the same documents.</p>
+</div>
+
+<div class="container">
+
+<p class="card card-warning"><strong>About the data:</strong> every document used in this post (the AeroPure AQ-200 and "Nimbus Home Appliances") is <strong>fictional and was generated by my own script</strong>. Every PDF page carries the banner <em>"FICTIONAL SAMPLE &ndash; FOR DEMO ONLY"</em>. No internal or customer information was used in the demo or during testing.</p>
+
+<nav class="toc">
+  <h2>Contents</h2>
+  <ol>
+    <li><a href="#s1">What "make me a site" does, and why I tested it on a product manual</a></li>
+    <li><a href="#s2">Source material: a fictional four-PDF manual set</a></li>
+    <li><a href="#s3">Step by step: generating the site in Gemini Notebook</a></li>
+    <li><a href="#s4">Second site: a sales and support dashboard</a></li>
+    <li><a href="#s5">Building a traditional RAG baseline on the same documents</a></li>
+    <li><a href="#s6">Results: 10 questions, accuracy, speed and cost</a></li>
+    <li><a href="#s7">Notebook interactive site vs traditional RAG</a></li>
+    <li><a href="#s8">My take</a></li>
+    <li><a href="#s9">How I will use this in my daily work</a></li>
+    <li><a href="#s10">Demo video</a></li>
+  </ol>
+</nav>
+
+<section id="s1">
+  <h2>1. What "make me a site" does, and why I tested it on a product manual</h2>
+  <p>In Gemini Notebook (notebook.google.com) you add sources and type <code>make me a site ...</code> into the chat. Instead of a written answer, Notebook generates a <strong>complete HTML/JavaScript web app</strong>, saves it as an item in the <strong>Studio</strong> panel, and lets you open it in its own tab or share it.</p>
+  <p>Other posts have already used this feature to build marketing dashboards. This post takes a different angle, closer to the day-to-day reality of a software company: <strong>turning product manuals and technical documents into interactive tools</strong> (error-code lookup, maintenance checklist, cost calculator), and then <strong>measuring objectively</strong> how that differs from what development teams usually build for the same problem: a <strong>traditional RAG pipeline</strong> (chunk &rarr; embed &rarr; retrieve &rarr; LLM answer).</p>
+  <ul>
+    <li><strong>Notebook path:</strong> 4 PDF manuals &rarr; Gemini Notebook &rarr; "Make me a site" &rarr; interactive web app</li>
+    <li><strong>RAG path:</strong> 4 PDF manuals &rarr; pypdf + chunking &rarr; gemini-embedding-2 &rarr; top-5 cosine retrieval &rarr; gemini-3.5-flash-lite answer with [S#] citations</li>
+  </ul>
+</section>
+
+<section id="s2">
+  <h2>2. Source material: a fictional four-PDF manual set</h2>
+  <p>I wrote one Python file (<code>demo-assets/sources-gen/product_data.py</code>) that holds all product data as the single source of truth, and <code>make_sources.py</code> renders both Markdown and PDF versions from it. Because of that, every correct answer (ground truth) can be recomputed in code instead of being judged by eye.</p>
+  <table class="data-table">
+    <thead><tr><th>File</th><th>Contents</th><th>Used to test</th></tr></thead>
+    <tbody>
+      <tr><td><code>AQ-200_User_Manual.pdf</code></td><td>Spec table for 3 models (Lite / AQ-200 / Pro), 7-step setup, control-panel table, maintenance schedule, 9 FAQs</td><td>Lookups, model comparison</td></tr>
+      <tr><td><code>AQ-200_Troubleshooting_Error_Codes.pdf</code></td><td>15 error codes E01&ndash;E15: meaning, cause, fix, applicable models</td><td>Error-code lookup</td></tr>
+      <tr><td><code>AQ-200_Parts_Price_List.pdf</code></td><td>12 spare parts plus service fees (USD, fictional)</td><td>Multi-step questions (error &rarr; part &rarr; price)</td></tr>
+      <tr><td><code>AQ-200_Sales_Support_Report_2026.pdf</code></td><td>Monthly units by model (Jan&ndash;Oct 2026), support tickets by category, resolution time, CSAT, incident notes</td><td>Dashboard, aggregation questions</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section id="s3">
+  <h2>3. Step by step: generating the site in Gemini Notebook</h2>
+  <p>Everything below was done in a real Chrome session (Gemini Notebook PRO account) on 20 November 2026. Button names are quoted exactly as they appear in the UI.</p>
+
+  <h3>Step 1 &ndash; Create a notebook</h3>
+  <p>Go to <code>https://notebook.google.com/</code> and click <strong>+ New notebook</strong>. (My personal notebook list is blurred.)</p>
+  <figure class="screenshot-wrap"><img src="images/step-01-notebook-home.png" alt="Gemini Notebook home page with the New notebook button"><figcaption>Gemini Notebook home &mdash; the New notebook button is on the right</figcaption></figure>
+
+  <h3>Step 2 &ndash; Rename it and open Add sources</h3>
+  <p>The new notebook is called "Untitled notebook". Click the title and rename it to <strong>AQ-200 Demo &ndash; Interactive Site</strong>. Click <strong>+ Add sources</strong>; the dialog offers <em>Upload files, Websites, Play Books, Drive, Textbooks, Copied text</em>.</p>
+  <figure class="screenshot-wrap"><img src="images/step-03-add-sources-dialog.png" alt="Add sources dialog"><figcaption>The Add sources dialog</figcaption></figure>
+
+  <h3>Step 3 &ndash; Upload the PDFs</h3>
+  <p>Choose <strong>Upload files</strong> and select the four PDFs. Measured: about <strong>8.5 seconds</strong> until all four sources were listed in the Sources panel. Notebook writes a source summary right after.</p>
+  <figure class="screenshot-wrap"><img src="images/step-05-sources-ready.png" alt="Four sources loaded"><figcaption>Four PDFs loaded; the chat box shows "4 sources"</figcaption></figure>
+
+  <h3>Step 4 &ndash; Prompt "Make me a site"</h3>
+  <p>Type the prompt into the <strong>"Ask a question or create something"</strong> box:</p>
+  <pre>Make me a site: an interactive troubleshooting and user-guide website for the AeroPure AQ-200 air purifier series, based only on these sources. Include: (1) an error-code lookup where I can type or pick a code E01-E15 and see the meaning, cause, fix, which models it applies to, and the spare part and price if a part is needed; (2) a side-by-side comparison of the 3 models; (3) a maintenance checklist with checkboxes grouped by interval, plus a yearly filter cost calculator (model + normal/pets usage); (4) a searchable FAQ. Clean, modern, mobile-friendly design.</pre>
+  <figure class="screenshot-wrap"><img src="images/step-07-prompt-site-typed.png" alt="Make me a site prompt in the chat box"><figcaption>The "Make me a site" prompt in the notebook chat</figcaption></figure>
+
+  <h3>Step 5 &ndash; Wait for the Studio item</h3>
+  <p>The chat replies almost immediately: <em>"I've started generating your interactive troubleshooting and user-guide site &hellip; in your Studio panel"</em>. On the right, Studio shows a <strong>"Generating Site&hellip; / based on 4 sources"</strong> card. Measured: still running at 182 s and finished at 212 s, so <strong>roughly 3 to 3.5 minutes</strong>.</p>
+  <figure class="screenshot-wrap"><img src="images/step-08-chat-ack-site-generating.png" alt="Site generation in progress"><figcaption>The chat confirms; Studio builds the site in the background (a blue "Unread" dot appears when it is done)</figcaption></figure>
+
+  <h3>Step 6 &ndash; Open the site</h3>
+  <p>Click the card in Studio. The site opens in a viewer with <strong>Open in new tab</strong>, Collapse, More options (&#8942;) and Close buttons, plus <em>View 4 sources</em> and <em>Good content / Bad content</em>.</p>
+  <figure class="screenshot-wrap"><img src="images/step-09-site-a-in-studio.png" alt="Generated site in the Studio viewer"><figcaption>"AeroPure AQ-200 Interactive Troubleshooting &amp; User Guide" &mdash; the title was chosen by Gemini</figcaption></figure>
+
+  <h3>Step 7 &ndash; Open in new tab</h3>
+  <p>Click <strong>Open in new tab</strong>. The site gets its own URL (<code>&hellip;/notebook/&lt;id&gt;/artifact/&lt;id&gt;</code>) with <em>To notebook</em> and <em>Create your own</em> in the top bar. The content runs in a sandboxed iframe on a <code>*.usercontent.goog</code> domain, and the footer reads <em>"Generated by AI based on user-provided sources and instructions"</em>.</p>
+  <figure class="screenshot-wrap"><img src="images/step-10-site-a-new-tab.png" alt="Generated site in its own tab"><figcaption>Site A in its own tab</figcaption></figure>
+
+  <h3>What I tested on site A</h3>
+  <figure class="screenshot-wrap"><img src="images/step-11-site-a-error-lookup-E03.png" alt="Error-code lookup for E03"><figcaption>Typing "E03" filters the code grid instantly and shows the cause plus a three-step fix</figcaption></figure>
+  <figure class="screenshot-wrap"><img src="images/step-13-site-a-calculator-pro-pets-uvc.png" alt="Filter cost calculator"><figcaption>Maintenance checklist (progress is saved) and the yearly filter-cost calculator by model and usage</figcaption></figure>
+  <table class="data-table">
+    <thead><tr><th>Check</th><th>What the site showed</th><th>Against the source</th></tr></thead>
+    <tbody>
+      <tr><td>Look up E02</td><td>Rated life ~2,160 h; FL-200H $39, FL-200H-2 $70, FL-200P $59; hold Filter Reset for 3 s</td><td>✅ Correct, and it joined the error-code doc with the price list (two different PDFs)</td></tr>
+      <tr><td>Look up E03</td><td>Plastic bag not removed, appears within the first 30 minutes, three fix steps</td><td>✅ Correct ("No replacement parts required" is shown twice &mdash; a minor layout bug)</td></tr>
+      <tr><td>Calculator: AQ-200 Pro with pets</td><td>3 filters/year &times; $59 = <strong>$177/year</strong>; ticking UV-C adds $35</td><td>✅ Correct (4-month interval, FL-200P $59, UV-200 $35)</td></tr>
+      <tr><td>Calculator: AQ-200 Lite, normal use</td><td>$70/year (it suggested the FL-200H-2 two-pack, saving $8)</td><td>✅ Correct, and smarter than what I asked for</td></tr>
+      <tr><td>Model comparison</td><td>All 15 spec rows plus a "Highlight differences only" toggle</td><td>✅ Matches the spec table</td></tr>
+      <tr><td>FAQ</td><td>15 questions (the source has 9); 6 extra ones were rewritten from the setup and troubleshooting sections</td><td>🟡 The content is in the sources, but it is no longer the original FAQ &mdash; worth knowing if you publish it as official documentation</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section id="s4">
+  <h2>4. Second site: a sales and support dashboard</h2>
+  <pre>Make me a site: an interactive sales &amp; support dashboard for the AeroPure AQ-200 series using only the monthly report (Jan-Oct 2026) and the price list. Include KPI cards (total units, revenue at list price, total tickets, average CSAT), a monthly units chart by model with a model filter, a stacked support-ticket chart by category, a CSAT vs resolution-time trend, a month range selector, and callouts that explain the March Wi-Fi spike and the August sensor spike from the report notes.</pre>
+  <p>The chat confirmed after <strong>16.8 s</strong> and the site was ready <strong>within 157 s</strong> (about 2.5 minutes) of sending the prompt. While it was generating I kept asking questions in the chat; generation runs in the background and does not block the chat.</p>
+  <figure class="screenshot-wrap"><img src="images/step-19-dashboard-new-tab.png" alt="Generated sales and support dashboard"><figcaption>"AeroPure AQ-200 Sales &amp; Support Dashboard" in its own tab</figcaption></figure>
+  <figure class="screenshot-wrap"><img src="images/step-20-dashboard-q1-filter.png" alt="Dashboard filtered to Q1"><figcaption>Selecting the "Q1 (Jan&ndash;Mar)" preset recalculates KPIs, charts and model mix instantly</figcaption></figure>
+  <table class="data-table">
+    <thead><tr><th>Dashboard KPI</th><th>Dashboard shows</th><th>Recomputed in Python</th></tr></thead>
+    <tbody>
+      <tr><td>Total units, Jan&ndash;Oct</td><td>17,175</td><td>17,175 ✅</td></tr>
+      <tr><td>Revenue at list price</td><td>$3,878,075</td><td>$3,878,075 ✅</td></tr>
+      <tr><td>Total tickets / top category</td><td>1,175 / Filter 505</td><td>1,175 / 505 ✅</td></tr>
+      <tr><td>Q1 units (after filtering)</td><td>3,790</td><td>3,790 ✅</td></tr>
+      <tr><td>Average CSAT</td><td>4.27</td><td>4.29 (simple mean) &mdash; the dashboard uses a ticket-weighted mean 🟡</td></tr>
+      <tr><td>March / August callouts</td><td>Wi-Fi 22&rarr;47 (+113.6%), Sensor 21&rarr;35 (+66.7%)</td><td>✅ Correct numbers and the correct reasons from the notes</td></tr>
+    </tbody>
+  </table>
+  <p class="card card-info"><strong>An interesting finding:</strong> when I asked the chat for "total units in Q1", Notebook answered <strong>3,490</strong>, which is wrong, even though the three monthly totals it listed were all correct. The dashboard that the same Notebook generated shows <strong>3,790</strong>, which is right, because that number is <strong>computed by JavaScript</strong> from the data table embedded in the page rather than added up in the LLM's head. That is the most important difference I found: for numbers, the <em>site</em> is more reliable than the <em>chat answer</em>.</p>
+</section>
+
+<section id="s5">
+  <h2>5. Building a traditional RAG baseline on the same documents</h2>
+  <p>For a fair comparison I wrote a minimal RAG pipeline (~200 lines, <code>demo-assets/rag/rag.py</code>) on exactly the same four PDFs:</p>
+  <ul>
+    <li><strong>Extract:</strong> <code>pypdf</code> pulls the text of each page.</li>
+    <li><strong>Chunk:</strong> lines are grouped into ~900-character chunks with a 2-line overlap, giving 17 chunks.</li>
+    <li><strong>Embed:</strong> <code>gemini-embedding-2</code> (3,072 dimensions, 4,430 tokens). A practical gotcha: this model is multimodal and <em>merges</em> a list of contents into a single vector, so each chunk has to be embedded in its own call. My first batched attempt returned one vector for all 17 chunks.</li>
+    <li><strong>Retrieve:</strong> cosine similarity, top 5.</li>
+    <li><strong>Answer:</strong> <code>gemini-3.5-flash-lite</code>, temperature 0, required to cite <code>[S#]</code> and to reply "Not found in the documents." when the context does not contain the answer.</li>
+  </ul>
+  <pre>cd demo-assets\rag
+python rag.py build
+python rag.py ask "Which month had the most Wi-Fi/App support tickets, how many, and what was the reason?"
+python rag.py eval ..\eval\questions.json</pre>
+  <p>Measured: <strong>index build in 10.1 s</strong> (extract + chunk 0.04 s, embedding 10 s). Each question took 5.1&ndash;7.0 s. Total cost for 10 questions: <strong>$0.0062</strong> (16,553 input / 497 output tokens at the flash-lite rate of $0.30 / $2.50 per 1M tokens; the embedding cost for 4,430 tokens is not included).</p>
+</section>
+
+<section id="s6">
+  <h2>6. Results: 10 questions</h2>
+  <p>The ten questions cover simple lookups, multi-step questions that join two documents, aggregations over the sales table, and one question that is <strong>not answerable from the documents</strong> (the AQ-300) to test hallucination. The same English questions went to the RAG script and to the Notebook chat (the same notebook that generated the sites). I scored them by hand against the source data.</p>
+  <table class="data-table">
+    <thead><tr><th>#</th><th>Type</th><th>Ground truth</th><th>Traditional RAG</th><th>Notebook chat</th></tr></thead>
+    <tbody>
+      <tr><td>Q1</td><td>Error code E03</td><td>Packaging bag not removed &rarr; remove it, reinstall</td><td>❌ "Not found" (the PDF table row was split; the chunk had "E03" but not the fix)</td><td>✅</td></tr>
+      <tr><td>Q2</td><td>Pro CADR + room size</td><td>450 m³/h; 38&ndash;55 m²</td><td>✅</td><td>✅</td></tr>
+      <tr><td>Q3</td><td>E02 on Lite &rarr; part, price, next step</td><td>FL-200H $39; hold Filter Reset 3 s</td><td>✅</td><td>✅ (also suggested the two-pack)</td></tr>
+      <tr><td>Q4</td><td>Pro with two cats: yearly cost</td><td>3 &times; $59 + $35 = $212</td><td>❌ "Not found" (did not retrieve both chunks)</td><td>✅ $212</td></tr>
+      <tr><td>Q5</td><td>Total units in Q1</td><td>3,790</td><td>✅ 3,790</td><td>❌ 3,490 (addition error)</td></tr>
+      <tr><td>Q6</td><td>Month with most Wi-Fi tickets + reason</td><td>March, 47, firmware 2.3</td><td>✅</td><td>✅</td></tr>
+      <tr><td>Q7</td><td>Pro revenue Jan&ndash;Oct (joins two files)</td><td>3,285 &times; $349 = $1,146,465</td><td>❌ "Not found" (price chunk not retrieved)</td><td>✅</td></tr>
+      <tr><td>Q8</td><td>Error codes only on Pro</td><td>E08, E13</td><td>✅</td><td>✅</td></tr>
+      <tr><td>Q9</td><td>Use in a bathroom?</td><td>No (humidity above 80%)</td><td>❌ "Not found" (safety chunk not in top 5)</td><td>✅</td></tr>
+      <tr><td>Q10</td><td>AQ-300 price and launch date (not in docs)</td><td>Decline</td><td>✅ Declined</td><td>✅ Declined, and said the sources only cover the AQ-200</td></tr>
+    </tbody>
+  </table>
+  <table class="rubric-table">
+    <thead><tr><th>Metric</th><th>Traditional RAG</th><th>Notebook chat</th><th>Notebook sites (A + B)</th></tr></thead>
+    <tbody>
+      <tr><td>Correct out of 10</td><td>6</td><td>9</td><td>Everything I checked was correct (sections 3 and 4)</td></tr>
+      <tr><td>Invented or wrong numbers</td><td>0</td><td>1 (Q5 addition)</td><td>0 (one weighted-average choice)</td></tr>
+      <tr><td>False refusals</td><td>4</td><td>0</td><td>&mdash;</td></tr>
+      <tr><td>Citations</td><td>Yes, [S#] with file/page</td><td>Yes, clickable reference numbers</td><td>"View 4 sources" button, no per-cell citations</td></tr>
+      <tr><td>Response time</td><td>5.1&ndash;7.0 s (median ~5.7 s)</td><td>8.7&ndash;13.8 s (median 10.7 s)</td><td>Instant once generated (generation took ~2.5&ndash;3.5 min)</td></tr>
+      <tr><td>Measured cost</td><td>$0.0062 for 10 questions</td><td>Included in the PRO plan; tokens not visible</td><td>Included in the PRO plan</td></tr>
+    </tbody>
+  </table>
+  <p>How to read these results: my RAG is a <strong>minimal</strong> build (character-based chunking, top-5, the cheapest model, a very strict prompt). It is "safe" (it invented nothing) but gives up too often. Matching Notebook would take more work: structure-aware table parsing, chunking per row or per error code, hybrid search (BM25 + vectors), reranking, a larger k&hellip; That is the hidden cost of a home-grown RAG.</p>
+</section>
+
+<section id="s7">
+  <h2>7. Notebook interactive site vs traditional RAG</h2>
+  <table class="data-table">
+    <thead><tr><th>Criterion</th><th>Gemini Notebook &ndash; interactive site</th><th>Traditional RAG (self-built)</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Output</strong></td><td>A complete web app: lookups, filters, charts, checklists, cost calculators. Users explore it without needing to know what to ask.</td><td>A text answer per question. Users have to know what to ask.</td></tr>
+      <tr><td><strong>Accuracy / hallucination</strong></td><td>Data is "frozen" into the page at generation time; calculations are done in JS, so they are stable (Q1 = 3,790, correct). Risks: rewording and added content (FAQ grew from 9 to 15), formula choices (weighted CSAT) &mdash; review it once.</td><td>Depends on retrieval quality. Minimal build: 0 fabrications but 4/10 false refusals. The LLM does the math on every query.</td></tr>
+      <tr><td><strong>Time to build</strong></td><td>~1 minute of clicking plus 2.5&ndash;3.5 minutes of waiting. No code.</td><td>Indexing takes 10 s, but writing and debugging the pipeline takes hours; doing it well (table parsing, reranking, a UI) takes days.</td></tr>
+      <tr><td><strong>Sharing</strong></td><td>Open in new tab / Share with Google accounts. Viewers use a browser; no server needed.</td><td>You host the API and UI yourself and handle auth.</td></tr>
+      <tr><td><strong>Updating when docs change</strong></td><td>The site is a snapshot at generation time; changed documents mean prompting again (a new artifact, possibly a different layout).</td><td>Re-run <code>build</code> (10 s) and answers are current; the UI stays the same. Better for documents that change often.</td></tr>
+      <tr><td><strong>Cost</strong></td><td>Included in the Gemini Notebook plan (PRO); per-run tokens and cost are not visible.</td><td>Pay per token, fully transparent: $0.0062 for 10 questions on flash-lite.</td></tr>
+      <tr><td><strong>Data control</strong></td><td>Documents and sites live on Google under your account's terms; you cannot pick the model or run on-premises.</td><td>Full control: choose the model, where the index lives, logging; you can even run a local model for sensitive data.</td></tr>
+      <tr><td><strong>Integration</strong></td><td>A standalone page; no API to embed it in your own product.</td><td>It is code, so it plugs into apps, chatbots, CI, Slack&hellip;</td></tr>
+      <tr><td><strong>Best for</strong></td><td>Fairly stable documents where other people need a tool to self-serve: user guides, error-code lookups, one-off dashboards, customer demos, onboarding.</td><td>Large, frequently changing document sets, open-ended questions, system integration and strict data control.</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section id="s8">
+  <h2>8. My take</h2>
+  <p><strong>1. This is not "better RAG"; it is a different kind of output.</strong> RAG answers <em>questions</em>; an interactive site answers a <em>need</em>. From the same four PDFs, Notebook worked out on its own that an error-code table should become a search box, a maintenance schedule should become a checklist, and a price list plus replacement intervals should become a cost calculator. I did not design any UI &mdash; something RAG never does.</p>
+  <p><strong>2. "Freezing the data into code" is an underrated strength.</strong> The Notebook chat added 3,790 up to 3,490, while its own dashboard got it right. When I need a number for a client, I will trust an interactive page that I have reviewed once over a chat answer that is regenerated every time.</p>
+  <p><strong>3. But a site is a snapshot, not a system.</strong> There is no API, no automatic update, and regenerating can produce a different layout. For living documents (a spec that changes every week), RAG or a real system is still needed.</p>
+  <p><strong>4. You still have to review it.</strong> The site "enriched" the content (FAQ from 9 to 15 entries, a two-pack suggestion). Most of it is grounded in the sources, but if it becomes official documentation it needs a review pass, just like AI-written code.</p>
+  <p><strong>5. Minimal RAG is easy; good RAG is not.</strong> My 200-line pipeline was beaten by the tables inside the PDFs. Notebook handled tabular PDFs far better out of the box &mdash; and that is exactly the hard part users never have to see.</p>
+</section>
+
+<section id="s9">
+  <h2>9. How I will use this in my daily work</h2>
+  <p>At a software development company my work includes writing technical blog posts and proposals, building demos for clients, and reading manuals, specs and materials that clients send. Concretely:</p>
+  <table class="data-table">
+    <thead><tr><th>Task</th><th>How I would use interactive sites</th><th>Expected benefit</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Proposals / estimates</strong></td><td>Turn an (anonymized) effort-and-rate table into an "estimate explorer": pick modules and watch man-days and cost change. Send the link with the proposal.</td><td>Clients try scenarios themselves; fewer "what if we drop module X?" email rounds.</td></tr>
+      <tr><td><strong>Pre-sales demos</strong></td><td>Before a meeting, load the client's <em>public</em> product materials (manuals, brochures) into Notebook and generate a lookup/support prototype in five minutes to illustrate the idea.</td><td>Something clickable to discuss instead of static slides.</td></tr>
+      <tr><td><strong>Technical blog posts</strong></td><td>Turn benchmark data from a post (like the results tables here) into a small companion dashboard.</td><td>Readers can filter by model or criterion themselves.</td></tr>
+      <tr><td><strong>Long specs and manuals</strong></td><td>Turn an API spec or device manual into a lookup page (error codes, endpoints, parameters) for the project team.</td><td>Faster onboarding than reading an 80-page PDF.</td></tr>
+      <tr><td><strong>Deciding when to build RAG</strong></td><td>Use this post's results as a rule of thumb: stable documents + a tool for end users &rarr; Notebook site; living documents + integration or data-control requirements &rarr; RAG.</td><td>Avoid building a RAG system when a lookup page is all that is needed.</td></tr>
+    </tbody>
+  </table>
+  <p class="card card-warning"><strong>My own security rule:</strong> only public or anonymized documents go into Notebook. Internal and client documents are processed only with pipelines I control (like the RAG in section 5) and according to company policy.</p>
+</section>
+
+<section id="s10">
+  <h2>10. Demo video</h2>
+  <!-- VIDEO -->
+  <video controls src="videos/full-demo.mp4" style="width:100%;border-radius:10px"></video>
+</section>
+
+<section>
+  <h2>References</h2>
+  <ul>
+    <li><a href="https://blog.google/innovation-and-ai/products/gemini-notebook/interactive-sites/" target="_blank">Google Blog – Gemini Notebook: interactive sites</a></li>
+  </ul>
+</section>
+
+</div>
+
+<div class="footer">
+  AI Quest &mdash; Investigate How &bull; Gemini Notebook interactive sites vs RAG &bull; 2026 &bull; All data in this post is fictional
+</div>
+
+</body>
+</html>

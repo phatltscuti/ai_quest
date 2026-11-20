@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agent Skills cho Claude Code và Codex</title>
+<style>
+  :root {
+    --primary: #0d47a1;
+    --primary-light: #1976d2;
+    --accent: #ff6d00;
+    --accent-light: #ff9e40;
+    --bg: #fafafa;
+    --card: #ffffff;
+    --text: #212121;
+    --text-secondary: #616161;
+    --border: #e0e0e0;
+    --code-bg: #263238;
+    --success: #2e7d32;
+    --success-bg: #e8f5e9;
+    --warning: #f57f17;
+    --warning-bg: #fff8e1;
+    --error: #c62828;
+    --gradient-start: #0d47a1;
+    --gradient-mid: #1565c0;
+    --gradient-end: #00838f;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.75;
+    font-size: 16px;
+  }
+  .hero {
+    background: linear-gradient(135deg, var(--gradient-start), var(--gradient-mid), var(--gradient-end));
+    color: white;
+    padding: 64px 20px;
+    text-align: center;
+  }
+  .hero h1 { font-size: 2.3em; margin-bottom: 14px; font-weight: 700; letter-spacing: -0.5px; }
+  .hero .subtitle { font-size: 1.12em; opacity: 0.93; max-width: 720px; margin: 0 auto; }
+  .hero .badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.18);
+    padding: 6px 20px;
+    border-radius: 20px;
+    font-size: 0.84em;
+    margin-bottom: 18px;
+    backdrop-filter: blur(4px);
+  }
+  .container { max-width: 940px; margin: 0 auto; padding: 32px 20px; }
+
+  .toc {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px 32px;
+    margin-bottom: 38px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  }
+  .toc h2 { font-size: 1.3em; margin-bottom: 14px; color: var(--primary); }
+  .toc ol { padding-left: 22px; }
+  .toc li { margin-bottom: 6px; }
+  .toc a { color: var(--primary-light); text-decoration: none; }
+  .toc a:hover { text-decoration: underline; }
+
+  section { margin-bottom: 44px; }
+  h2 {
+    font-size: 1.55em;
+    color: var(--primary);
+    border-bottom: 3px solid var(--primary);
+    padding-bottom: 8px;
+    margin-bottom: 22px;
+  }
+  h3 { font-size: 1.22em; color: var(--text); margin: 22px 0 10px; }
+  h4 { font-size: 1.05em; color: var(--text-secondary); margin: 16px 0 8px; }
+  p { margin-bottom: 14px; }
+  a { color: var(--primary-light); }
+
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+  }
+  .card-accent { border-left: 4px solid var(--accent); }
+  .card-info { border-left: 4px solid var(--primary-light); }
+  .card-warning { border-left: 4px solid var(--warning); background: var(--warning-bg); }
+  .card-success { border-left: 4px solid var(--success); background: var(--success-bg); }
+
+  .prompt-box {
+    background: var(--code-bg);
+    color: #cfd8dc;
+    border-radius: 10px;
+    padding: 22px 24px;
+    margin: 14px 0 22px;
+    font-family: 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+    font-size: 0.9em;
+    line-height: 1.65;
+    white-space: pre-wrap;
+    position: relative;
+    overflow-x: auto;
+  }
+  .prompt-box .label {
+    position: absolute;
+    top: 8px;
+    right: 12px;
+    background: var(--accent);
+    color: white;
+    font-size: 0.7em;
+    padding: 2px 12px;
+    border-radius: 8px;
+    font-family: 'Segoe UI', sans-serif;
+    font-weight: 600;
+  }
+
+  table.data-table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+  table.data-table th, table.data-table td {
+    border: 1px solid var(--border);
+    padding: 10px 14px;
+    text-align: left;
+    font-size: 0.93em;
+  }
+  table.data-table th {
+    background: var(--primary);
+    color: white;
+    font-weight: 600;
+  }
+  table.data-table tr:nth-child(even) { background: #f5f5f5; }
+  table.data-table tr:hover { background: #e3f2fd; }
+
+  table.rubric-table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+  table.rubric-table th, table.rubric-table td {
+    border: 1px solid var(--border);
+    padding: 10px 14px;
+    text-align: center;
+    font-size: 0.93em;
+  }
+  table.rubric-table th { background: var(--primary); color: white; }
+  table.rubric-table td:first-child { text-align: left; font-weight: 600; }
+  table.rubric-table tr:nth-child(even) { background: #f5f5f5; }
+
+  .v-badge {
+    display: inline-block;
+    padding: 3px 14px;
+    border-radius: 16px;
+    font-size: 0.8em;
+    font-weight: 700;
+    margin-right: 8px;
+    color: white;
+  }
+  .v-badge.v1 { background: var(--accent); }
+  .v-badge.v2 { background: var(--success); }
+
+  .compare-grid img{max-width:100%}
+  .compare-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin: 18px 0;
+  }
+  @media (max-width: 700px) { .compare-grid img{max-width:100%}
+  .compare-grid { grid-template-columns: 1fr; } }
+
+  .step-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    background: var(--primary);
+    color: white;
+    border-radius: 50%;
+    font-weight: 700;
+    font-size: 0.9em;
+    margin-right: 12px;
+    flex-shrink: 0;
+  }
+  .step-row { display: flex; align-items: flex-start; margin-bottom: 14px; }
+  .step-row p { margin: 0; }
+
+  .img-placeholder {
+    background: #eceff1;
+    border: 2px dashed #b0bec5;
+    border-radius: 10px;
+    padding: 36px 20px;
+    text-align: center;
+    color: var(--text-secondary);
+    font-size: 0.9em;
+    margin: 14px 0;
+  }
+  .img-placeholder .icon { font-size: 2em; margin-bottom: 8px; }
+
+  .screenshot-wrap {
+    margin: 16px 0;
+    text-align: center;
+  }
+  .screenshot-wrap img {
+    max-width: 100%;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+  .screenshot-wrap .caption {
+    margin-top: 8px;
+    font-size: 0.85em;
+    color: var(--text-secondary);
+  }
+
+  ul, ol { margin-bottom: 14px; padding-left: 24px; }
+  li { margin-bottom: 6px; }
+
+  .flow-diagram {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 22px 0;
+    font-size: 0.92em;
+  }
+  .flow-step {
+    background: var(--primary);
+    color: white;
+    padding: 10px 18px;
+    border-radius: 10px;
+    font-weight: 600;
+  }
+  .flow-arrow { color: var(--text-secondary); font-size: 1.4em; }
+
+  .score-bar {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin: 4px 0;
+  }
+  .score-bar .bar {
+    height: 10px;
+    border-radius: 5px;
+    background: var(--primary-light);
+  }
+  .score-bar .bar.v2 { background: var(--success); }
+
+  .footer {
+    text-align: center;
+    padding: 32px;
+    color: var(--text-secondary);
+    font-size: 0.85em;
+    border-top: 1px solid var(--border);
+    margin-top: 40px;
+  }
+  code {
+    background: #eceff1;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.9em;
+  }
+  .tag {
+    display: inline-block;
+    background: #e3f2fd;
+    color: var(--primary);
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 0.8em;
+    margin: 2px 4px 2px 0;
+  }
+  .highlight-box {
+    background: linear-gradient(135deg, #e3f2fd, #e8f5e9);
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin: 18px 0;
+    border: 1px solid #bbdefb;
+  }
+  figure.screenshot-wrap { margin: 16px 0; text-align: center; }
+  figure.screenshot-wrap figcaption { margin-top: 8px; font-size: 0.85em; color: var(--text-secondary); }
+  pre { background: var(--code-bg); color: #cfd8dc; border-radius: 10px; padding: 18px 22px; margin: 14px 0 22px; font-family: Consolas, monospace; font-size: 0.9em; white-space: pre-wrap; }
+</style>
+</head>
+<body>
+<div class="hero">
+  <div class="badge">AI Quest &mdash; Investigate How</div>
+  <h1>Tạo một Agent Skill dùng chung cho Claude Code và Codex: Có thể tái sử dụng việc định nghĩa requirement và code review không?</h1>
+  <p class="subtitle">Tôi viết hai Agent Skills một lần, đặt vào cùng một thư mục, rồi chạy cùng các tác vụ qua Claude Code và OpenAI Codex CLI. Dưới đây là những gì dùng lại được, những gì không, kèm toàn bộ skill để bạn tự thử.</p>
+</div>
+
+<div class="container">
+
+<nav class="toc">
+  <h2>Mục lục</h2>
+  <ol>
+    <li><a href="#s1">Vì sao skill dùng chung quan trọng</a></li>
+    <li><a href="#s2">Định dạng Agent Skills trong năm phút</a></li>
+    <li><a href="#s3">Một thư mục cho hai agent</a></li>
+    <li><a href="#s4">Hai skill (toàn bộ source)</a></li>
+    <li><a href="#s5">Thiết lập bài test</a></li>
+    <li><a href="#s6">Video demo</a></li>
+    <li><a href="#s7">Kết quả: discovery, định nghĩa requirement, code review</a></li>
+    <li><a href="#s8">Những gì tôi rút ra (kể cả các bất ngờ trên Windows)</a></li>
+    <li><a href="#s9">Quan điểm của tôi về việc chuẩn hóa skill</a></li>
+    <li><a href="#s10">Tôi sẽ dùng Agent Skills trong công việc hằng ngày như thế nào</a></li>
+  </ol>
+</nav>
+
+<section id="s1">
+  <h2>1. Vì sao skill dùng chung quan trọng</h2>
+  <p><strong>Agent Skills</strong> là các thư mục chứa hướng dẫn (một file <code>SKILL.md</code> cùng references và scripts tùy chọn) mà coding agent chỉ nạp khi tác vụ cần đến. Team của chúng tôi, cũng như nhiều team khác, không dùng một agent duy nhất: có người thích Claude Code, người khác thích Codex, còn reviewer dùng GitHub Copilot. Nếu mỗi công cụ cần file prompt riêng, checklist review và template requirement của chúng tôi sẽ dần lệch nhau.</p>
+  <p>Anthropic đã tặng đặc tả Agent Skills cho Agentic AI Foundation vào tháng 10 năm 2026, và cả Codex lẫn GitHub Copilot đều đọc cùng một định dạng. Câu hỏi của quest này rất thực tế: <strong>tôi có thể viết quy trình định nghĩa requirement và quy trình code review một lần, rồi nhận được cùng một hành vi từ Claude Code và Codex không?</strong></p>
+</section>
+
+<section id="s2">
+  <h2>2. Định dạng Agent Skills trong năm phút</h2>
+  <p>Đặc tả mở tại agentskills.io được cố ý giữ rất nhỏ gọn:</p>
+  <table class="data-table">
+    <thead><tr><th>Thành phần</th><th>Quy tắc</th></tr></thead>
+    <tbody>
+      <tr><td><code>SKILL.md</code></td><td>YAML frontmatter nằm giữa hai dòng <code>---</code>, sau đó là hướng dẫn bằng Markdown. Nên giữ dưới khoảng 500 dòng.</td></tr>
+      <tr><td><code>name</code> (bắt buộc)</td><td>1–64 ký tự, gồm chữ thường, chữ số và dấu gạch ngang. Phải trùng với tên thư mục.</td></tr>
+      <tr><td><code>description</code> (bắt buộc)</td><td>Tối đa 1.024 ký tự: skill làm gì và <em>khi nào nên dùng</em>. Agent dựa vào đoạn văn bản này để ghép tác vụ với skill.</td></tr>
+      <tr><td>Các trường tùy chọn</td><td><code>license</code>, <code>compatibility</code>, <code>metadata</code>, <code>allowed-tools</code> (thử nghiệm)</td></tr>
+      <tr><td>Các thư mục tùy chọn</td><td><code>references/</code>, <code>scripts/</code>, <code>assets/</code>, chỉ được nạp khi phần hướng dẫn trỏ tới (progressive disclosure)</td></tr>
+    </tbody>
+  </table>
+  <p>Nơi mỗi công cụ tìm project skill:</p>
+  <table class="data-table">
+    <thead><tr><th>Công cụ</th><th>Thư mục project skill</th><th>Gọi tường minh</th></tr></thead>
+    <tbody>
+      <tr><td>Claude Code</td><td><code>.claude/skills/&lt;name&gt;/SKILL.md</code></td><td><code>/skill-name</code></td></tr>
+      <tr><td>Codex CLI</td><td><code>.agents/skills/&lt;name&gt;/SKILL.md</code></td><td><code>$skill-name</code></td></tr>
+      <tr><td>GitHub Copilot</td><td><code>.github/skills</code>, <code>.claude/skills</code> hoặc <code>.agents/skills</code></td><td>tự động theo description</td></tr>
+    </tbody>
+  </table>
+  <p>Cả ba công cụ cũng tự chọn skill khi yêu cầu khớp với <code>description</code> của skill đó.</p>
+</section>
+
+<section id="s3">
+  <h2>3. Một thư mục cho hai agent</h2>
+  <p>Để tránh hai bản sao lệch nhau, tôi giữ các file thật trong <code>.agents/skills/</code> (Codex và Copilot đọc) và biến <code>.claude/skills</code> thành một directory junction trỏ tới đó (symlink cũng hoạt động tương tự trên macOS/Linux):</p>
+  <pre>demo-project/
+├── .agents/skills/
+│   ├── requirement-definition/
+│   │   ├── SKILL.md
+│   │   └── references/template.md
+│   └── code-review/
+│       ├── SKILL.md
+│       └── references/checklist.md
+├── .claude/skills  →  junction to .agents/skills
+├── feature-request.txt
+└── leave_service.py
+
+# Windows (no admin needed for a junction)
+mklink /J .claude\skills .agents\skills
+# macOS / Linux
+ln -s ../.agents/skills .claude/skills</pre>
+  <p>Tôi chỉ dùng các trường có trong đặc tả mở (<code>name</code>, <code>description</code>, <code>license</code>, <code>compatibility</code>, <code>metadata</code>) và không dùng extension riêng của công cụ nào, rồi kiểm tra cả hai skill bằng validator tham chiếu:</p>
+  <pre>pip install skills-ref
+agentskills validate .agents/skills/code-review              # Valid skill
+agentskills validate .agents/skills/requirement-definition   # Valid skill</pre>
+  <figure class="screenshot-wrap"><img src="images/q2-s1.png" alt="Thư mục Agent Skills và bước validate"><figcaption>Một thư mục skill, hai công cụ, và cả hai skill đều qua được validator của đặc tả</figcaption></figure>
+</section>
+
+<section id="s4">
+  <h2>4. Hai skill (toàn bộ source)</h2>
+  <p>Hãy chép bốn file này vào <code>.agents/skills/</code> trong repository của bạn (và liên kết <code>.claude/skills</code> tới đó) để tự thử. Chúng được cấp phép MIT.</p>
+
+  <h3>4.1 <code>requirement-definition/SKILL.md</code></h3>
+  <pre>---
+name: requirement-definition
+description: Turn an informal feature request (Slack message, email, meeting note) into a structured requirements document with user stories, numbered functional and non-functional requirements, Given/When/Then acceptance criteria, assumptions and open questions. Use when the user asks to define, clarify, write or review requirements, a spec, or acceptance criteria for a feature.
+license: MIT
+compatibility: Agent Skills standard (agentskills.io). Tested with Claude Code and OpenAI Codex CLI. Needs read/write access to the repository.
+metadata:
+  author: phatlt
+  version: "1.0"
+---
+
+# Requirement definition
+
+Produce a requirements document that a developer, a tester and the requester can all agree on.
+
+## Procedure
+
+1. **Read the request and the code it touches.** Find the related modules (search for nouns from the request) so requirements match the real data model. Never invent tables or fields that do not exist without marking them as *new*.
+2. **Separate facts from guesses.** Anything the requester did not state explicitly goes to *Assumptions* (A-xx). Anything that blocks implementation goes to *Open questions* (Q-xx) addressed to a named role.
+3. **Write the document** using exactly the template in [references/template.md](references/template.md). Keep every heading, in the same order, even if a section is "None".
+4. **Number everything**: FR-01, NFR-01, AC-01, A-01, Q-01. Each acceptance criterion references the FR it verifies.
+5. **Acceptance criteria** use Given / When / Then and must be testable (concrete values, no "should work well").
+6. **Save** the document to `docs/requirements/&lt;kebab-case-feature-name&gt;.md` and print a 3-line summary: number of FRs, NFRs, ACs and open questions.
+
+## Rules
+
+- Write in the language of the request unless the user asks otherwise.
+- Prefer short sentences; one requirement per line.
+- Flag security, privacy and audit needs explicitly as NFRs.
+- Do not write implementation code in this skill.</pre>
+
+  <h3>4.2 <code>requirement-definition/references/template.md</code></h3>
+  <pre># &lt;Feature name&gt; — Requirements
+
+| Item | Value |
+|---|---|
+| Source | &lt;where the request came from&gt; |
+| Requester | &lt;role&gt; |
+| Target date | &lt;date or "not stated"&gt; |
+| Related code | &lt;files/modules&gt; |
+
+## 1. Background
+## 2. Goals / Non-goals
+## 3. User stories            (US-01: As a &lt;role&gt;, I want ... so that ...)
+## 4. Functional requirements (| ID | Requirement | Priority (Must/Should/Could) |)
+## 5. Non-functional requirements (| ID | Category | Requirement |)
+## 6. Acceptance criteria     (| ID | Verifies | Given | When | Then |)
+## 7. Assumptions             (A-01: ...)
+## 8. Open questions          (| ID | Question | To |)
+## 9. Out of scope</pre>
+
+  <h3>4.3 <code>code-review/SKILL.md</code></h3>
+  <pre>---
+name: code-review
+description: Review source code or a diff for security, correctness, error handling, maintainability and test coverage, and report findings in a fixed severity-ranked format with file:line references and concrete fixes. Use when the user asks for a code review, PR review, bug hunt, security check or "look over this code".
+license: MIT
+compatibility: Agent Skills standard (agentskills.io). Tested with Claude Code and OpenAI Codex CLI. Read-only; does not modify code.
+metadata:
+  author: phatlt
+  version: "1.0"
+---
+
+# Code review
+
+Review like a senior engineer who must sign off the change. Be specific, cite lines, propose fixes. Do not edit the code.
+
+## Procedure
+
+1. **Scope**: review the files or diff the user names. If none are named, review files changed in the working tree (`git diff --name-only`), otherwise all source files in the current directory.
+2. **Read every line** of the in-scope files. Check each item of [references/checklist.md](references/checklist.md).
+3. **Classify** every finding with exactly one severity:
+   - **Critical**: security hole, data loss, secret exposure. Must fix before merge.
+   - **Major**: wrong behaviour, broken business rule, crash risk.
+   - **Minor**: error handling, robustness, maintainability.
+   - **Nit**: style, naming, comments.
+4. **Report** using the output format below, sorted Critical → Nit. One finding per row. Merge duplicates.
+5. Finish with a one-line **verdict**: `APPROVE`, `APPROVE WITH COMMENTS` or `REQUEST CHANGES` (any Critical or Major → REQUEST CHANGES).
+
+## Output format
+
+## Code review: &lt;scope&gt;
+
+| # | Severity | Location | Finding | Suggested fix |
+|---|----------|----------|---------|---------------|
+| 1 | Critical | file.py:12 | ... | ... |
+
+**Summary:** &lt;n&gt; Critical, &lt;n&gt; Major, &lt;n&gt; Minor, &lt;n&gt; Nit
+**Verdict:** REQUEST CHANGES
+
+## Rules
+
+- Location must be `path:line` (or `path:start-end`).
+- Never report something you did not verify in the code.
+- If tests are missing for changed logic, report it as Minor.</pre>
+
+  <h3>4.4 <code>code-review/references/checklist.md</code></h3>
+  <pre># Review checklist
+
+## Security
+- [ ] No secrets, tokens or passwords in source code or logs
+- [ ] All SQL uses parameter binding (no string formatting / f-strings)
+- [ ] Authorization: the caller is allowed to perform the action (e.g. no self-approval)
+- [ ] Input validation for user-supplied values
+
+## Correctness
+- [ ] Logic matches docstrings, comments and business rules (inclusive/exclusive ranges, off-by-one)
+- [ ] State transitions are checked (e.g. cannot approve something already approved or cancelled)
+- [ ] No mutable default arguments or shared global state
+
+## Error handling &amp; resources
+- [ ] No silent `except: pass` / swallowed exceptions
+- [ ] Connections, files and cursors are closed (context managers)
+
+## Maintainability &amp; tests
+- [ ] Functions are small and named for what they do
+- [ ] Changed logic has tests</pre>
+</section>
+
+<section id="s5">
+  <h2>5. Thiết lập bài test</h2>
+  <h3>Đầu vào (giống hệt nhau cho cả hai công cụ)</h3>
+  <ul>
+    <li><strong>Định nghĩa requirement</strong>: một tin nhắn Slack lộn xộn, giống thật, từ bộ phận HR yêu cầu "tự hủy đơn nghỉ phép", với các gợi ý về hủy một phần, thông báo cho manager và audit bị chôn trong lời văn thân mật.</li>
+    <li><strong>Code review</strong>: một module Python 50 dòng (hư cấu) cho đơn xin nghỉ phép với <strong>6 lỗi cài sẵn</strong>: admin token viết cứng, SQL injection qua f-string, đếm ngày lệch một đơn vị (off-by-one) mâu thuẫn với docstring, mutable default argument, thiếu kiểm tra phân quyền và trạng thái trong <code>approve_request</code>, và một <code>except Exception: pass</code> im lặng.</li>
+  </ul>
+  <h3>Các lệnh (chính xác những gì đã chạy)</h3>
+  <pre># Claude Code
+claude -p "/requirement-definition feature-request.txt (answer in English)" --permission-mode acceptEdits
+claude -p "/code-review leave_service.py (answer in English)" --allowedTools Read,Grep,Glob
+
+# Codex CLI
+codex exec --skip-git-repo-check --dangerously-bypass-approvals-and-sandbox "$requirement-definition feature-request.txt (answer in English)"
+codex exec --skip-git-repo-check --dangerously-bypass-approvals-and-sandbox "$code-review leave_service.py (answer in English)"</pre>
+  <div class="card card-warning">
+    <p><strong>Môi trường, nói thẳng:</strong> Windows 11, Claude Code 2.1.329 (model mặc định) và Codex CLI 0.171.0. Tôi không có gói ChatGPT/OpenAI cho Codex, nên đã cấu hình Codex với một model provider tùy chỉnh: <strong>Gemini 3.5 Flash-Lite</strong>, truy cập qua một bridge cục bộ nhỏ cung cấp OpenAI Responses API. Việc phát hiện skill, nạp skill, gọi tool và sửa file đều do chính Codex thực hiện; chỉ model phía sau là khác. Điều này quan trọng với kết quả: khác biệt về <em>độ sâu</em> bên dưới chủ yếu là khác biệt do model, còn khác biệt về <em>quy trình</em> mới là thứ skill kiểm soát.</p>
+  </div>
+</section>
+
+<section id="s6">
+  <h2>6. Video demo</h2>
+  <p>Mọi lệnh dưới đây đều là thật và được hiển thị cùng output và thời gian thật: thư mục và bước validate, việc phát hiện skill ở cả hai công cụ, cả hai lần chạy requirement và cả hai lần code review.</p>
+  <!-- VIDEO -->
+</section>
+
+<section id="s7">
+  <h2>7. Kết quả</h2>
+  <h3>7.1 Discovery: cả hai agent tìm thấy cùng các skill</h3>
+  <p>Khi hỏi "bạn dùng được những skill nào?", Claude Code liệt kê <code>code-review</code> và <code>requirement-definition</code> từ <code>.claude/skills</code> (qua junction). Codex liệt kê đúng hai skill đó từ <code>.agents/skills</code>, bên cạnh bốn system skill có sẵn của nó. Không công cụ nào cần sửa gì trong các file.</p>
+  <figure class="screenshot-wrap"><img src="images/q2-s2a.png" alt="Claude Code liệt kê các Agent Skills"><figcaption>Claude Code phát hiện cả hai skill</figcaption></figure>
+  <figure class="screenshot-wrap"><img src="images/q2-s2c.png" alt="Codex CLI liệt kê các Agent Skills"><figcaption>Codex CLI phát hiện cùng hai skill đó cùng các skill có sẵn của nó</figcaption></figure>
+
+  <h3>7.2 Định nghĩa requirement</h3>
+  <figure class="screenshot-wrap"><img src="images/q2-s3.png" alt="Claude Code chạy requirement-definition"><figcaption>Claude Code: tài liệu được lưu vào docs/requirements/ và được tóm tắt</figcaption></figure>
+  <figure class="screenshot-wrap"><img src="images/q2-s4.png" alt="Codex chạy requirement-definition"><figcaption>Codex: đọc yêu cầu, viết tài liệu theo cùng template</figcaption></figure>
+  <table class="data-table">
+    <thead><tr><th>Tiêu chí kiểm tra (từ skill)</th><th>Claude Code</th><th>Codex CLI</th></tr></thead>
+    <tbody>
+      <tr><td>Đủ 9 mục của template, đúng thứ tự</td><td>✅ 9/9</td><td>✅ 9/9</td></tr>
+      <tr><td>ID có đánh số (US, FR, NFR, AC, A, Q)</td><td>✅</td><td>✅</td></tr>
+      <tr><td>Mỗi AC tham chiếu tới một FR</td><td>✅</td><td>✅</td></tr>
+      <tr><td>Lưu trong <code>docs/requirements/</code></td><td>✅</td><td>✅</td></tr>
+      <tr><td>Đọc code và dùng các trường thật (<code>leave_requests</code>, <code>status</code>, <code>approver</code>)</td><td>✅ và đánh dấu các trường mới là <em>new</em></td><td>✅ (<code>leave_requests</code>, <code>status</code>, <code>approver</code>), ít chi tiết hơn</td></tr>
+      <tr><td>Số lượng: user story / FR / NFR / AC / assumption / open question</td><td>4 / 17 / 10 / 18 / 10 / 10</td><td>4 / 6 / 2 / 5 / 2 / 2</td></tr>
+      <tr><td>AC kiểm thử được, có giá trị cụ thể</td><td>✅ ngày tháng, ID, số dư, thông báo lỗi chính xác</td><td>✅ nhưng ít hơn và kém cụ thể hơn</td></tr>
+      <tr><td>Thời gian thực tế</td><td>58 giây</td><td>163 giây (gồm một lần <code>mkdir</code> thất bại mà nó tự khắc phục)</td></tr>
+    </tbody>
+  </table>
+  <p><strong>Quy trình</strong> được chuyển giao hoàn toàn: cùng các heading, cùng cách đánh số, cùng vị trí file. Nhưng <strong>độ sâu</strong> thì không: tài liệu của Claude Code đọc như một spec tôi có thể đưa thẳng cho tester (ví dụ "Hôm nay là 2026-12-23; #11 được duyệt từ 2026-12-22 đến 2026-12-26; hủy từ 2026-12-24 → end = 2026-12-23, days = 2"), trong khi lần chạy Codex với model Flash-Lite cho ra một bộ khung đúng nhưng mỏng.</p>
+
+  <h3>7.3 Code review</h3>
+  <figure class="screenshot-wrap"><img src="images/q2-s5.png" alt="Output code-review của Claude Code"><figcaption>Claude Code: 13 finding, verdict REQUEST CHANGES</figcaption></figure>
+  <figure class="screenshot-wrap"><img src="images/q2-s6.png" alt="Output code-review của Codex"><figcaption>Codex: 8 finding theo cùng định dạng bảng, verdict REQUEST CHANGES</figcaption></figure>
+  <table class="data-table">
+    <thead><tr><th>Lỗi cài sẵn</th><th>Claude Code</th><th>Codex CLI</th></tr></thead>
+    <tbody>
+      <tr><td>Admin token viết cứng</td><td>✅ Critical</td><td>✅ Critical</td></tr>
+      <tr><td>SQL injection (f-string)</td><td>✅ Critical</td><td>✅ Critical</td></tr>
+      <tr><td>Off-by-one so với docstring</td><td>✅ Major</td><td>✅ Minor (đánh giá thấp)</td></tr>
+      <tr><td>Mutable default argument</td><td>✅ Major</td><td>✅ Major</td></tr>
+      <tr><td>Thiếu kiểm tra phân quyền / trạng thái</td><td>✅ Critical + Major (tách riêng)</td><td>✅ Major</td></tr>
+      <tr><td><code>except: pass</code> im lặng</td><td>✅ Minor</td><td>✅ Minor</td></tr>
+      <tr><td><strong>Số lỗi cài sẵn tìm được</strong></td><td><strong>6 / 6</strong></td><td><strong>6 / 6</strong></td></tr>
+      <tr><td>Các finding hợp lệ bổ sung</td><td>7 (input validation, connection không đóng, TOCTOU race, thiếu test, nit)</td><td>2 (connection không đóng, thiếu test)</td></tr>
+      <tr><td>Định dạng output và verdict đúng như chỉ định</td><td>✅</td><td>✅</td></tr>
+      <tr><td>Tham chiếu dòng chính xác</td><td>✅</td><td>Phần lớn (nhiều chỗ lệch 1 dòng)</td></tr>
+      <tr><td>Thời gian thực tế</td><td>30 giây</td><td>32 giây</td></tr>
+    </tbody>
+  </table>
+  <p>Hai bản review so sánh trực tiếp được vì skill cố định hình dạng của chúng: thang severity, các cột, thứ tự sắp xếp và quy tắc verdict. Reviewer có thể diff từng dòng hai báo cáo từ hai công cụ, điều không thể làm với các prompt tự do kiểu "hãy review giúp tôi".</p>
+</section>
+
+<section id="s8">
+  <h2>8. Những gì tôi rút ra (kể cả các bất ngờ trên Windows)</h2>
+  <ul>
+    <li><strong>Tính di động là có thật ở cấp độ quy trình.</strong> Một file <code>SKILL.md</code>, không sửa gì, tạo ra cùng một cấu trúc ở cả hai agent cho cả hai tác vụ. Skill chuyển giao ổn định phần <em>cái gì</em> và <em>định dạng</em>; model quyết định <em>độ sâu</em>.</li>
+    <li><strong>Hãy viết description để ghép khớp, không phải để người đọc.</strong> Cả hai agent đều chọn đúng skill chỉ từ description. Việc đưa vào các cụm kích hoạt ("PR review", "acceptance criteria") quan trọng hơn một đoạn tóm tắt đẹp.</li>
+    <li><strong>Đặt checklist trong <code>references/</code>.</strong> Cả hai agent chỉ mở <code>checklist.md</code> và <code>template.md</code> khi quy trình bảo làm vậy, nhờ đó phần luôn được nạp được giữ nhỏ.</li>
+    <li><strong>Codex trên Windows: sandbox mặc định chặn mọi lệnh shell</strong>, kể cả đọc một file, nên những lần chạy đầu chỉ cho ra câu trả lời kiểu "vui lòng dán file vào đây". Có các lựa chọn: thiết lập Windows sandbox của Codex (tài khoản sandbox toàn máy, cần admin) hoặc chạy không có sandbox. Tôi chọn cách sau, <em>chỉ trong một thư mục demo dùng một lần</em>.</li>
+    <li><strong>Không có sandbox, agent làm nhiều hơn bạn yêu cầu.</strong> Trong một lần chạy, Codex còn thực thi <code>git add</code> lên tài liệu vừa tạo. Ở đây vô hại, nhưng là lời nhắc tốt: skill mô tả một quy trình, nó không hạn chế tool. Hãy giữ các review skill ở quyền chỉ-đọc (Claude Code: <code>--allowedTools Read,Grep,Glob</code>).</li>
+    <li><strong>Cài đặt ngôn ngữ ảnh hưởng ngược lại.</strong> Cài đặt Claude Code cá nhân của tôi yêu cầu trả lời bằng tiếng Việt; câu "write in the language of the request" trong skill không ghi đè được điều đó, nên tôi thêm "answer in English" vào cả hai prompt để so sánh công bằng.</li>
+  </ul>
+</section>
+
+<section id="s9">
+  <h2>9. Quan điểm của tôi về việc chuẩn hóa skill</h2>
+  <p>Tôi nghĩ chuẩn Agent Skills có kích cỡ vừa đúng: nó chuẩn hóa <em>nơi</em> hướng dẫn được đặt và <em>cách</em> chúng được phát hiện, còn mọi thứ khác để cho Markdown thuần. Đó là lý do một file chạy nguyên vẹn trên hai agent rất khác nhau.</p>
+  <p>Những gì vẫn còn thiếu cho các team:</p>
+  <ul>
+    <li><strong>Một thư mục project duy nhất.</strong> Codex đọc <code>.agents/skills</code>, Claude Code đọc <code>.claude/skills</code>. Junction hoặc symlink dùng được, nhưng là cái bẫy trên Windows và ở một số CI checkout. Nếu Claude Code cũng đọc <code>.agents/skills</code> thì sẽ xóa được chút ma sát cuối cùng.</li>
+    <li><strong>Quyền hạn trong chuẩn.</strong> <code>allowed-tools</code> vẫn còn thử nghiệm và được diễn giải khác nhau. Một review skill nên có khả năng khai báo "chỉ-đọc" một cách di động.</li>
+    <li><strong>Versioning và testing.</strong> Skill là code dành cho agent. Chúng cần pin version và các regression test nhỏ (như 6 lỗi cài sẵn ở đây), nếu không một "thay đổi câu chữ nhỏ" sẽ âm thầm làm đổi hành vi của team.</li>
+  </ul>
+  <p>Dù vậy, tôi vẫn sẽ chuẩn hóa theo nó ngay bây giờ: chi phí chỉ là một thư mục trong repository, còn lợi ích là quy trình của team vẫn tồn tại khi đổi công cụ.</p>
+</section>
+
+<section id="s10">
+  <h2>10. Tôi sẽ dùng Agent Skills trong công việc hằng ngày như thế nào</h2>
+  <table class="data-table">
+    <thead><tr><th>Hôm nay</th><th>Với Agent Skills dùng chung</th></tr></thead>
+    <tbody>
+      <tr><td>Yêu cầu của khách hàng đến dưới dạng tin nhắn chat; tôi viết lại thành spec bằng tay, mỗi lần một chút khác nhau</td><td><code>/requirement-definition</code> (hoặc <code>$requirement-definition</code>) biến tin nhắn thành template của chúng tôi, kèm các open question sẵn sàng gửi lại cho khách hàng</td></tr>
+      <tr><td>Comment code review khác nhau tùy reviewer và tùy công cụ</td><td>Cùng một skill <code>code-review</code> ở mọi repo, nên báo cáo từ Claude Code, Codex và Copilot có cùng thang severity và quy tắc verdict</td></tr>
+      <tr><td>Checklist quest của chúng tôi (ý kiến riêng, ứng dụng vào công việc hằng ngày, không có dữ liệu mật) nằm trong đầu tôi</td><td>Một skill <code>blog-review</code> kiểm tra bản nháp theo checklist trước khi tôi nộp</td></tr>
+      <tr><td>Thành viên mới học quy ước bằng cách hỏi</td><td>Quy ước nằm trong <code>.agents/skills</code> của repository và được áp dụng bởi bất kỳ agent nào người đó thích</td></tr>
+    </tbody>
+  </table>
+  <p>Bước đầu tiên rất rẻ: thêm <code>.agents/skills/</code> với hai skill này vào một project đang hoạt động, liên kết <code>.claude/skills</code> tới đó, rồi so sánh một tuần review trước và sau.</p>
+</section>
+
+<section>
+  <h2>Tài liệu tham khảo</h2>
+  <ul>
+    <li><a href="https://www.anthropic.com/news/donating-agent-skills-to-the-agentic-ai-foundation" target="_blank">Anthropic – Donating Agent Skills to the Agentic AI Foundation</a></li>
+    <li><a href="https://agentskills.io/specification" target="_blank">Đặc tả Agent Skills</a></li>
+    <li><a href="https://code.claude.com/docs/en/skills" target="_blank">Claude Code – Skills</a></li>
+    <li><a href="https://docs.github.com/en/copilot/concepts/customizations/agent-skills" target="_blank">GitHub Docs – Agent Skills</a></li>
+  </ul>
+</section>
+
+</div>
+<div class="footer">AI Quest &mdash; Investigate How &bull; Agent Skills cho Claude Code và Codex &bull; 2026</div>
+
+</body>
+</html>
