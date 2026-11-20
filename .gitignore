@@ -7,3 +7,5 @@ tools/codex-home/*
 
 # raw recordings (may contain unmasked frames)
 *-raw.mp4
+__pycache__/
+*.pyc

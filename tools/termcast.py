@@ -38,7 +38,7 @@ def run_steps(steps, cast_path, title="Windows PowerShell", prompt_cwd=None):
         else:
             code = 0
         out["steps"].append({"comment": st.get("comment"), "show": st.get("show", st.get("run")),
-                             "prompt": st.get("prompt", prompt_cwd or "PS D:\\code\\personal\\ai_quest>"),
+                             "prompt": st.get("prompt", prompt_cwd or "PS D:\\code\\work\\ai_quest>"),
                              "events": events, "exit": code, "seconds": round(time.time() - t0, 2)})
         print(f"\n[step done: {st.get('show') or st.get('run')} exit={code} {time.time() - t0:.1f}s]")
     Path(cast_path).parent.mkdir(parents=True, exist_ok=True)

@@ -6,5 +6,5 @@ name = "Gemini (via local Responses bridge)"
 base_url = "http://127.0.0.1:4141/v1"
 wire_api = "responses"
 
-[projects.'D:\code\personal\ai_quest\blog-html\agent-skill-claude-codex\demo-project']
+[projects.'D:\code\work\ai_quest\blog-html\agent-skill-claude-codex\demo-project']
 trust_level = "trusted"

@@ -74,7 +74,7 @@
 
 ### Cảnh 8 – RAG truyền thống (PowerShell hiển thị, ~2 phút)
 ```powershell
-cd D:\code\personal\ai_quest\blog-html\gemini-notebook-interactive-sites\demo-assets
+cd D:\code\work\ai_quest\blog-html\gemini-notebook-interactive-sites\demo-assets
 powershell -ExecutionPolicy Bypass -File .\run-demo.ps1 -Quick     # build + 3 câu (~45 s)
 # hoặc bản đầy đủ (thêm eval 10 câu, ~1,5 phút):
 powershell -ExecutionPolicy Bypass -File .\run-demo.ps1
