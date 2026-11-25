@@ -1,0 +1,100 @@
+{
+ "title": "Windows PowerShell",
+ "steps": [
+  {
+   "comment": "Which scopes does create_file need?",
+   "show": "gwscli drive create_file --show-scopes | Select-String scope",
+   "prompt": "PS D:\\ai_quest\\google-workspace-cli-mcp>",
+   "events": [
+    [
+     0.89,
+     "      --show-scopes                     Show the OAuth scopes required for this command in the help output.\nOAuth Scopes:\n  All Supported Scopes:\n    - https://www.googleapis.com/auth/drive\n    - https://www.googleapis.com/auth/drive.appdata\n    - https://www.googleapis.com/auth/drive.file\n  Recommended Minimal Scopes:\n    - https://www.googleapis.com/auth/drive.file\n"
+    ]
+   ],
+   "exit": 0,
+   "seconds": 0.91
+  },
+  {
+   "comment": "Task 1: upload a (fictional) weekly report to Drive",
+   "show": "gwscli drive create_file --title \"AIQuest gwscli demo - weekly report\" --filePath data/aiquest-gwscli-demo-report.md --contentMimeType text/markdown",
+   "prompt": "PS D:\\ai_quest\\google-workspace-cli-mcp>",
+   "events": [
+    [
+     1.081,
+     "Error: drive:create_file Drive MCP upload initiation failed (status 403): {\n  \"error\": {\n    \"code\": 403,\n    \"message\": \"The caller does not have permission\",\n    \"status\": \"PERMISSION_DENIED\"\n  }\n}\n"
+    ],
+    [
+     1.081,
+     "Usage:\n  gwscli drive [command]\n\nAvailable Commands:\n  copy_file             Call this tool to copy an existing File in Google Drive.\n  create_file           Call this tool to create or upload a File to Google Drive.\n  download_file_content Call this tool to download the content of a Drive file as a base64 encoded string.\n  get_file_metadata     Call this tool to find general metadata about a user's Drive file.\n  get_file_permissions  Call this tool to list the permissions of a Drive File.\n  list_recent_files     Call this tool to find recent files for a user specified a sort order. Default sort order is `recency` if orderBy is not set or set to an unsupported value.\n  read_file_content     Call this tool to fetch a natural language representation of a known Drive file, and if specified, its comments.\n  search_files          Search for Drive files using a structured query (syntax: `query_term operator values`). Only terms in this list are supported.\n  upload_file_revision  Call this tool to upload a new content revision for an existing blob file in Google Drive.\n\nGlobal Flags:\n  -h, --help                 Print help message\n      --oauth_token string   OAuth token to authenticate requests directly\n\nUse \"gwscli drive [command] --help\" for more information about a command.\n\n"
+    ]
+   ],
+   "exit": 1,
+   "seconds": 1.4
+  },
+  {
+   "comment": "Find it again with a structured Drive query",
+   "show": "gwscli drive search_files --query \"title contains 'AIQuest gwscli demo'\" --excludeContentSnippets",
+   "prompt": "PS D:\\ai_quest\\google-workspace-cli-mcp>",
+   "events": [
+    [
+     1.265,
+     "{\n  \"content\": [\n    {\n      \"text\": \"The caller does not have permission\",\n      \"type\": \"text\"\n    }\n  ],\n  \"isError\": true,\n  \"resultType\": \"complete\"\n}\n"
+    ]
+   ],
+   "exit": 1,
+   "seconds": 1.58
+  },
+  {
+   "comment": "Task 2: book a review meeting on my calendar",
+   "show": "gwscli calendar create_event --summary \"AIQuest demo: review gwscli report\" --startTime 2026-11-26T10:00:00 --endTime 2026-11-26T10:30:00",
+   "prompt": "PS D:\\ai_quest\\google-workspace-cli-mcp>",
+   "events": [
+    [
+     1.034,
+     "{\n  \"content\": [\n    {\n      \"text\": \"Access to this tool requires that your Google Cloud project (772831598343) is enrolled in the Google Workspace Developer Preview Program. Please see https://developers.google.com/workspace/preview\",\n      \"type\": \"text\"\n    }\n  ],\n  \"isError\": true,\n  \"resultType\": \"complete\"\n}\n"
+    ]
+   ],
+   "exit": 1,
+   "seconds": 1.2
+  },
+  {
+   "comment": "Read the calendar back (only demo events)",
+   "show": "gwscli calendar list_events --fullText \"AIQuest demo\"",
+   "prompt": "PS D:\\ai_quest\\google-workspace-cli-mcp>",
+   "events": [
+    [
+     0.983,
+     "{\n  \"content\": [\n    {\n      \"text\": \"Access to this tool requires that your Google Cloud project (772831598343) is enrolled in the Google Workspace Developer Preview Program. Please see https://developers.google.com/workspace/preview\",\n      \"type\": \"text\"\n    }\n  ],\n  \"isError\": true,\n  \"resultType\": \"complete\"\n}\n"
+    ]
+   ],
+   "exit": 1,
+   "seconds": 1.5
+  },
+  {
+   "comment": "Task 3: create a follow-up task",
+   "show": "gwscli tasks create_task --title \"AIQuest demo: send weekly report\" --scheduledDate 2026-11-26",
+   "prompt": "PS D:\\ai_quest\\google-workspace-cli-mcp>",
+   "events": [
+    [
+     2.138,
+     "{\n  \"content\": [\n    {\n      \"text\": \"Access to this tool requires that your Google Cloud project (772831598343) is enrolled in the Google Workspace Developer Preview Program. Please see https://developers.google.com/workspace/preview\",\n      \"type\": \"text\"\n    }\n  ],\n  \"isError\": true,\n  \"resultType\": \"complete\"\n}\n"
+    ]
+   ],
+   "exit": 1,
+   "seconds": 2.7
+  },
+  {
+   "comment": "Task 4: draft (not send) the status e-mail",
+   "show": "gwscli gmail create_draft --to demo@example.com --subject \"AIQuest demo: weekly report\" --body \"...\"",
+   "prompt": "PS D:\\ai_quest\\google-workspace-cli-mcp>",
+   "events": [
+    [
+     3.758,
+     "{\n  \"content\": [\n    {\n      \"text\": \"Access to this tool requires that your Google Cloud project (772831598343) is enrolled in the Google Workspace Developer Preview Program. Please see https://developers.google.com/workspace/preview\",\n      \"type\": \"text\"\n    }\n  ],\n  \"isError\": true,\n  \"resultType\": \"complete\"\n}\n"
+    ]
+   ],
+   "exit": 1,
+   "seconds": 4.08
+  }
+ ]
+}

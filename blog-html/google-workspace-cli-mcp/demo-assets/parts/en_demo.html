@@ -1,0 +1,62 @@
+  <h3>2.4 Step 3: Register the client and sign the CLI in (incremental scopes)</h3>
+  <p>The CLI keeps two things locally: the registered OAuth client (from <strong>gwscli auth setup</strong>) and the user grant with its refresh token (from <strong>gwscli auth login</strong>). On Windows both live in %AppData%\gwscli (client_credentials.json and token.json). Instead of the read-only bundle I asked only for what my scenario needed: the Drive, Calendar and Tasks services plus the single Gmail action <strong>create_draft</strong>.</p>
+  <pre>PS&gt; echo Y | gwscli auth setup --oauth_client_file=client_secret.json
+Configuring your OAuth Client will first remove your existing stored OAuth tokens (logout), are you sure you want to proceed? Y, N.
+Already logged out (no cached token found).
+Successfully configured OAuth client credentials (client_id: ****).
+
+PS&gt; gwscli auth login drive calendar tasks "gmail create_draft"
+Please open the following URL in your browser to log in:
+[Open this URL in your browser to sign in]
+Waiting for authorization code on localhost:61118...
+Successfully authorized the following scopes:
+  - https://www.googleapis.com/auth/calendar
+  - https://www.googleapis.com/auth/calendar.events.readonly
+  - https://www.googleapis.com/auth/calendar.readonly
+  - https://www.googleapis.com/auth/drive.file
+  - https://www.googleapis.com/auth/drive.metadata.readonly
+  - https://www.googleapis.com/auth/drive.readonly
+  - https://www.googleapis.com/auth/gmail.compose
+  - https://www.googleapis.com/auth/tasks
+  - https://www.googleapis.com/auth/tasks.readonly</pre>
+  <figure class="screenshot-wrap"><img src="images/step-04-consent-1.png" alt="Google consent screen listing the requested Drive, Calendar, Gmail and Tasks scopes"><figcaption>The consent screen shows the project name (ai-quest-gwscli-demo) and every scope individually; the account is masked</figcaption></figure>
+  <p>The whole sign-in took about 37 seconds including the browser consent. Three things I noticed:</p>
+  <ul>
+    <li><strong>"Service" means broad scopes.</strong> Asking for the calendar service granted the full https://www.googleapis.com/auth/calendar scope, which the consent screen describes as "See, edit, share, and permanently delete all the calendars you can access". If you only need one action, name the action (for example "calendar list_events"), not the service.</li>
+    <li><strong>gmail.compose is more than drafts.</strong> I asked for create_draft only, and the consent screen said "Manage drafts and send emails". The CLI has no send command, but the token itself would allow sending if it leaked. This is exactly why the token file must be treated as a secret.</li>
+    <li><strong>The login listener cannot be driven by an agent.</strong> The CLI prints a URL and waits on a random localhost port; a human has to complete the consent in a browser on the same machine. In my demo I opened the URL in a dedicated Chrome profile.</li>
+  </ul>
+
+  <h3>2.5 Step 4: The remote MCP servers: protocol check and Claude Code registration</h3>
+  <p>The MCP servers are Google-hosted endpoints, so "installing" them means pointing an MCP client at the URL with an OAuth token from an agent-flagged client. I verified them in two ways.</p>
+  <p><strong>(a) A raw MCP client.</strong> To see the protocol without any agent in between, I wrote a 60-line Python script (mcp_probe.py) that speaks MCP over Streamable HTTP: it sends initialize, tools/list and optionally tools/call as JSON-RPC, using the access token that gwscli had obtained (the token is read from the cache and never printed). This is the real output against the Drive, Calendar and Tasks servers:</p>
+  <pre>&gt; POST https://drivemcp.googleapis.com/mcp/v1  initialize
+  HTTP 200 in 495 ms  server={"name": "StatelessServer", "version": "ESF"}  protocol=2025-06-18
+&gt; tools/list
+  HTTP 200 in 496 ms  9 tools:
+   - copy_file                    [write]
+   - create_file                  [write]
+   - download_file_content        [read-only]
+   - get_file_metadata            [read-only]
+   - get_file_permissions         [read-only]
+   - list_recent_files            [read-only]
+   - read_file_content            [read-only]
+   - search_files                 [read-only]
+   - upload_file_revision         [DESTRUCTIVE]
+
+&gt; POST https://calendarmcp.googleapis.com/mcp/v1  initialize
+  HTTP 200 in 477 ms  9 tools: list_events, get_event, list_calendars, suggest_time [read-only],
+  create_event, update_event, respond_to_event [write], delete_event [DESTRUCTIVE], search_events [read-only]
+
+&gt; POST https://tasksmcp.googleapis.com/mcp/v1  initialize
+  HTTP 200 in 915 ms  9 tools: list_task_lists, list_tasks, get_task [read-only],
+  create_task, update_task, undelete_task, complete_task, uncomplete_task [write], delete_task [DESTRUCTIVE]</pre>
+  <p>Useful facts from this check: the servers are stateless (serverInfo "StatelessServer", no session id needed), they speak MCP protocol version 2025-06-18, a round trip takes roughly 0.45&ndash;1 second from Vietnam, and every tool carries MCP annotations (readOnlyHint / destructiveHint). Those annotations are what an MCP client uses to decide which tools may run without asking. The tool lists match the CLI command lists one-to-one for Drive, Calendar and Tasks, which confirms that the CLI is a thin client over the same backend. The Tasks endpoint (tasksmcp.googleapis.com), which is missing from the MCP configuration page, does exist and answers.</p>
+  <p><strong>(b) Registering the server in Claude Code.</strong> Claude Code accepts a remote HTTP MCP server with a pre-registered OAuth client. The secret is taken from the MCP_CLIENT_SECRET environment variable (or prompted), so it never appears on the command line:</p>
+  <pre>PS&gt; claude mcp add --transport http gws-drive https://drivemcp.googleapis.com/mcp/v1 --client-id **** --client-secret --callback-port 8765
+Added HTTP MCP server gws-drive with URL: https://drivemcp.googleapis.com/mcp/v1 to local config
+
+PS&gt; claude mcp list
+Checking MCP server health...
+gws-drive: https://drivemcp.googleapis.com/mcp/v1 (HTTP) - Connected</pre>
+  <p>A Desktop-type client accepts loopback redirect URIs on any port, so the fixed callback port 8765 works without registering a redirect URI in the console. The user OAuth consent for the server is then completed inside Claude Code with /mcp.</p>

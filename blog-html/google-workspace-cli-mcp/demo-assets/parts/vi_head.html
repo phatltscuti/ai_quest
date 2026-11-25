@@ -1,0 +1,39 @@
+<div class="hero">
+  <div class="badge">AI Quest &mdash; Investigate How</div>
+  <h1>Google Workspace CLI và MCP Servers: Kiểm chứng thông số phát hành chính thức và dùng thử thực tế</h1>
+  <p class="subtitle">Google thực sự đã phát hành những gì trong hai ngày 24&ndash;25/11/2026 (gwscli GA, các Workspace MCP server dạng remote và mô hình bảo mật mới cho agent trong doanh nghiệp), được cài trên laptop Windows và điều khiển bằng Claude Code với một tài khoản Google Workspace của công ty.</p>
+</div>
+
+<div class="container">
+
+<nav class="toc">
+  <h2>Mục lục</h2>
+  <ol>
+    <li><a href="#intro">Giới thiệu và bảng đối chiếu yêu cầu</a></li>
+    <li><a href="#s1">Yêu cầu 1: Thông số phát hành chính thức và tính năng chính</a></li>
+    <li><a href="#s2">Yêu cầu 2: Cài đặt CLI và MCP server trên môi trường của tôi</a></li>
+    <li><a href="#s3">Yêu cầu 3: Tác vụ thực tế với CLI và agent kết nối MCP</a></li>
+    <li><a href="#s4">Yêu cầu 4: Quan điểm cá nhân: ứng dụng hằng ngày, giới hạn và bảo mật</a></li>
+    <li><a href="#s5">FAQ</a></li>
+    <li><a href="#s6">Kết luận</a></li>
+    <li><a href="#refs">Tài liệu tham khảo</a></li>
+  </ol>
+</nav>
+
+<section id="intro">
+  <h2>Giới thiệu</h2>
+  <p>Tôi là developer kiêm AI engineer tại một công ty phần mềm nhỏ ở Việt Nam. Giống phần lớn các team cùng quy mô, chúng tôi làm việc gần như hoàn toàn trên Google Workspace: spec và báo cáo nằm trong Drive, trao đổi với khách hàng qua Gmail, sprint review trên Calendar, việc cần theo dõi nằm trong Tasks. Trong năm qua, các coding agent (Claude Code, Codex) đã làm rất tốt phần "code", nhưng hễ công việc chạm tới Workspace thì vẫn phải có người copy tài liệu vào khung chat, dán bản tóm tắt ngược lại vào email, hoặc tự tay tạo cuộc họp. Phần "keo dán" giữa các công cụ vẫn là việc thủ công.</p>
+  <p>Ngày 24/11/2026 Google công bố <strong>Google Workspace CLI (gwscli)</strong> chính thức GA, và một ngày sau Google Cloud blog giới thiệu <strong>Google Workspace MCP servers</strong> cùng một bộ cơ chế <strong>bảo mật agent cho doanh nghiệp</strong>. Cả hai đều nhắm đúng vào phần keo dán đó: cho phép agent đọc và ghi dữ liệu Workspace qua giao diện thiết kế riêng cho agent, dưới các chính sách thiết kế riêng cho agent. Bài viết có hai mục tiêu. Thứ nhất, kiểm chứng những gì thực sự được phát hành bằng cách đọc các trang đặc tả chính thức thay vì nhắc lại thông cáo. Thứ hai, tự cài đặt và sử dụng, rồi ghi lại những gì xảy ra thật, kể cả những chỗ không khớp với tài liệu.</p>
+  <p>Phần thực hành được làm trên laptop Windows 11 của tôi với một tài khoản Google Workspace của công ty. Toàn bộ file, sự kiện, task và bản nháp trong demo đều do tôi tự tạo cho bài test này. Không dùng dữ liệu khách hàng hay dữ liệu nội bộ, và client ID, secret, token đều được che trong mọi ảnh chụp màn hình và output.</p>
+
+  <h3>Mỗi yêu cầu được trả lời ở đâu</h3>
+  <table class="data-table">
+    <thead><tr><th>Yêu cầu của quest</th><th>Mục trong bài</th><th>Nội dung</th></tr></thead>
+    <tbody>
+      <tr><td>1. Tóm tắt thông số phát hành chính thức và tính năng chính của Google Workspace CLI, MCP servers và bảo mật agent cho doanh nghiệp</td><td><a href="#s1">Mục 1</a></td><td>Bảng phát hành, thiết kế CLI, cài đặt, xác thực, danh sách lệnh, endpoint và scope của MCP, so sánh CLI và MCP, các lớp bảo mật, và những điểm vênh trong tài liệu</td></tr>
+      <tr><td>2. Cài đặt và cấu hình CLI và MCP server trên môi trường của mình, có ảnh chụp hoặc output lệnh</td><td><a href="#s2">Mục 2</a></td><td>Cài trên Windows, project personal mode và OAuth client gắn cờ agent, đăng nhập CLI, kết nối Claude Code với Workspace MCP server dạng remote</td></tr>
+      <tr><td>3. Thực hiện ít nhất một tác vụ thực tế bằng CLI hoặc agent kết nối MCP</td><td><a href="#s3">Mục 3</a></td><td>Upload, tìm và đọc file Drive, tạo sự kiện Calendar, tạo task, tạo bản nháp Gmail có xác nhận của con người, agent làm việc qua skills và qua MCP, video demo</td></tr>
+      <tr><td>4. Quan điểm cá nhân về ứng dụng trong công việc hằng ngày, giới hạn và bảo mật</td><td><a href="#s4">Mục 4</a></td><td>Các workflow cụ thể cho một team dev nhỏ, cách chọn giữa CLI và MCP, giới hạn, và checklist bảo mật</td></tr>
+    </tbody>
+  </table>
+</section>

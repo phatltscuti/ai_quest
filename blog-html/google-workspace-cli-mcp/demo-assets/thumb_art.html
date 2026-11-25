@@ -1,0 +1,28 @@
+<style>
+.art{position:absolute;right:34px;top:150px;width:460px;transform:rotate(-3deg);z-index:0}
+.term{background:#0f1720;border-radius:14px;box-shadow:0 30px 60px rgba(0,0,0,.5);overflow:hidden;border:1px solid rgba(255,255,255,.15)}
+.term .bar{background:#1e2a36;padding:10px 14px;display:flex;gap:8px;align-items:center}
+.term .bar i{width:12px;height:12px;border-radius:50%;display:inline-block}
+.term .bar b{margin-left:10px;font:600 14px 'Segoe UI';color:#9fb3c8}
+.term pre{margin:0;padding:16px 18px;font:15px/1.6 Consolas,monospace;color:#d6e2ee;white-space:pre}
+.term .p{color:#4dd0e1}.term .o{color:#a5d6a7}.term .w{color:#ffcc80}
+.mcp{margin-top:18px;display:flex;flex-wrap:wrap;gap:10px;justify-content:flex-end}
+.mcp span{background:rgba(255,255,255,.95);color:#0b3d91;font:700 16px 'Segoe UI';padding:8px 14px;border-radius:10px;box-shadow:0 8px 20px rgba(0,0,0,.3)}
+.shield{margin-top:14px;margin-left:auto;width:max-content;background:#ff6d00;color:#fff;font:700 17px 'Segoe UI';padding:9px 16px;border-radius:12px;box-shadow:0 8px 20px rgba(0,0,0,.3)}
+.shade{background:linear-gradient(90deg,rgba(9,42,110,.97) 0%,rgba(9,42,110,.88) 50%,rgba(9,42,110,0) 62%)!important}
+.flow{position:absolute;left:64px;top:430px;display:flex;gap:10px;align-items:center;font:600 19px 'Segoe UI';color:#e3f2fd;z-index:2}.flow b{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.3);padding:7px 13px;border-radius:10px;font-weight:600}.flow em{font-style:normal;color:#ffb74d}
+</style>
+<div class="flow"><b>Spec check</b><em>&rarr;</em><b>Setup</b><em>&rarr;</em><b>Practical tasks</b><em>&rarr;</em><b>Security</b></div>
+<div class="art">
+  <div class="term">
+    <div class="bar"><i style="background:#ff5f56"></i><i style="background:#ffbd2e"></i><i style="background:#27c93f"></i><b>PowerShell</b></div>
+<pre><span class="p">&gt;</span> gwscli version
+<span class="o">gwscli version 1.0.6</span>
+<span class="p">&gt;</span> gwscli auth login --bundle=readonly
+<span class="p">&gt;</span> gwscli drive search_files ...
+<span class="p">&gt;</span> gwscli gmail create_draft ...
+<span class="w">Allow this app? ALLOW_ONCE / DENY_ONCE</span></pre>
+  </div>
+  <div class="mcp"><span>drivemcp</span><span>calendarmcp</span><span>gmailmcp</span><span>/mcp/v1</span></div>
+  <div class="shield">&#128737; Agent-flagged OAuth &middot; Human-in-the-loop</div>
+</div>

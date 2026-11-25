@@ -1,0 +1,8 @@
+  <h4>What the hands-on test taught me</h4>
+  <ul>
+    <li><strong>"Generally available" did not mean "open to every project" on day one.</strong> The CLI binary, the OAuth client type, the sign-in and the MCP discovery all worked on a brand-new project, but tool execution on Calendar, Tasks and Gmail still required Developer Preview enrolment, and Drive was refused with a generic permission error. The MCP pages still carry the Developer Preview banner, and in practice they were the more accurate description.</li>
+    <li><strong>Error quality differs between services.</strong> Calendar, Tasks and Gmail return a precise, actionable message; Drive returns only "The caller does not have permission", which an agent (and a human) can mistake for a missing scope.</li>
+    <li><strong>Scopes are broader than the action.</strong> Granting create_draft produced a token that can also send mail, and granting the calendar service produced full read-write-delete access to calendars. Name specific actions at login.</li>
+    <li><strong>Discovery is open, execution is gated.</strong> Agents can list and plan with all tools before learning they may not call them. Prompts and skills should tell the agent to stop and report on isError, which Claude Code did when asked to report exactly what happened.</li>
+    <li><strong>Fast round trips.</strong> MCP calls from Vietnam took about 0.45&ndash;1 second; CLI commands including process start took 1.2&ndash;4.1 seconds. Speed is not a reason to prefer one path over the other.</li>
+  </ul>

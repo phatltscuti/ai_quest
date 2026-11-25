@@ -1,0 +1,98 @@
+> POST https://drivemcp.googleapis.com/mcp/v1  initialize
+  HTTP 200 in 495 ms  server={"name": "StatelessServer", "version": "ESF"}  protocol=2025-06-18
+> tools/list
+  HTTP 200 in 496 ms  9 tools:
+   - copy_file                    [write]
+   - create_file                  [write]
+   - download_file_content        [read-only]
+   - get_file_metadata            [read-only]
+   - get_file_permissions         [read-only]
+   - list_recent_files            [read-only]
+   - read_file_content            [read-only]
+   - search_files                 [read-only]
+   - upload_file_revision         [DESTRUCTIVE]
+> POST https://drivemcp.googleapis.com/mcp/v1  initialize
+  HTTP 200 in 469 ms  server={"name": "StatelessServer", "version": "ESF"}  protocol=2025-06-18
+> tools/list
+  HTTP 200 in 682 ms  9 tools:
+   - copy_file                    [write]
+   - create_file                  [write]
+   - download_file_content        [read-only]
+   - get_file_metadata            [read-only]
+   - get_file_permissions         [read-only]
+   - list_recent_files            [read-only]
+   - read_file_content            [read-only]
+   - search_files                 [read-only]
+   - upload_file_revision         [DESTRUCTIVE]
+> tools/call search_files {"query": "title contains 'AIQuest'"}
+  HTTP 200 in 533 ms
+  {
+   "content": [
+    {
+     "text": "The caller does not have permission",
+     "type": "text"
+    }
+   ],
+   "isError": true
+  }
+> POST https://calendarmcp.googleapis.com/mcp/v1  initialize
+  HTTP 200 in 477 ms  server={"name": "StatelessServer", "version": "ESF"}  protocol=2025-06-18
+> tools/list
+  HTTP 200 in 436 ms  9 tools:
+   - list_events                  [read-only]
+   - get_event                    [read-only]
+   - list_calendars               [read-only]
+   - suggest_time                 [read-only]
+   - create_event                 [write]
+   - update_event                 [write]
+   - delete_event                 [DESTRUCTIVE]
+   - respond_to_event             [write]
+   - search_events                [read-only]
+> tools/call list_calendars {}
+  HTTP 200 in 445 ms
+  {
+   "content": [
+    {
+     "text": "Access to this tool requires that your Google Cloud project (772831598343) is enrolled in the Google Workspace Developer Preview Program. Please see https://developers.google.com/workspace/preview",
+     "type": "text"
+    }
+   ],
+   "isError": true
+  }
+> POST https://tasksmcp.googleapis.com/mcp/v1  initialize
+  HTTP 200 in 915 ms  server={"name": "StatelessServer", "version": "ESF"}  protocol=2025-06-18
+> tools/list
+  HTTP 200 in 977 ms  9 tools:
+   - list_task_lists              [read-only]
+   - list_tasks                   [read-only]
+   - get_task                     [read-only]
+   - create_task                  [write]
+   - update_task                  [write]
+   - delete_task                  [DESTRUCTIVE]
+   - undelete_task                [write]
+   - complete_task                [write]
+   - uncomplete_task              [write]
+> tools/call list_task_lists {}
+  HTTP 200 in 955 ms
+  {
+   "content": [
+    {
+     "text": "Access to this tool requires that your Google Cloud project (772831598343) is enrolled in the Google Workspace Developer Preview Program. Please see https://developers.google.com/workspace/preview",
+     "type": "text"
+    }
+   ],
+   "isError": true
+  }
+Added HTTP MCP server gws-drive with URL: https://drivemcp.googleapis.com/mcp/v1 to local config
+File modified: C:\Users\lytan\.claude-mise\.claude.json [project: D:/code/work/ai_quest]
+Checking MCP server health…
+
+claude.ai Claude Docs: https://api.anthropic.com/v1/pages/mcp - ✔ Connected
+gws-drive: https://drivemcp.googleapis.com/mcp/v1 (HTTP) - ✔ ConnectedInstalling skills to .claude/skills...
+Folder PATH listing for volume Data
+Volume serial number is 38B1-96F5
+D:\CODE\WORK\AI_QUEST\BLOG-HTML\GOOGLE-WORKSPACE-CLI-MCP\DEMO-ASSETS\.CLAUDE
+\---skills
+    \---gwscli
+            SKILL.md
+            

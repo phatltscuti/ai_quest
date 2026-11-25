@@ -1,0 +1,74 @@
+  <h3>3.1 Discovering commands at run time</h3>
+  <p>Because the CLI does not promise stable signatures, the first thing I (and later the agent) did was ask the binary itself: --help for flags, --schema for the JSON output and --show-scopes for the minimal scopes of an action. For example:</p>
+  <pre>PS&gt; gwscli drive create_file --help --show-scopes
+OAuth Scopes:
+  All Supported Scopes:
+    - https://www.googleapis.com/auth/drive
+    - https://www.googleapis.com/auth/drive.appdata
+    - https://www.googleapis.com/auth/drive.file
+  Recommended Minimal Scopes:
+    - https://www.googleapis.com/auth/drive.file</pre>
+  <p>The help texts are written for a model, not for a human: create_event explains that times must be passed without a UTC offset unless the user named one, create_task contains a full set of rules about deadlines versus scheduled dates and what to tell the user when a deadline is dropped, and search_files documents its whole query grammar. In other words the "prompt engineering" for each tool ships inside the binary.</p>
+
+  <h3>3.2 Practical tasks with the CLI: what really happened</h3>
+  <p>I ran the planned scenario (upload a fictional weekly report, find it, schedule a review, create a follow-up task, draft the e-mail) with real commands. Every command reached Google and returned a structured answer, but <strong>none of the Workspace actions were allowed to run</strong>:</p>
+  <table class="data-table">
+    <thead><tr><th>#</th><th>Command (shortened)</th><th>Time</th><th>Result</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>drive create_file --title "AIQuest gwscli demo - weekly report" --filePath data/aiquest-gwscli-demo-report.md --contentMimeType text/markdown</td><td>1.4 s</td><td>HTTP 403 PERMISSION_DENIED "The caller does not have permission" (upload initiation)</td></tr>
+      <tr><td>2</td><td>drive search_files --query "title contains 'AIQuest gwscli demo'" --excludeContentSnippets</td><td>1.6 s</td><td>isError: "The caller does not have permission"</td></tr>
+      <tr><td>3</td><td>calendar create_event --summary "AIQuest demo: review gwscli report" --startTime 2026-11-26T10:00:00 --endTime 2026-11-26T10:30:00</td><td>1.2 s</td><td>isError: project must be enrolled in the Developer Preview Program</td></tr>
+      <tr><td>4</td><td>calendar list_events --fullText "AIQuest demo"</td><td>1.5 s</td><td>same Developer Preview error</td></tr>
+      <tr><td>5</td><td>tasks create_task --title "AIQuest demo: send weekly report" --scheduledDate 2026-11-26</td><td>2.7 s</td><td>same Developer Preview error</td></tr>
+      <tr><td>6</td><td>gmail create_draft --to demo@example.com --subject "AIQuest demo: weekly report" --body "..."</td><td>4.1 s</td><td>same Developer Preview error</td></tr>
+    </tbody>
+  </table>
+  <p>The exact message for Calendar, Tasks and Gmail was:</p>
+  <pre>{
+  "content": [
+    {
+      "text": "Access to this tool requires that your Google Cloud project (7728xxxxxxxx) is enrolled in the Google Workspace Developer Preview Program. Please see https://developers.google.com/workspace/preview",
+      "type": "text"
+    }
+  ],
+  "isError": true,
+  "resultType": "complete"
+}</pre>
+  <p>Before concluding anything I ruled out the obvious causes. The APIs were enabled: the project's "Enabled APIs &amp; services" page listed the Drive, Calendar, Tasks, Gmail, Docs, Sheets, Slides, Chat and Workspace MCP APIs together with the classic APIs, and the Drive/Calendar/Tasks MCP APIs already showed my requests (with errors) in their traffic graphs. The scopes were granted (see 2.4). The client carried the agent flag. And the error text is explicit: the gate is the <strong>project's enrolment in the Developer Preview Program</strong>, not my token. Drive returns a less helpful generic "caller does not have permission", but it fails at the same stage, both through the CLI and through raw MCP (below).</p>
+  <p>Note also what the output format tells us: the CLI result is literally an MCP tool result (content array, isError, resultType). That confirms what the documentation implies: gwscli is an MCP client of the same Google-hosted servers, with a command-line front end and local file handling. There was no human-in-the-loop prompt for create_draft, because the request was rejected before the server got that far.</p>
+  <figure class="screenshot-wrap"><img src="images/step-06-cli-tasks.png" alt="Terminal running the gwscli practical tasks"><figcaption>The CLI tasks in the terminal: every call returns a structured MCP error instead of a result</figcaption></figure>
+
+  <h3>3.3 The same calls through raw MCP</h3>
+  <p>To be sure the CLI was not the problem, I made the same kind of call directly against the MCP endpoints with mcp_probe.py. The handshake and tools/list succeed (section 2.5), and tools/call fails with the same messages:</p>
+  <pre>&gt; tools/call search_files {"query": "title contains 'AIQuest'"}
+  HTTP 200 in 533 ms
+  { "content": [ { "text": "The caller does not have permission", "type": "text" } ], "isError": true }
+
+&gt; tools/call list_calendars {}            (calendarmcp)
+  HTTP 200 in 445 ms   "Access to this tool requires that your Google Cloud project (...) is enrolled in the Google Workspace Developer Preview Program."
+
+&gt; tools/call list_task_lists {}           (tasksmcp)
+  HTTP 200 in 955 ms   same Developer Preview message</pre>
+  <p>Two protocol details are worth noting for anyone writing an MCP client: tool failures come back as HTTP 200 with isError: true inside the result, not as HTTP errors or JSON-RPC errors, so a client must check the flag; and discovery (initialize and tools/list) is not gated, only execution is. In other words, an agent can see every tool, plan with them, and only learns at call time that it is not allowed to use them.</p>
+  <figure class="screenshot-wrap"><img src="images/step-07-mcp-probe.png" alt="Raw MCP client calling the Drive, Calendar and Tasks MCP servers"><figcaption>Raw MCP over Streamable HTTP: handshake and tool discovery work, tools/call is blocked</figcaption></figure>
+
+  <h3>3.4 An agent task: Claude Code with the gwscli skill</h3>
+  <p>The CLI ships its own agent skill. Installing it is a single command that writes a SKILL.md file:</p>
+  <pre>PS&gt; gwscli skills install --dir .claude/skills
+Installing skills to .claude/skills...
+PS&gt; tree /F .claude
+\---skills
+    \---gwscli
+            SKILL.md</pre>
+  <p>Then I gave Claude Code a task in natural language, without command names, and allowed it to run only gwscli commands (plus reading files and using skills):</p>
+  <pre>claude -p "Use the gwscli skill: find my Drive files whose title contains AIQuest, then list my Google Tasks lists. Report exactly what happened, including any error text. Do not try to change any settings." --allowedTools "Bash(gwscli:*)" Read Skill</pre>
+  <p>The run took 26 seconds. What the agent did (its answer, translated from the Vietnamese it replied in because of my global settings):</p>
+  <ol>
+    <li>It first checked the CLI version, as the skill instructs (the skill requires at least version 0.2.0); my local version 1.0.6 passed.</li>
+    <li>It built the correct structured query on its own: <strong>gwscli drive search_files --query="title contains 'AIQuest'"</strong>, and reported exit code 1 with "The caller does not have permission". It explicitly said this is a permission error, not "no matching files".</li>
+    <li>It ran <strong>gwscli tasks list_task_lists</strong> and quoted the Developer Preview message, including the project number.</li>
+    <li>It proposed next steps for me (enrol the project, or re-authorise the Drive action) and did not attempt any setting change, as instructed. It also noticed that the gws-drive MCP server was available in the session and offered to try that path instead.</li>
+  </ol>
+  <p>So even with the backend closed, the practical test answered the question "how does it operate in practice": the skill gave the agent enough guidance to choose the right commands and syntax on the first try, the structured MCP errors were easy for the agent to interpret and report honestly, and the permission boundary (only gwscli allowed, no settings changes) was respected. When the project is enrolled, the same prompt should return results without any change on my side.</p>
+  <figure class="screenshot-wrap"><img src="images/step-08-claude-skill.png" alt="Claude Code using the gwscli skill"><figcaption>Claude Code with the installed gwscli skill: correct commands, honest error report, no attempt to bypass the gate</figcaption></figure>
+  <p><strong>Status of the write tasks.</strong> Enrolment in the Developer Preview Program is a request reviewed by Google, so it could not be completed within the time of this test. The scenario commands are kept in demo-assets/film_gws.py so the same run can be repeated after approval, and I will update this post with the results.</p>

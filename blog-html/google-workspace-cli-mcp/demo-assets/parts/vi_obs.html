@@ -1,0 +1,8 @@
+  <h4>Những gì bài test thực tế dạy tôi</h4>
+  <ul>
+    <li><strong>"Generally available" không có nghĩa là "mở cho mọi project" ngay từ ngày đầu.</strong> Binary CLI, loại OAuth client, bước đăng nhập và MCP discovery đều hoạt động trên một project hoàn toàn mới, nhưng việc thực thi tool trên Calendar, Tasks và Gmail vẫn đòi hỏi ghi danh Developer Preview, còn Drive thì từ chối bằng một lỗi quyền chung chung. Các trang MCP vẫn mang banner Developer Preview, và trên thực tế đó mới là mô tả chính xác hơn.</li>
+    <li><strong>Chất lượng thông báo lỗi khác nhau giữa các service.</strong> Calendar, Tasks và Gmail trả về thông báo chính xác, có thể hành động ngay; Drive chỉ trả về "The caller does not have permission", khiến agent (và cả con người) dễ nhầm là thiếu scope.</li>
+    <li><strong>Scope rộng hơn action.</strong> Cấp create_draft sinh ra token cũng có thể gửi mail, và cấp service calendar sinh ra quyền đọc-ghi-xoá toàn bộ lịch. Hãy ghi rõ từng action cụ thể khi đăng nhập.</li>
+    <li><strong>Discovery thì mở, thực thi thì bị chặn.</strong> Agent có thể liệt kê và lên kế hoạch với mọi tool trước khi biết mình không được gọi chúng. Prompt và skill nên dặn agent dừng lại và báo cáo khi gặp isError, điều mà Claude Code đã làm khi được yêu cầu báo cáo chính xác chuyện gì đã xảy ra.</li>
+    <li><strong>Round trip nhanh.</strong> Các lần gọi MCP từ Việt Nam mất khoảng 0,45&ndash;1 giây; lệnh CLI tính cả thời gian khởi động process mất 1,2&ndash;4,1 giây. Tốc độ không phải lý do để chọn cách này thay vì cách kia.</li>
+  </ul>

@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Google Workspace CLI và MCP Servers thực hành</title>
+<style>
+  :root {
+    --primary: #0d47a1;
+    --primary-light: #1976d2;
+    --accent: #ff6d00;
+    --accent-light: #ff9e40;
+    --bg: #fafafa;
+    --card: #ffffff;
+    --text: #212121;
+    --text-secondary: #616161;
+    --border: #e0e0e0;
+    --code-bg: #263238;
+    --success: #2e7d32;
+    --success-bg: #e8f5e9;
+    --warning: #f57f17;
+    --warning-bg: #fff8e1;
+    --error: #c62828;
+    --gradient-start: #0d47a1;
+    --gradient-mid: #1565c0;
+    --gradient-end: #00838f;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.75;
+    font-size: 16px;
+  }
+  .hero {
+    background: linear-gradient(135deg, var(--gradient-start), var(--gradient-mid), var(--gradient-end));
+    color: white;
+    padding: 64px 20px;
+    text-align: center;
+  }
+  .hero h1 { font-size: 2.3em; margin-bottom: 14px; font-weight: 700; letter-spacing: -0.5px; }
+  .hero .subtitle { font-size: 1.12em; opacity: 0.93; max-width: 720px; margin: 0 auto; }
+  .hero .badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.18);
+    padding: 6px 20px;
+    border-radius: 20px;
+    font-size: 0.84em;
+    margin-bottom: 18px;
+    backdrop-filter: blur(4px);
+  }
+  .container { max-width: 940px; margin: 0 auto; padding: 32px 20px; }
+
+  .toc {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px 32px;
+    margin-bottom: 38px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  }
+  .toc h2 { font-size: 1.3em; margin-bottom: 14px; color: var(--primary); }
+  .toc ol { padding-left: 22px; }
+  .toc li { margin-bottom: 6px; }
+  .toc a { color: var(--primary-light); text-decoration: none; }
+  .toc a:hover { text-decoration: underline; }
+
+  section { margin-bottom: 44px; }
+  h2 {
+    font-size: 1.55em;
+    color: var(--primary);
+    border-bottom: 3px solid var(--primary);
+    padding-bottom: 8px;
+    margin-bottom: 22px;
+  }
+  h3 { font-size: 1.22em; color: var(--text); margin: 22px 0 10px; }
+  h4 { font-size: 1.05em; color: var(--text-secondary); margin: 16px 0 8px; }
+  p { margin-bottom: 14px; }
+  a { color: var(--primary-light); }
+
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+  }
+  .card-accent { border-left: 4px solid var(--accent); }
+  .card-info { border-left: 4px solid var(--primary-light); }
+  .card-warning { border-left: 4px solid var(--warning); background: var(--warning-bg); }
+  .card-success { border-left: 4px solid var(--success); background: var(--success-bg); }
+
+  .prompt-box {
+    background: var(--code-bg);
+    color: #cfd8dc;
+    border-radius: 10px;
+    padding: 22px 24px;
+    margin: 14px 0 22px;
+    font-family: 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+    font-size: 0.9em;
+    line-height: 1.65;
+    white-space: pre-wrap;
+    position: relative;
+    overflow-x: auto;
+  }
+  .prompt-box .label {
+    position: absolute;
+    top: 8px;
+    right: 12px;
+    background: var(--accent);
+    color: white;
+    font-size: 0.7em;
+    padding: 2px 12px;
+    border-radius: 8px;
+    font-family: 'Segoe UI', sans-serif;
+    font-weight: 600;
+  }
+
+  table.data-table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+  table.data-table th, table.data-table td {
+    border: 1px solid var(--border);
+    padding: 10px 14px;
+    text-align: left;
+    font-size: 0.93em;
+  }
+  table.data-table th {
+    background: var(--primary);
+    color: white;
+    font-weight: 600;
+  }
+  table.data-table tr:nth-child(even) { background: #f5f5f5; }
+  table.data-table tr:hover { background: #e3f2fd; }
+
+  table.rubric-table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+  table.rubric-table th, table.rubric-table td {
+    border: 1px solid var(--border);
+    padding: 10px 14px;
+    text-align: center;
+    font-size: 0.93em;
+  }
+  table.rubric-table th { background: var(--primary); color: white; }
+  table.rubric-table td:first-child { text-align: left; font-weight: 600; }
+  table.rubric-table tr:nth-child(even) { background: #f5f5f5; }
+
+  .v-badge {
+    display: inline-block;
+    padding: 3px 14px;
+    border-radius: 16px;
+    font-size: 0.8em;
+    font-weight: 700;
+    margin-right: 8px;
+    color: white;
+  }
+  .v-badge.v1 { background: var(--accent); }
+  .v-badge.v2 { background: var(--success); }
+
+  .compare-grid img{max-width:100%}
+  .compare-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin: 18px 0;
+  }
+  @media (max-width: 700px) { .compare-grid img{max-width:100%}
+  .compare-grid { grid-template-columns: 1fr; } }
+
+  .step-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    background: var(--primary);
+    color: white;
+    border-radius: 50%;
+    font-weight: 700;
+    font-size: 0.9em;
+    margin-right: 12px;
+    flex-shrink: 0;
+  }
+  .step-row { display: flex; align-items: flex-start; margin-bottom: 14px; }
+  .step-row p { margin: 0; }
+
+  .img-placeholder {
+    background: #eceff1;
+    border: 2px dashed #b0bec5;
+    border-radius: 10px;
+    padding: 36px 20px;
+    text-align: center;
+    color: var(--text-secondary);
+    font-size: 0.9em;
+    margin: 14px 0;
+  }
+  .img-placeholder .icon { font-size: 2em; margin-bottom: 8px; }
+
+  .screenshot-wrap {
+    margin: 16px 0;
+    text-align: center;
+  }
+  .screenshot-wrap img {
+    max-width: 100%;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+  .screenshot-wrap .caption {
+    margin-top: 8px;
+    font-size: 0.85em;
+    color: var(--text-secondary);
+  }
+
+  ul, ol { margin-bottom: 14px; padding-left: 24px; }
+  li { margin-bottom: 6px; }
+
+  .flow-diagram {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 22px 0;
+    font-size: 0.92em;
+  }
+  .flow-step {
+    background: var(--primary);
+    color: white;
+    padding: 10px 18px;
+    border-radius: 10px;
+    font-weight: 600;
+  }
+  .flow-arrow { color: var(--text-secondary); font-size: 1.4em; }
+
+  .score-bar {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin: 4px 0;
+  }
+  .score-bar .bar {
+    height: 10px;
+    border-radius: 5px;
+    background: var(--primary-light);
+  }
+  .score-bar .bar.v2 { background: var(--success); }
+
+  .footer {
+    text-align: center;
+    padding: 32px;
+    color: var(--text-secondary);
+    font-size: 0.85em;
+    border-top: 1px solid var(--border);
+    margin-top: 40px;
+  }
+  code {
+    background: #eceff1;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.9em;
+  }
+  .tag {
+    display: inline-block;
+    background: #e3f2fd;
+    color: var(--primary);
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 0.8em;
+    margin: 2px 4px 2px 0;
+  }
+  .highlight-box {
+    background: linear-gradient(135deg, #e3f2fd, #e8f5e9);
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin: 18px 0;
+    border: 1px solid #bbdefb;
+  }
+  figure.screenshot-wrap { margin: 16px 0; text-align: center; }
+  figure.screenshot-wrap figcaption { margin-top: 8px; font-size: 0.85em; color: var(--text-secondary); }
+  pre { background: var(--code-bg); color: #cfd8dc; border-radius: 10px; padding: 18px 22px; margin: 14px 0 22px; font-family: Consolas, monospace; font-size: 0.9em; white-space: pre-wrap; }
+
+  .todo { background: #fff3e0; border: 2px dashed #ff9800; border-radius: 8px; padding: 12px 16px; color: #e65100; }
+  table.data-table td { vertical-align: top; }
+  .container pre { overflow-x: auto; }
+  @media (max-width: 700px) { table.data-table { display: block; overflow-x: auto; } .hero h1 { font-size: 1.6em; } }
+</style>
+</head>
+<body>
+<div class="hero">
+  <div class="badge">AI Quest &mdash; Investigate How</div>
+  <h1>Google Workspace CLI và MCP Servers: Kiểm chứng thông số phát hành chính thức và dùng thử thực tế</h1>
+  <p class="subtitle">Google thực sự đã phát hành những gì trong hai ngày 24&ndash;25/11/2026 (gwscli GA, các Workspace MCP server dạng remote và mô hình bảo mật mới cho agent trong doanh nghiệp), được cài trên laptop Windows và điều khiển bằng Claude Code với một tài khoản Google Workspace của công ty.</p>
+</div>
+
+<div class="container">
+
+<nav class="toc">
+  <h2>Mục lục</h2>
+  <ol>
+    <li><a href="#intro">Giới thiệu và bảng đối chiếu yêu cầu</a></li>
+    <li><a href="#s1">Yêu cầu 1: Thông số phát hành chính thức và tính năng chính</a></li>
+    <li><a href="#s2">Yêu cầu 2: Cài đặt CLI và MCP server trên môi trường của tôi</a></li>
+    <li><a href="#s3">Yêu cầu 3: Tác vụ thực tế với CLI và agent kết nối MCP</a></li>
+    <li><a href="#s4">Yêu cầu 4: Quan điểm cá nhân: ứng dụng hằng ngày, giới hạn và bảo mật</a></li>
+    <li><a href="#s5">FAQ</a></li>
+    <li><a href="#s6">Kết luận</a></li>
+    <li><a href="#refs">Tài liệu tham khảo</a></li>
+  </ol>
+</nav>
+
+<section id="intro">
+  <h2>Giới thiệu</h2>
+  <p>Tôi là developer kiêm AI engineer tại một công ty phần mềm nhỏ ở Việt Nam. Giống phần lớn các team cùng quy mô, chúng tôi làm việc gần như hoàn toàn trên Google Workspace: spec và báo cáo nằm trong Drive, trao đổi với khách hàng qua Gmail, sprint review trên Calendar, việc cần theo dõi nằm trong Tasks. Trong năm qua, các coding agent (Claude Code, Codex) đã làm rất tốt phần "code", nhưng hễ công việc chạm tới Workspace thì vẫn phải có người copy tài liệu vào khung chat, dán bản tóm tắt ngược lại vào email, hoặc tự tay tạo cuộc họp. Phần "keo dán" giữa các công cụ vẫn là việc thủ công.</p>
+  <p>Ngày 24/11/2026 Google công bố <strong>Google Workspace CLI (gwscli)</strong> chính thức GA, và một ngày sau Google Cloud blog giới thiệu <strong>Google Workspace MCP servers</strong> cùng một bộ cơ chế <strong>bảo mật agent cho doanh nghiệp</strong>. Cả hai đều nhắm đúng vào phần keo dán đó: cho phép agent đọc và ghi dữ liệu Workspace qua giao diện thiết kế riêng cho agent, dưới các chính sách thiết kế riêng cho agent. Bài viết có hai mục tiêu. Thứ nhất, kiểm chứng những gì thực sự được phát hành bằng cách đọc các trang đặc tả chính thức thay vì nhắc lại thông cáo. Thứ hai, tự cài đặt và sử dụng, rồi ghi lại những gì xảy ra thật, kể cả những chỗ không khớp với tài liệu.</p>
+  <p>Phần thực hành được làm trên laptop Windows 11 của tôi với một tài khoản Google Workspace của công ty. Toàn bộ file, sự kiện, task và bản nháp trong demo đều do tôi tự tạo cho bài test này. Không dùng dữ liệu khách hàng hay dữ liệu nội bộ, và client ID, secret, token đều được che trong mọi ảnh chụp màn hình và output.</p>
+
+  <h3>Mỗi yêu cầu được trả lời ở đâu</h3>
+  <table class="data-table">
+    <thead><tr><th>Yêu cầu của quest</th><th>Mục trong bài</th><th>Nội dung</th></tr></thead>
+    <tbody>
+      <tr><td>1. Tóm tắt thông số phát hành chính thức và tính năng chính của Google Workspace CLI, MCP servers và bảo mật agent cho doanh nghiệp</td><td><a href="#s1">Mục 1</a></td><td>Bảng phát hành, thiết kế CLI, cài đặt, xác thực, danh sách lệnh, endpoint và scope của MCP, so sánh CLI và MCP, các lớp bảo mật, và những điểm vênh trong tài liệu</td></tr>
+      <tr><td>2. Cài đặt và cấu hình CLI và MCP server trên môi trường của mình, có ảnh chụp hoặc output lệnh</td><td><a href="#s2">Mục 2</a></td><td>Cài trên Windows, project personal mode và OAuth client gắn cờ agent, đăng nhập CLI, kết nối Claude Code với Workspace MCP server dạng remote</td></tr>
+      <tr><td>3. Thực hiện ít nhất một tác vụ thực tế bằng CLI hoặc agent kết nối MCP</td><td><a href="#s3">Mục 3</a></td><td>Upload, tìm và đọc file Drive, tạo sự kiện Calendar, tạo task, tạo bản nháp Gmail có xác nhận của con người, agent làm việc qua skills và qua MCP, video demo</td></tr>
+      <tr><td>4. Quan điểm cá nhân về ứng dụng trong công việc hằng ngày, giới hạn và bảo mật</td><td><a href="#s4">Mục 4</a></td><td>Các workflow cụ thể cho một team dev nhỏ, cách chọn giữa CLI và MCP, giới hạn, và checklist bảo mật</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section id="s1">
+  <h2>1. Yêu cầu 1: Thông số phát hành chính thức và tính năng chính của Google Workspace CLI, MCP servers và bảo mật agent cho doanh nghiệp</h2>
+<h3>1.1 Vì sao Google ra mắt CLI và MCP server cho agent, và vì sao là lúc này</h3>
+<p>Hơn mười năm qua, "hợp đồng" giữa Google Workspace và phần mềm bên thứ ba rất đơn giản: ứng dụng xin người dùng một OAuth token một lần, và từ đó mọi REST call mang token đó đều được coi là điều người dùng muốn. Giả định này đúng khi phần mềm chạy với tốc độ của con người. Nó không còn đúng khi một AI agent có thể đọc một nghìn email, viết lại một spreadsheet và chia sẻ một thư mục trong thời gian một người uống xong ly cà phê. Số liệu của chính Google cho thấy quy mô: bài Cloud blog ngày 25/11/2026 cho biết Workspace API xử lý hơn 2,8 nghìn tỷ lượt gọi mỗi tháng, và hơn 18 tỷ lượt đọc Drive mỗi ngày đến từ các API caller.</p>
+<p>Câu trả lời của Google là hai "cửa chính" mới dành riêng cho agent, cộng với một chính sách mà về lâu dài biến chúng thành những cửa duy nhất:</p>
+<ul>
+<li><strong>Google Workspace CLI (gwscli)</strong>, một binary duy nhất mà các agent chạy local như Claude Code, Codex hay Antigravity có thể gọi qua shell. CLI chính thức GA ngày 24/11/2026.</li>
+<li><strong>Google Workspace MCP servers</strong>, các endpoint Model Context Protocol dạng remote do Google host (mỗi sản phẩm một server) mà mọi client hỗ trợ MCP đều có thể kết nối.</li>
+<li><strong>Một lớp bảo mật bao quanh cả hai</strong>: OAuth client gắn cờ agent, kiểm tra chính sách trên từng request, xác nhận của con người cho thao tác rủi ro, sàng lọc bằng Model Armor, và một văn bản hợp đồng mới là Workspace AI Tools Addendum, với việc cưỡng chế kỹ thuật bắt đầu từ 01/02/2027.</li>
+</ul>
+<p>Nửa đầu bài viết là phần nghiên cứu. Tôi đọc tài liệu chính thức và thông cáo, rồi cố gắng giải thích cái gì thực sự được phát hành, các mảnh ghép khớp với nhau thế nào, và chỗ nào các tài liệu mâu thuẫn nhau. Phần thực hành theo sau, nơi chúng ta cài CLI và kết nối MCP server với một agent thật.</p>
+
+<h3>1.2 Tổng quan thông số phát hành</h3>
+<table class="data-table">
+<thead>
+<tr><th>Thành phần</th><th>Trạng thái / ngày</th><th>Phân phối</th><th>Mô hình xác thực</th><th>Dịch vụ hỗ trợ</th><th>Client hỗ trợ</th></tr>
+</thead>
+<tbody>
+<tr><td>Google Workspace CLI (gwscli)</td><td>GA, 24/11/2026 (release notes). Binary trên máy báo gwscli version 1.0.6.1026726559</td><td>Một binary native từ dl.google.com cho Linux, macOS và Windows trên x86_64 và ARM64; có script cài đặt cho bash và PowerShell</td><td>OAuth 2.0 desktop client gắn cờ "for an AI-powered agent"; personal mode hoặc cài đặt thủ công; hoặc token có sẵn qua --oauth_token</td><td>Calendar, Chat, Docs, Drive, Gmail, Sheets, Slides, Tasks; People (Developer Preview)</td><td>Mọi agent chạy được lệnh shell (nêu tên Claude Code, Codex, Antigravity); có sẵn agent skills nhúng trong binary</td></tr>
+<tr><td>Workspace MCP servers</td><td>GA theo Cloud blog (25/11/2026); các trang developer vẫn còn banner "Developer Preview"</td><td>Endpoint remote do Google host, transport Streamable HTTP, https://&lt;product&gt;mcp.googleapis.com/mcp/v1</td><td>OAuth 2.0 client (thường là loại Web application) gắn cờ AI-powered agent; cũng chấp nhận service account domain-wide delegation</td><td>Gmail, Drive, Docs, Sheets, Slides, Calendar, Chat, People, Classroom, Universal Search (blog còn liệt kê Tasks)</td><td>Antigravity, Claude (custom connector cho gói Pro/Max/Team/Enterprise), mọi MCP client chung</td></tr>
+<tr><td>Model Armor cho MCP</td><td>Được mô tả trên một trang Developer Preview</td><td>Google Cloud API modelarmor.googleapis.com, cấu hình dưới dạng "floor setting" của project</td><td>Google Cloud IAM trên project</td><td>Sàng lọc prompt và response của Google MCP servers</td><td>Trong suốt với MCP client</td></tr>
+<tr><td>Agent Gateway / Agent Registry (Google Cloud)</td><td>Công bố 25/11/2026, chưa có ngày GA</td><td>Dịch vụ managed của Google Cloud</td><td>Agent Identity cho từng agent, IAM policy, không dùng key dài hạn dùng chung</td><td>Lưu lượng LLM, MCP và Agent2Agent (A2A)</td><td>Agent chạy trên Google Cloud</td></tr>
+</tbody>
+</table>
+<p>Bảng trên đã cho thấy ý tưởng thiết kế chính: CLI và MCP server không phải hai sản phẩm riêng biệt mà là hai client của cùng một backend. Khi bật một dịch vụ cho CLI, bạn bật cả API cổ điển (ví dụ drive.googleapis.com) lẫn phần MCP đi kèm (drivemcp.googleapis.com). Về bản chất CLI là một MCP client chạy local đóng gói trong binary, vì vậy tên lệnh trong CLI và tên tool trong MCP reference gần như giống hệt nhau.</p>
+
+<h3>1.3 Google Workspace CLI</h3>
+<h4>1.3.1 Thiết kế: để máy đọc</h4>
+<p>Cú pháp thống nhất: <strong>gwscli &lt;service&gt; &lt;action&gt; [flags]</strong>. Ba lựa chọn thiết kế khiến nó thân thiện với agent chứ không chỉ là một công cụ admin khác:</p>
+<ul>
+<li><strong>Khám phá lúc chạy thay vì nhớ signature.</strong> Tài liệu nói thẳng rằng giao diện lệnh và schema output có thể thay đổi mà không đảm bảo tương thích ngược. Thay vì hứa ổn định, Google cho agent cách học giao diện ngay lúc chạy: <strong>gwscli --help</strong>, <strong>gwscli drive --help</strong>, <strong>gwscli drive list_recent_files --help</strong>.</li>
+<li><strong>Schema theo yêu cầu.</strong> <strong>--schema</strong> in ra toàn bộ JSON output schema của một lệnh mà không thực thi, và <strong>--show-scopes</strong> in ra các OAuth scope tối thiểu cần dùng. Agent có thể lên kế hoạch gọi lệnh, kiểm tra quyền và biết trước hình dạng kết quả trước khi chạm vào dữ liệu.</li>
+<li><strong>JSON trên stdout.</strong> Kết quả dạng danh sách, file và sự kiện đều là JSON hợp lệ nên có thể pipe vào jq. Các lệnh đọc nội dung tài liệu cũng trả về trong JSON, ví dụ drive read_file_content trả về chuỗi fileContent ở dạng plain text hoặc Markdown.</li>
+</ul>
+<pre>gwscli drive search_files --schema
+gwscli drive search_files --query="title contains 'Quarterly'" | jq '.files[] | {id: .id, title: .title}'
+gwscli drive read_file_content --fileId="FILE_ID" | jq -r '.fileContent'</pre>
+<p>Nhận định của tôi: đây là một sự đánh đổi có chủ ý. Google giữ quyền phát triển bề mặt tool thật nhanh (giống cách MCP server làm qua tools/list), và đổi lại yêu cầu người viết script bỏ thói quen hard-code. Với người viết bash script thì hơi phiền; với một LLM agent vốn đọc lại help mỗi phiên thì gần như không tốn gì.</p>
+
+<h4>1.3.2 Cài đặt theo hệ điều hành</h4>
+<table class="data-table">
+<thead><tr><th>OS</th><th>Cài nhanh</th><th>Vị trí mặc định</th><th>URL binary thủ công</th></tr></thead>
+<tbody>
+<tr><td>Linux / macOS</td><td>curl -fsSL https://dl.google.com/workspace-cli/install.sh | bash</td><td>~/.local/bin (đổi bằng GWSCLI_INSTALL_DIR)</td><td>.../linux/gwscli, .../linux_arm64/gwscli, .../macos_silicon/gwscli, .../macos_intel/gwscli</td></tr>
+<tr><td>Windows (PowerShell)</td><td>iex ((New-Object Net.WebClient).DownloadString('https://dl.google.com/workspace-cli/install.ps1'))</td><td>$HOME\bin, được thêm vào user PATH</td><td>.../windows/gwscli.exe, .../windows_arm64/gwscli.exe</td></tr>
+</tbody>
+</table>
+<p>Một vài chi tiết thực tế trong tài liệu: trên macOS, binary tải thủ công cần <strong>xattr -d com.apple.quarantine</strong>; trên Windows nên gọi curl.exe tường minh vì trong PowerShell curl là alias của Invoke-WebRequest. Ngoài ra còn có file INSTALL_PROMPT.md (https://dl.google.com/workspace-cli/INSTALL_PROMPT.md) để đưa cho agent tự cài CLI, kèm lưu ý rõ ràng rằng việc cấu hình credential và đăng nhập phải do con người làm trong terminal local. Kiểm tra bằng <strong>gwscli version</strong>. CLI không tự cập nhật; bạn so version với release notes và chạy lại installer.</p>
+
+<h4>1.3.3 Mô hình xác thực</h4>
+<p>Xác thực là phần thú vị nhất của CLI, vì đây là nơi chính sách mới "agent là một loại client riêng" của Google trở nên cụ thể.</p>
+<table class="data-table">
+<thead><tr><th>Chế độ</th><th>Dành cho</th><th>Cách hoạt động</th><th>Đánh đổi</th></tr></thead>
+<tbody>
+<tr><td>Personal mode</td><td>Một developer, một Google Account</td><td>Link console https://console.cloud.google.com/auth/overview/personal?apis=ws,wsmcp,tasksmcp&amp;clientType=desktop&amp;isAgent=true tạo một desktop client chỉ dùng cho một người, bật các API cốt lõi, bỏ qua consent screen và app verification. Sau đó chạy <strong>gwscli auth setup</strong>.</td><td>Nhanh nhất; client chỉ hoạt động với tài khoản của chính bạn</td></tr>
+<tr><td>Cài đặt thủ công</td><td>Project có sẵn, team, nhiều người dùng</td><td>Bật từng API cùng phần *mcp đi kèm, cấu hình consent screen (thêm test user nếu là External), tạo Desktop app client có tick "Use this client for an AI-powered agent", rồi <strong>gwscli auth setup --oauth_client_file=...</strong></td><td>Nhiều bước hơn, nhưng dùng được cho cả tổ chức</td></tr>
+<tr><td>Token có sẵn</td><td>CI, container, job headless</td><td>Global flag <strong>--oauth_token="$ACCESS_TOKEN"</strong> trên mọi lệnh; token phải đến từ client gắn cờ agent hoặc service account domain-wide delegation</td><td>Không có màn hình consent, không tự refresh; token có thể lộ qua shell history hoặc danh sách process</td></tr>
+</tbody>
+</table>
+<p>Bốn chi tiết đáng chú ý:</p>
+<ul>
+<li><strong>Client gắn cờ agent.</strong> Checkbox "Use this client for an AI-powered agent" không phải để trang trí. Cả phần troubleshooting của CLI và MCP đều nói request từ user-delegated client không có cờ này sẽ bị từ chối. Nếu một client hiện có còn phục vụ ứng dụng thường (không phải agent), Google khuyên tạo client riêng. Đây là cách Google phân biệt lưu lượng agent với lưu lượng của ứng dụng cho con người.</li>
+<li><strong>Scope tăng dần và bundle.</strong> Đăng nhập mang tính cộng dồn: <strong>gwscli auth login --bundle=readonly</strong> cấp scope chỉ đọc cho mọi dịch vụ, <strong>gwscli auth login gmail search_threads</strong> chỉ cấp đúng những gì một action cần, và các lần login sau gộp scope mới vào grant hiện có. <strong>--print-scope-only</strong> in ra danh sách scope tối thiểu mà không đăng nhập.</li>
+<li><strong>Thời hạn token.</strong> Access token thường sống khoảng một giờ và được refresh tự động từ refresh token đã cache. <strong>gwscli auth status</strong>, <strong>auth refresh</strong>, <strong>auth logout</strong> (thu hồi token) và <strong>auth reset</strong> (xoá luôn client đã đăng ký) dùng để quản lý phiên.</li>
+<li><strong>Redirect về localhost.</strong> Đăng nhập tương tác mở một listener tạm trên http://127.0.0.1:&lt;port&gt;/. Qua SSH, trong Cloud Shell hay container bạn phải forward port đó, hoặc dùng --oauth_token. Lệnh login sẽ chờ mãi nếu không có input, nên tuyệt đối không để agent chạy không giám sát.</li>
+</ul>
+
+<h4>1.3.4 Danh sách lệnh theo dịch vụ</h4>
+<table class="data-table">
+<thead><tr><th>Dịch vụ</th><th>Action đọc (trong bundle readonly)</th><th>Action ghi</th></tr></thead>
+<tbody>
+<tr><td>Calendar</td><td>list_calendars, list_events, get_event, search_events, suggest_time</td><td>create_event, update_event, respond_to_event, delete_event</td></tr>
+<tr><td>Chat</td><td>search_conversations, list_messages, search_messages</td><td>send_message (tài khoản Workspace + Chat app đã cấu hình)</td></tr>
+<tr><td>Docs</td><td>read_doc</td><td>update_doc (batch update)</td></tr>
+<tr><td>Drive</td><td>search_files, list_recent_files, get_file_metadata, get_file_permissions, read_file_content, download_file_content</td><td>create_file, upload_file_revision, copy_file</td></tr>
+<tr><td>Gmail</td><td>search_threads, get_thread, get_message, list_drafts, get_draft, list_labels</td><td>create_draft, label/unlabel thread và message, trash/untrash, mark/unmark spam, apply_sensitive_*_label</td></tr>
+<tr><td>People (Developer Preview)</td><td>get_user_profile, search_contacts, search_directory_people</td><td>không có</td></tr>
+<tr><td>Sheets</td><td>get_spreadsheet, get_values</td><td>update_values, update_formulas, insert_dimension, update_spreadsheet</td></tr>
+<tr><td>Slides</td><td>read_presentation, read_slide_page, read_slide_page_thumbnail</td><td>update_presentation (batch update)</td></tr>
+<tr><td>Tasks</td><td>list_task_lists, list_tasks, get_task</td><td>create_task, update_task, complete_task, uncomplete_task, delete_task, undelete_task</td></tr>
+</tbody>
+</table>
+<p>Những gì còn thiếu cũng nói lên nhiều điều như những gì có mặt. Gmail không có "send email", chỉ có create_draft, nên agent có thể soạn sẵn câu trả lời nhưng con người mới là người bấm Send. Không có lệnh đổi quyền chia sẻ Drive và không có lệnh xoá vĩnh viễn file. Xoá trong Gmail đi qua thùng rác, tức là khôi phục được. Bề mặt lệnh rõ ràng được thiết kế để những thao tác gây hại nhất hoặc không tồn tại, hoặc có thể hoàn tác.</p>
+
+<h4>1.3.5 Agent skills, human-in-the-loop và telemetry</h4>
+<p><strong>Agent skills</strong> được nhúng trong binary. <strong>gwscli skills list</strong> liệt kê chúng và <strong>gwscli skills install --dir ~/.claude/skills</strong> (hoặc ~/.agents/skills cho thư mục dùng chung) ghi chúng vào nơi agent harness tìm thấy. Vì nằm trong binary, sau mỗi lần cập nhật CLI nên chạy <strong>skills install --overwrite</strong> và khởi động lại agent.</p>
+<p><strong>Human-in-the-loop</strong> được cưỡng chế ở phía server, không phải ở CLI. Với thao tác nhạy cảm (gửi tin nhắn, chia sẻ ra ngoài, đưa vào thùng rác, xoá), CLI tạm dừng, ghi một câu hỏi như "Allow this app to use send_message?" ra stderr và đọc một trong các giá trị ALLOW_ONCE, ALLOW_TOOL_ALWAYS hoặc DENY_ONCE từ stdin. ALLOW_TOOL_ALWAYS chỉ xuất hiện trong terminal tương tác và chỉ khi chính sách cho phép. Tài liệu nói rõ agent phải xin xác nhận của người dùng trước khi ghi câu trả lời đó. Đây là điểm yếu cần nói thẳng: một agent có quyền ghi vào stdin về mặt kỹ thuật có thể tự trả lời thay người dùng, nên lớp bảo vệ này phụ thuộc vào việc agent harness tôn trọng quy tắc.</p>
+<p><strong>Telemetry</strong> bật mặc định. Nó ghi metadata của lệnh (service, action, tên flag), môi trường (version, OS, CPU) và chẩn đoán (trạng thái, thời gian chạy, mã HTTP và mã lỗi, crash trace). Nó không ghi giá trị flag, token, query, document ID, email hay nội dung. Có thể tắt bằng <strong>gwscli logging off</strong> hoặc GWSCLI_TELEMETRY_ENABLED=0.</p>
+
+<h4>1.3.6 Giới hạn</h4>
+<ul>
+<li>Không đảm bảo tương thích ngược cho lệnh hay schema output, kể cả sau GA.</li>
+<li>Đăng nhập tương tác cần trình duyệt truy cập được localhost trên cùng máy.</li>
+<li>Chat send_message không hoạt động với tài khoản Gmail cá nhân.</li>
+<li>Lệnh People cần đăng ký Developer Preview.</li>
+<li>Không tự cập nhật; skills phải làm mới thủ công.</li>
+<li>Không tính phí riêng, nhưng request được tính vào usage tier và quota Workspace của project.</li>
+</ul>
+
+<h3>1.4 Google Workspace MCP servers</h3>
+<h4>1.4.1 Endpoint và tool</h4>
+<p>Tất cả server đều là remote, do Google host, dùng transport Streamable HTTP và OAuth 2.0. Tên tool dưới đây lấy từ trang MCP reference của từng sản phẩm.</p>
+<table class="data-table">
+<thead><tr><th>Sản phẩm</th><th>Endpoint</th><th>Tool</th></tr></thead>
+<tbody>
+<tr><td>Gmail</td><td>https://gmailmcp.googleapis.com/mcp/v1</td><td>search_threads, get_thread, get_message, list_drafts, list_labels, create_draft, label_thread, label_message, unlabel_thread, unlabel_message</td></tr>
+<tr><td>Drive</td><td>https://drivemcp.googleapis.com/mcp/v1</td><td>search_files, list_recent_files, get_file_metadata, get_file_permissions, read_file_content, download_file_content, create_file, copy_file</td></tr>
+<tr><td>Docs</td><td>https://docsmcp.googleapis.com/mcp/v1</td><td>read_doc, update_doc</td></tr>
+<tr><td>Sheets</td><td>https://sheetsmcp.googleapis.com/mcp/v1</td><td>get_spreadsheet, get_values, update_values, update_formulas, insert_dimension, update_spreadsheet</td></tr>
+<tr><td>Slides</td><td>https://slidesmcp.googleapis.com/mcp/v1</td><td>read_presentation, read_slide_page, read_slide_page_thumbnail, update_presentation</td></tr>
+<tr><td>Calendar</td><td>https://calendarmcp.googleapis.com/mcp/v1</td><td>list_calendars, list_events, get_event, search_events, suggest_time, create_event, update_event, delete_event, respond_to_event</td></tr>
+<tr><td>Chat</td><td>https://chatmcp.googleapis.com/mcp/v1</td><td>search_conversations, list_messages, search_messages, send_message, list_memberships, mark_as_read, mark_as_unread, get_notification_settings, update_notification_settings</td></tr>
+<tr><td>People</td><td>https://people.googleapis.com/mcp/v1</td><td>get_user_profile, search_contacts, search_directory_people</td></tr>
+<tr><td>Classroom</td><td>https://classroommcp.googleapis.com/mcp/v1</td><td>ví dụ list_courses, create_announcement</td></tr>
+<tr><td>Universal Search</td><td>https://workspacemcp.googleapis.com/mcp/v1</td><td>search_corpus (Gmail, Drive, Calendar, Chat trong một truy vấn)</td></tr>
+</tbody>
+</table>
+<p>Hai điểm lạ: People được phục vụ trực tiếp trên people.googleapis.com thay vì một host *mcp riêng, và trang reference của Docs, Sheets, Slides liệt kê thêm một path thứ hai là /mcp/v1self ("self-mode") với cùng bộ tool, nhưng hướng dẫn cài đặt không hề giải thích.</p>
+
+<h4>1.4.2 OAuth scope</h4>
+<table class="data-table">
+<thead><tr><th>Server</th><th>Scope (tiền tố https://www.googleapis.com/auth/)</th></tr></thead>
+<tbody>
+<tr><td>Gmail</td><td>gmail.readonly, gmail.compose, gmail.modify</td></tr>
+<tr><td>Drive</td><td>drive.readonly, drive.file</td></tr>
+<tr><td>Docs / Sheets / Slides</td><td>drive.readonly, drive.file cộng documents(.readonly), spreadsheets(.readonly), presentations(.readonly)</td></tr>
+<tr><td>Calendar</td><td>calendar.calendarlist.readonly, calendar.events.freebusy, calendar.events.readonly, calendar.events</td></tr>
+<tr><td>Chat</td><td>chat.spaces.readonly, chat.memberships.readonly, chat.messages.readonly, chat.messages.create, chat.users.readstate, chat.users.spacesettings</td></tr>
+<tr><td>People</td><td>directory.readonly, userinfo.profile, contacts.readonly</td></tr>
+<tr><td>Classroom</td><td>classroom.courses.readonly, classroom.announcements, classroom.rosters.readonly, classroom.topics và năm scope khác</td></tr>
+<tr><td>Universal Search</td><td>gmail.readonly, drive.readonly, calendar.readonly, chat.messages.readonly, chat.spaces.readonly, chat.memberships.readonly (đều là tuỳ chọn)</td></tr>
+</tbody>
+</table>
+<p>Lưu ý quyền ghi Drive dùng drive.file, chỉ bao gồm các file do app tạo ra hoặc người dùng mở bằng app, chứ không phải scope drive đầy đủ. Đó là nguyên tắc least privilege được đặt sẵn trong cấu hình mặc định.</p>
+
+<h4>1.4.3 Cấu hình client</h4>
+<ul>
+<li><strong>Quick setup (personal mode).</strong> Console chọn sẵn client loại Web application. Bạn thêm callback URI của MCP client, giữ nguyên checkbox agent, rồi copy client ID và secret. Quick setup không bật Classroom.</li>
+<li><strong>Antigravity.</strong> Callback https://antigravity.google/oauth-callback. Server được khai báo trong ~/.gemini/config/mcp_config.json dưới mcpServers, mỗi mục có serverUrl và object oauth (clientId, clientSecret). Xác thực trong Settings &gt; Customizations &gt; Installed MCP Servers, hoặc trên CLI qua <strong>agy</strong> rồi <strong>/mcp</strong>.</li>
+<li><strong>Claude (claude.ai / Claude Desktop).</strong> Gói Pro, Max, Team hoặc Enterprise. Callback https://claude.ai/api/mcp/auth_callback. Thêm từng server làm custom connector trong Settings &gt; Connectors, với OAuth client ID và secret trong Advanced settings.</li>
+<li><strong>Client chung.</strong> Tên server googleworkspace, Streamable HTTP, OAuth 2.0 với client gắn cờ agent. Web client phải yêu cầu access_type=offline (hoặc offline_access) để có refresh token.</li>
+</ul>
+<pre>{
+  "mcpServers": {
+    "drive": {
+      "serverUrl": "https://drivemcp.googleapis.com/mcp/v1",
+      "oauth": { "clientId": "CLIENT_ID", "clientSecret": "CLIENT_SECRET" }
+    }
+  }
+}</pre>
+
+<h4>1.4.4 Universal Search, Classroom và troubleshooting</h4>
+<p><strong>Universal Search</strong> là server "agent-native" nhất: chỉ một tool search_corpus, tìm trên cả Gmail, Drive, Calendar và Chat. Nó chỉ tìm trong những sản phẩm mà người dùng đã cấp scope; nếu thiếu scope Chat spaces và memberships, kết quả Chat bị coi là chia sẻ ra ngoài và có thể bị lọc hoặc cần xác nhận. <strong>Classroom</strong> cần bật thủ công classroom.googleapis.com và classroommcp.googleapis.com và một lớp học thử; create_announcement chỉ tạo bản nháp, giáo viên mới là người đăng.</p>
+<p>Các lưu ý troubleshooting đáng nhớ: phải đăng nhập lại mỗi giờ nghĩa là bạn không có refresh token (yêu cầu offline access hoặc thêm prompt=consent); service account với domain-wide delegation không gắn cờ agent được nhưng vẫn kích hoạt hộp thoại xác nhận (elicitation) cho lệnh nhạy cảm; OAuth client mặc định của Apps Script không gắn cờ agent được, nên bạn cần client riêng và thư viện apps-script-oauth2.</p>
+
+<h3>1.5 CLI hay MCP: khi nào dùng cái nào</h3>
+<table class="data-table">
+<thead><tr><th>Tiêu chí</th><th>Workspace CLI</th><th>Workspace MCP servers</th></tr></thead>
+<tbody>
+<tr><td>Chạy ở đâu</td><td>Process local cạnh agent</td><td>Remote, do Google host</td></tr>
+<tr><td>Client phù hợp nhất</td><td>Coding agent có shell (Claude Code, Codex, terminal của Antigravity)</td><td>Client dạng chat và agent được host (connector của claude.ai, Antigravity, ADK, Gemini Enterprise)</td></tr>
+<tr><td>Loại OAuth client</td><td>Desktop app</td><td>Thường là Web application (callback URI theo từng client)</td></tr>
+<tr><td>Output</td><td>JSON trên stdout, pipe được vào jq, file lưu xuống đĩa</td><td>Kết quả tool MCP trả thẳng vào context của model</td></tr>
+<tr><td>File local</td><td>Upload/download file thật (create_file --filePath, download_file_content --destinationPath)</td><td>Không có filesystem local</td></tr>
+<tr><td>Chi phí token cho model</td><td>Thấp: agent lọc bằng jq trước khi đọc</td><td>Cao hơn: toàn bộ kết quả rơi vào context</td></tr>
+<tr><td>Xác nhận của con người</td><td>Câu hỏi qua stdin (ALLOW_ONCE...)</td><td>MCP form elicitation trên giao diện client</td></tr>
+<tr><td>Dịch vụ riêng</td><td>Tasks; nhiều action ghi Gmail hơn (trash, spam)</td><td>Classroom, Universal Search, thêm tool Chat</td></tr>
+<tr><td>Headless/CI</td><td>Có, với --oauth_token</td><td>Tuỳ MCP client</td></tr>
+<tr><td>Cập nhật</td><td>Cập nhật binary + skills thủ công</td><td>Phía server, tự động</td></tr>
+</tbody>
+</table>
+<p>Phân tích của tôi: chúng không cạnh tranh nhau. Dùng CLI khi agent vốn sống trong terminal và cần kết hợp dữ liệu Workspace với công việc local, ví dụ "đọc spec trên Drive, sinh code, upload báo cáo ngược lên". Shell pipeline cho phép agent thu gọn 500 dòng kết quả xuống còn năm dòng cần thiết trước khi model nhìn thấy, vừa tiết kiệm token vừa giảm bề mặt tấn công prompt injection. Dùng MCP khi không có shell (giao diện chat, agent được host), khi người dùng không phải developer, hoặc khi cần Universal Search. Vì cả hai cùng đi vào một backend với cùng các bước kiểm tra chính sách, một team có thể dùng kết hợp mà không tạo ra hai mô hình bảo mật.</p>
+
+<h3>1.6 Bảo mật agent cho doanh nghiệp, từng lớp kiểm soát</h3>
+<p>Câu cốt lõi của Cloud blog là "a valid token is no longer enough" (một token hợp lệ không còn là đủ): kiểm tra chính sách, ranh giới dữ liệu và xác nhận của con người phải nằm ngay trên đường đi của request. Dưới đây là từng lớp kiểm soát, ý nghĩa của nó, và ý nghĩa với một công ty phát triển phần mềm nhỏ như chúng tôi.</p>
+<table class="data-table">
+<thead><tr><th>Lớp kiểm soát</th><th>Là gì</th><th>Trạng thái</th><th>Ý nghĩa với một team dev nhỏ</th></tr></thead>
+<tbody>
+<tr><td>Kiểm tra chính sách trên mọi request</td><td>Mỗi lần agent gọi đều được đối chiếu với quyền Workspace, rule DLP và nhãn phân loại</td><td>Đang hoạt động với MCP/CLI</td><td>Rule DLP bảo vệ bạn khỏi chính agent của mình; nên cấu hình dù chỉ là rule cơ bản</td></tr>
+<tr><td>Workspace AI Tools Addendum</td><td>Agent phải dùng MCP server hoặc CLI, không dùng REST API cổ điển; không lưu trữ dữ liệu thô vĩnh viễn, không dùng để train model, không giữ dữ liệu dẫn xuất quá lâu, không scraping</td><td>Cưỡng chế kỹ thuật từ 01/02/2027</td><td>Mọi script hay bot nội bộ gọi Gmail/Drive REST API "với tư cách agent" cần chuyển đổi trước tháng 2/2027</td></tr>
+<tr><td>Định danh agent / client gắn cờ agent</td><td>Client ID OAuth riêng cho agent; agent trên Google Cloud có Agent Identity trong Agent Registry, không dùng key dài hạn dùng chung</td><td>Đang hoạt động (Workspace); đã công bố (Cloud)</td><td>Tạo client riêng cho mỗi agent; đừng dùng lại client của web app</td></tr>
+<tr><td>Scope tối thiểu</td><td>Agent chỉ xin scope cần thiết; bundle và --show-scopes của CLI hỗ trợ việc này</td><td>Đang hoạt động</td><td>Bắt đầu với --bundle=readonly, thêm scope ghi theo từng action</td></tr>
+<tr><td>Phê duyệt có thời hạn</td><td>Quyền được cấp sẽ tự hết hạn</td><td>"Coming soon", chưa có ngày</td><td>Trong lúc chờ, tự thu hồi sau khi thử nghiệm</td></tr>
+<tr><td>Quota sử dụng và billing</td><td>Lưu lượng agent được tính vào quota của project</td><td>Bắt đầu tính phí từ 01/04/2027</td><td>Hiện miễn phí nhưng cần dự trù; một vòng lặp agent chạy mất kiểm soát sẽ tốn tiền sau tháng 4/2027</td></tr>
+<tr><td>Con người ký duyệt</td><td>Soạn nháp và tóm tắt chạy tự do; gửi email, đổi quyền chia sẻ Drive, sửa hàng loạt cần người dùng xác nhận rõ ràng</td><td>Đang hoạt động trên MCP và CLI</td><td>Không bao giờ để agent tự trả lời câu hỏi xác nhận</td></tr>
+<tr><td>Khả năng quan sát và thu hồi của admin</td><td>Admin xem, audit và thu hồi agent trong Admin console; người dùng "sắp" xem được hoạt động của agent và tự thu hồi quyền</td><td>Admin: đang hoạt động; phía người dùng: sắp có</td><td>Người làm Workspace admin nên rà soát các agent đã kết nối hằng tháng</td></tr>
+<tr><td>DLP / client-side encryption cho agent</td><td>Giới hạn truy cập AI cho phép admin và người dùng chặn agent khỏi email Gmail và các file/thư mục Drive cụ thể</td><td>"Coming soon"</td><td>Lên kế hoạch thư mục nào (hợp đồng, nhân sự, dữ liệu khách hàng) cần chặn agent</td></tr>
+<tr><td>Model Armor</td><td>Dịch vụ Google Cloud sàng lọc prompt và response của MCP; bật dưới dạng floor setting của project với integrated service GOOGLE_MCP_SERVER và INSPECT_AND_BLOCK</td><td>Đã có tài liệu (trang đánh dấu Developer Preview)</td><td>Bảo hiểm rẻ chống prompt injection ẩn trong email đến hoặc tài liệu được chia sẻ; lưu ý logging sẽ lưu toàn bộ payload</td></tr>
+<tr><td>Agent Gateway / Agent Registry</td><td>Gateway hiểu giao thức cho lưu lượng LLM, MCP và A2A: xác minh định danh agent, áp IAM và egress mặc định từ chối, chuyển qua Model Armor và Service Extensions</td><td>Đã công bố, chưa có ngày GA</td><td>Có lẽ quá mức cần thiết với team nhỏ hiện nay; sẽ liên quan khi agent chạy production trên Cloud Run/GKE</td></tr>
+</tbody>
+</table>
+<p>Trang hướng dẫn bảo mật cấu hình Model Armor cho MCP dưới dạng <strong>floor setting</strong> của Google Cloud project, bằng gcloud hoặc console. Nói đơn giản: bạn bật cưỡng chế floor setting, thêm Google MCP servers (integrated service GOOGLE_MCP_SERVER) vào danh sách dịch vụ được bảo vệ, chọn kiểu cưỡng chế (INSPECT_AND_BLOCK để chặn lưu lượng bị gắn cờ, hoặc chỉ inspect), và tuỳ chọn bật Cloud Logging cho lưu lượng MCP cùng các bộ lọc như phát hiện URL độc hại và các nhóm responsible-AI với ngưỡng confidence. Tôi cố ý không chép lại lệnh ở đây: flag của tính năng đang preview này vẫn còn thay đổi, nên hãy copy phiên bản hiện tại từ trang bảo mật chính thức thay vì từ một bài blog.</p>
+<p>Gộp lại, mô hình này có nhiều lớp: định danh (agent là ai), scope (được chạm vào gì), chính sách và DLP (tổ chức cho phép gì), sàng lọc nội dung (input có bị đầu độc không), xác nhận (con người có đồng ý không), và audit/thu hồi (có dừng được không). Với công ty cỡ chúng tôi, lớp thứ nhất, thứ hai và thứ năm là miễn phí và dùng được ngay; mốc thời gian thực sự quan trọng là 01/02/2027, sau đó việc agent truy cập qua REST API cũ dự kiến sẽ bị chặn.</p>
+
+<h3>1.7 Câu hỏi mở và những điểm vênh tôi tìm thấy trong tài liệu</h3>
+<ol>
+<li><strong>GA hay Developer Preview.</strong> Cloud blog (25/11/2026) gọi Workspace MCP servers là GA, nhưng trang cài đặt MCP, trang bảo mật, Universal Search và mọi trang tool reference tôi đã xem vẫn có banner Developer Preview và ghi điều kiện tiên quyết là tham gia chương trình. Có lẽ tài liệu cập nhật chậm, nhưng điều này quan trọng với ai cần điều khoản GA.</li>
+<li><strong>Thiếu endpoint MCP cho Tasks.</strong> Blog liệt kê Tasks trong danh sách MCP server, và CLI yêu cầu tasksmcp.googleapis.com (link personal mode còn truyền apis=ws,wsmcp,tasksmcp), nhưng trang cấu hình MCP không có dòng nào cho Tasks, không có URL endpoint và không có danh sách scope.</li>
+<li><strong>Release notes không có số version.</strong> Mục duy nhất (24/11/2026) ghi GA nhưng không có version; binary báo gwscli version 1.0.6.1026726559, nên người đọc không thể đối chiếu version với thay đổi.</li>
+<li><strong>Bộ tool của CLI và MCP khác nhau.</strong> CLI có Gmail get_draft, trash/untrash, các action spam và Drive upload_file_revision mà MCP reference không liệt kê; Chat MCP server có list_memberships, mark_as_read/unread và notification settings mà CLI không có. Chưa rõ CLI gọi thêm endpoint hay trang reference chưa đầy đủ.</li>
+<li><strong>Path /mcp/v1self không có tài liệu</strong> trên Docs, Sheets và Slides.</li>
+<li><strong>CLI "GA" nhưng không đảm bảo ổn định.</strong> GA thường đi kèm cam kết tương thích; ở đây schema có thể thay đổi mà không tương thích ngược.</li>
+<li><strong>Các mục "coming soon" không có ngày</strong>: phê duyệt có thời hạn, màn hình hoạt động/thu hồi agent cho người dùng và DLP/CSE cho agent đều chưa có ngày, trong khi cưỡng chế (01/02/2027) và billing (01/04/2027) thì có. Các lớp kiểm soát có thể đến sau khi cưỡng chế bắt đầu.</li>
+<li><strong>Giá quota</strong> từ 01/04/2027 được công bố mà không có bảng giá hay mức miễn phí trong các nguồn tôi đã đọc.</li>
+</ol>
+
+</section>
+
+<section id="s2">
+  <h2>2. Yêu cầu 2: Cài đặt Google Workspace CLI và MCP server trên môi trường của tôi</h2>
+  <p>Phần này ghi lại quá trình cài đặt đúng như tôi đã làm. Thứ tự theo hướng dẫn chính thức: cài binary, tạo OAuth client gắn cờ agent trong một Google Cloud project, đăng nhập CLI, rồi kết nối một MCP client với các server remote dùng chung project đó.</p>
+
+  <h3>2.1 Môi trường thử nghiệm</h3>
+  <table class="data-table">
+    <thead><tr><th>Hạng mục</th><th>Giá trị</th></tr></thead>
+    <tbody>
+      <tr><td>Máy / OS</td><td>Laptop Windows 11, Windows PowerShell 5.1 và Git Bash</td></tr>
+      <tr><td>Tài khoản Google</td><td>Tài khoản Google Workspace của công ty (user của chính tôi, không thao tác quyền admin)</td></tr>
+      <tr><td>Google Cloud project</td><td>ai-quest-gwscli-demo, tạo qua personal-mode onboarding</td></tr>
+      <tr><td>OAuth client</td><td>gwscli-mcp-agent, loại Desktop app, gắn cờ "Use this client for an AI-powered agent"</td></tr>
+      <tr><td>CLI</td><td>gwscli version 1.0.6.1026726559</td></tr>
+      <tr><td>Agent</td><td>Claude Code (terminal) cho cả bài test qua skills và qua MCP</td></tr>
+      <tr><td>Dữ liệu demo</td><td>Một báo cáo tuần hư cấu tự viết, cùng một sự kiện, một task và một bản nháp thử đã lên kế hoạch (các thao tác ghi bị chặn, xem 3.2)</td></tr>
+    </tbody>
+  </table>
+
+  <h3>2.2 Bước 1: Cài gwscli trên Windows</h3>
+  <p>Hướng dẫn có sẵn một lệnh PowerShell một dòng tải install.ps1 về rồi chạy bằng iex. Cách đó chạy được, nhưng trên laptop công ty tôi không thích pipe một script từ xa thẳng vào shell, nên tôi chọn cách thủ công: tải binary duy nhất bằng curl.exe, đặt vào một thư mục có trong PATH và kiểm tra version. Lưu ý phải gọi tường minh <strong>curl.exe</strong>: trong Windows PowerShell, curl chỉ là alias của Invoke-WebRequest và nhận tham số khác.</p>
+  <pre>New-Item -ItemType Directory -Force "$HOME\bin" | Out-Null
+curl.exe -fL -o "$HOME\bin\gwscli.exe" https://dl.google.com/workspace-cli/windows/gwscli.exe
+
+# thêm $HOME\bin vào user PATH (một lần), rồi mở terminal mới
+[Environment]::SetEnvironmentVariable("Path", [Environment]::GetEnvironmentVariable("Path","User") + ";$HOME\bin", "User")
+
+gwscli version</pre>
+  <pre>gwscli version 1.0.6.1026726559</pre>
+  <p>Ngay ở bước này đã có hai nhận xét. Thứ nhất, chuỗi version này là thông tin version duy nhất tôi tìm được: trang release notes chỉ có một mục ghi ngày (24/11/2026) và không có số version, nên không có cách nào đối chiếu "1.0.6.1026726559" với changelog. Thứ hai, không có lệnh tự cập nhật. Muốn nâng cấp thì tải lại binary, và vì agent skills nằm trong binary nên sau đó phải cài lại skills (xem 3.3).</p>
+
+  <h3>2.3 Bước 2: Project personal mode và OAuth client gắn cờ agent</h3>
+  <p>Với một developer, đường nhanh nhất là <strong>personal mode</strong>. Hướng dẫn CLI dẫn tới một trang Cloud console (auth/overview/personal với tham số apis=ws,wsmcp,tasksmcp, clientType=desktop và isAgent=true). Chỉ trong một form, trang này tạo project mới, bật các Workspace API cùng phần MCP đi kèm, và tạo một OAuth client chỉ hoạt động với tài khoản của tôi, nên không cần cấu hình consent screen hay app verification.</p>
+  <p>Tôi điền tên project <strong>ai-quest-gwscli-demo</strong>, chọn application type <strong>Desktop app</strong>, đặt tên client là <strong>gwscli-mcp-agent</strong> và tick <strong>Use this client for an AI-powered agent</strong>. Checkbox này là phần quan trọng: theo trang troubleshooting của cả CLI và MCP, request user-delegated đến từ client không có cờ này sẽ bị các endpoint agent của Workspace từ chối.</p>
+  <p>Sau khi bấm Continue, console tạo project, bật các Workspace API cùng các MCP API đi kèm, và hiển thị client mới đúng một lần kèm nút Download JSON. Sau khi đóng hộp thoại thì không xem lại được secret nữa, nên tôi lưu file JSON thẳng vào một thư mục đã được git-ignore.</p>
+  <figure class="screenshot-wrap"><img src="images/step-01-personal-mode-project.png" alt="Personal mode onboarding: project mới ai-quest-gwscli-demo"><figcaption>Personal mode onboarding: tạo project mới "ai-quest-gwscli-demo" từ link trong hướng dẫn CLI</figcaption></figure>
+  <figure class="screenshot-wrap"><img src="images/step-02-oauth-client-agent.png" alt="Desktop OAuth client gwscli-mcp-agent với tuỳ chọn AI-powered agent"><figcaption>Client Desktop app "gwscli-mcp-agent" với tuỳ chọn "Use this client for an AI-powered agent"</figcaption></figure>
+  <figure class="screenshot-wrap"><img src="images/step-03-client-created.png" alt="OAuth client đã được tạo"><figcaption>Client đã được tạo; client ID và secret đã được che</figcaption></figure>
+  <p>Personal mode rất hợp cho một bài test như thế này, nhưng nó bị giới hạn có chủ đích: client chỉ hoạt động với Google Account đã tạo ra nó. Với một team, nên dùng cài đặt thủ công (bật từng API và phần *mcp đi kèm, cấu hình consent screen, mỗi agent một client) và tốt nhất là để Workspace admin rà soát.</p>
+
+  <h3>2.4 Bước 3: Đăng ký client và đăng nhập CLI (cấp scope theo từng phần)</h3>
+  <p>CLI lưu hai thứ ở máy local: OAuth client đã đăng ký (từ <strong>gwscli auth setup</strong>) và grant của người dùng kèm refresh token (từ <strong>gwscli auth login</strong>). Trên Windows cả hai nằm trong %AppData%\gwscli (client_credentials.json và token.json). Thay vì dùng bundle chỉ đọc, tôi chỉ xin đúng những gì kịch bản cần: các service Drive, Calendar và Tasks cùng một action Gmail duy nhất là <strong>create_draft</strong>.</p>
+  <pre>PS&gt; echo Y | gwscli auth setup --oauth_client_file=client_secret.json
+Configuring your OAuth Client will first remove your existing stored OAuth tokens (logout), are you sure you want to proceed? Y, N.
+Already logged out (no cached token found).
+Successfully configured OAuth client credentials (client_id: ****).
+
+PS&gt; gwscli auth login drive calendar tasks "gmail create_draft"
+Please open the following URL in your browser to log in:
+[Open this URL in your browser to sign in]
+Waiting for authorization code on localhost:61118...
+Successfully authorized the following scopes:
+  - https://www.googleapis.com/auth/calendar
+  - https://www.googleapis.com/auth/calendar.events.readonly
+  - https://www.googleapis.com/auth/calendar.readonly
+  - https://www.googleapis.com/auth/drive.file
+  - https://www.googleapis.com/auth/drive.metadata.readonly
+  - https://www.googleapis.com/auth/drive.readonly
+  - https://www.googleapis.com/auth/gmail.compose
+  - https://www.googleapis.com/auth/tasks
+  - https://www.googleapis.com/auth/tasks.readonly</pre>
+  <figure class="screenshot-wrap"><img src="images/step-04-consent-1.png" alt="Màn hình consent của Google liệt kê các scope Drive, Calendar, Gmail và Tasks được yêu cầu"><figcaption>Màn hình consent hiển thị tên project (ai-quest-gwscli-demo) và từng scope riêng lẻ; tài khoản đã được che</figcaption></figure>
+  <p>Toàn bộ quá trình đăng nhập mất khoảng 37 giây, tính cả bước consent trên trình duyệt. Có ba điều tôi để ý:</p>
+  <ul>
+    <li><strong>"Service" nghĩa là scope rộng.</strong> Xin service calendar sẽ được cấp scope đầy đủ https://www.googleapis.com/auth/calendar, mà màn hình consent mô tả là "See, edit, share, and permanently delete all the calendars you can access". Nếu chỉ cần một action, hãy ghi rõ action đó (ví dụ "calendar list_events") thay vì cả service.</li>
+    <li><strong>gmail.compose không chỉ là bản nháp.</strong> Tôi chỉ xin create_draft, nhưng màn hình consent ghi "Manage drafts and send emails". CLI không có lệnh gửi, nhưng bản thân token vẫn cho phép gửi mail nếu bị lộ. Đây chính là lý do file token phải được coi như secret.</li>
+    <li><strong>Agent không thể tự điều khiển bước đăng nhập.</strong> CLI in ra một URL và chờ trên một cổng localhost ngẫu nhiên; con người phải hoàn tất consent trên trình duyệt ở cùng máy. Trong demo, tôi mở URL đó trong một Chrome profile riêng.</li>
+  </ul>
+
+  <h3>2.5 Bước 4: Các MCP server remote: kiểm tra giao thức và đăng ký vào Claude Code</h3>
+  <p>Các MCP server là endpoint do Google host, nên "cài đặt" chúng nghĩa là trỏ một MCP client tới URL kèm OAuth token lấy từ một client có gắn cờ agent. Tôi kiểm tra chúng theo hai cách.</p>
+  <p><strong>(a) Một MCP client thô.</strong> Để quan sát giao thức mà không có agent nào xen vào giữa, tôi viết một script Python khoảng 60 dòng (mcp_probe.py) nói chuyện MCP qua Streamable HTTP: nó gửi initialize, tools/list và tuỳ chọn tools/call dưới dạng JSON-RPC, dùng access token mà gwscli đã lấy được (token được đọc từ cache và không bao giờ in ra). Đây là output thật khi chạy với các server Drive, Calendar và Tasks:</p>
+  <pre>&gt; POST https://drivemcp.googleapis.com/mcp/v1  initialize
+  HTTP 200 in 495 ms  server={"name": "StatelessServer", "version": "ESF"}  protocol=2025-06-18
+&gt; tools/list
+  HTTP 200 in 496 ms  9 tools:
+   - copy_file                    [write]
+   - create_file                  [write]
+   - download_file_content        [read-only]
+   - get_file_metadata            [read-only]
+   - get_file_permissions         [read-only]
+   - list_recent_files            [read-only]
+   - read_file_content            [read-only]
+   - search_files                 [read-only]
+   - upload_file_revision         [DESTRUCTIVE]
+
+&gt; POST https://calendarmcp.googleapis.com/mcp/v1  initialize
+  HTTP 200 in 477 ms  9 tools: list_events, get_event, list_calendars, suggest_time [read-only],
+  create_event, update_event, respond_to_event [write], delete_event [DESTRUCTIVE], search_events [read-only]
+
+&gt; POST https://tasksmcp.googleapis.com/mcp/v1  initialize
+  HTTP 200 in 915 ms  9 tools: list_task_lists, list_tasks, get_task [read-only],
+  create_task, update_task, undelete_task, complete_task, uncomplete_task [write], delete_task [DESTRUCTIVE]</pre>
+  <p>Những điều hữu ích rút ra từ bước kiểm tra này: các server là stateless (serverInfo "StatelessServer", không cần session id), dùng MCP protocol version 2025-06-18, một round trip từ Việt Nam mất khoảng 0,45&ndash;1 giây, và mọi tool đều mang MCP annotation (readOnlyHint / destructiveHint). Chính các annotation này được MCP client dùng để quyết định tool nào được chạy mà không cần hỏi. Danh sách tool khớp một-một với danh sách lệnh CLI của Drive, Calendar và Tasks, xác nhận rằng CLI chỉ là một client mỏng phía trên cùng một backend. Endpoint Tasks (tasksmcp.googleapis.com), vốn không có trong trang cấu hình MCP, thực ra vẫn tồn tại và phản hồi bình thường.</p>
+  <p><strong>(b) Đăng ký server trong Claude Code.</strong> Claude Code chấp nhận MCP server HTTP remote với một OAuth client đã đăng ký sẵn. Secret được lấy từ biến môi trường MCP_CLIENT_SECRET (hoặc được hỏi khi chạy), nên không bao giờ xuất hiện trên dòng lệnh:</p>
+  <pre>PS&gt; claude mcp add --transport http gws-drive https://drivemcp.googleapis.com/mcp/v1 --client-id **** --client-secret --callback-port 8765
+Added HTTP MCP server gws-drive with URL: https://drivemcp.googleapis.com/mcp/v1 to local config
+
+PS&gt; claude mcp list
+Checking MCP server health...
+gws-drive: https://drivemcp.googleapis.com/mcp/v1 (HTTP) - Connected</pre>
+  <p>Client loại Desktop chấp nhận redirect URI loopback trên bất kỳ cổng nào, nên cổng callback cố định 8765 hoạt động mà không cần đăng ký redirect URI trong console. Sau đó, bước OAuth consent của người dùng cho server được hoàn tất ngay trong Claude Code bằng /mcp.</p>
+</section>
+
+<section id="s3">
+  <h2>3. Yêu cầu 3: Tác vụ thực tế với CLI và agent kết nối MCP</h2>
+  <p>Để thử công cụ trên thứ gì đó gần với công việc thật, tôi dùng một kịch bản nhỏ mà tuần nào tôi cũng làm: <strong>chuẩn bị báo cáo tuần, lưu lại, lên lịch review, theo dõi việc cần làm tiếp và nhờ đồng nghiệp review</strong>. Báo cáo là một file demo ngắn tôi tự viết cho bài này. Kịch bản chạm tới năm dịch vụ (Drive, Calendar, Tasks, Gmail, và Drive lần nữa để đọc), kết hợp thao tác đọc và ghi, và có một thao tác cần con người quyết định.</p>
+  <div class="flow-diagram">
+    <span class="flow-step">Upload báo cáo (Drive)</span><span class="flow-arrow">&rarr;</span>
+    <span class="flow-step">Tìm + đọc lại</span><span class="flow-arrow">&rarr;</span>
+    <span class="flow-step">Họp review (Calendar)</span><span class="flow-arrow">&rarr;</span>
+    <span class="flow-step">Việc cần làm (Tasks)</span><span class="flow-arrow">&rarr;</span>
+    <span class="flow-step">Nháp email (Gmail, HITL)</span>
+  </div>
+
+  <h3>3.1 Khám phá lệnh lúc chạy</h3>
+  <p>Vì CLI không cam kết chữ ký lệnh ổn định, việc đầu tiên tôi (và sau này là agent) làm là hỏi chính binary: --help để xem flag, --schema để xem output JSON và --show-scopes để xem scope tối thiểu của một action. Ví dụ:</p>
+  <pre>PS&gt; gwscli drive create_file --help --show-scopes
+OAuth Scopes:
+  All Supported Scopes:
+    - https://www.googleapis.com/auth/drive
+    - https://www.googleapis.com/auth/drive.appdata
+    - https://www.googleapis.com/auth/drive.file
+  Recommended Minimal Scopes:
+    - https://www.googleapis.com/auth/drive.file</pre>
+  <p>Các đoạn help được viết cho model chứ không phải cho con người: create_event giải thích rằng thời gian phải truyền vào không kèm UTC offset trừ khi người dùng nêu rõ, create_task chứa cả một bộ quy tắc về deadline so với ngày lên lịch và phải nói gì với người dùng khi bỏ deadline, còn search_files mô tả toàn bộ ngữ pháp truy vấn. Nói cách khác, phần "prompt engineering" cho từng tool được đóng gói sẵn trong binary.</p>
+
+  <h3>3.2 Tác vụ thực tế với CLI: chuyện gì đã thực sự xảy ra</h3>
+  <p>Tôi chạy kịch bản đã lên kế hoạch (upload một báo cáo tuần hư cấu, tìm lại nó, lên lịch buổi review, tạo task theo dõi, soạn nháp email) bằng các lệnh thật. Mọi lệnh đều tới được Google và nhận về câu trả lời có cấu trúc, nhưng <strong>không thao tác Workspace nào được phép chạy</strong>:</p>
+  <table class="data-table">
+    <thead><tr><th>#</th><th>Lệnh (rút gọn)</th><th>Thời gian</th><th>Kết quả</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>drive create_file --title "AIQuest gwscli demo - weekly report" --filePath data/aiquest-gwscli-demo-report.md --contentMimeType text/markdown</td><td>1,4 s</td><td>HTTP 403 PERMISSION_DENIED "The caller does not have permission" (ở bước khởi tạo upload)</td></tr>
+      <tr><td>2</td><td>drive search_files --query "title contains 'AIQuest gwscli demo'" --excludeContentSnippets</td><td>1,6 s</td><td>isError: "The caller does not have permission"</td></tr>
+      <tr><td>3</td><td>calendar create_event --summary "AIQuest demo: review gwscli report" --startTime 2026-11-26T10:00:00 --endTime 2026-11-26T10:30:00</td><td>1,2 s</td><td>isError: project phải được ghi danh vào Developer Preview Program</td></tr>
+      <tr><td>4</td><td>calendar list_events --fullText "AIQuest demo"</td><td>1,5 s</td><td>cùng lỗi Developer Preview</td></tr>
+      <tr><td>5</td><td>tasks create_task --title "AIQuest demo: send weekly report" --scheduledDate 2026-11-26</td><td>2,7 s</td><td>cùng lỗi Developer Preview</td></tr>
+      <tr><td>6</td><td>gmail create_draft --to demo@example.com --subject "AIQuest demo: weekly report" --body "..."</td><td>4,1 s</td><td>cùng lỗi Developer Preview</td></tr>
+    </tbody>
+  </table>
+  <p>Thông báo chính xác cho Calendar, Tasks và Gmail là:</p>
+  <pre>{
+  "content": [
+    {
+      "text": "Access to this tool requires that your Google Cloud project (7728xxxxxxxx) is enrolled in the Google Workspace Developer Preview Program. Please see https://developers.google.com/workspace/preview",
+      "type": "text"
+    }
+  ],
+  "isError": true,
+  "resultType": "complete"
+}</pre>
+  <p>Trước khi kết luận, tôi đã loại trừ các nguyên nhân hiển nhiên. Các API đã được bật: trang "Enabled APIs &amp; services" của project liệt kê Drive, Calendar, Tasks, Gmail, Docs, Sheets, Slides, Chat và Workspace MCP API cùng các API cổ điển, và các MCP API của Drive/Calendar/Tasks đã ghi nhận request của tôi (kèm lỗi) trên biểu đồ traffic. Các scope đã được cấp (xem 2.4). Client có gắn cờ agent. Và nội dung lỗi rất rõ ràng: thứ chặn lại là <strong>việc project chưa được ghi danh vào Developer Preview Program</strong>, không phải token của tôi. Drive trả về thông báo chung chung kém hữu ích hơn là "caller does not have permission", nhưng nó thất bại ở cùng một giai đoạn, cả qua CLI lẫn qua MCP thô (bên dưới).</p>
+  <p>Cũng cần để ý định dạng output nói lên điều gì: kết quả của CLI đúng nghĩa đen là một MCP tool result (mảng content, isError, resultType). Điều này xác nhận những gì tài liệu ngụ ý: gwscli là một MCP client của chính các server do Google host, với giao diện dòng lệnh và khả năng xử lý file local. Không có câu hỏi xác nhận human-in-the-loop nào cho create_draft, vì request đã bị từ chối trước khi server đi tới bước đó.</p>
+  <figure class="screenshot-wrap"><img src="images/step-06-cli-tasks.png" alt="Terminal chạy các tác vụ thực tế bằng gwscli"><figcaption>Các tác vụ CLI trong terminal: mọi lần gọi đều trả về lỗi MCP có cấu trúc thay vì kết quả</figcaption></figure>
+
+  <h3>3.3 Cùng các lần gọi đó qua MCP thô</h3>
+  <p>Để chắc chắn vấn đề không nằm ở CLI, tôi thực hiện cùng loại lời gọi trực tiếp tới các MCP endpoint bằng mcp_probe.py. Handshake và tools/list thành công (mục 2.5), còn tools/call thất bại với đúng các thông báo đó:</p>
+  <pre>&gt; tools/call search_files {"query": "title contains 'AIQuest'"}
+  HTTP 200 in 533 ms
+  { "content": [ { "text": "The caller does not have permission", "type": "text" } ], "isError": true }
+
+&gt; tools/call list_calendars {}            (calendarmcp)
+  HTTP 200 in 445 ms   "Access to this tool requires that your Google Cloud project (...) is enrolled in the Google Workspace Developer Preview Program."
+
+&gt; tools/call list_task_lists {}           (tasksmcp)
+  HTTP 200 in 955 ms   same Developer Preview message</pre>
+  <p>Có hai chi tiết giao thức đáng lưu ý cho ai đang viết MCP client: lỗi của tool trả về dưới dạng HTTP 200 với isError: true bên trong result, không phải HTTP error hay JSON-RPC error, nên client bắt buộc phải kiểm tra flag này; và bước discovery (initialize và tools/list) không bị chặn, chỉ có bước thực thi bị chặn. Nói cách khác, agent có thể thấy mọi tool, lên kế hoạch với chúng, và chỉ phát hiện ra lúc gọi rằng mình không được phép dùng.</p>
+  <figure class="screenshot-wrap"><img src="images/step-07-mcp-probe.png" alt="MCP client thô gọi các MCP server Drive, Calendar và Tasks"><figcaption>MCP thô qua Streamable HTTP: handshake và tool discovery hoạt động, tools/call bị chặn</figcaption></figure>
+
+  <h3>3.4 Tác vụ cho agent: Claude Code với skill gwscli</h3>
+  <p>CLI đi kèm agent skill riêng. Cài nó chỉ cần một lệnh, lệnh này ghi ra một file SKILL.md:</p>
+  <pre>PS&gt; gwscli skills install --dir .claude/skills
+Installing skills to .claude/skills...
+PS&gt; tree /F .claude
+\---skills
+    \---gwscli
+            SKILL.md</pre>
+  <p>Sau đó tôi giao cho Claude Code một tác vụ bằng ngôn ngữ tự nhiên, không nêu tên lệnh, và chỉ cho phép nó chạy các lệnh gwscli (cộng với đọc file và dùng skill):</p>
+  <pre>claude -p "Use the gwscli skill: find my Drive files whose title contains AIQuest, then list my Google Tasks lists. Report exactly what happened, including any error text. Do not try to change any settings." --allowedTools "Bash(gwscli:*)" Read Skill</pre>
+  <p>Lần chạy mất 26 giây. Những gì agent đã làm (theo câu trả lời của nó, vốn bằng tiếng Việt do cài đặt global của tôi):</p>
+  <ol>
+    <li>Đầu tiên nó kiểm tra phiên bản CLI theo hướng dẫn của skill (skill yêu cầu tối thiểu version 0.2.0); bản local 1.0.6 của tôi đạt yêu cầu.</li>
+    <li>Nó tự dựng đúng truy vấn có cấu trúc: <strong>gwscli drive search_files --query="title contains 'AIQuest'"</strong>, và báo exit code 1 kèm "The caller does not have permission". Nó nói rõ đây là lỗi quyền truy cập, không phải "không có file nào khớp".</li>
+    <li>Nó chạy <strong>gwscli tasks list_task_lists</strong> và trích nguyên văn thông báo Developer Preview, kể cả số project.</li>
+    <li>Nó đề xuất bước tiếp theo cho tôi (ghi danh project, hoặc cấp lại quyền cho action Drive) và không thử thay đổi cài đặt nào, đúng như yêu cầu. Nó cũng nhận ra MCP server gws-drive có sẵn trong phiên và đề nghị thử theo hướng đó.</li>
+  </ol>
+  <p>Vậy là dù backend bị đóng, bài test thực tế vẫn trả lời được câu hỏi "nó vận hành thế nào trong thực tế": skill cho agent đủ hướng dẫn để chọn đúng lệnh và cú pháp ngay lần đầu, các lỗi MCP có cấu trúc giúp agent dễ hiểu và báo cáo trung thực, và ranh giới quyền (chỉ được dùng gwscli, không đổi cài đặt) được tôn trọng. Khi project được ghi danh, cùng prompt đó sẽ trả về kết quả mà tôi không cần thay đổi gì.</p>
+  <figure class="screenshot-wrap"><img src="images/step-08-claude-skill.png" alt="Claude Code sử dụng skill gwscli"><figcaption>Claude Code với skill gwscli đã cài: lệnh đúng, báo lỗi trung thực, không tìm cách vượt qua rào chặn</figcaption></figure>
+  <p><strong>Tình trạng các tác vụ ghi.</strong> Việc ghi danh vào Developer Preview Program là một yêu cầu do Google xét duyệt, nên không thể hoàn tất trong thời gian thực hiện bài test này. Các lệnh của kịch bản được giữ trong demo-assets/film_gws.py để có thể chạy lại y hệt sau khi được duyệt, và tôi sẽ cập nhật bài viết này với kết quả.</p>
+
+  <h3>3.5 Video demo</h3>
+  <p>Video dưới đây ghi lại toàn bộ luồng: cài CLI, các bước personal mode trên console, đăng nhập, các tác vụ CLI, Claude Code dùng skills đã cài, và Claude Code làm việc qua MCP server remote. Toàn bộ là dữ liệu demo; client secret, token và địa chỉ email đều được che.</p>
+  <!-- VIDEO -->
+</section>
+
+<section id="s4">
+  <h2>4. Yêu cầu 4: Quan điểm của tôi về việc dùng Google Workspace CLI và MCP server trong công việc hằng ngày</h2>
+  <p>Sau khi đọc đặc tả và chạy thử, quan điểm chung của tôi là tích cực nhưng thận trọng. Các công cụ này rõ ràng được thiết kế bởi những người nghĩ về agent trước tiên: lệnh tự khám phá được, output JSON, các thao tác "nguy hiểm" bị lược bỏ, xác nhận ở phía server. Đồng thời đây là phiên bản đầu tiên của một hợp đồng mới giữa Google và AI agent, và một công ty nhỏ nên áp dụng nó giống như cấp bất kỳ quyền truy cập dữ liệu production nào: từ từ, quyền hẹp, và có một người chịu trách nhiệm.</p>
+
+  <h3>4.1 Có thể cải thiện hoặc tự động hoá công việc hằng ngày của tôi ở đâu</h3>
+  <p>Đây là các workflow tôi thực sự sẽ xây ở công ty, xếp từ "thử được ngay ngày mai" đến "cần có chính sách trước".</p>
+  <table class="data-table">
+    <thead><tr><th>Công việc hiện tại</th><th>Với gwscli / MCP và agent</th><th>Quyền cần</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Chuẩn bị họp.</strong> Trước sprint review hay buổi gọi với khách hàng, tôi mở sự kiện, tìm spec liên quan và ghi chú tuần trước, đọc lướt thread email mới nhất.</td><td>Agent đọc các sự kiện ngày mai, tìm tên dự án trong Drive và Gmail, rồi viết một bản brief một trang kèm câu hỏi còn mở. Universal Search (search_corpus) rất hợp cho việc này.</td><td>Chỉ đọc</td></tr>
+      <tr><td><strong>Tạo báo cáo.</strong> Báo cáo tiến độ hằng tuần được ghép từ Git, issue tracker và kế hoạch trên Sheets, rồi upload và chia sẻ.</td><td>Claude Code vốn đã có Git và issue tracker; với CLI nó đọc thêm kế hoạch trên Sheets, sinh báo cáo ở local, upload bằng create_file và tạo bản nháp email. Con người kiểm tra rồi gửi.</td><td>Đọc + drive.file + gmail.compose</td></tr>
+      <tr><td><strong>Dọn dẹp Drive.</strong> Tìm bản sao lỗi thời, file đặt tên mơ hồ và tài liệu chia sẻ quá rộng.</td><td>Agent liệt kê file gần đây cùng quyền chia sẻ (get_file_permissions) và lập báo cáo các trường hợp đáng ngờ. Việc thay đổi do con người làm, điều mà CLI vốn đã đảm bảo vì không có lệnh đổi quyền.</td><td>Chỉ đọc</td></tr>
+      <tr><td><strong>Đồng bộ task.</strong> Việc cần làm sau họp nằm trong ghi chú rồi bị quên.</td><td>Sau buổi họp, agent đọc tài liệu ghi chú và tạo Tasks có hạn chót, hoặc thêm sự kiện theo dõi vào lịch.</td><td>Đọc + tasks + calendar.events</td></tr>
+      <tr><td><strong>Workflow coding do agent điều khiển.</strong> Spec nằm trên Docs, bằng chứng test cần đưa lại vào Drive.</td><td>Coding agent đọc spec từ Drive khi bắt đầu task và upload báo cáo test hoặc ảnh chụp khi kết thúc, để người review tìm thấy mọi thứ ở chỗ quen thuộc.</td><td>Đọc + drive.file</td></tr>
+      <tr><td><strong>Phân loại hộp thư.</strong> Nhiều email khách hàng cần gắn nhãn và soạn nháp trả lời đầu tiên.</td><td>Agent gắn nhãn thread và soạn nháp trả lời; không có gì được gửi tự động. Đây là trường hợp nhạy cảm nhất vì email là kênh prompt injection chính.</td><td>gmail.modify + gmail.compose, chỉ sau khi thống nhất chính sách</td></tr>
+    </tbody>
+  </table>
+  <p>Điểm chung: agent làm phần tìm kiếm, đọc, tóm tắt và chuẩn bị, vốn chiếm phần lớn thời gian, còn con người làm bước cuối không thể hoàn tác. Cách chia này không chỉ là sở thích của tôi; bề mặt công cụ được xây đúng như vậy (có create_draft nhưng không có send, không đổi quyền chia sẻ, đưa vào thùng rác thay vì xoá), và tôi nghĩ đó là thiết kế đúng cho một hai năm tới.</p>
+
+  <h3>4.2 Tôi chọn giữa CLI và MCP server như thế nào</h3>
+  <ul>
+    <li><strong>CLI khi agent sống trong terminal.</strong> Với Claude Code hay Codex làm việc trong một repository, CLI là lựa chọn mặc định của tôi. Nó chuyển file thật giữa ổ đĩa và Drive, JSON có thể lọc bằng jq trước khi model nhìn thấy, và cùng các lệnh đó sau này có thể đưa vào script hay job định kỳ. Chi phí token thấp hơn và ít văn bản không tin cậy trong context hơn là lợi thế thật, không chỉ là tiện lợi.</li>
+    <li><strong>MCP khi không có shell hoặc người dùng không phải developer.</strong> Với đồng nghiệp dùng Claude trên trình duyệt hay một chat client khác, MCP connector là lựa chọn thực tế duy nhất, và Universal Search chỉ có ở phía MCP. Việc cập nhật diễn ra phía Google, nên không phải giữ binary mới nhất trên từng laptop.</li>
+    <li><strong>Dù chọn cái nào cũng chỉ một mô hình bảo mật.</strong> Vì hai đường đi dùng chung backend, chung loại client gắn cờ agent và chung cơ chế xác nhận phía server, tôi không thấy lý do phải chuẩn hoá về một cái. Một team có thể cho developer dùng CLI và người không phải developer dùng MCP, dưới cùng một bộ quy tắc.</li>
+  </ul>
+
+  <h3>4.3 Những giới hạn tôi thấy</h3>
+  <ul>
+    <li><strong>Độ ổn định.</strong> Một sản phẩm GA nhưng nói rõ không đảm bảo tương thích ngược cho lệnh và schema output nghĩa là mọi script tôi viết đều phải coi là dễ vỡ. Agent đối phó bằng cách đọc help mỗi lần; cron job và script CI thì không.</li>
+    <li><strong>Nhãn preview và lỗ hổng tài liệu.</strong> Các trang MCP vẫn ghi Developer Preview, Tasks không có endpoint MCP được mô tả, và release notes không có số version. Với dự án khách hàng cần điều khoản GA, tôi sẽ đợi tài liệu cập nhật.</li>
+    <li><strong>Đăng nhập tương tác.</strong> Login cần trình duyệt trên cùng máy. Dùng headless chỉ có thể qua --oauth_token, tức là đẩy việc tạo và bảo vệ token về phía chúng ta.</li>
+    <li><strong>Chênh lệch tính năng giữa CLI và MCP.</strong> Một số action chỉ có ở một phía (Tasks, trash/spam Gmail trên CLI; Universal Search, Classroom và thêm tool Chat trên MCP), nên một workflow có thể không chuyển trơn tru từ bên này sang bên kia.</li>
+    <li><strong>Chi phí và mốc thời gian sắp tới.</strong> Lượng dùng được tính vào quota của project, billing bắt đầu 01/04/2027 nhưng chưa có bảng giá, và từ 01/02/2027 agent dự kiến chỉ được dùng các giao diện này. Mọi bot nội bộ gọi REST API cổ điển thay cho agent cần có kế hoạch chuyển đổi ngay từ bây giờ.</li>
+    <li><strong>Chi phí token của MCP.</strong> Kết quả lớn rơi thẳng vào context của model. Với "đọc tài liệu 40 trang này" thì ổn; với "kiểm tra 500 file" thì CLI lọc bằng jq rẻ hơn rõ rệt.</li>
+  </ul>
+  <h4>Những gì bài test thực tế dạy tôi</h4>
+  <ul>
+    <li><strong>"Generally available" không có nghĩa là "mở cho mọi project" ngay từ ngày đầu.</strong> Binary CLI, loại OAuth client, bước đăng nhập và MCP discovery đều hoạt động trên một project hoàn toàn mới, nhưng việc thực thi tool trên Calendar, Tasks và Gmail vẫn đòi hỏi ghi danh Developer Preview, còn Drive thì từ chối bằng một lỗi quyền chung chung. Các trang MCP vẫn mang banner Developer Preview, và trên thực tế đó mới là mô tả chính xác hơn.</li>
+    <li><strong>Chất lượng thông báo lỗi khác nhau giữa các service.</strong> Calendar, Tasks và Gmail trả về thông báo chính xác, có thể hành động ngay; Drive chỉ trả về "The caller does not have permission", khiến agent (và cả con người) dễ nhầm là thiếu scope.</li>
+    <li><strong>Scope rộng hơn action.</strong> Cấp create_draft sinh ra token cũng có thể gửi mail, và cấp service calendar sinh ra quyền đọc-ghi-xoá toàn bộ lịch. Hãy ghi rõ từng action cụ thể khi đăng nhập.</li>
+    <li><strong>Discovery thì mở, thực thi thì bị chặn.</strong> Agent có thể liệt kê và lên kế hoạch với mọi tool trước khi biết mình không được gọi chúng. Prompt và skill nên dặn agent dừng lại và báo cáo khi gặp isError, điều mà Claude Code đã làm khi được yêu cầu báo cáo chính xác chuyện gì đã xảy ra.</li>
+    <li><strong>Round trip nhanh.</strong> Các lần gọi MCP từ Việt Nam mất khoảng 0,45&ndash;1 giây; lệnh CLI tính cả thời gian khởi động process mất 1,2&ndash;4,1 giây. Tốc độ không phải lý do để chọn cách này thay vì cách kia.</li>
+  </ul>
+
+  <h3>4.4 Các lưu ý bảo mật</h3>
+  <p>Câu "a valid token is no longer enough" của Cloud blog là mô hình tư duy đúng. Trước khi để các công cụ này chạm vào dữ liệu thật của công ty, tôi sẽ đặt ra các quy tắc dưới đây. Phần lớn không tốn chi phí.</p>
+  <table class="data-table">
+    <thead><tr><th>Khía cạnh</th><th>Tôi sẽ làm gì</th><th>Vì sao</th></tr></thead>
+    <tbody>
+      <tr><td>Client gắn cờ agent</td><td>Mỗi agent hoặc mỗi use case một OAuth client, luôn tick "Use this client for an AI-powered agent"; không bao giờ dùng lại client của một web app thường</td><td>Giúp Google và admin phân biệt lưu lượng agent, áp chính sách cho agent, và thu hồi một agent mà không ảnh hưởng các agent khác</td></tr>
+      <tr><td>Scope tối thiểu</td><td>Bắt đầu với --bundle=readonly; thêm scope ghi theo từng action bằng đăng nhập bổ sung; kiểm tra --show-scopes / --print-scope-only trước khi cấp</td><td>Agent bị chiếm quyền hoặc hiểu sai chỉ làm được những gì scope cho phép; drive.file thay vì drive đầy đủ giới hạn việc ghi vào file do app tạo hoặc mở</td></tr>
+      <tr><td>Human in the loop</td><td>Coi ALLOW_ONCE / ALLOW_TOOL_ALWAYS / DENY_ONCE là quyết định chỉ con người được đưa ra; cấu hình agent harness để nó không thể tự trả lời; tránh ALLOW_TOOL_ALWAYS cho việc gửi và chia sẻ</td><td>Server hỏi, nhưng CLI đọc câu trả lời từ stdin, nên lớp bảo vệ chỉ mạnh bằng harness đang giữ stdin</td></tr>
+      <tr><td>Xử lý token</td><td>Không bao giờ dán client secret hay access token vào prompt, file trong repository hay shell history; ưu tiên nhập secret tương tác; chạy auth logout hoặc auth reset sau khi thử nghiệm; thu hồi grant không dùng trong cài đặt Google Account</td><td>Refresh token là quyền truy cập dài hạn vào hộp thư và Drive; giá trị --oauth_token có thể lộ qua danh sách process và log</td></tr>
+      <tr><td>Prompt injection</td><td>Giả định mọi email và tài liệu được chia sẻ đều có thể chứa chỉ dẫn nhắm vào agent; giữ các thao tác ghi và gửi sau bước xác nhận; cân nhắc Model Armor khi dùng MCP với nội dung bên ngoài</td><td>Agent đọc văn bản không tin cậy với quyền của bạn; bước xác nhận là tuyến phòng thủ cuối cùng</td></tr>
+      <tr><td>Telemetry</td><td>Biết rằng telemetry của CLI bật mặc định; công ty cần quyết định có tắt bằng gwscli logging off hoặc GWSCLI_TELEMETRY_ENABLED=0 hay không</td><td>Nó không gửi nội dung, ID hay token, nhưng metadata lệnh rời khỏi máy công ty nên là một quyết định có ý thức</td></tr>
+      <tr><td>Chính sách dữ liệu công ty</td><td>Thống nhất dữ liệu nào agent được chạm vào (ví dụ: tài liệu nội bộ được, hợp đồng khách hàng và dữ liệu nhân sự không) và công cụ AI nào được nhận nội dung Workspace; đánh dấu thư mục hạn chế và áp dụng giới hạn truy cập agent cùng rule DLP khi có</td><td>Hợp đồng với khách hàng thường giới hạn nơi dữ liệu của họ được xử lý; agent chuyển một spec vào model bên thứ ba vẫn là xử lý dữ liệu</td></tr>
+      <tr><td>Audit và thu hồi</td><td>Workspace admin rà soát các agent đã kết nối và scope của chúng hằng tháng trong Admin console, và xoá các client thử nghiệm như client này sau khi xong</td><td>Với team nhỏ, khả năng quan sát và thu hồi nhanh quan trọng hơn ngăn chặn hoàn hảo</td></tr>
+    </tbody>
+  </table>
+  <p>Một nhận xét thẳng thắn về thiết kế human-in-the-loop. Đây là thiết kế tốt, và nó được cưỡng chế ở server, tốt hơn nhiều so với kiểm tra phía client. Nhưng trong CLI, quyết định đi ngược lại qua standard input, và chính tài liệu phải yêu cầu agent xin xác nhận của người dùng trước khi trả lời. Một harness tử tế như Claude Code sẽ hiện câu hỏi và hỏi tôi; một script tự viết cẩu thả pipe "ALLOW_ONCE" vào mọi lệnh sẽ âm thầm gỡ bỏ lớp bảo vệ. Vì vậy tôi coi HITL là trách nhiệm chung: Google cung cấp chốt kiểm soát, còn team phải đảm bảo không ai tự động hoá bỏ qua nó.</p>
+
+  <h3>4.5 Khuyến nghị của tôi cho một công ty nhỏ</h3>
+  <ol>
+    <li>Bắt đầu ngay với các use case chỉ đọc (chuẩn bị họp, báo cáo dọn dẹp Drive) trên client personal mode, để mọi người làm quen công cụ mà không có rủi ro.</li>
+    <li>Viết một chính sách agent dài một trang: dữ liệu được phép, scope được phép, ai được duyệt scope ghi, thiết lập telemetry, và cách thu hồi.</li>
+    <li>Chuyển sang cài đặt thủ công với mỗi use case một client gắn cờ agent, và để Workspace admin quản lý danh sách.</li>
+    <li>Kiểm kê các script hay bot nội bộ gọi Workspace REST API thay cho AI và chuyển chúng sang CLI hoặc MCP trước 01/02/2027.</li>
+    <li>Ước tính lượng sử dụng trước 01/04/2027, khi bắt đầu tính phí theo quota.</li>
+  </ol>
+</section>
+
+<section id="s5">
+  <h2>5. FAQ</h2>
+  <h3>gwscli có phải chỉ là một lớp vỏ bọc REST API cổ điển?</h3>
+  <p>Không hẳn. Khi cài đặt một dịch vụ cho CLI, bạn bật cả API cổ điển lẫn phần MCP đi kèm (ví dụ drive.googleapis.com và drivemcp.googleapis.com), và tên action của CLI gần như trùng khớp một-một với tên tool MCP. Trên thực tế CLI hoạt động như một MCP client chạy local đóng gói thành binary, với cùng cơ chế xác thực gắn cờ agent và cùng các bước xác nhận phía server. Script gọi thẳng REST API bằng OAuth client thường là một con đường khác, và theo Workspace AI Tools Addendum, lưu lượng của agent dự kiến phải chuyển sang CLI hoặc MCP server.</p>
+  <h3>Có cần tài khoản Google Workspace trả phí không?</h3>
+  <p>Phần lớn dịch vụ chạy được với Google Account cá nhân ở personal mode. Chat send_message cần tài khoản Workspace và một Chat app đã cấu hình, còn lệnh People cần đăng ký Developer Preview. Trong domain công ty, chính sách của admin quyết định app và scope nào được phép.</p>
+  <h3>Có miễn phí không?</h3>
+  <p>Hiện chưa tính phí riêng cho CLI hay MCP server, nhưng request được tính vào quota sử dụng Workspace của Cloud project, và việc tính phí cho lưu lượng agent được công bố sẽ bắt đầu từ 01/04/2027.</p>
+  <h3>Agent có tự gửi email hay chia sẻ file được không?</h3>
+  <p>CLI và Gmail MCP server chỉ tạo bản nháp; con người gửi. Không có lệnh đổi quyền chia sẻ Drive. Các thao tác nhạy cảm có tồn tại (gửi tin nhắn Chat, đưa vào thùng rác) sẽ kích hoạt xác nhận phía server mà con người phải trả lời.</p>
+  <h3>Có dùng chung một OAuth client cho CLI và MCP được không?</h3>
+  <p>Trong bài test của tôi cả hai dùng chung một project. Hướng dẫn khuyên dùng Desktop client cho CLI và thường là Web application client cho MCP client cần đăng ký callback URL. Trong mọi trường hợp client phải được gắn cờ agent, và nên tách client của agent khỏi client của ứng dụng thường.</p>
+  <h3>Có chạy được trong CI hay trên server không?</h3>
+  <p>Có, với global flag --oauth_token và token từ client gắn cờ agent hoặc service account domain-wide delegation. Khi đó bạn tự chịu trách nhiệm tạo, xoay vòng và bảo vệ token, và xác nhận cho thao tác nhạy cảm vẫn áp dụng.</p>
+</section>
+
+<section id="s6">
+  <h2>6. Kết luận</h2>
+  <ul>
+    <li><strong>Những gì được phát hành:</strong> gwscli GA ngày 24/11/2026 dưới dạng một binary cho Linux, macOS và Windows, với output JSON, khám phá lúc chạy và agent skills nhúng sẵn; các MCP server do Google host phủ Gmail, Drive, Docs, Sheets, Slides, Calendar, Chat, People, Classroom và Universal Search; và một mô hình bảo mật xây quanh client gắn cờ agent, kiểm tra chính sách trên từng request, xác nhận của con người và quyền kiểm soát của admin, với cưỡng chế từ 01/02/2027 và tính phí từ 01/04/2027.</li>
+    <li><strong>Những gì tài liệu chưa thống nhất:</strong> nhãn GA và Developer Preview, endpoint MCP cho Tasks, số version trong release notes, và một số tool chỉ có ở một phía.</li>
+    <li><strong>Những gì tôi đã làm:</strong> cài gwscli 1.0.6 trên Windows, tạo project personal mode với client gắn cờ agent, đăng nhập với scope chỉ đọc, chạy kịch bản báo cáo tuần trên Drive, Calendar, Tasks và Gmail, và để Claude Code làm việc tương tự qua skills và qua MCP server remote.</li>
+    <li><strong>Quan điểm của tôi:</strong> CLI cho agent trong terminal, MCP cho chat client và người không phải developer, một mô hình bảo mật cho cả hai. Lợi ích lớn nhất cho một team dev nhỏ nằm ở phần đọc và chuẩn bị trong công việc hằng ngày; bước cuối không thể hoàn tác nên để con người làm, và đó cũng chính là cách Google thiết kế.</li>
+  </ul>
+  <p><em>Mọi file, sự kiện, task và bản nháp trong bài đều do tác giả tạo để thử nghiệm. Không sử dụng dữ liệu khách hàng hay dữ liệu bảo mật của công ty. Client ID, secret, token và địa chỉ email đều đã được che. Thông số được đối chiếu với các trang chính thức ngày 25/11/2026 và có thể thay đổi.</em></p>
+</section>
+
+<section id="refs">
+  <h2>Tài liệu tham khảo</h2>
+  <ul>
+    <li><a href="https://developers.google.com/workspace/guides/workspace-cli" target="_blank">Google Workspace CLI guide</a></li>
+    <li><a href="https://developers.google.com/workspace/cli/release-notes" target="_blank">Google Workspace CLI release notes</a></li>
+    <li><a href="https://developers.google.com/workspace/guides/configure-mcp-servers" target="_blank">Configure Google Workspace MCP servers</a></li>
+    <li><a href="https://developers.google.com/workspace/guides/configure-mcp-security" target="_blank">Configure security for Google Workspace MCP servers (Model Armor)</a></li>
+    <li><a href="https://developers.google.com/workspace/guides/universal-search-mcp" target="_blank">Universal Search MCP</a></li>
+    <li><a href="https://developers.google.com/workspace/gmail/api/reference/mcp" target="_blank">Gmail MCP reference</a></li>
+    <li><a href="https://developers.google.com/workspace/drive/api/reference/mcp" target="_blank">Drive MCP reference</a></li>
+    <li><a href="https://developers.google.com/workspace/docs/api/reference/mcp" target="_blank">Docs MCP reference</a></li>
+    <li><a href="https://developers.google.com/workspace/sheets/api/reference/mcp" target="_blank">Sheets MCP reference</a></li>
+    <li><a href="https://developers.google.com/workspace/slides/api/reference/mcp" target="_blank">Slides MCP reference</a></li>
+    <li><a href="https://developers.google.com/workspace/calendar/api/v3/reference/mcp" target="_blank">Calendar MCP reference</a></li>
+    <li><a href="https://developers.google.com/workspace/chat/api/reference/mcp" target="_blank">Chat MCP reference</a></li>
+    <li><a href="https://developers.google.com/people/api/mcp" target="_blank">People MCP reference</a></li>
+    <li><a href="https://cloud.google.com/blog/products/identity-security/deploying-agents-safely-in-your-enterprise" target="_blank">Google Cloud blog: Built for trust and control: Powering the next wave of AI agents across Google Workspace and Google Cloud (November 25, 2026)</a></li>
+    <li><a href="https://code.claude.com/docs/en/mcp" target="_blank">Claude Code documentation: connecting MCP servers</a></li>
+  </ul>
+</section>
+
+</div>
+<div class="footer">AI Quest &mdash; Investigate How &bull; Google Workspace CLI + MCP servers &bull; 2026</div>
+
+</body>
+</html>

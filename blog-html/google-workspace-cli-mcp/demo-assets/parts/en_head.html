@@ -1,0 +1,39 @@
+<div class="hero">
+  <div class="badge">AI Quest &mdash; Investigate How</div>
+  <h1>Google Workspace CLI and MCP Servers: Verifying the Official Release Specifications and Trying Them Hands-on</h1>
+  <p class="subtitle">What Google actually shipped on November 24&ndash;25, 2026 (gwscli GA, remote Workspace MCP servers and a new security model for enterprise agents), installed on a Windows laptop and driven by Claude Code against a company Google Workspace account.</p>
+</div>
+
+<div class="container">
+
+<nav class="toc">
+  <h2>Contents</h2>
+  <ol>
+    <li><a href="#intro">Introduction and requirement map</a></li>
+    <li><a href="#s1">Requirement 1: Official release specifications and key features</a></li>
+    <li><a href="#s2">Requirement 2: Setting up the CLI and MCP servers in my environment</a></li>
+    <li><a href="#s3">Requirement 3: Practical tasks with the CLI and an MCP-connected agent</a></li>
+    <li><a href="#s4">Requirement 4: My opinion: daily-work use, limitations and security</a></li>
+    <li><a href="#s5">FAQ</a></li>
+    <li><a href="#s6">Conclusion</a></li>
+    <li><a href="#refs">References</a></li>
+  </ol>
+</nav>
+
+<section id="intro">
+  <h2>Introduction</h2>
+  <p>I work as a developer and AI engineer at a small software company in Vietnam. Like most teams of our size, we live in Google Workspace: specifications and reports in Drive, customer threads in Gmail, sprint reviews in Calendar, follow-ups in Tasks. In the last year our coding agents (Claude Code, Codex) became very good at the "code" half of the work, but every time a task touched Workspace, a human still had to copy a document into the chat, paste a summary back into an email, or create the meeting by hand. The glue work stayed manual.</p>
+  <p>On November 24, 2026 Google announced the general availability of the <strong>Google Workspace CLI (gwscli)</strong>, and one day later the Google Cloud blog presented the <strong>Google Workspace MCP servers</strong> together with a new set of <strong>enterprise agent security</strong> controls. Both are aimed exactly at that glue work: they let an agent read and write Workspace data through interfaces designed for agents, under policies designed for agents. This post has two goals. First, to verify what was officially released, by reading the specification pages rather than repeating the announcement. Second, to install and use the tools myself and report what actually happens, including the parts that did not match the documentation.</p>
+  <p>The hands-on part was done on my own Windows 11 laptop with a company Google Workspace account. All files, events, tasks and drafts used in the demo were created by me for this test. No customer or internal business data was involved, and client IDs, secrets and tokens are masked in every screenshot and command output.</p>
+
+  <h3>Where each requirement is answered</h3>
+  <table class="data-table">
+    <thead><tr><th>Quest requirement</th><th>Section in this post</th><th>What you will find there</th></tr></thead>
+    <tbody>
+      <tr><td>1. Summarize the official release specifications and key features of Google Workspace CLI, MCP servers and enterprise agent security</td><td><a href="#s1">Section 1</a></td><td>Release table, CLI design, install, authentication, command surface, MCP endpoints and scopes, CLI vs MCP, security controls, and discrepancies found in the docs</td></tr>
+      <tr><td>2. Set up and configure the CLI and MCP server in your own environment, with screenshots or command outputs</td><td><a href="#s2">Section 2</a></td><td>Windows install, personal-mode project and agent-flagged OAuth client, CLI sign-in, Claude Code connected to remote Workspace MCP servers</td></tr>
+      <tr><td>3. Execute at least one practical task with the CLI or an MCP-connected agent</td><td><a href="#s3">Section 3</a></td><td>Drive upload, search and read, Calendar event, Tasks item, Gmail draft with human confirmation, agent tasks through skills and through MCP, demo video</td></tr>
+      <tr><td>4. Your own opinion on daily-work use, limitations and security considerations</td><td><a href="#s4">Section 4</a></td><td>Concrete workflows for a small dev team, how I choose between CLI and MCP, limitations, and a security checklist</td></tr>
+    </tbody>
+  </table>
+</section>

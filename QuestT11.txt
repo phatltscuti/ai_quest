@@ -68,3 +68,21 @@ Objectively document the results of your implementation and explicitly clarify t
 Include your own opinions on this technology, and explicitly state how you can apply these interactive site generation features to improve and streamline your own daily work processes.
 
 
+@channel AI Quest Type 2 (Investigate How)
+
+Verify the official release specifications of Google Workspace CLI and MCP servers and try using them
+
+https://x.com/ChanduThota/status/2125275496355348799
+https://cloud.google.com/blog/products/identity-security/deploying-agents-safely-in-your-enterprise
+https://developers.google.com/workspace/guides/configure-mcp-servers
+https://developers.google.com/workspace/guides/workspace-cli
+
+
+Requirements:
+
+Summarize the official release specifications and key features of Google Workspace CLI, MCP servers, and enterprise agent security based on the reference links
+Set up and configure the Google Workspace CLI and MCP server in your own environment, documenting the actual steps and results with screenshots or command outputs
+Execute at least one practical task using the CLI or an MCP-connected agent to confirm how it operates in practice
+Share your own opinion on how Google Workspace CLI and MCP servers can be utilized to improve or automate your daily work processes, including any limitations or security considerations you observed
+
+

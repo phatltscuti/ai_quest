@@ -1,0 +1,1025 @@
+<!-- wp:paragraph -->
+<p><em>I wrote two Agent Skills once, put them in a single folder, and ran the same tasks through Claude Code and OpenAI Codex CLI. Here is what transferred, what did not, and the full skills so you can try them yourself.</em></p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph -->
+<p>This post is written to answer three concrete questions, and each one has its own section so you can jump straight to it:</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:list -->
+<ul class="wp-block-list"><!-- wp:list-item -->
+<li><strong>Requirement 1 – create a common Agent Skill</strong> that follows the open specification (agentskills.io) and the Claude Code skills documentation and works in both Claude Code and Codex: sections 2 to 4 (format, one shared folder, full source of both skills).</li>
+<!-- /wp:list-item --><!-- wp:list-item -->
+<li><strong>Requirement 2 – test the skill with requirement definition and code review</strong> and document the results objectively: sections 5 to 7 (setup, video, results with tables taken from the real output files), plus section 10 on the limits of the test.</li>
+<!-- /wp:list-item --><!-- wp:list-item -->
+<li><strong>Requirement 3 – my own opinion on standardisation and how I will use skills in daily work</strong>: sections 11 and 12, followed by an FAQ and a short conclusion.</li>
+<!-- /wp:list-item --></ul>
+<!-- /wp:list -->
+
+<!-- wp:heading -->
+<h2 class="wp-block-heading">1. Why a common skill matters</h2>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph -->
+<p><strong>Agent Skills</strong> are folders of instructions (a <strong>SKILL.md</strong> plus optional references and scripts) that a coding agent loads only when a task needs them. Our team, like many, does not use a single agent: some people prefer Claude Code, others Codex, and reviewers use GitHub Copilot. If every tool needs its own prompt files, our review checklist and our requirements template slowly drift apart.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph -->
+<p>Anthropic donated the Agent Skills specification to the Agentic AI Foundation in October 2026, and Codex and GitHub Copilot both read the same format. The question for this quest is practical: <strong>can I write a requirement-definition procedure and a code-review procedure once, and get the same behaviour from Claude Code and Codex?</strong></p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph -->
+<p>I picked these two procedures on purpose. Requirement definition is a <em>generative</em> task: the agent has to turn vague text into a structured document, and there is no single right answer. Code review is an <em>analytical</em> task: there is a ground truth (the bugs that are really in the file), so detection can be counted. If one skill format carries both kinds of work across two agents, it is a good sign that it can carry most of the procedures a development team writes down.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:heading -->
+<h2 class="wp-block-heading">2. The Agent Skills format in five minutes</h2>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph -->
+<p>The open specification at agentskills.io is deliberately small:</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:table -->
+<figure class="wp-block-table"><table class="has-fixed-layout"><thead><tr><th>Part</th><th>Rule</th></tr></thead>
+<tbody>
+<tr><td><strong>SKILL.md</strong></td><td>YAML frontmatter between <strong>---</strong> lines, then Markdown instructions. Keep it under about 500 lines.</td></tr>
+<tr><td><strong>name</strong> (required)</td><td>1–64 characters, lowercase letters, digits and hyphens. It must match the folder name.</td></tr>
+<tr><td><strong>description</strong> (required)</td><td>Up to 1,024 characters: what the skill does and <em>when to use it</em>. Agents match tasks to skills with this text.</td></tr>
+<tr><td>Optional fields</td><td><strong>license</strong>, <strong>compatibility</strong>, <strong>metadata</strong>, <strong>allowed-tools</strong> (experimental)</td></tr>
+<tr><td>Optional folders</td><td><strong>references/</strong>, <strong>scripts/</strong>, <strong>assets/</strong>, loaded only when the instructions point to them (progressive disclosure)</td></tr>
+</tbody></table></figure>
+<!-- /wp:table -->
+
+<!-- wp:paragraph -->
+<p>Where each tool looks for project skills:</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:table -->
+<figure class="wp-block-table"><table class="has-fixed-layout"><thead><tr><th>Tool</th><th>Project skill folder</th><th>Explicit invocation</th></tr></thead>
+<tbody>
+<tr><td>Claude Code</td><td><strong>.claude/skills/&lt;name&gt;/SKILL.md</strong></td><td><strong>/skill-name</strong></td></tr>
+<tr><td>Codex CLI</td><td><strong>.agents/skills/&lt;name&gt;/SKILL.md</strong></td><td><strong>$skill-name</strong></td></tr>
+<tr><td>GitHub Copilot</td><td><strong>.github/skills</strong>, <strong>.claude/skills</strong> or <strong>.agents/skills</strong></td><td>automatic by description</td></tr>
+</tbody></table></figure>
+<!-- /wp:table -->
+
+<!-- wp:paragraph -->
+<p>All three also pick a skill automatically when the request matches its <strong>description</strong>.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:heading {"level":3} -->
+<h3 class="wp-block-heading">2.1 What each frontmatter field is for (and how I filled it)</h3>
+<!-- /wp:heading -->
+
+<!-- wp:list -->
+<ul class="wp-block-list"><!-- wp:list-item -->
+<li><strong>name</strong>: the identifier you type after <strong>/</strong> in Claude Code or <strong>$</strong> in Codex. Because it must equal the folder name, renaming a skill means renaming the folder; the validator catches a mismatch. I used <strong>requirement-definition</strong> and <strong>code-review</strong>, which read naturally in both invocation styles.</li>
+<!-- /wp:list-item --><!-- wp:list-item -->
+<li><strong>description</strong>: the only text an agent sees about a skill before deciding to load it. I wrote it in two halves: one sentence on <em>what</em> the skill produces, then a "Use when…" sentence listing the words people actually type ("PR review", "bug hunt", "acceptance criteria", "spec").</li>
+<!-- /wp:list-item --><!-- wp:list-item -->
+<li><strong>license</strong>: MIT, so that the skills can be copied between repositories without a legal question.</li>
+<!-- /wp:list-item --><!-- wp:list-item -->
+<li><strong>compatibility</strong>: free text about the environment. I used it to record which tools the skill was tested with and what access it needs ("Read-only; does not modify code" for the review skill). Agents do not enforce this field; it is documentation for the next person.</li>
+<!-- /wp:list-item --><!-- wp:list-item -->
+<li><strong>metadata</strong>: an open key/value map. I put <strong>author</strong> and <strong>version</strong> there. The version is a quoted string ("1.0") so YAML does not turn it into a number.</li>
+<!-- /wp:list-item --><!-- wp:list-item -->
+<li><strong>allowed-tools</strong>: deliberately <em>not</em> used. It is marked experimental in the specification, and I did not want the test to depend on a field the two tools might interpret differently. Permissions were set on the command line instead (section 5).</li>
+<!-- /wp:list-item --></ul>
+<!-- /wp:list -->
+
+<!-- wp:paragraph -->
+<p>Claude Code also understands some extra frontmatter fields of its own, described in its skills documentation. I avoided all of them: anything outside the open specification is, by definition, not guaranteed to mean the same thing in Codex.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:heading {"level":3} -->
+<h3 class="wp-block-heading">2.2 How a skill is discovered and loaded</h3>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph -->
+<p>Both tools follow the same three-step pattern that the specification calls progressive disclosure:</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:list {"ordered":true} -->
+<ol class="wp-block-list"><!-- wp:list-item -->
+<li><strong>Discovery.</strong> At start-up the agent scans its skill folders and keeps only the <strong>name</strong> and <strong>description</strong> of each skill in context. This is cheap, so a repository can hold many skills.</li>
+<!-- /wp:list-item --><!-- wp:list-item -->
+<li><strong>Activation.</strong> When the user invokes a skill explicitly, or a request matches a description, the body of <strong>SKILL.md</strong> is loaded.</li>
+<!-- /wp:list-item --><!-- wp:list-item -->
+<li><strong>On-demand resources.</strong> Files under <strong>references/</strong>, <strong>scripts/</strong> or <strong>assets/</strong> are read only when the instructions point to them.</li>
+<!-- /wp:list-item --></ol>
+<!-- /wp:list -->
+
+<!-- wp:paragraph -->
+<p>The Codex logs from my runs show this pattern directly. In the discovery run, Codex answered "based on the skills configuration provided in your prompt", i.e. the names and descriptions were already in its context without opening any file. In the task runs, the <strong>SKILL.md</strong> body never appears as a shell command, but the reference files do: Codex ran <strong>cat .agents/skills/requirement-definition/references/template.md</strong> and <strong>cat .agents/skills/code-review/references/checklist.md</strong> at the point where the procedure tells it to use them. Claude Code in print mode only shows its final answer, so I cannot show its file reads, but both requirement documents reproduce column headers that exist only in <strong>template.md</strong> (for example "Category (Security/Audit/Performance/Usability)"), so both agents clearly read the reference file.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:heading -->
+<h2 class="wp-block-heading">3. Requirement 1: one common skill folder for two agents</h2>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph -->
+<p>To avoid two copies drifting apart, I keep the real files in <strong>.agents/skills/</strong> (read by Codex and Copilot) and make <strong>.claude/skills</strong> a directory junction pointing to it (a symlink works the same on macOS/Linux):</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:preformatted -->
+<pre class="wp-block-preformatted">demo-project/
+├── .agents/skills/
+│   ├── requirement-definition/
+│   │   ├── SKILL.md
+│   │   └── references/template.md
+│   └── code-review/
+│       ├── SKILL.md
+│       └── references/checklist.md
+├── .claude/skills  →  junction to .agents/skills
+├── feature-request.txt
+└── leave_service.py
+
+# Windows (no admin needed for a junction)
+mklink /J .claude\skills .agents\skills
+# macOS / Linux
+ln -s ../.agents/skills .claude/skills</pre>
+<!-- /wp:preformatted -->
+
+<!-- wp:paragraph -->
+<p>I used only fields from the open spec (<strong>name</strong>, <strong>description</strong>, <strong>license</strong>, <strong>compatibility</strong>, <strong>metadata</strong>) and no tool-specific extensions, then validated both skills with the reference validator:</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:preformatted -->
+<pre class="wp-block-preformatted">pip install skills-ref
+agentskills validate .agents/skills/code-review              # Valid skill
+agentskills validate .agents/skills/requirement-definition   # Valid skill</pre>
+<!-- /wp:preformatted -->
+
+<!-- wp:image {"sizeSlug":"full","linkDestination":"none","align":"center","id":23510} -->
+<figure class="wp-block-image aligncenter size-full"><img src="https://scuti.asia/wp-content/uploads/2026/11/q2-s1.png" alt="Agent Skills folder and validation" class="wp-image-23510" /><figcaption class="wp-element-caption">One skill folder, two tools, and both skills pass the spec validator</figcaption></figure>
+<!-- /wp:image -->
+
+<!-- wp:heading {"level":3} -->
+<h3 class="wp-block-heading">3.1 Design decisions that keep a skill portable</h3>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph -->
+<p>Passing the validator only proves the file is well-formed. Whether it <em>behaves</em> the same in two agents depends on how the instructions are written. These are the choices I made, and why:</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:list -->
+<ul class="wp-block-list"><!-- wp:list-item -->
+<li><strong>Describe actions, not tool names.</strong> The requirement skill says "search for nouns from the request", not "use the Grep tool". Claude Code and Codex expose different tools (Codex on Windows runs everything through PowerShell), so naming a specific tool would make the instructions wrong in one of them.</li>
+<!-- /wp:list-item --><!-- wp:list-item -->
+<li><strong>Fix the output shape, leave the thinking free.</strong> Both skills prescribe an exact output (a template with nine headings, a five-column review table, a fixed severity scale and verdict rule). That is what makes two outputs comparable. How the agent finds problems is left to the model.</li>
+<!-- /wp:list-item --><!-- wp:list-item -->
+<li><strong>Put long content in references/.</strong> The template and the checklist live in separate files linked with relative Markdown links. Each <strong>SKILL.md</strong> stays short (29 and 44 lines).</li>
+<!-- /wp:list-item --><!-- wp:list-item -->
+<li><strong>No scripts.</strong> A <strong>scripts/</strong> folder would have needed Python or a shell that behaves the same on both sides. For procedures that are mostly judgement, plain Markdown is the most portable choice.</li>
+<!-- /wp:list-item --><!-- wp:list-item -->
+<li><strong>Testable rules.</strong> Every rule in the skills can be checked by reading the output ("each AC references an FR", "any Critical or Major → REQUEST CHANGES"). That made the evaluation in section 7 a matter of counting, not taste.</li>
+<!-- /wp:list-item --></ul>
+<!-- /wp:list -->
+
+<!-- wp:heading -->
+<h2 class="wp-block-heading">4. The two skills (full source)</h2>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph -->
+<p>Copy these four files into <strong>.agents/skills/</strong> in your repository (and link <strong>.claude/skills</strong> to it) to try them yourself. They are MIT-licensed.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:heading {"level":3} -->
+<h3 class="wp-block-heading">4.1 <strong>requirement-definition/SKILL.md</strong></h3>
+<!-- /wp:heading -->
+
+<!-- wp:preformatted -->
+<pre class="wp-block-preformatted">---
+name: requirement-definition
+description: Turn an informal feature request (Slack message, email, meeting note) into a structured requirements document with user stories, numbered functional and non-functional requirements, Given/When/Then acceptance criteria, assumptions and open questions. Use when the user asks to define, clarify, write or review requirements, a spec, or acceptance criteria for a feature.
+license: MIT
+compatibility: Agent Skills standard (agentskills.io). Tested with Claude Code and OpenAI Codex CLI. Needs read/write access to the repository.
+metadata:
+  author: phatlt
+  version: &quot;1.0&quot;
+---
+
+# Requirement definition
+
+Produce a requirements document that a developer, a tester and the requester can all agree on.
+
+## Procedure
+
+1. **Read the request and the code it touches.** Find the related modules (search for nouns from the request) so requirements match the real data model. Never invent tables or fields that do not exist without marking them as *new*.
+2. **Separate facts from guesses.** Anything the requester did not state explicitly goes to *Assumptions* (A-xx). Anything that blocks implementation goes to *Open questions* (Q-xx) addressed to a named role.
+3. **Write the document** using exactly the template in [references/template.md](references/template.md). Keep every heading, in the same order, even if a section is &quot;None&quot;.
+4. **Number everything**: FR-01, NFR-01, AC-01, A-01, Q-01. Each acceptance criterion references the FR it verifies.
+5. **Acceptance criteria** use Given / When / Then and must be testable (concrete values, no &quot;should work well&quot;).
+6. **Save** the document to `docs/requirements/&lt;kebab-case-feature-name&gt;.md` and print a 3-line summary: number of FRs, NFRs, ACs and open questions.
+
+## Rules
+
+- Write in the language of the request unless the user asks otherwise.
+- Prefer short sentences; one requirement per line.
+- Flag security, privacy and audit needs explicitly as NFRs.
+- Do not write implementation code in this skill.</pre>
+<!-- /wp:preformatted -->
+
+<!-- wp:heading {"level":3} -->
+<h3 class="wp-block-heading">4.2 <strong>requirement-definition/references/template.md</strong></h3>
+<!-- /wp:heading -->
+
+<!-- wp:preformatted -->
+<pre class="wp-block-preformatted"># &lt;Feature name&gt; — Requirements
+
+| Item | Value |
+|---|---|
+| Source | &lt;where the request came from&gt; |
+| Requester | &lt;role&gt; |
+| Target date | &lt;date or &quot;not stated&quot;&gt; |
+| Related code | &lt;files/modules&gt; |
+
+## 1. Background
+&lt;2–4 sentences: the problem, who has it, why now&gt;
+
+## 2. Goals / Non-goals
+- Goal: ...
+- Non-goal: ...
+
+## 3. User stories
+- US-01: As a &lt;role&gt;, I want &lt;capability&gt; so that &lt;benefit&gt;.
+
+## 4. Functional requirements
+| ID | Requirement | Priority (Must/Should/Could) |
+|---|---|---|
+| FR-01 | ... | Must |
+
+## 5. Non-functional requirements
+| ID | Category (Security/Audit/Performance/Usability) | Requirement |
+|---|---|---|
+| NFR-01 | ... | ... |
+
+## 6. Acceptance criteria
+| ID | Verifies | Given | When | Then |
+|---|---|---|---|---|
+| AC-01 | FR-01 | ... | ... | ... |
+
+## 7. Assumptions
+- A-01: ...
+
+## 8. Open questions
+| ID | Question | To |
+|---|---|---|
+| Q-01 | ... | HR / PM / Dev |
+
+## 9. Out of scope
+- ...</pre>
+<!-- /wp:preformatted -->
+
+<!-- wp:heading {"level":3} -->
+<h3 class="wp-block-heading">4.3 <strong>code-review/SKILL.md</strong></h3>
+<!-- /wp:heading -->
+
+<!-- wp:preformatted -->
+<pre class="wp-block-preformatted">---
+name: code-review
+description: Review source code or a diff for security, correctness, error handling, maintainability and test coverage, and report findings in a fixed severity-ranked format with file:line references and concrete fixes. Use when the user asks for a code review, PR review, bug hunt, security check or &quot;look over this code&quot;.
+license: MIT
+compatibility: Agent Skills standard (agentskills.io). Tested with Claude Code and OpenAI Codex CLI. Read-only; does not modify code.
+metadata:
+  author: phatlt
+  version: &quot;1.0&quot;
+---
+
+# Code review
+
+Review like a senior engineer who must sign off the change. Be specific, cite lines, propose fixes. Do not edit the code.
+
+## Procedure
+
+1. **Scope**: review the files or diff the user names. If none are named, review files changed in the working tree (`git diff --name-only`), otherwise all source files in the current directory.
+2. **Read every line** of the in-scope files. Check each item of [references/checklist.md](references/checklist.md).
+3. **Classify** every finding with exactly one severity:
+   - **Critical**: security hole, data loss, secret exposure. Must fix before merge.
+   - **Major**: wrong behaviour, broken business rule, crash risk.
+   - **Minor**: error handling, robustness, maintainability.
+   - **Nit**: style, naming, comments.
+4. **Report** using the output format below, sorted Critical → Nit. One finding per row. Merge duplicates.
+5. Finish with a one-line **verdict**: `APPROVE`, `APPROVE WITH COMMENTS` or `REQUEST CHANGES` (any Critical or Major → REQUEST CHANGES).
+
+## Output format
+
+## Code review: &lt;scope&gt;
+
+| # | Severity | Location | Finding | Suggested fix |
+|---|----------|----------|---------|---------------|
+| 1 | Critical | file.py:12 | ... | ... |
+
+**Summary:** &lt;n&gt; Critical, &lt;n&gt; Major, &lt;n&gt; Minor, &lt;n&gt; Nit
+**Verdict:** REQUEST CHANGES
+
+## Rules
+
+- Location must be `path:line` (or `path:start-end`).
+- Never report something you did not verify in the code.
+- If tests are missing for changed logic, report it as Minor.</pre>
+<!-- /wp:preformatted -->
+
+<!-- wp:heading {"level":3} -->
+<h3 class="wp-block-heading">4.4 <strong>code-review/references/checklist.md</strong></h3>
+<!-- /wp:heading -->
+
+<!-- wp:preformatted -->
+<pre class="wp-block-preformatted"># Review checklist
+
+## Security
+- [ ] No secrets, tokens or passwords in source code or logs
+- [ ] All SQL uses parameter binding (no string formatting / f-strings)
+- [ ] Authorization: the caller is allowed to perform the action (e.g. no self-approval)
+- [ ] Input validation for user-supplied values
+
+## Correctness
+- [ ] Logic matches docstrings, comments and business rules (inclusive/exclusive ranges, off-by-one)
+- [ ] State transitions are checked (e.g. cannot approve something already approved or cancelled)
+- [ ] No mutable default arguments or shared global state
+
+## Error handling &amp; resources
+- [ ] No silent `except: pass` / swallowed exceptions
+- [ ] Connections, files and cursors are closed (context managers)
+
+## Maintainability &amp; tests
+- [ ] Functions are small and named for what they do
+- [ ] Changed logic has tests</pre>
+<!-- /wp:preformatted -->
+
+<!-- wp:heading -->
+<h2 class="wp-block-heading">5. Test setup</h2>
+<!-- /wp:heading -->
+
+<!-- wp:heading {"level":3} -->
+<h3 class="wp-block-heading">Inputs (identical for both tools)</h3>
+<!-- /wp:heading -->
+
+<!-- wp:list -->
+<ul class="wp-block-list"><!-- wp:list-item -->
+<li><strong>Requirement definition</strong>: a real-style, messy Slack message from HR asking for "self-service leave cancellation", with partial cancellation, manager notification and audit hints buried in casual text.</li>
+<!-- /wp:list-item --><!-- wp:list-item -->
+<li><strong>Code review</strong>: a 50-line Python module for leave requests (fictional) with <strong>6 seeded issues</strong>: a hard-coded admin token, SQL injection through an f-string, an off-by-one day count that contradicts its docstring, a mutable default argument, a missing authorization and state check in <strong>approve_request</strong>, and a silent <strong>except Exception: pass</strong>.</li>
+<!-- /wp:list-item --></ul>
+<!-- /wp:list -->
+
+<!-- wp:paragraph -->
+<p>This is the complete feature request both agents received, exactly as stored in <strong>feature-request.txt</strong>:</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:preformatted -->
+<pre class="wp-block-preformatted">From: HR team (Slack message, pasted as-is)
+
+hi dev team! employees keep asking us to cancel leave they already submitted, sometimes even after it's approved :(
+can we let them cancel by themselves in the app? managers should get notified. also if the leave already started they shouldn't be able to cancel the whole thing i think?? maybe only the remaining days.
+we also want to see who cancelled what for audit. need this before the year-end holidays if possible. thanks!!</pre>
+<!-- /wp:preformatted -->
+
+<!-- wp:paragraph -->
+<p>The same <strong>leave_service.py</strong> file served two purposes: it was the code under review, and it was the "existing code" the requirement skill had to read so that its requirements matched the real data model (a <strong>leave_requests</strong> table with <strong>employee</strong>, <strong>start</strong>, <strong>end</strong>, <strong>days</strong>, <strong>reason</strong>, <strong>status</strong> and <strong>approver</strong>).</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:heading {"level":3} -->
+<h3 class="wp-block-heading">Commands (exactly what was run)</h3>
+<!-- /wp:heading -->
+
+<!-- wp:preformatted -->
+<pre class="wp-block-preformatted"># Claude Code
+claude -p &quot;/requirement-definition feature-request.txt (answer in English)&quot; --permission-mode acceptEdits
+claude -p &quot;/code-review leave_service.py (answer in English)&quot; --allowedTools Read,Grep,Glob
+
+# Codex CLI
+codex exec --skip-git-repo-check --dangerously-bypass-approvals-and-sandbox &quot;$requirement-definition feature-request.txt (answer in English)&quot;
+codex exec --skip-git-repo-check --dangerously-bypass-approvals-and-sandbox &quot;$code-review leave_service.py (answer in English)&quot;</pre>
+<!-- /wp:preformatted -->
+
+<!-- wp:paragraph -->
+<p><strong>Environment, stated plainly:</strong> Windows 11, Claude Code 2.1.329 (its default model) and Codex CLI 0.171.0. I did not have a ChatGPT/OpenAI subscription for Codex, so I configured Codex with a custom model provider: <strong>Gemini 3.5 Flash-Lite</strong>, reached through a small local bridge that exposes the OpenAI Responses API. Skill discovery, loading, tool calls and file edits are all done by Codex itself; only the model behind it differs. That matters for the results: differences in <em>depth</em> below are mostly model differences, while differences in <em>procedure</em> are what the skill controls.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:heading {"level":3} -->
+<h3 class="wp-block-heading">How I scored the results</h3>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph -->
+<p>To keep the evaluation objective, I decided the scoring rules before looking at the outputs:</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:list -->
+<ul class="wp-block-list"><!-- wp:list-item -->
+<li><strong>Procedure compliance</strong> is checked rule by rule against the text of each <strong>SKILL.md</strong>: does the output have the nine template headings in order, numbered IDs, ACs that cite an FR, the review table columns, the severity scale, the verdict rule, and so on. A rule is either followed, partly followed or not followed.</li>
+<!-- /wp:list-item --><!-- wp:list-item -->
+<li><strong>Code review detection</strong> is checked against a ground-truth list of the six seeded issues (file, line, expected severity) that I wrote before the runs and never showed to the agents. A seeded issue counts as found if a finding describes the same defect at the same code, whatever severity it was given. Severity is then compared separately.</li>
+<!-- /wp:list-item --><!-- wp:list-item -->
+<li><strong>Timing</strong> is the wall-clock time of each command as captured by the terminal recorder used for the video. <strong>Token counts</strong> are only available for Codex, which prints them at the end of a run.</li>
+<!-- /wp:list-item --><!-- wp:list-item -->
+<li>Every number in section 7 comes from the saved output files of the runs shown in the video; nothing was re-run or edited for the comparison.</li>
+<!-- /wp:list-item --></ul>
+<!-- /wp:list -->
+
+<!-- wp:heading -->
+<h2 class="wp-block-heading">6. Demo video</h2>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph -->
+<p>Every command below is real and shown with its real output and timing: the folder and validation, skill discovery in both tools, both requirement runs and both code reviews.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:video {"id":23517} -->
+<figure class="wp-block-video"><video controls src="https://scuti.asia/wp-content/uploads/2026/11/full-demo-2.mp4"></video></figure>
+<!-- /wp:video -->
+
+<!-- wp:heading -->
+<h2 class="wp-block-heading">7. Requirement 2: test results on both platforms</h2>
+<!-- /wp:heading -->
+
+<!-- wp:heading {"level":3} -->
+<h3 class="wp-block-heading">7.1 Discovery: both agents found the same skills</h3>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph -->
+<p>Asked "which skills can you use?", Claude Code listed <strong>code-review</strong> and <strong>requirement-definition</strong> from <strong>.claude/skills</strong> (through the junction). Codex listed the same two from <strong>.agents/skills</strong>, next to its four built-in system skills. Neither tool needed any change to the files.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:image {"sizeSlug":"full","linkDestination":"none","align":"center","id":23511} -->
+<figure class="wp-block-image aligncenter size-full"><img src="https://scuti.asia/wp-content/uploads/2026/11/q2-s2a.png" alt="Claude Code lists the Agent Skills" class="wp-image-23511" /><figcaption class="wp-element-caption">Claude Code discovers both skills</figcaption></figure>
+<!-- /wp:image -->
+
+<!-- wp:image {"sizeSlug":"full","linkDestination":"none","align":"center","id":23512} -->
+<figure class="wp-block-image aligncenter size-full"><img src="https://scuti.asia/wp-content/uploads/2026/11/q2-s2c.png" alt="Codex CLI lists the Agent Skills" class="wp-image-23512" /><figcaption class="wp-element-caption">Codex CLI discovers the same two skills plus its built-in ones</figcaption></figure>
+<!-- /wp:image -->
+
+<!-- wp:paragraph -->
+<p>Two details from the logs are worth noting. Claude Code answered in 10.7 seconds and even explained that <strong>.claude/skills</strong> is a link to <strong>.agents/skills</strong>. The Codex discovery run took 67.1 seconds and used 19,451 tokens, mostly because the model first tried three shell commands (<strong>Get-ChildItem</strong>, <strong>git status</strong>, <strong>ls</strong>) that the read-only sandbox rejected, and then answered from the skill list already in its prompt. Both descriptions came back almost word for word, for example Codex's "Review source code or a diff for security, correctness, error handling, maintainability, and test coverage", which is the first half of my <strong>description</strong> field.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:heading {"level":3} -->
+<h3 class="wp-block-heading">7.2 Requirement definition</h3>
+<!-- /wp:heading -->
+
+<!-- wp:image {"sizeSlug":"full","linkDestination":"none","align":"center","id":23513} -->
+<figure class="wp-block-image aligncenter size-full"><img src="https://scuti.asia/wp-content/uploads/2026/11/q2-s3.png" alt="Claude Code requirement-definition run" class="wp-image-23513" /><figcaption class="wp-element-caption">Claude Code: the document is saved to docs/requirements/ and summarised</figcaption></figure>
+<!-- /wp:image -->
+
+<!-- wp:image {"sizeSlug":"full","linkDestination":"none","align":"center","id":23514} -->
+<figure class="wp-block-image aligncenter size-full"><img src="https://scuti.asia/wp-content/uploads/2026/11/q2-s4.png" alt="Codex requirement-definition run" class="wp-image-23514" /><figcaption class="wp-element-caption">Codex: reads the request, writes the document with the same template</figcaption></figure>
+<!-- /wp:image -->
+
+<!-- wp:table -->
+<figure class="wp-block-table"><table class="has-fixed-layout"><thead><tr><th>Check (from the skill)</th><th>Claude Code</th><th>Codex CLI</th></tr></thead>
+<tbody>
+<tr><td>All 9 template sections, same order</td><td>✅ 9/9</td><td>✅ 9/9</td></tr>
+<tr><td>Numbered IDs (US, FR, NFR, AC, A, Q)</td><td>✅</td><td>✅</td></tr>
+<tr><td>Each AC references an FR</td><td>✅</td><td>✅</td></tr>
+<tr><td>Saved under <strong>docs/requirements/</strong></td><td>✅</td><td>✅</td></tr>
+<tr><td>Read the code and used real fields (<strong>leave_requests</strong>, <strong>status</strong>, <strong>approver</strong>)</td><td>✅ and marked new fields as <em>new</em></td><td>✅ (<strong>leave_requests</strong>, <strong>status</strong>, <strong>approver</strong>), with less detail</td></tr>
+<tr><td>Counts: user stories / FR / NFR / AC / assumptions / open questions</td><td>4 / 17 / 10 / 18 / 10 / 10</td><td>4 / 6 / 2 / 5 / 2 / 2</td></tr>
+<tr><td>Testable ACs with concrete values</td><td>✅ dates, IDs, balances, exact error messages</td><td>✅ but fewer and less specific</td></tr>
+<tr><td>Wall-clock time</td><td>58 s</td><td>163 s (16 shell commands, 5 of which failed and were retried)</td></tr>
+</tbody></table></figure>
+<!-- /wp:table -->
+
+<!-- wp:paragraph -->
+<p>The <strong>procedure</strong> transferred completely: same headings, same numbering scheme, same file location. The <strong>depth</strong> did not: Claude Code's document read like a spec I could hand to a tester (for example "Today is 2026-12-23; #11 is approved 2026-12-22 to 2026-12-26; cancel from 2026-12-24 → end = 2026-12-23, days = 2"), while the Codex run with a Flash-Lite model produced a correct but thin skeleton.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:heading {"level":3} -->
+<h3 class="wp-block-heading">Requirement documents, section by section</h3>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph -->
+<p>The counts above hide where the documents actually differ. This table compares each template section of the two saved files (<strong>self-service-leave-cancellation.md</strong> from Claude Code, <strong>leave-cancellation.md</strong> from Codex):</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:table -->
+<figure class="wp-block-table"><table class="has-fixed-layout"><thead><tr><th>Section</th><th>Claude Code</th><th>Codex CLI</th></tr></thead>
+<tbody>
+<tr><td>Header table</td><td>Source names the file; target date quoted with a pointer to Q-01; related code lists all 8 columns of <strong>leave_requests</strong> and 4 functions</td><td>"Slack message", "Before year-end holidays", related code = <strong>leave_service.py</strong></td></tr>
+<tr><td>1. Background</td><td>4 short sentences, as the template asks</td><td>One paragraph covering the same facts</td></tr>
+<tr><td>2. Goals / Non-goals</td><td>4 goals, 3 non-goals (no date editing, no cancelling on behalf of others, no change to approval workflow)</td><td>4 goals, 1 non-goal (no cancelling leave that has fully passed)</td></tr>
+<tr><td>3. User stories</td><td>4 (employee, employee with started leave, manager, HR)</td><td>4 (employee, manager, employee with started leave, HR auditor)</td></tr>
+<tr><td>4. Functional requirements</td><td>17, each one rule: ownership, state rules, partial cancel from tomorrow, reason length, balance, notification content, audit fields, HR filter, confirmation dialog</td><td>6, broader: full cancel of pending, full cancel of future approved, partial cancel, notify, audit, restore balance</td></tr>
+<tr><td>5. Non-functional requirements</td><td>10: Security ×3, Audit ×3, Privacy ×1, Performance ×2, Usability ×1</td><td>2: Audit ×1, Security ×1</td></tr>
+<tr><td>6. Acceptance criteria</td><td>18, including negative cases (forbidden, already cancelled, too-long reason, audit write failure, notification service down)</td><td>5, all happy-path</td></tr>
+<tr><td>7. Assumptions</td><td>10, e.g. "today" counts as already started, partial cancel shortens the row instead of creating a new one</td><td>2 (notification channel, schema needs new columns/tables)</td></tr>
+<tr><td>8. Open questions</td><td>10, each addressed to HR, PM, Dev or Legal</td><td>2, addressed to HR and HR / Dev</td></tr>
+<tr><td>9. Out of scope</td><td>5 items, including "fixing unrelated issues in <strong>leave_service.py</strong>"</td><td>2 items</td></tr>
+</tbody></table></figure>
+<!-- /wp:table -->
+
+<!-- wp:heading {"level":3} -->
+<h3 class="wp-block-heading">The same requirement, written by each agent</h3>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph -->
+<p>The trickiest line in the Slack message is "if the leave already started they shouldn't be able to cancel the whole thing i think?? maybe only the remaining days". Here is how each agent turned it into a requirement and an acceptance criterion (copied from the saved files):</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:preformatted -->
+<pre class="wp-block-preformatted">Claude Code
+FR-04 | If an approved leave has started (start ≤ today ≤ end), the employee
+        cannot cancel the whole request. | Must
+FR-05 | If an approved leave has started, the employee can cancel the remaining
+        days from a chosen date (≥ tomorrow) to the end date. | Must
+AC-04 | FR-05, FR-06, FR-11 | Today is 2026-12-23; #11 is approved, 2026-12-22
+        to 2026-12-26 (5 days) | alice cancels from 2026-12-24 | #11 end =
+        2026-12-23, days = 2, status approved; 3 days are returned to the balance
+
+Codex CLI
+FR-03 | The system must allow employees to partially cancel approved leave if
+        the leave start date is in the past or today, by adjusting the end date
+        to an earlier date (not earlier than start date). | Must
+AC-03 | FR-03 | An employee has an approved leave request REQ-103 from 2026-11-18
+        to 2026-11-25 (current date 2026-11-20). | The employee requests to
+        shorten the leave end date to 2026-11-21. | The leave end date updates to
+        2026-11-21, days are recalculated, remaining unused days are restored to
+        balance, and manager is notified.</pre>
+<!-- /wp:preformatted -->
+
+<!-- wp:paragraph -->
+<p>Both agents understood the business rule the same way, and both wrote a Given/When/Then with concrete dates. The difference is precision. Claude Code turned the ambiguity into an explicit decision (A-02: "Remaining days means days from tomorrow onward"), a separate negative test (AC-05 rejects a cancel-from date of today) and exact day counts. Codex's AC says "days are recalculated" without the expected number, so a tester would still have to work it out.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph -->
+<p>Step 1 of the skill ("read the code it touches") produced the largest gap. Claude Code's requirement run noticed four things in <strong>leave_service.py</strong> that affect the feature: there is no <strong>cancelled</strong> status, audit table or notification module yet (marked <em>new</em>); there is no manager field for <em>pending</em> requests, only <strong>approver</strong> (Q-03); <strong>leave_days</strong> returns one day less than its docstring says, which would make cancelled-day counts wrong (A-07, Q-07); and the existing SQL is string-formatted, so NFR-02 requires parameterised queries for the new feature. Codex's log shows it read the same file, but its document only reflects it in A-02 ("schema will require new columns/tables"). Its AC-01 uses a <strong>cancelled</strong> status without marking it as new.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:heading {"level":3} -->
+<h3 class="wp-block-heading">Rule-by-rule compliance of the requirement-definition skill</h3>
+<!-- /wp:heading -->
+
+<!-- wp:table -->
+<figure class="wp-block-table"><table class="has-fixed-layout"><thead><tr><th>Instruction in SKILL.md</th><th>Claude Code</th><th>Codex CLI</th></tr></thead>
+<tbody>
+<tr><td>Read the request and the related code</td><td>Followed (code facts cited in the document)</td><td>Followed (log shows <strong>cat leave_service.py</strong>), little used</td></tr>
+<tr><td>Mark invented fields as <em>new</em></td><td>Followed</td><td>Partly (A-02 mentions new columns; <strong>cancelled</strong> not marked)</td></tr>
+<tr><td>Unstated items → Assumptions, blockers → Open questions with a named role</td><td>Followed</td><td>Followed</td></tr>
+<tr><td>Use the template exactly, every heading in order</td><td>Followed</td><td>Followed</td></tr>
+<tr><td>Number everything; each AC references an FR</td><td>Followed</td><td>Followed</td></tr>
+<tr><td>Testable ACs with concrete values</td><td>Followed</td><td>Partly (AC-04 and AC-05 have no concrete values)</td></tr>
+<tr><td>Save to <strong>docs/requirements/&lt;kebab-case&gt;.md</strong></td><td>Followed</td><td>Followed</td></tr>
+<tr><td>Print a 3-line summary of counts</td><td>Partly (counts given, inside a longer summary)</td><td>Partly (counts given as 4 bullet lines)</td></tr>
+<tr><td>Flag security, privacy and audit as NFRs</td><td>Followed (all three)</td><td>Partly (security and audit, no privacy)</td></tr>
+<tr><td>No implementation code</td><td>Followed</td><td>Followed</td></tr>
+</tbody></table></figure>
+<!-- /wp:table -->
+
+<!-- wp:heading {"level":3} -->
+<h3 class="wp-block-heading">What the Codex requirement run actually did</h3>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph -->
+<p>Because Codex prints every shell command, its log shows the procedure being executed step by step. In order, it ran <strong>git status</strong>, read <strong>feature-request.txt</strong>, listed the project files (with two failed attempts using Unix syntax, <strong>find</strong> and <strong>ls -la</strong>, before <strong>Get-ChildItem</strong> worked), read <strong>leave_service.py</strong>, read <strong>template.md</strong>, created the folder (a failed <strong>mkdir -p</strong>, then <strong>New-Item</strong>), tried to write the file with a Bash heredoc (fails in PowerShell), wrote it with <strong>Set-Content</strong>, and finally ran <strong>git add</strong> on the new document (the first attempt with <strong>&amp;&amp;</strong> failed in Windows PowerShell 5.1). That is 16 commands, 5 failures and 62,334 tokens. The order matches steps 1, 3 and 6 of the skill exactly; the failures are all about shell dialect, not about the skill.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:heading {"level":3} -->
+<h3 class="wp-block-heading">7.3 Code review</h3>
+<!-- /wp:heading -->
+
+<!-- wp:image {"sizeSlug":"full","linkDestination":"none","align":"center","id":23515} -->
+<figure class="wp-block-image aligncenter size-full"><img src="https://scuti.asia/wp-content/uploads/2026/11/q2-s5.png" alt="Claude Code code-review output" class="wp-image-23515" /><figcaption class="wp-element-caption">Claude Code: 13 findings, verdict REQUEST CHANGES</figcaption></figure>
+<!-- /wp:image -->
+
+<!-- wp:image {"sizeSlug":"full","linkDestination":"none","align":"center","id":23516} -->
+<figure class="wp-block-image aligncenter size-full"><img src="https://scuti.asia/wp-content/uploads/2026/11/q2-s6.png" alt="Codex code-review output" class="wp-image-23516" /><figcaption class="wp-element-caption">Codex: 8 findings in the identical table format, verdict REQUEST CHANGES</figcaption></figure>
+<!-- /wp:image -->
+
+<!-- wp:table -->
+<figure class="wp-block-table"><table class="has-fixed-layout"><thead><tr><th>Seeded issue</th><th>Claude Code</th><th>Codex CLI</th></tr></thead>
+<tbody>
+<tr><td>Hard-coded admin token</td><td>✅ Critical</td><td>✅ Critical</td></tr>
+<tr><td>SQL injection (f-string)</td><td>✅ Critical</td><td>✅ Critical</td></tr>
+<tr><td>Off-by-one vs docstring</td><td>✅ Major</td><td>✅ Minor (under-rated)</td></tr>
+<tr><td>Mutable default argument</td><td>✅ Major</td><td>✅ Major</td></tr>
+<tr><td>Missing authorization / state check</td><td>✅ Critical + Major (split)</td><td>✅ Major</td></tr>
+<tr><td>Silent <strong>except: pass</strong></td><td>✅ Minor</td><td>✅ Minor</td></tr>
+<tr><td><strong>Seeded issues found</strong></td><td><strong>6 / 6</strong></td><td><strong>6 / 6</strong></td></tr>
+<tr><td>Extra valid findings</td><td>7 (input validation, unclosed connections, TOCTOU race, no tests, nits)</td><td>2 (unclosed connections, no tests)</td></tr>
+<tr><td>Output format and verdict as specified</td><td>✅</td><td>✅</td></tr>
+<tr><td>Line references exact</td><td>✅</td><td>Approximate (most are 1–3 lines off)</td></tr>
+<tr><td>Wall-clock time</td><td>30 s</td><td>32 s</td></tr>
+</tbody></table></figure>
+<!-- /wp:table -->
+
+<!-- wp:paragraph -->
+<p>Both reviews are directly comparable because the skill fixes the shape: severity scale, columns, sort order and verdict rule. A reviewer can diff two reports from two tools line by line, which is impossible with free-form "please review this" prompts.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:heading {"level":3} -->
+<h3 class="wp-block-heading">Seeded issues: location and severity per tool</h3>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph -->
+<p>The table below puts my ground-truth list next to the exact location and severity each agent reported:</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:table -->
+<figure class="wp-block-table"><table class="has-fixed-layout"><thead><tr><th>#</th><th>Seeded issue (true line, expected severity)</th><th>Claude Code</th><th>Codex CLI</th></tr></thead>
+<tbody>
+<tr><td>B1</td><td>Hard-coded <strong>ADMIN_TOKEN</strong> (line 6, Critical)</td><td>:6, Critical</td><td>:7, Critical</td></tr>
+<tr><td>B2</td><td>SQL injection via f-string (line 15, Critical)</td><td>:15, Critical</td><td>:16-18, Critical</td></tr>
+<tr><td>B3</td><td>Off-by-one in <strong>leave_days</strong> (line 21, Major)</td><td>:19-21, Major</td><td>:21-24, Minor</td></tr>
+<tr><td>B4</td><td>Mutable default <strong>attachments=[]</strong> (lines 24–25, Major)</td><td>:24,26, Major</td><td>:27, Major</td></tr>
+<tr><td>B5</td><td>No authorization / state check in <strong>approve_request</strong> (lines 36–43, Major)</td><td>:36-41 Critical (authorization) + :38-41 Major (state, TOCTOU)</td><td>:38-45, Major (both in one row)</td></tr>
+<tr><td>B6</td><td>Silent <strong>except Exception: pass</strong> (lines 47–50, Minor)</td><td>:47-50, Minor</td><td>:47-51, Minor</td></tr>
+<tr><td colspan="2"><strong>Severity matches the ground truth</strong></td><td><strong>5 / 6</strong> (B5 rated higher)</td><td><strong>5 / 6</strong> (B3 rated lower)</td></tr>
+<tr><td colspan="2"><strong>Summary line</strong></td><td>3 Critical, 3 Major, 4 Minor, 3 Nit</td><td>2 Critical, 2 Major, 4 Minor, 0 Nit</td></tr>
+</tbody></table></figure>
+<!-- /wp:table -->
+
+<!-- wp:paragraph -->
+<p>So the tools were equally good at <em>finding</em> the seeded issues and equally close on <em>severity</em>, but they disagreed in opposite directions. Claude Code treated self-approval as a security hole (Critical); my ground truth said Major, and I think a reasonable reviewer could pick either. Codex rated the off-by-one as Minor, although the skill defines Major as "wrong behaviour, broken business rule", and a one-day leave counting as zero days is exactly that. Codex also merged authorization and state checks into one row, which the skill's "merge duplicates" rule allows; Claude Code split them, which makes each fix easier to track.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:heading {"level":3} -->
+<h3 class="wp-block-heading">Quality of the suggested fixes</h3>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph -->
+<p>The skill asks for "concrete fixes". Both agents gave a fix in every row, but at different levels of precision. Two examples, copied from the reports:</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:preformatted -->
+<pre class="wp-block-preformatted">State check in approve_request
+  Claude Code: Make the update atomic: UPDATE leave_requests SET status='approved',
+               approver=? WHERE id=? AND status='pending', then raise if
+               cur.rowcount == 0.
+  Codex CLI:   Verify the approver's permissions and check that request status
+               is 'pending'.
+
+Unclosed connections
+  Claude Code: Use with contextlib.closing(get_conn()) as conn, conn: ... Note that
+               with sqlite3.connect(...) only commits or rolls back. It does not
+               close the connection.
+  Codex CLI:   Use a with statement context manager for database connections.</pre>
+<!-- /wp:preformatted -->
+
+<!-- wp:paragraph -->
+<p>Claude Code's fixes could be pasted into a pull request. Codex's are correct as directions but, in the connection case, the literal advice (a plain <strong>with</strong> block on a SQLite connection) would not close the connection, which is exactly the trap Claude Code's row warns about. In my reading, this is a model-depth difference, not a procedure difference: the skill asked for the same thing and both delivered a fix column.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:heading {"level":3} -->
+<h3 class="wp-block-heading">What the Codex review run did</h3>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph -->
+<p>Codex ran four commands: <strong>git status</strong>, <strong>cat leave_service.py</strong>, <strong>cat .agents/skills/code-review/references/checklist.md</strong> and <strong>git diff leave_service.py</strong>, for 22,437 tokens in total. Reading the checklist right after the file is step 2 of the skill. The <strong>git diff</strong> comes from step 1 (scope), even though I had named the file, so it was not needed. The first <strong>git status</strong> also showed that the requirement document from the previous Codex run had been staged with <strong>git add</strong>, which is how I noticed that side effect (section 8). The code itself was not modified by either agent, as the skill requires.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:heading {"level":3} -->
+<h3 class="wp-block-heading">7.4 Verdict: can the procedures be reused across both platforms?</h3>
+<!-- /wp:heading -->
+
+<!-- wp:table -->
+<figure class="wp-block-table"><table class="has-fixed-layout"><thead><tr><th>Question</th><th>Requirement definition</th><th>Code review</th></tr></thead>
+<tbody>
+<tr><td>Same skill file, unchanged, discovered by both?</td><td>Yes</td><td>Yes</td></tr>
+<tr><td>Same procedure steps executed?</td><td>Yes (read request and code, use template, save)</td><td>Yes (scope, read, checklist, classify, report, verdict)</td></tr>
+<tr><td>Same output structure?</td><td>Yes (9/9 sections, same ID scheme)</td><td>Yes (same table, scale, summary line, verdict)</td></tr>
+<tr><td>Same conclusions?</td><td>Same core rules; Claude Code far more complete</td><td>Same 6/6 seeded issues, same verdict</td></tr>
+<tr><td>Same depth and precision?</td><td>No</td><td>No (13 vs 8 findings; exact vs approximate lines)</td></tr>
+</tbody></table></figure>
+<!-- /wp:table -->
+
+<!-- wp:paragraph -->
+<p>My answer is <strong>yes, the procedures are reusable</strong>, with a precise meaning: the skill transfers the <em>process</em> and the <em>output contract</em> across platforms, and that part worked 100% in this test. It does not transfer <em>quality</em>, which follows the model you plug in.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:heading {"level":3} -->
+<h3 class="wp-block-heading">7.5 Why the outputs differed</h3>
+<!-- /wp:heading -->
+
+<!-- wp:list -->
+<ul class="wp-block-list"><!-- wp:list-item -->
+<li><strong>The model.</strong> Claude Code ran with its default model; Codex ran with Gemini 3.5 Flash-Lite through a bridge, and Codex itself warned "Model metadata for gemini-3.5-flash-lite not found. Defaulting to fallback metadata; this can degrade performance". A lightweight model with fallback metadata is the most likely cause of the thinner documents.</li>
+<!-- /wp:list-item --><!-- wp:list-item -->
+<li><strong>The shell.</strong> Codex on Windows executes through Windows PowerShell, and the model kept writing Unix commands. Five of its sixteen commands in the requirement run failed for that reason alone, which costs time but did not change the result.</li>
+<!-- /wp:list-item --><!-- wp:list-item -->
+<li><strong>Permissions.</strong> The Claude Code review ran with read-only tools, so it could not run <strong>git</strong>; Codex ran without a sandbox and did. In this test that only changed side effects, not findings.</li>
+<!-- /wp:list-item --><!-- wp:list-item -->
+<li><strong>Not the skill.</strong> Both agents received the same text and both followed it. I could not find a difference that I can trace back to the skill being read differently.</li>
+<!-- /wp:list-item --></ul>
+<!-- /wp:list -->
+
+<!-- wp:heading -->
+<h2 class="wp-block-heading">8. What I learned (including the Windows surprises)</h2>
+<!-- /wp:heading -->
+
+<!-- wp:list -->
+<ul class="wp-block-list"><!-- wp:list-item -->
+<li><strong>Portability is real at the procedure level.</strong> One <strong>SKILL.md</strong>, unchanged, produced the same structure in both agents for both tasks. The skill reliably transfers the <em>what</em> and the <em>format</em>; the model decides the <em>depth</em>.</li>
+<!-- /wp:list-item --><!-- wp:list-item -->
+<li><strong>Write descriptions for matching, not for humans.</strong> Both agents chose the right skill from the description alone. Including trigger phrases ("PR review", "acceptance criteria") matters more than a nice summary.</li>
+<!-- /wp:list-item --><!-- wp:list-item -->
+<li><strong>Put the checklist in <strong>references/</strong>.</strong> Both agents opened <strong>checklist.md</strong> and <strong>template.md</strong> only when the procedure told them to, which keeps the always-loaded part small.</li>
+<!-- /wp:list-item --><!-- wp:list-item -->
+<li><strong>Codex on Windows: the default sandbox blocked every shell command</strong>, including reading a file, so the first runs only produced "please paste the file" answers. Options are Codex's Windows sandbox setup (machine-wide sandbox accounts, admin) or running without the sandbox. I chose the latter, <em>only inside a throwaway demo folder</em>.</li>
+<!-- /wp:list-item --><!-- wp:list-item -->
+<li><strong>Without a sandbox, agents do more than you asked.</strong> In one run Codex also executed <strong>git add</strong> on the generated document. Harmless here, but a good reminder: a skill describes a procedure, it does not restrict tools. Keep review skills on read-only permissions (Claude Code: <strong>--allowedTools Read,Grep,Glob</strong>).</li>
+<!-- /wp:list-item --><!-- wp:list-item -->
+<li><strong>Language settings leak in.</strong> My personal Claude Code settings ask for Vietnamese answers; the skill's "write in the language of the request" did not override that, so I added "answer in English" to both prompts for a fair comparison.</li>
+<!-- /wp:list-item --></ul>
+<!-- /wp:list -->
+
+<!-- wp:heading -->
+<h2 class="wp-block-heading">9. Portability pitfalls and a checklist for cross-tool skills</h2>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph -->
+<p>Everything in section 8 can be turned into rules. This is the checklist I now use before I commit a skill that has to work in more than one agent:</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:list {"ordered":true} -->
+<ol class="wp-block-list"><!-- wp:list-item -->
+<li><strong>Frontmatter uses only open-spec fields</strong>, and the skill passes <strong>agentskills validate</strong>. Tool-specific fields go in a separate, clearly marked variant if they are really needed.</li>
+<!-- /wp:list-item --><!-- wp:list-item -->
+<li><strong>One source folder.</strong> Real files in <strong>.agents/skills</strong>; other tool folders are links. On Windows, check that the junction survives <strong>git clone</strong> on a colleague's machine; if not, generate the link in a setup script.</li>
+<!-- /wp:list-item --><!-- wp:list-item -->
+<li><strong>No shell commands in the instructions unless they are cross-platform.</strong> <strong>git</strong> commands are safe. <strong>ls -la</strong>, <strong>find</strong>, <strong>mkdir -p</strong> and heredocs are not, as the Codex log shows. Prefer "create the folder if it does not exist" over a command.</li>
+<!-- /wp:list-item --><!-- wp:list-item -->
+<li><strong>The description contains the words users type</strong>, both the formal ones ("acceptance criteria") and the casual ones ("look over this code").</li>
+<!-- /wp:list-item --><!-- wp:list-item -->
+<li><strong>The output contract is explicit</strong>: headings, table columns, ID scheme, file path, final line. This is the part that transfers best, so it should carry as much of the process as possible.</li>
+<!-- /wp:list-item --><!-- wp:list-item -->
+<li><strong>Rules are checkable</strong> by reading the output, so the same test can grade both tools.</li>
+<!-- /wp:list-item --><!-- wp:list-item -->
+<li><strong>Permissions are set outside the skill</strong>: read-only tool lists for review skills, a sandbox or a throwaway branch for skills that write files.</li>
+<!-- /wp:list-item --><!-- wp:list-item -->
+<li><strong>Language is stated explicitly</strong> in the prompt or the skill, because personal settings can override a "use the language of the request" rule.</li>
+<!-- /wp:list-item --><!-- wp:list-item -->
+<li><strong>A regression input lives next to the skill</strong> (for example a file with seeded bugs and its ground truth), and every change to the skill is re-run against it in each tool.</li>
+<!-- /wp:list-item --></ol>
+<!-- /wp:list -->
+
+<!-- wp:heading -->
+<h2 class="wp-block-heading">10. Limitations of this test</h2>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph -->
+<p>I want the results to be read for what they are, so here are the weaknesses I am aware of:</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:list -->
+<ul class="wp-block-list"><!-- wp:list-item -->
+<li><strong>One run per tool and task.</strong> Agent output varies between runs. Counts such as "17 vs 6 FRs" describe these runs, not an average.</li>
+<!-- /wp:list-item --><!-- wp:list-item -->
+<li><strong>Different models.</strong> Codex was not running an OpenAI model, so this is not a "Claude Code vs Codex" quality comparison. It is a test of whether the same skill drives two different agent runtimes.</li>
+<!-- /wp:list-item --><!-- wp:list-item -->
+<li><strong>The checklist names the bug classes.</strong> My review checklist mentions self-approval, off-by-one, mutable defaults and <strong>except: pass</strong>, which are exactly the seeded issues. That makes 6/6 easier: it shows that the agents <em>followed the checklist</em>, which is what I wanted to test, but it says less about finding unknown bugs.</li>
+<!-- /wp:list-item --><!-- wp:list-item -->
+<li><strong>A small, synthetic file.</strong> Fifty lines with obvious defects is far from a real pull request with hundreds of changed lines and context spread over many files.</li>
+<!-- /wp:list-item --><!-- wp:list-item -->
+<li><strong>Explicit invocation.</strong> The task runs used <strong>/skill</strong> and <strong>$skill</strong>. Automatic selection by description was only checked in the discovery step, not on the tasks themselves.</li>
+<!-- /wp:list-item --><!-- wp:list-item -->
+<li><strong>Self-scoring.</strong> I wrote the skills, the seeded bugs and the scoring. I reduced the bias by fixing the ground truth and the rules before the runs and by publishing the raw outputs in the video, but a second reviewer would be better.</li>
+<!-- /wp:list-item --><!-- wp:list-item -->
+<li><strong>Not covered:</strong> GitHub Copilot (it reads the same folder but I did not test it), macOS/Linux, non-English requests, and skills that include scripts.</li>
+<!-- /wp:list-item --></ul>
+<!-- /wp:list -->
+
+<!-- wp:heading -->
+<h2 class="wp-block-heading">11. Requirement 3: my opinion on skill standardisation</h2>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph -->
+<p>I think the Agent Skills standard is the right size: it standardises <em>where</em> instructions live and <em>how</em> they are discovered, and leaves everything else to plain Markdown. That is why one file worked unchanged across two very different agents.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph -->
+<p>What is still missing for teams:</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:list -->
+<ul class="wp-block-list"><!-- wp:list-item -->
+<li><strong>One project folder.</strong> Codex reads <strong>.agents/skills</strong>, Claude Code reads <strong>.claude/skills</strong>. A junction or symlink works, but it is a trap on Windows and in some CI checkouts. Claude Code reading <strong>.agents/skills</strong> too would remove the last friction.</li>
+<!-- /wp:list-item --><!-- wp:list-item -->
+<li><strong>Permissions in the standard.</strong> <strong>allowed-tools</strong> is still experimental and interpreted differently. A review skill should be able to declare "read-only" portably.</li>
+<!-- /wp:list-item --><!-- wp:list-item -->
+<li><strong>Versioning and testing.</strong> Skills are code for agents. They need version pins and small regression tests (like the 6 seeded bugs here), otherwise a "small wording change" silently changes team behaviour.</li>
+<!-- /wp:list-item --></ul>
+<!-- /wp:list -->
+
+<!-- wp:paragraph -->
+<p>Even so, I would standardise on it now: the cost is one folder in the repository, and the benefit is that our team process survives a change of tools.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:heading {"level":3} -->
+<h3 class="wp-block-heading">11.1 What I see as the real benefits</h3>
+<!-- /wp:heading -->
+
+<!-- wp:list -->
+<ul class="wp-block-list"><!-- wp:list-item -->
+<li><strong>The process becomes an artefact.</strong> Before, "how we review code" lived in people's heads and in a wiki page nobody opened. A skill is a file in the repository that is reviewed in pull requests, has a history, and is executed every time. I find that the biggest change, bigger than any time saving.</li>
+<!-- /wp:list-item --><!-- wp:list-item -->
+<li><strong>Freedom of tool choice without losing consistency.</strong> In my test, two agents with two different models produced reports with the same columns, scale and verdict. A team lead can let each developer use the agent they like and still get comparable output.</li>
+<!-- /wp:list-item --><!-- wp:list-item -->
+<li><strong>Cheap to adopt, cheap to leave.</strong> A skill is Markdown. If the standard disappeared tomorrow, the template and checklist would still be useful documents for humans.</li>
+<!-- /wp:list-item --><!-- wp:list-item -->
+<li><strong>Comparability makes evaluation possible.</strong> Because the output format is fixed, I could score both tools with the same table. Without that, comparing agents is a matter of impressions.</li>
+<!-- /wp:list-item --></ul>
+<!-- /wp:list -->
+
+<!-- wp:heading {"level":3} -->
+<h3 class="wp-block-heading">11.2 Risks and limits of standardisation</h3>
+<!-- /wp:heading -->
+
+<!-- wp:list -->
+<ul class="wp-block-list"><!-- wp:list-item -->
+<li><strong>A standard format does not give standard quality.</strong> My results show this clearly: the same skill produced 17 functional requirements in one agent and 6 in the other. Teams should not read "we use a shared skill" as "every tool now reviews equally well".</li>
+<!-- /wp:list-item --><!-- wp:list-item -->
+<li><strong>Over-specification.</strong> A skill that prescribes every step can stop a strong model from doing better than the checklist. Claude Code's TOCTOU finding was not in my checklist. I prefer to fix the output and the minimum checks, and leave room for extra findings.</li>
+<!-- /wp:list-item --><!-- wp:list-item -->
+<li><strong>Fragmentation through extensions.</strong> Each vendor adds its own frontmatter fields. If teams start depending on them, "portable" skills quietly become single-tool skills again. I would keep tool-specific fields out of shared skills.</li>
+<!-- /wp:list-item --><!-- wp:list-item -->
+<li><strong>False sense of control.</strong> As the <strong>git add</strong> episode showed, a skill describes what to do; it does not prevent anything. Safety still has to come from the agent's permission settings.</li>
+<!-- /wp:list-item --></ul>
+<!-- /wp:list -->
+
+<!-- wp:heading {"level":3} -->
+<h3 class="wp-block-heading">11.3 Versioning and governance: how I would run shared skills</h3>
+<!-- /wp:heading -->
+
+<!-- wp:list -->
+<ul class="wp-block-list"><!-- wp:list-item -->
+<li><strong>Version in metadata, history in git.</strong> I already put <strong>version</strong> in <strong>metadata</strong>. I would bump it on any change to the output contract (a new column, a renamed heading) because those changes break anyone who parses or compares the output.</li>
+<!-- /wp:list-item --><!-- wp:list-item -->
+<li><strong>Owners.</strong> Each shared skill gets an owner, and <strong>.agents/skills</strong> is covered by code-owner review, so a skill cannot change without the owner's approval.</li>
+<!-- /wp:list-item --><!-- wp:list-item -->
+<li><strong>Regression inputs.</strong> Every skill ships with at least one test input and an expected result, like <strong>leave_service.py</strong> and its six seeded issues. A pull request that changes the skill includes the before/after output from each supported agent.</li>
+<!-- /wp:list-item --><!-- wp:list-item -->
+<li><strong>One shared repository for common skills.</strong> Project-specific skills stay in each project; company-wide ones (review, requirements, release notes) live in one repository and are copied or linked into projects at a pinned version.</li>
+<!-- /wp:list-item --></ul>
+<!-- /wp:list -->
+
+<!-- wp:heading {"level":3} -->
+<h3 class="wp-block-heading">11.4 Security: skills are executable instructions</h3>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph -->
+<p>My two skills contain no scripts, but the specification allows a <strong>scripts/</strong> folder, and an agent will run those scripts with whatever permissions it has. Even plain Markdown is effectively code, because the agent obeys it. In my opinion, that means a third-party skill deserves the same care as a third-party package: read it fully before installing, prefer skills from known sources, pin the version, and re-read the diff when it updates. Instructions such as "also send the file to this URL" could be hidden in a long reference file. For our team I would allow only skills from our own repository on client projects, and run any skill with scripts inside a sandbox or a disposable branch.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:heading {"level":3} -->
+<h3 class="wp-block-heading">11.5 What I would like the specification to add</h3>
+<!-- /wp:heading -->
+
+<!-- wp:list -->
+<ul class="wp-block-list"><!-- wp:list-item -->
+<li>A stable, portable way to say "this skill is read-only" or "this skill may write only under <strong>docs/</strong>", honoured by every tool.</li>
+<!-- /wp:list-item --><!-- wp:list-item -->
+<li>One agreed project folder that every tool reads, so no links are needed.</li>
+<!-- /wp:list-item --><!-- wp:list-item -->
+<li>An optional, standard place for test inputs and expected outputs, so that skill authors can share evaluations along with the skill.</li>
+<!-- /wp:list-item --></ul>
+<!-- /wp:list -->
+
+<!-- wp:heading -->
+<h2 class="wp-block-heading">12. Requirement 3: how I will use Agent Skills in my daily work</h2>
+<!-- /wp:heading -->
+
+<!-- wp:table -->
+<figure class="wp-block-table"><table class="has-fixed-layout"><thead><tr><th>Today</th><th>With shared Agent Skills</th></tr></thead>
+<tbody>
+<tr><td>Customer requests arrive as chat messages; I rewrite them into specs by hand, each time a bit differently</td><td><strong>/requirement-definition</strong> (or <strong>$requirement-definition</strong>) turns the message into our template, with open questions ready to send back to the customer</td></tr>
+<tr><td>Code review comments vary by reviewer and by tool</td><td>The same <strong>code-review</strong> skill in every repo, so reports from Claude Code, Codex and Copilot have the same severity scale and verdict rule</td></tr>
+<tr><td>Our quest checklist (own opinion, daily-work application, no confidential data) lives in my head</td><td>A <strong>blog-review</strong> skill that checks a draft against the checklist before I submit</td></tr>
+<tr><td>New team members learn conventions by asking</td><td>Conventions live in <strong>.agents/skills</strong> in the repository and are applied by whatever agent the person prefers</td></tr>
+</tbody></table></figure>
+<!-- /wp:table -->
+
+<!-- wp:paragraph -->
+<p>The first step is cheap: add <strong>.agents/skills/</strong> with these two skills to one active project, link <strong>.claude/skills</strong> to it, and compare a week of reviews before and after.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:heading {"level":3} -->
+<h3 class="wp-block-heading">12.1 Workflow 1: from customer message to agreed spec</h3>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph -->
+<p>The requirement run gave me the most useful single artefact of this test: ten open questions, each addressed to a role. That is exactly the list I usually write by hand after a customer call. My new routine will be:</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:list {"ordered":true} -->
+<ol class="wp-block-list"><!-- wp:list-item -->
+<li>Paste the customer's message into a text file in the project, without personal or confidential data.</li>
+<!-- /wp:list-item --><!-- wp:list-item -->
+<li>Run <strong>/requirement-definition</strong> on it, in whichever agent I have open.</li>
+<!-- /wp:list-item --><!-- wp:list-item -->
+<li>Review the Assumptions and Open questions sections first, since they are where the agent guessed; send the questions to the customer the same day.</li>
+<!-- /wp:list-item --><!-- wp:list-item -->
+<li>When answers arrive, update the document and move answered questions into requirements; the acceptance criteria become the tester's starting point.</li>
+<!-- /wp:list-item --></ol>
+<!-- /wp:list -->
+
+<!-- wp:heading {"level":3} -->
+<h3 class="wp-block-heading">12.2 Workflow 2: a consistent first pass before human review</h3>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph -->
+<p>I will not replace human review with the skill. Instead, the author of a pull request runs <strong>code-review</strong> on their own diff before asking for review and fixes the Critical and Major rows first. The human reviewer then reads the report, confirms or rejects each row, and spends their time on design questions that a checklist cannot cover. Because the format is the same in every agent, the report can be pasted into the pull request description regardless of which tool produced it.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:heading {"level":3} -->
+<h3 class="wp-block-heading">12.3 Workflow 3: personal skills for repeated writing tasks</h3>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph -->
+<p>Outside code, I repeat the same checks every time I submit a blog post for this program: is my own opinion stated, is the daily-work application concrete, are secrets and client data hidden in screenshots and videos. A small <strong>blog-review</strong> skill with that checklist in <strong>references/</strong> would catch omissions before submission, and it would work in whichever agent I happen to be using that day.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:heading {"level":3} -->
+<h3 class="wp-block-heading">12.4 Rolling it out to the team</h3>
+<!-- /wp:heading -->
+
+<!-- wp:list {"ordered":true} -->
+<ol class="wp-block-list"><!-- wp:list-item -->
+<li><strong>Week 1:</strong> add the two skills to one active project, with the folder link and a short README line. Use them myself on every new request and every pull request I open.</li>
+<!-- /wp:list-item --><!-- wp:list-item -->
+<li><strong>Week 2:</strong> ask two colleagues, one on Claude Code and one on Codex, to use the same skills, and collect the reports side by side, as in section 7.</li>
+<!-- /wp:list-item --><!-- wp:list-item -->
+<li><strong>Week 3:</strong> adjust the template and checklist based on real false positives and missed issues, and bump the version.</li>
+<!-- /wp:list-item --><!-- wp:list-item -->
+<li><strong>Week 4:</strong> if the team agrees, move the skills to a shared repository and add them to new projects by default.</li>
+<!-- /wp:list-item --></ol>
+<!-- /wp:list -->
+
+<!-- wp:heading {"level":3} -->
+<h3 class="wp-block-heading">12.5 Expected benefit (my estimates, not measurements)</h3>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph -->
+<p>I have not measured time savings in daily work yet, so these are my own expectations, to be checked during the rollout above. The measured facts are only the run times in section 7: 58 seconds for a full requirements draft and about 30 seconds for a review of this small file.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:list -->
+<ul class="wp-block-list"><!-- wp:list-item -->
+<li><strong>Requirement drafts:</strong> I expect the first draft of a spec to become mostly a review task instead of a writing task, and I would guess it saves me a large part of the time I currently spend on the first version. The bigger gain I expect is fewer forgotten questions, because the template forces the Assumptions and Open questions sections.</li>
+<!-- /wp:list-item --><!-- wp:list-item -->
+<li><strong>Reviews:</strong> I expect fewer review rounds for basic issues (secrets, SQL, missing tests), because authors will see them before a human does.</li>
+<!-- /wp:list-item --><!-- wp:list-item -->
+<li><strong>How I will check:</strong> count review rounds per pull request and the number of questions sent back to customers after the spec is "done", before and after the rollout.</li>
+<!-- /wp:list-item --></ul>
+<!-- /wp:list -->
+
+<!-- wp:paragraph -->
+<p>One rule stays the same with or without skills: the person who runs the skill owns the result. The agent's document and review are drafts until a human has read them.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:heading -->
+<h2 class="wp-block-heading">13. FAQ</h2>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph -->
+<p><strong>Do I need two copies of each skill?</strong> No. Keep one copy in <strong>.agents/skills</strong> and make <strong>.claude/skills</strong> a link to it, as in section 3. Both tools discovered the same files this way.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph -->
+<p><strong>Does the skill make a weaker model as good as a stronger one?</strong> No. In this test it made the weaker setup follow the same process and format, and find the same six seeded issues, but its documents and fixes were much less detailed.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph -->
+<p><strong>Can I use Claude Code's extra frontmatter fields?</strong> You can, but then the skill is no longer guaranteed to behave the same in Codex. For shared skills I keep to the open-spec fields.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph -->
+<p><strong>Do I have to type /skill or $skill every time?</strong> No; both tools can pick a skill from its description. I used explicit invocation in the tests so that the comparison was not affected by whether the skill was selected.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph -->
+<p><strong>Is it safe to run Codex without the sandbox like I did?</strong> Only in a throwaway folder. On a real project, set up the Windows sandbox or run on Linux/macOS with the sandbox enabled, and keep review skills read-only.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph -->
+<p><strong>Does it work with GitHub Copilot?</strong> Copilot's documentation says it reads <strong>.agents/skills</strong> and <strong>.claude/skills</strong>, but I did not test it here.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:heading -->
+<h2 class="wp-block-heading">14. Conclusion</h2>
+<!-- /wp:heading -->
+
+<!-- wp:list -->
+<ul class="wp-block-list"><!-- wp:list-item -->
+<li><strong>Requirement 1:</strong> I created two skills, <strong>requirement-definition</strong> and <strong>code-review</strong>, using only open-spec fields. Both pass the reference validator and were discovered unchanged by Claude Code (through <strong>.claude/skills</strong>) and Codex CLI (through <strong>.agents/skills</strong>) from a single folder.</li>
+<!-- /wp:list-item --><!-- wp:list-item -->
+<li><strong>Requirement 2:</strong> In both tools, both procedures were followed and the output structure was identical. Both agents found all 6 seeded issues and gave the same verdict. Depth was very different (17 vs 6 functional requirements, 13 vs 8 review findings), and I attribute that mainly to the model behind each agent. The procedures are reusable; quality is not guaranteed by the skill.</li>
+<!-- /wp:list-item --><!-- wp:list-item -->
+<li><strong>Requirement 3:</strong> I think the standard is worth adopting now because it turns team processes into versioned files that survive a change of tools. It still needs portable permissions, one shared folder and a habit of testing skills like code. I will start with requirement drafts and pre-review on one project, then roll the skills out to the team over a month.</li>
+<!-- /wp:list-item --></ul>
+<!-- /wp:list -->
+
+<!-- wp:heading -->
+<h2 class="wp-block-heading">References</h2>
+<!-- /wp:heading -->
+
+<!-- wp:list -->
+<ul class="wp-block-list"><!-- wp:list-item -->
+<li><a href="https://www.anthropic.com/news/donating-agent-skills-to-the-agentic-ai-foundation" target="_blank">Anthropic – Donating Agent Skills to the Agentic AI Foundation</a></li>
+<!-- /wp:list-item --><!-- wp:list-item -->
+<li><a href="https://agentskills.io/specification" target="_blank">Agent Skills specification</a></li>
+<!-- /wp:list-item --><!-- wp:list-item -->
+<li><a href="https://code.claude.com/docs/en/skills" target="_blank">Claude Code – Skills</a></li>
+<!-- /wp:list-item --><!-- wp:list-item -->
+<li><a href="https://docs.github.com/en/copilot/concepts/customizations/agent-skills" target="_blank">GitHub Docs – Agent Skills</a></li>
+<!-- /wp:list-item --></ul>
+<!-- /wp:list -->

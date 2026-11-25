@@ -1,0 +1,62 @@
+gwscli version 1.0.6.1026726559
+Google Workspace CLI - manage Google Workspace services.
+
+Usage:
+  gwscli [command]
+
+Available Services:
+  calendar    Schedule meetings, check availability, and manage events
+  chat        Send messages, read conversations, and manage Chat spaces
+  docs        Read and edit Google Docs documents
+  drive       Search, upload, download, and organize Drive files
+  gmail       Search emails, read threads, manage labels, and create drafts
+  people      Search directory profiles and view personal contacts
+  sheets      Read, write, format, and analyze Sheets data
+  slides      Read and edit Slides presentations
+  tasks       Create, read, and manage Google Tasks and task lists
+
+Utility Commands:
+  auth        Sign in, sign out, and manage authentication
+  logging     Manage telemetry and usage logging
+  privacy     Print the Privacy Policy URL
+  skills      Discover and manage agent skills
+  terms       Print the Terms of Service URL
+  version     Print the version
+
+Additional Commands:
+  help        Help about any command
+
+Flags:
+  -h, --help                 Print help message
+      --oauth_token string   OAuth token to authenticate requests directly
+
+Use "gwscli [command] --help" for more information about a command.
+Configuring your OAuth Client will first remove your existing stored OAuth tokens (logout), are you sure you want to proceed? Y, N.
+Already logged out (no cached token found).
+Successfully configured OAuth client credentials (client_id: ****).
+Please open the following URL in your browser to log in:
+
+[Open this URL in your browser to sign in]
+
+Waiting for authorization code on localhost:61118...
+Successfully authorized the following scopes:
+  - https://www.googleapis.com/auth/calendar
+  - https://www.googleapis.com/auth/calendar.events.readonly
+  - https://www.googleapis.com/auth/calendar.readonly
+  - https://www.googleapis.com/auth/drive.file
+  - https://www.googleapis.com/auth/drive.metadata.readonly
+  - https://www.googleapis.com/auth/drive.readonly
+  - https://www.googleapis.com/auth/gmail.compose
+  - https://www.googleapis.com/auth/tasks
+  - https://www.googleapis.com/auth/tasks.readonly
+saved D:\code\work\ai_quest\blog-html\google-workspace-cli-mcp\videos\s3-consent-1795606602-raw.mp4 (199 frames, 16s)
+Granted the following scopes:
+  - https://www.googleapis.com/auth/calendar
+  - https://www.googleapis.com/auth/calendar.events.readonly
+  - https://www.googleapis.com/auth/calendar.readonly
+  - https://www.googleapis.com/auth/drive.file
+  - https://www.googleapis.com/auth/drive.metadata.readonly
+  - https://www.googleapis.com/auth/drive.readonly
+  - https://www.googleapis.com/auth/gmail.compose
+  - https://www.googleapis.com/auth/tasks
+  - https://www.googleapis.com/auth/tasks.readonly

@@ -1,0 +1,62 @@
+  <h3>2.4 Bước 3: Đăng ký client và đăng nhập CLI (cấp scope theo từng phần)</h3>
+  <p>CLI lưu hai thứ ở máy local: OAuth client đã đăng ký (từ <strong>gwscli auth setup</strong>) và grant của người dùng kèm refresh token (từ <strong>gwscli auth login</strong>). Trên Windows cả hai nằm trong %AppData%\gwscli (client_credentials.json và token.json). Thay vì dùng bundle chỉ đọc, tôi chỉ xin đúng những gì kịch bản cần: các service Drive, Calendar và Tasks cùng một action Gmail duy nhất là <strong>create_draft</strong>.</p>
+  <pre>PS&gt; echo Y | gwscli auth setup --oauth_client_file=client_secret.json
+Configuring your OAuth Client will first remove your existing stored OAuth tokens (logout), are you sure you want to proceed? Y, N.
+Already logged out (no cached token found).
+Successfully configured OAuth client credentials (client_id: ****).
+
+PS&gt; gwscli auth login drive calendar tasks "gmail create_draft"
+Please open the following URL in your browser to log in:
+[Open this URL in your browser to sign in]
+Waiting for authorization code on localhost:61118...
+Successfully authorized the following scopes:
+  - https://www.googleapis.com/auth/calendar
+  - https://www.googleapis.com/auth/calendar.events.readonly
+  - https://www.googleapis.com/auth/calendar.readonly
+  - https://www.googleapis.com/auth/drive.file
+  - https://www.googleapis.com/auth/drive.metadata.readonly
+  - https://www.googleapis.com/auth/drive.readonly
+  - https://www.googleapis.com/auth/gmail.compose
+  - https://www.googleapis.com/auth/tasks
+  - https://www.googleapis.com/auth/tasks.readonly</pre>
+  <figure class="screenshot-wrap"><img src="images/step-04-consent-1.png" alt="Màn hình consent của Google liệt kê các scope Drive, Calendar, Gmail và Tasks được yêu cầu"><figcaption>Màn hình consent hiển thị tên project (ai-quest-gwscli-demo) và từng scope riêng lẻ; tài khoản đã được che</figcaption></figure>
+  <p>Toàn bộ quá trình đăng nhập mất khoảng 37 giây, tính cả bước consent trên trình duyệt. Có ba điều tôi để ý:</p>
+  <ul>
+    <li><strong>"Service" nghĩa là scope rộng.</strong> Xin service calendar sẽ được cấp scope đầy đủ https://www.googleapis.com/auth/calendar, mà màn hình consent mô tả là "See, edit, share, and permanently delete all the calendars you can access". Nếu chỉ cần một action, hãy ghi rõ action đó (ví dụ "calendar list_events") thay vì cả service.</li>
+    <li><strong>gmail.compose không chỉ là bản nháp.</strong> Tôi chỉ xin create_draft, nhưng màn hình consent ghi "Manage drafts and send emails". CLI không có lệnh gửi, nhưng bản thân token vẫn cho phép gửi mail nếu bị lộ. Đây chính là lý do file token phải được coi như secret.</li>
+    <li><strong>Agent không thể tự điều khiển bước đăng nhập.</strong> CLI in ra một URL và chờ trên một cổng localhost ngẫu nhiên; con người phải hoàn tất consent trên trình duyệt ở cùng máy. Trong demo, tôi mở URL đó trong một Chrome profile riêng.</li>
+  </ul>
+
+  <h3>2.5 Bước 4: Các MCP server remote: kiểm tra giao thức và đăng ký vào Claude Code</h3>
+  <p>Các MCP server là endpoint do Google host, nên "cài đặt" chúng nghĩa là trỏ một MCP client tới URL kèm OAuth token lấy từ một client có gắn cờ agent. Tôi kiểm tra chúng theo hai cách.</p>
+  <p><strong>(a) Một MCP client thô.</strong> Để quan sát giao thức mà không có agent nào xen vào giữa, tôi viết một script Python khoảng 60 dòng (mcp_probe.py) nói chuyện MCP qua Streamable HTTP: nó gửi initialize, tools/list và tuỳ chọn tools/call dưới dạng JSON-RPC, dùng access token mà gwscli đã lấy được (token được đọc từ cache và không bao giờ in ra). Đây là output thật khi chạy với các server Drive, Calendar và Tasks:</p>
+  <pre>&gt; POST https://drivemcp.googleapis.com/mcp/v1  initialize
+  HTTP 200 in 495 ms  server={"name": "StatelessServer", "version": "ESF"}  protocol=2025-06-18
+&gt; tools/list
+  HTTP 200 in 496 ms  9 tools:
+   - copy_file                    [write]
+   - create_file                  [write]
+   - download_file_content        [read-only]
+   - get_file_metadata            [read-only]
+   - get_file_permissions         [read-only]
+   - list_recent_files            [read-only]
+   - read_file_content            [read-only]
+   - search_files                 [read-only]
+   - upload_file_revision         [DESTRUCTIVE]
+
+&gt; POST https://calendarmcp.googleapis.com/mcp/v1  initialize
+  HTTP 200 in 477 ms  9 tools: list_events, get_event, list_calendars, suggest_time [read-only],
+  create_event, update_event, respond_to_event [write], delete_event [DESTRUCTIVE], search_events [read-only]
+
+&gt; POST https://tasksmcp.googleapis.com/mcp/v1  initialize
+  HTTP 200 in 915 ms  9 tools: list_task_lists, list_tasks, get_task [read-only],
+  create_task, update_task, undelete_task, complete_task, uncomplete_task [write], delete_task [DESTRUCTIVE]</pre>
+  <p>Những điều hữu ích rút ra từ bước kiểm tra này: các server là stateless (serverInfo "StatelessServer", không cần session id), dùng MCP protocol version 2025-06-18, một round trip từ Việt Nam mất khoảng 0,45&ndash;1 giây, và mọi tool đều mang MCP annotation (readOnlyHint / destructiveHint). Chính các annotation này được MCP client dùng để quyết định tool nào được chạy mà không cần hỏi. Danh sách tool khớp một-một với danh sách lệnh CLI của Drive, Calendar và Tasks, xác nhận rằng CLI chỉ là một client mỏng phía trên cùng một backend. Endpoint Tasks (tasksmcp.googleapis.com), vốn không có trong trang cấu hình MCP, thực ra vẫn tồn tại và phản hồi bình thường.</p>
+  <p><strong>(b) Đăng ký server trong Claude Code.</strong> Claude Code chấp nhận MCP server HTTP remote với một OAuth client đã đăng ký sẵn. Secret được lấy từ biến môi trường MCP_CLIENT_SECRET (hoặc được hỏi khi chạy), nên không bao giờ xuất hiện trên dòng lệnh:</p>
+  <pre>PS&gt; claude mcp add --transport http gws-drive https://drivemcp.googleapis.com/mcp/v1 --client-id **** --client-secret --callback-port 8765
+Added HTTP MCP server gws-drive with URL: https://drivemcp.googleapis.com/mcp/v1 to local config
+
+PS&gt; claude mcp list
+Checking MCP server health...
+gws-drive: https://drivemcp.googleapis.com/mcp/v1 (HTTP) - Connected</pre>
+  <p>Client loại Desktop chấp nhận redirect URI loopback trên bất kỳ cổng nào, nên cổng callback cố định 8765 hoạt động mà không cần đăng ký redirect URI trong console. Sau đó, bước OAuth consent của người dùng cho server được hoàn tất ngay trong Claude Code bằng /mcp.</p>

@@ -1,0 +1,74 @@
+  <h3>3.1 Khám phá lệnh lúc chạy</h3>
+  <p>Vì CLI không cam kết chữ ký lệnh ổn định, việc đầu tiên tôi (và sau này là agent) làm là hỏi chính binary: --help để xem flag, --schema để xem output JSON và --show-scopes để xem scope tối thiểu của một action. Ví dụ:</p>
+  <pre>PS&gt; gwscli drive create_file --help --show-scopes
+OAuth Scopes:
+  All Supported Scopes:
+    - https://www.googleapis.com/auth/drive
+    - https://www.googleapis.com/auth/drive.appdata
+    - https://www.googleapis.com/auth/drive.file
+  Recommended Minimal Scopes:
+    - https://www.googleapis.com/auth/drive.file</pre>
+  <p>Các đoạn help được viết cho model chứ không phải cho con người: create_event giải thích rằng thời gian phải truyền vào không kèm UTC offset trừ khi người dùng nêu rõ, create_task chứa cả một bộ quy tắc về deadline so với ngày lên lịch và phải nói gì với người dùng khi bỏ deadline, còn search_files mô tả toàn bộ ngữ pháp truy vấn. Nói cách khác, phần "prompt engineering" cho từng tool được đóng gói sẵn trong binary.</p>
+
+  <h3>3.2 Tác vụ thực tế với CLI: chuyện gì đã thực sự xảy ra</h3>
+  <p>Tôi chạy kịch bản đã lên kế hoạch (upload một báo cáo tuần hư cấu, tìm lại nó, lên lịch buổi review, tạo task theo dõi, soạn nháp email) bằng các lệnh thật. Mọi lệnh đều tới được Google và nhận về câu trả lời có cấu trúc, nhưng <strong>không thao tác Workspace nào được phép chạy</strong>:</p>
+  <table class="data-table">
+    <thead><tr><th>#</th><th>Lệnh (rút gọn)</th><th>Thời gian</th><th>Kết quả</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>drive create_file --title "AIQuest gwscli demo - weekly report" --filePath data/aiquest-gwscli-demo-report.md --contentMimeType text/markdown</td><td>1,4 s</td><td>HTTP 403 PERMISSION_DENIED "The caller does not have permission" (ở bước khởi tạo upload)</td></tr>
+      <tr><td>2</td><td>drive search_files --query "title contains 'AIQuest gwscli demo'" --excludeContentSnippets</td><td>1,6 s</td><td>isError: "The caller does not have permission"</td></tr>
+      <tr><td>3</td><td>calendar create_event --summary "AIQuest demo: review gwscli report" --startTime 2026-11-26T10:00:00 --endTime 2026-11-26T10:30:00</td><td>1,2 s</td><td>isError: project phải được ghi danh vào Developer Preview Program</td></tr>
+      <tr><td>4</td><td>calendar list_events --fullText "AIQuest demo"</td><td>1,5 s</td><td>cùng lỗi Developer Preview</td></tr>
+      <tr><td>5</td><td>tasks create_task --title "AIQuest demo: send weekly report" --scheduledDate 2026-11-26</td><td>2,7 s</td><td>cùng lỗi Developer Preview</td></tr>
+      <tr><td>6</td><td>gmail create_draft --to demo@example.com --subject "AIQuest demo: weekly report" --body "..."</td><td>4,1 s</td><td>cùng lỗi Developer Preview</td></tr>
+    </tbody>
+  </table>
+  <p>Thông báo chính xác cho Calendar, Tasks và Gmail là:</p>
+  <pre>{
+  "content": [
+    {
+      "text": "Access to this tool requires that your Google Cloud project (7728xxxxxxxx) is enrolled in the Google Workspace Developer Preview Program. Please see https://developers.google.com/workspace/preview",
+      "type": "text"
+    }
+  ],
+  "isError": true,
+  "resultType": "complete"
+}</pre>
+  <p>Trước khi kết luận, tôi đã loại trừ các nguyên nhân hiển nhiên. Các API đã được bật: trang "Enabled APIs &amp; services" của project liệt kê Drive, Calendar, Tasks, Gmail, Docs, Sheets, Slides, Chat và Workspace MCP API cùng các API cổ điển, và các MCP API của Drive/Calendar/Tasks đã ghi nhận request của tôi (kèm lỗi) trên biểu đồ traffic. Các scope đã được cấp (xem 2.4). Client có gắn cờ agent. Và nội dung lỗi rất rõ ràng: thứ chặn lại là <strong>việc project chưa được ghi danh vào Developer Preview Program</strong>, không phải token của tôi. Drive trả về thông báo chung chung kém hữu ích hơn là "caller does not have permission", nhưng nó thất bại ở cùng một giai đoạn, cả qua CLI lẫn qua MCP thô (bên dưới).</p>
+  <p>Cũng cần để ý định dạng output nói lên điều gì: kết quả của CLI đúng nghĩa đen là một MCP tool result (mảng content, isError, resultType). Điều này xác nhận những gì tài liệu ngụ ý: gwscli là một MCP client của chính các server do Google host, với giao diện dòng lệnh và khả năng xử lý file local. Không có câu hỏi xác nhận human-in-the-loop nào cho create_draft, vì request đã bị từ chối trước khi server đi tới bước đó.</p>
+  <figure class="screenshot-wrap"><img src="images/step-06-cli-tasks.png" alt="Terminal chạy các tác vụ thực tế bằng gwscli"><figcaption>Các tác vụ CLI trong terminal: mọi lần gọi đều trả về lỗi MCP có cấu trúc thay vì kết quả</figcaption></figure>
+
+  <h3>3.3 Cùng các lần gọi đó qua MCP thô</h3>
+  <p>Để chắc chắn vấn đề không nằm ở CLI, tôi thực hiện cùng loại lời gọi trực tiếp tới các MCP endpoint bằng mcp_probe.py. Handshake và tools/list thành công (mục 2.5), còn tools/call thất bại với đúng các thông báo đó:</p>
+  <pre>&gt; tools/call search_files {"query": "title contains 'AIQuest'"}
+  HTTP 200 in 533 ms
+  { "content": [ { "text": "The caller does not have permission", "type": "text" } ], "isError": true }
+
+&gt; tools/call list_calendars {}            (calendarmcp)
+  HTTP 200 in 445 ms   "Access to this tool requires that your Google Cloud project (...) is enrolled in the Google Workspace Developer Preview Program."
+
+&gt; tools/call list_task_lists {}           (tasksmcp)
+  HTTP 200 in 955 ms   same Developer Preview message</pre>
+  <p>Có hai chi tiết giao thức đáng lưu ý cho ai đang viết MCP client: lỗi của tool trả về dưới dạng HTTP 200 với isError: true bên trong result, không phải HTTP error hay JSON-RPC error, nên client bắt buộc phải kiểm tra flag này; và bước discovery (initialize và tools/list) không bị chặn, chỉ có bước thực thi bị chặn. Nói cách khác, agent có thể thấy mọi tool, lên kế hoạch với chúng, và chỉ phát hiện ra lúc gọi rằng mình không được phép dùng.</p>
+  <figure class="screenshot-wrap"><img src="images/step-07-mcp-probe.png" alt="MCP client thô gọi các MCP server Drive, Calendar và Tasks"><figcaption>MCP thô qua Streamable HTTP: handshake và tool discovery hoạt động, tools/call bị chặn</figcaption></figure>
+
+  <h3>3.4 Tác vụ cho agent: Claude Code với skill gwscli</h3>
+  <p>CLI đi kèm agent skill riêng. Cài nó chỉ cần một lệnh, lệnh này ghi ra một file SKILL.md:</p>
+  <pre>PS&gt; gwscli skills install --dir .claude/skills
+Installing skills to .claude/skills...
+PS&gt; tree /F .claude
+\---skills
+    \---gwscli
+            SKILL.md</pre>
+  <p>Sau đó tôi giao cho Claude Code một tác vụ bằng ngôn ngữ tự nhiên, không nêu tên lệnh, và chỉ cho phép nó chạy các lệnh gwscli (cộng với đọc file và dùng skill):</p>
+  <pre>claude -p "Use the gwscli skill: find my Drive files whose title contains AIQuest, then list my Google Tasks lists. Report exactly what happened, including any error text. Do not try to change any settings." --allowedTools "Bash(gwscli:*)" Read Skill</pre>
+  <p>Lần chạy mất 26 giây. Những gì agent đã làm (theo câu trả lời của nó, vốn bằng tiếng Việt do cài đặt global của tôi):</p>
+  <ol>
+    <li>Đầu tiên nó kiểm tra phiên bản CLI theo hướng dẫn của skill (skill yêu cầu tối thiểu version 0.2.0); bản local 1.0.6 của tôi đạt yêu cầu.</li>
+    <li>Nó tự dựng đúng truy vấn có cấu trúc: <strong>gwscli drive search_files --query="title contains 'AIQuest'"</strong>, và báo exit code 1 kèm "The caller does not have permission". Nó nói rõ đây là lỗi quyền truy cập, không phải "không có file nào khớp".</li>
+    <li>Nó chạy <strong>gwscli tasks list_task_lists</strong> và trích nguyên văn thông báo Developer Preview, kể cả số project.</li>
+    <li>Nó đề xuất bước tiếp theo cho tôi (ghi danh project, hoặc cấp lại quyền cho action Drive) và không thử thay đổi cài đặt nào, đúng như yêu cầu. Nó cũng nhận ra MCP server gws-drive có sẵn trong phiên và đề nghị thử theo hướng đó.</li>
+  </ol>
+  <p>Vậy là dù backend bị đóng, bài test thực tế vẫn trả lời được câu hỏi "nó vận hành thế nào trong thực tế": skill cho agent đủ hướng dẫn để chọn đúng lệnh và cú pháp ngay lần đầu, các lỗi MCP có cấu trúc giúp agent dễ hiểu và báo cáo trung thực, và ranh giới quyền (chỉ được dùng gwscli, không đổi cài đặt) được tôn trọng. Khi project được ghi danh, cùng prompt đó sẽ trả về kết quả mà tôi không cần thay đổi gì.</p>
+  <figure class="screenshot-wrap"><img src="images/step-08-claude-skill.png" alt="Claude Code sử dụng skill gwscli"><figcaption>Claude Code với skill gwscli đã cài: lệnh đúng, báo lỗi trung thực, không tìm cách vượt qua rào chặn</figcaption></figure>
+  <p><strong>Tình trạng các tác vụ ghi.</strong> Việc ghi danh vào Developer Preview Program là một yêu cầu do Google xét duyệt, nên không thể hoàn tất trong thời gian thực hiện bài test này. Các lệnh của kịch bản được giữ trong demo-assets/film_gws.py để có thể chạy lại y hệt sau khi được duyệt, và tôi sẽ cập nhật bài viết này với kết quả.</p>

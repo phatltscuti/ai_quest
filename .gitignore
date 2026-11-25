@@ -9,3 +9,4 @@ tools/codex-home/*
 *-raw.mp4
 __pycache__/
 *.pyc
+.secrets/

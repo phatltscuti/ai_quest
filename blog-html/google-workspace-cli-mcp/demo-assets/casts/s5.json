@@ -1,0 +1,281 @@
+{
+ "title": "Windows PowerShell",
+ "steps": [
+  {
+   "comment": "Same backend, raw MCP: handshake + tools/list on the Drive MCP server",
+   "show": "python mcp_probe.py drive",
+   "prompt": "PS D:\\ai_quest\\google-workspace-cli-mcp>",
+   "events": [
+    [
+     0.312,
+     "> POST https://drivemcp.googleapis.com/mcp/v1  initialize"
+    ],
+    [
+     0.312,
+     "\r\n"
+    ],
+    [
+     0.809,
+     "  HTTP 200 in 495 ms  server={\"name\": \"StatelessServer\", \"version\": \"ESF\"}  protocol=2025-06-18"
+    ],
+    [
+     0.809,
+     "\r\n"
+    ],
+    [
+     1.321,
+     "> tools/list"
+    ],
+    [
+     1.321,
+     "\r\n"
+    ],
+    [
+     1.818,
+     "  HTTP 200 in 496 ms  9 tools:"
+    ],
+    [
+     1.818,
+     "\r\n   - copy_file                    [write]\r\n   - create_file                  [write]\r\n   - download_file_content        [read-only]\r\n   - get_file_metadata            [read-only]\r\n   - get_file_permissions         [read-only]\r\n   - list_recent_files            [read-only]\r\n   - read_file_content            [read-only]\r\n   - search_files                 [read-only]\r\n   - upload_file_revision         [DESTRUCTIVE]\r\n"
+    ]
+   ],
+   "exit": 0,
+   "seconds": 1.84
+  },
+  {
+   "comment": "tools/call through MCP (read-only search)",
+   "show": "python mcp_probe.py drive search_files \"query=title contains 'AIQuest'\"",
+   "prompt": "PS D:\\ai_quest\\google-workspace-cli-mcp>",
+   "events": [
+    [
+     0.254,
+     "> POST https://drivemcp.googleapis.com/mcp/v1  initialize"
+    ],
+    [
+     0.255,
+     "\r\n"
+    ],
+    [
+     0.725,
+     "  HTTP 200 in 469 ms  server={\"name\": \"StatelessServer\", \"version\": \"ESF\"}  protocol=2025-06-18"
+    ],
+    [
+     0.725,
+     "\r\n"
+    ],
+    [
+     1.192,
+     "> tools/list"
+    ],
+    [
+     1.192,
+     "\r\n"
+    ],
+    [
+     1.874,
+     "  HTTP 200 in 682 ms  9 tools:"
+    ],
+    [
+     1.874,
+     "\r\n   - copy_file                    [write]\r\n   - create_file                  [write]\r\n   - download_file_content        [read-only]\r\n   - get_file_metadata            [read-only]\r\n   - get_file_permissions         [read-only]\r\n   - list_recent_files            [read-only]\r\n   - read_file_content            [read-only]\r\n   - search_files                 [read-only]\r\n   - upload_file_revision         [DESTRUCTIVE]\r\n> tools/call search_files {\"query\": \"title contains 'AIQuest'\"}\r\n"
+    ],
+    [
+     2.407,
+     "  HTTP 200 in 533 ms"
+    ],
+    [
+     2.407,
+     "\r\n"
+    ],
+    [
+     2.407,
+     "  {\r\n   \"content\": [\r\n    {\r\n     \"text\": \"The caller does not have permission\",\r\n     \"type\": \"text\"\r\n    }\r\n   ],\r\n   \"isError\": true\r\n  }\r\n"
+    ]
+   ],
+   "exit": 0,
+   "seconds": 2.42
+  },
+  {
+   "comment": "Calendar and Tasks MCP servers",
+   "show": "python mcp_probe.py calendar list_calendars",
+   "prompt": "PS D:\\ai_quest\\google-workspace-cli-mcp>",
+   "events": [
+    [
+     0.193,
+     "> POST https://calendarmcp.googleapis.com/mcp/v1  initialize"
+    ],
+    [
+     0.193,
+     "\r\n"
+    ],
+    [
+     0.671,
+     "  HTTP 200 in 477 ms  server={\"name\": \"StatelessServer\", \"version\": \"ESF\"}  protocol=2025-06-18"
+    ],
+    [
+     0.671,
+     "\r\n"
+    ],
+    [
+     1.101,
+     "> tools/list"
+    ],
+    [
+     1.101,
+     "\r\n"
+    ],
+    [
+     1.538,
+     "  HTTP 200 in 436 ms  9 tools:"
+    ],
+    [
+     1.538,
+     "\r\n   - list_events                  [read-only]\r\n   - get_event                    [read-only]\r\n   - list_calendars               [read-only]\r\n   - suggest_time                 [read-only]\r\n   - create_event                 [write]\r\n   - update_event                 [write]\r\n   - delete_event                 [DESTRUCTIVE]\r\n   - respond_to_event             [write]\r\n   - search_events                [read-only]\r\n> tools/call list_calendars {}\r\n"
+    ],
+    [
+     1.985,
+     "  HTTP 200 in 445 ms"
+    ],
+    [
+     1.985,
+     "\r\n  {\r\n   \"content\": [\r\n    {\r\n     \"text\": \"Access to this tool requires that your Google Cloud project (772831598343) is enrolled in the Google Workspace Developer Preview Program. Please see https://developers.google.com/workspace/preview\",\r\n     \"type\": \"text\"\r\n    }\r\n   ],\r\n   \"isError\": true\r\n  }"
+    ],
+    [
+     1.985,
+     "\r\n"
+    ]
+   ],
+   "exit": 0,
+   "seconds": 2.01
+  },
+  {
+   "comment": "Tasks MCP server",
+   "show": "python mcp_probe.py tasks list_task_lists",
+   "prompt": "PS D:\\ai_quest\\google-workspace-cli-mcp>",
+   "events": [
+    [
+     0.287,
+     "> POST https://tasksmcp.googleapis.com/mcp/v1  initialize"
+    ],
+    [
+     0.287,
+     "\r\n"
+    ],
+    [
+     1.205,
+     "  HTTP 200 in 915 ms  server={\"name\": \"StatelessServer\", \"version\": \"ESF\"}  protocol=2025-06-18"
+    ],
+    [
+     1.205,
+     "\r\n"
+    ],
+    [
+     2.097,
+     "> tools/list"
+    ],
+    [
+     2.097,
+     "\r\n"
+    ],
+    [
+     3.076,
+     "  HTTP 200 in 977 ms  9 tools:"
+    ],
+    [
+     3.076,
+     "\r\n   - list_task_lists              [read-only]\r\n   - list_tasks                   [read-only]\r\n   - get_task                     [read-only]\r\n   - create_task                  [write]\r\n   - update_task                  [write]\r\n   - delete_task                  [DESTRUCTIVE]\r\n   - undelete_task                [write]\r\n   - complete_task                [write]\r\n   - uncomplete_task              [write]\r\n> tools/call list_task_lists {}\r\n"
+    ],
+    [
+     4.033,
+     "  HTTP 200 in 955 ms"
+    ],
+    [
+     4.033,
+     "\r\n  {\r\n   \"content\": [\r\n    {\r\n     \"text\": \"Access to this tool requires that your Google Cloud project (772831598343) is enrolled in the Google Workspace Developer Preview Program. Please see https://developers.google.com/workspace/preview\",\r\n     \"type\": \"text\"\r\n    }\r\n   ],\r\n   \"isError\": true\r\n  }\r\n"
+    ]
+   ],
+   "exit": 0,
+   "seconds": 4.05
+  },
+  {
+   "comment": "Register the remote MCP server in Claude Code (agent-flagged OAuth client)",
+   "show": "claude mcp add --transport http gws-drive https://drivemcp.googleapis.com/mcp/v1 --client-id **** --client-secret --callback-port 8765",
+   "prompt": "PS D:\\ai_quest\\google-workspace-cli-mcp>",
+   "events": [
+    [
+     0.195,
+     "Added HTTP MCP server gws-drive with URL: https://drivemcp.googleapis.com/mcp/v1 to local config\n"
+    ],
+    [
+     0.195,
+     "File modified: C:\\Users\\lytan\\.claude-mise\\.claude.json [project: D:/code/work/ai_quest]\n"
+    ]
+   ],
+   "exit": 0,
+   "seconds": 0.71
+  },
+  {
+   "comment": "Claude Code sees the server",
+   "show": "claude mcp list",
+   "prompt": "PS D:\\ai_quest\\google-workspace-cli-mcp>",
+   "events": [
+    [
+     0.601,
+     "Checking MCP server health…\n\n"
+    ],
+    [
+     1.549,
+     "claude.ai Claude Docs: https://api.anthropic.com/v1/pages/mcp - ✔ Connected\ngws-drive: https://drivemcp.googleapis.com/mcp/v1 (HTTP) - ✔ Connected"
+    ]
+   ],
+   "exit": 0,
+   "seconds": 2.09
+  },
+  {
+   "comment": "Install the gwscli agent skills for Claude Code",
+   "show": "gwscli skills install --dir .claude/skills",
+   "prompt": "PS D:\\ai_quest\\google-workspace-cli-mcp>",
+   "events": [
+    [
+     0.096,
+     "Installing skills to .claude/skills...\n"
+    ]
+   ],
+   "exit": 0,
+   "seconds": 0.64
+  },
+  {
+   "comment": "What was installed",
+   "show": "tree /F .claude",
+   "prompt": "PS D:\\ai_quest\\google-workspace-cli-mcp>",
+   "events": [
+    [
+     0.053,
+     "Folder PATH listing for volume Data\r\n"
+    ],
+    [
+     0.053,
+     "Volume serial number is 38B1-96F5\r\nD:\\CODE\\WORK\\AI_QUEST\\BLOG-HTML\\GOOGLE-WORKSPACE-CLI-MCP\\DEMO-ASSETS\\.CLAUDE\r\n\\---skills\r\n"
+    ],
+    [
+     0.053,
+     "    \\---"
+    ],
+    [
+     0.053,
+     "gwscli\r\n"
+    ],
+    [
+     0.053,
+     "            "
+    ],
+    [
+     0.053,
+     "SKILL.md\r\n            \r\n"
+    ]
+   ],
+   "exit": 0,
+   "seconds": 0.06
+  }
+ ]
+}
